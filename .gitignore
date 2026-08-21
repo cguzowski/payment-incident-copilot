@@ -1,0 +1,42 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Java and Maven
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# Node and Angular
+node_modules/
+dist/
+.angular/
+coverage/
+npm-debug.log*
+
+# IDEs and operating systems
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+tmp/
+.tmp/
+
+# Local infrastructure state
+infra/**/*.tfstate
+infra/**/*.tfstate.*
+infra/**/.terraform/
+infra/**/.terraform.lock.hcl
+
+# Agent-local state; shared agent guidance remains committed
+CLAUDE.local.md
+.codex-log/

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: operations-mcp-server
+  ai:
+    mcp:
+      server:
+        name: operations-mcp-server
+        version: 0.1.0
+        protocol: STREAMABLE
+
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

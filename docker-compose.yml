@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: payment-copilot-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-payment_copilot}
+      POSTGRES_USER: ${POSTGRES_USER:-payment_copilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_only_change_me}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - payment-copilot-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-payment_copilot} -d ${POSTGRES_DB:-payment_copilot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  payment-copilot-postgres-data:
