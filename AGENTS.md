@@ -170,18 +170,22 @@ approved knowledge, an LLM-generated report, and human review.
 The product provides decision support. It does not autonomously resolve
 incidents or execute payment actions.
 
-## Read before working
+## Required context
 
 Before planning or changing code, read:
 
-1. `docs/agent/PROJECT.md`
-2. `docs/agent/CONSTRAINTS.md`
-3. `docs/agent/STATUS.md`
-4. `docs/agent/tasks/current.md`
-5. The nearest service-specific `AGENTS.md`
+1. `docs/agent/PROJECT.md` — product goal and MVP scope.
+2. `docs/agent/CONSTRAINTS.md` — non-negotiable boundaries.
+3. `docs/agent/STATUS.md` — current repository state.
+4. `docs/agent/tasks/current.md` — active task and acceptance criteria.
+5. The nearest service-specific `AGENTS.md` — local implementation rules.
 
-Read `docs/agent/ARCHITECTURE.md` for cross-service work and
-`docs/agent/DOMAIN.md` when changing payment or incident terminology.
+Read when relevant:
+
+- `docs/agent/ARCHITECTURE.md` — cross-service, API, or data-flow changes.
+- `docs/agent/DOMAIN.md` — payment or incident terminology changes.
+- `docs/agent/QUALITY.md` — verification commands and quality requirements.
+- `docs/agent/decisions/` — ADRs related to the affected architecture.
 
 ## Repository boundaries
 
