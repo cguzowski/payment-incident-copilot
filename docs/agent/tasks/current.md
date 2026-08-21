@@ -57,12 +57,26 @@ contract can be verified independently.
 - [ ] The operator console displays the queue and all asynchronous states.
 - [ ] Backend and frontend tests cover successful, invalid, and empty cases.
 
+## Test plan
+
+- Alert ingestion integration tests cover valid persistence, invalid input, and
+  duplicate idempotency before the ingestion implementation is written.
+- Queue contract tests cover the triage projection and empty results before the
+  queue implementation is written.
+- Operator-console tests cover loading, empty, success, and error states before
+  the queue view is implemented.
+
 ## Expected approach
 
-1. Agree on the smallest alert request and queue response schemas.
-2. Implement persistence, validation, idempotency, and API contracts.
-3. Initialize the Angular application and implement the queue view.
-4. Validate through automated tests and one manual synthetic alert.
+1. Agree on the smallest alert request and queue response schemas, then map
+   every acceptance criterion to a named test.
+2. Write and run the focused backend tests to confirm the expected failures.
+3. Implement the minimum backend behavior needed to pass those tests.
+4. If needed, create only the Angular and test harness scaffold; then write and
+   run the focused frontend tests to confirm the expected failures.
+5. Implement the minimum queue UI behavior needed to pass those tests.
+6. Refactor while green, then run the broader validation commands and one
+   manual synthetic alert.
 
 ## Likely files or components
 
@@ -87,7 +101,10 @@ cd frontend/operator-console && npm test -- --watch=false && npm run build
 
 ## Completion evidence
 
-- Tests: Not started
+- Red-phase evidence: Not started
+- Green-phase evidence: Not started
+- Acceptance-criteria coverage: Not started
+- Full verification: Not started
 - Manual verification: Not started
 - Documentation updated: Initial task only
 - Remaining limitations: Entire implementation remains

@@ -1,6 +1,6 @@
 # Quality and validation
 
-Last reviewed: 2026-08-20
+Last reviewed: 2026-08-21
 
 ## Standard commands
 
@@ -20,7 +20,28 @@ npm test -- --watch=false
 npm run build
 ```
 
-## Testing expectations
+## Test-driven development
+
+All production behavior changes follow a red-green-refactor cycle:
+
+1. Translate the user story and each acceptance criterion into named test
+   cases at the lowest suitable level.
+2. Write one focused test for the next behavior and run it to confirm that it
+   fails for the intended reason.
+3. Implement only enough production code to make that test pass.
+4. Refactor without changing behavior while keeping the tests green.
+5. Repeat for the remaining criteria, then run the broader relevant suite.
+
+For a defect, first add a failing regression test that reproduces it. Do not
+weaken a valid test to accommodate an implementation. If an acceptance
+criterion requires manual validation, record why it cannot be automated and
+add the closest meaningful automated coverage.
+
+Changes with no executable behavior, such as documentation-only edits, do not
+require artificial tests. Run the relevant static or structural validation and
+record that evidence instead.
+
+## Coverage expectations
 
 - Unit tests for domain rules and state transitions
 - Integration tests for HTTP contracts, PostgreSQL, Flyway, and MCP boundaries
@@ -41,6 +62,9 @@ npm run build
 ## Definition of done
 
 - Acceptance criteria are demonstrably satisfied.
+- Each acceptance criterion is mapped to automated coverage or a documented
+  manual-verification reason.
+- Red-phase and green-phase evidence is recorded for behavior changes.
 - Relevant automated tests pass.
 - Failure and invalid-input behavior is intentional.
 - Database changes use migrations.

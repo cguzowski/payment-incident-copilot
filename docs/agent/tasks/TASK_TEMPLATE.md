@@ -39,11 +39,19 @@ As a [user], I want [capability], so that [value].
 - [ ] Relevant actions are auditable.
 - [ ] Automated tests cover the main and failure paths.
 
+## Test plan
+
+- [Acceptance criterion] -> [named automated test and level]
+- [Failure or edge case] -> [named automated test and level]
+- [Manual-only criterion, if any] -> [reason and verification method]
+
 ## Expected approach
 
-1. [High-level phase]
-2. [High-level phase]
-3. [Validation phase]
+1. Map every acceptance criterion to a test case.
+2. Write and run the next focused test; confirm the expected failure.
+3. Implement the minimum code needed to pass the test.
+4. Repeat the red-green cycle, then refactor while tests remain green.
+5. Run the broader validation commands.
 
 The agent may propose a simpler approach before implementation.
 
@@ -68,7 +76,10 @@ The agent may propose a simpler approach before implementation.
 
 ## Completion evidence
 
-- Tests:
+- Red-phase evidence:
+- Green-phase evidence:
+- Acceptance-criteria coverage:
+- Full verification:
 - Manual verification:
 - Documentation updated:
 - Remaining limitations:

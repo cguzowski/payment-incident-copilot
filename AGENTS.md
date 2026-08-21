@@ -1,252 +1,111 @@
-# AGENTS.md
+# Repository agent instructions
 
-## Purpose
-
-These instructions apply to every AI coding agent working in this repository.
-
-Act as a disciplined software engineer. Make the smallest coherent change that completely satisfies the requested objective while preserving existing behavior and repository conventions.
-
-## Before Making Changes
-
-Before editing:
-
-1. Identify the exact objective.
-2. Locate the relevant files and existing implementation.
-3. Determine the acceptance criteria.
-4. Identify important risks, dependencies, and edge cases.
-5. Find the repository's documented verification commands.
-
-Read only the files needed for the current objective.
-
-If a requirement is materially ambiguous, ask for clarification instead of silently choosing a product, business, security, or architectural decision.
-
-## Scope Discipline
-
-- Work on one objective at a time.
-- Do not modify unrelated files.
-- Do not perform unrelated cleanup or refactoring.
-- Do not add dependencies unless they are necessary.
-- Do not redesign architecture unless the task requires it.
-- Preserve existing public behavior unless a change is explicitly requested.
-- Follow the repository's existing naming, structure, formatting, and design patterns.
-- Do not invent requirements.
-- Do not hide assumptions; state consequential assumptions explicitly.
-
-## Planning
-
-For substantial work, create a short implementation plan before changing code.
-
-Substantial work includes:
-
-- Changes across multiple components or modules
-- API or database changes
-- Authentication, authorization, or security-sensitive work
-- Architectural changes
-- Business-critical behavior
-- Work with unclear implementation boundaries
-
-The plan should identify:
-
-- The intended outcome
-- The files or components likely to change
-- The implementation sequence
-- Important risks and edge cases
-- How the result will be verified
-
-Small, obvious, low-risk edits may be implemented directly.
-
-If investigation invalidates the plan, stop and revise the plan before continuing.
-
-## Implementation
-
-- Prefer incremental, reviewable changes.
-- Use the smallest implementation that fully solves the problem.
-- Keep business logic explicit and understandable.
-- Reuse existing abstractions when they fit.
-- Avoid speculative abstractions and premature generalization.
-- Avoid broad boilerplate rewrites.
-- Keep changes consistent with surrounding code.
-- Add comments only when they explain non-obvious reasoning.
-- Never expose, log, or commit secrets or sensitive credentials.
-
-## Testing and Verification
-
-Never claim that work is complete without verification evidence.
-
-When practical, define or write the important tests before implementing the behavior.
-
-Prioritize tests for:
-
-- Business-critical behavior
-- Security-sensitive behavior
-- Regression risks
-- Important edge cases
-- Integration boundaries
-- User-visible behavior
-
-Do not test every line merely to increase test coverage. Test meaningful behavior.
-
-Run the checks relevant to the change, including where applicable:
-
-- Focused unit tests
-- Integration tests
-- Backend tests
-- Frontend tests
-- Type checking
-- Linting and formatting checks
-- Build verification
-- Security checks
-- Browser-based verification
-- Screenshots or visual comparison for UI changes
-
-Start with the most focused verification and expand when appropriate.
-
-If a required check cannot be run, report:
-
-- The command or verification that was not run
-- Why it could not be run
-- What remains unverified
-
-Do not describe unverified behavior as working.
-
-## Parallel Work
-
-Use parallel agents only when work can be separated into clearly isolated objectives, such as:
-
-- Focused research
-- Debugging
-- Security review
-- Code review
-- Independent implementation areas
-
-Each parallel task must have a narrow objective and return a concise result.
-
-When multiple agents modify code:
-
-- Use a separate worktree and branch for each task.
-- Never allow multiple agents to edit the same worktree concurrently.
-- Keep each task isolated until its changes are reviewed and integrated.
-
-Preferred model:
-
-> One task = one conversation = one worktree = one branch
-
-## Repository Safety
-
-- Inspect existing changes before editing.
-- Treat existing uncommitted changes as user-owned.
-- Do not overwrite or discard unrelated work.
-- Do not use destructive Git operations unless explicitly requested.
-- Do not revert changes that were not created for the current task.
-- Keep generated files and temporary artifacts out of the repository unless required.
-
-## Completion Standard
-
-A task is complete only when:
-
-- The requested scope has been implemented.
-- Relevant tests pass.
-- Relevant type, lint, and build checks pass.
-- User-visible changes have been verified where applicable.
-- No unrelated changes were introduced.
-- Remaining risks or limitations are clearly reported.
-
-The final report should state:
-
-1. What changed
-2. Why it changed
-3. Which files or components were affected
-4. What verification was performed
-5. Any remaining risks, limitations, or follow-up work
-
-# Payment Incident Investigation Copilot
-
-## Mission
-
-Build a portfolio-quality application that helps a payment operations analyst
-investigate synthetic payment incidents using retrieved operational context,
-approved knowledge, an LLM-generated report, and human review.
-
-The product provides decision support. It does not autonomously resolve
-incidents or execute payment actions.
+These rules apply to every agent working in this repository. Nested
+`AGENTS.md` files add service-specific rules; they do not replace this file.
 
 ## Required context
 
-Before planning or changing code, read:
+Before planning or editing, read:
 
 1. `docs/agent/PROJECT.md` — product goal and MVP scope.
 2. `docs/agent/CONSTRAINTS.md` — non-negotiable boundaries.
-3. `docs/agent/STATUS.md` — current repository state.
-4. `docs/agent/tasks/current.md` — active task and acceptance criteria.
-5. The nearest service-specific `AGENTS.md` — local implementation rules.
+3. `docs/agent/STATUS.md` — current facts and blockers.
+4. `docs/agent/tasks/current.md` — active user story and acceptance criteria.
+5. The nearest service-specific `AGENTS.md`, when one exists.
 
-Read when relevant:
+For executable changes, also read `docs/agent/QUALITY.md`.
 
-- `docs/agent/ARCHITECTURE.md` — cross-service, API, or data-flow changes.
-- `docs/agent/DOMAIN.md` — payment or incident terminology changes.
-- `docs/agent/QUALITY.md` — verification commands and quality requirements.
-- `docs/agent/decisions/` — ADRs related to the affected architecture.
+Read only when relevant:
 
-## Repository boundaries
+- `docs/agent/ARCHITECTURE.md` for cross-service, API, persistence, or data-flow
+  changes.
+- `docs/agent/DOMAIN.md` for payment or incident terminology.
+- Relevant records under `docs/agent/decisions/` before changing an accepted
+  architectural decision.
 
-- `frontend/operator-console`: Angular operator interface.
-- `backend/copilot-api`: incidents, investigations, retrieval, reports,
-  decisions, and audit history.
-- `backend/operations-mcp-server`: deterministic synthetic operational tools.
-- `infra`: local and AWS deployment configuration.
-- `docs`: architecture, domain, task, and decision records.
+Do not load the entire documentation tree by default.
 
-Keep each application independently buildable and deployable.
+## Operating rules
 
-## Product boundary
-
-The current vertical slice is:
-
-```text
-synthetic alert
--> alert queue
--> start investigation
--> gather context through MCP
--> retrieve runbooks and policies
--> normalize evidence
--> generate structured report
--> human approve or reject
--> preserve audit history
-```
-
-Do not expand the MVP into real payment processing, autonomous remediation,
-real fraud detection, multiple payment domains, or speculative infrastructure.
-
-## Responsible-AI rules
-
-- LLM output is advisory and requires human review.
-- Every report conclusion must reference supporting evidence.
-- Clearly distinguish observed facts from AI inference.
-- Never fabricate missing operational data.
-- Preserve model, prompt, evidence, and decision metadata for auditability.
-- Never allow the model to execute irreversible operational actions.
+- Work on one explicit objective at a time.
+- Use the user story and acceptance criteria as the behavioral contract.
+- Inspect Git status and existing changes before editing. Treat unrelated
+  changes as user-owned.
+- Make the smallest coherent change that fully satisfies the objective.
+- Preserve public behavior unless the task explicitly changes it.
+- Do not perform unrelated cleanup, add speculative abstractions, or introduce
+  a dependency before it is required.
+- Follow existing naming, structure, and local conventions.
 - Never commit secrets, credentials, personal data, or real payment data.
+- Do not invent product, security, or architecture decisions. Stop and ask when
+  a missing decision would materially change the result.
 
-## Engineering workflow
+## Test-driven development
 
-1. Inspect the relevant code and documentation.
-2. Restate the task and surface material ambiguity.
-3. Propose the smallest end-to-end change.
-4. Implement without unrelated refactoring.
-5. Run relevant tests and builds.
-6. Review the resulting diff.
+Every production behavior change follows red-green-refactor:
+
+1. Map the user story and every acceptance criterion to named tests.
+2. Write the smallest meaningful test before production code.
+3. Run it and confirm it fails for the intended reason (red).
+4. Write only enough production code to make it pass (green).
+5. Refactor while keeping the relevant tests green.
+6. Run the focused tests, then the broader relevant suite.
+
+Do not implement behavior first and backfill tests. Reproduce defects with a
+failing regression test before fixing them. If a criterion cannot be automated,
+record why and perform the strongest available manual verification.
+Documentation-only changes require appropriate static checks, not artificial
+tests.
+
+## Product guardrails
+
+- Use synthetic data only; this product does not process or move money.
+- LLM output is advisory and always requires human review.
+- Separate observed facts from AI inference.
+- Every report conclusion must reference supporting evidence.
+- Preserve missing, unavailable, or contradictory evidence; never fabricate it.
+- Preserve model, prompt, evidence, retrieval, and decision metadata needed for
+  auditability.
+- Never allow AI to approve reports or execute irreversible operational actions.
+- Carry tenant identity through persistence and retrieval boundaries.
+- Keep the operator console, copilot API, and operations MCP server independently
+  buildable and deployable.
+
+## Workflow
+
+1. Inspect the relevant implementation, tests, instructions, and current diff.
+2. Restate the objective and surface material ambiguity.
+3. For substantial work, write a concise plan with risks and verification.
+4. Execute the TDD cycle one behavior at a time.
+5. Run the documented focused and broader verification commands.
+6. Review the final diff for scope, duplication, secrets, and generated output.
 7. Update `docs/agent/STATUS.md` when project state changes.
-8. Record consequential architecture decisions in an ADR.
+8. Update the active task with factual progress and verification evidence.
+9. Record consequential architectural decisions in an ADR.
 
-## Dependency policy
+Substantial work includes cross-service changes, API or database changes,
+security-sensitive behavior, architecture changes, and business-critical flows.
+Do not pause for approval after a plan unless a material decision is unresolved.
 
-- Reuse existing dependencies when practical.
-- Explain why a new production dependency is necessary before adding it.
-- Do not add infrastructure solely for hypothetical future scale.
-- Keep dependency versions in Maven or npm configuration, not documentation.
+## Parallel work
 
-## Definition of done
+- One writing agent per worktree.
+- Give each parallel task a narrow, non-overlapping objective and its own branch
+  and worktree.
+- Never allow multiple agents to edit the same working tree concurrently.
+- Review and verify each isolated diff before integration.
 
-A change is complete only when acceptance criteria are met, relevant tests
-pass, invalid inputs are handled, logs exclude sensitive information, behavior
-changes are documented, and the diff contains no unrelated edits.
+## Completion standard
+
+Do not claim completion without evidence. A completed behavior change has:
+
+- Acceptance criteria mapped to passing tests or a documented manual exception.
+- Focused tests and relevant suites passing.
+- Type, lint, build, security, and visual checks passing where applicable.
+- Invalid inputs and important failure paths covered.
+- Documentation matching the resulting behavior.
+- No unrelated changes, secrets, or generated artifacts in the diff.
+
+If a check cannot run, report the exact command, reason, and remaining risk. The
+final report must state what changed, why, affected files, verification, and any
+remaining limitations.

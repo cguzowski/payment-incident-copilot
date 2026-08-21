@@ -35,7 +35,6 @@ tmp/
 infra/**/*.tfstate
 infra/**/*.tfstate.*
 infra/**/.terraform/
-infra/**/.terraform.lock.hcl
 
 # Agent-local state; shared agent guidance remains committed
 CLAUDE.local.md

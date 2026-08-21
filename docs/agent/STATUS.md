@@ -1,10 +1,10 @@
 # Project status
 
-Last updated: 2026-08-20
+Last updated: 2026-08-21
 
 ## Current milestone
 
-Milestone 0 — Establish the monorepo, shared context, and build boundaries.
+Milestone 0 — Validate the foundation and agent workflow.
 
 ## Completed
 
@@ -12,22 +12,27 @@ Milestone 0 — Establish the monorepo, shared context, and build boundaries.
 - Selected Java, Spring Boot, Spring AI, Angular, AWS, PostgreSQL, and pgvector.
 - Defined separate copilot API and synthetic MCP server boundaries.
 - Created the initial monorepo and coding-agent scaffold.
+- Confirmed the Maven reactor builds locally.
+- Confirmed the latest pushed commit passes GitHub Actions CI.
 
 ## In progress
 
-- Validate the generated project structure on the development machine.
+- Complete local PostgreSQL/pgvector validation.
+- Choose the first payment incident family and alert contract.
 
 ## Next
 
-1. Initialize the Angular workspace.
-2. Confirm the Java modules resolve and build.
-3. Start PostgreSQL/pgvector locally.
-4. Implement synthetic alert ingestion and the operator alert queue.
-5. Choose one concrete payment incident scenario.
+1. Install or expose the Docker CLI and validate the Compose configuration.
+2. Choose one concrete payment incident scenario.
+3. Implement synthetic alert ingestion and the operator queue test-first.
+4. Initialize the Angular workspace only when the queue tests require it.
 
 ## Blockers
 
-- None recorded.
+- Docker CLI is not available in the current development environment, so local
+  Compose and PostgreSQL validation remain unverified.
+- The active task requires a decision on the first incident family and sample
+  alert fields before implementation.
 
 ## Known deliberate gaps
 

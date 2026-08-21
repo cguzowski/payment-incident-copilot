@@ -15,15 +15,6 @@ spring:
           time_zone: UTC
   flyway:
     enabled: true
-  ai:
-    bedrock:
-      aws:
-        region: ${AWS_REGION:us-east-1}
-    model:
-      embedding: bedrock-titan
-    vectorstore:
-      pgvector:
-        initialize-schema: false
 
 server:
   port: 8080
