@@ -1,7 +1,6 @@
 services:
   postgres:
     image: pgvector/pgvector:pg17
-    container_name: payment-copilot-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-payment_copilot}
       POSTGRES_USER: ${POSTGRES_USER:-payment_copilot}

@@ -7,6 +7,10 @@ spring:
         name: operations-mcp-server
         version: 0.1.0
         protocol: STREAMABLE
+        capabilities:
+          completion: false
+          prompt: false
+          resource: false
 
 server:
   port: 8081
