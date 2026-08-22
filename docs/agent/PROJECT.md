@@ -1,6 +1,6 @@
 # Project definition
 
-Last reviewed: 2026-08-20
+Last reviewed: 2026-08-22
 Owner: Christopher Guzowski
 Status: Foundation
 
@@ -78,7 +78,7 @@ snapshot without pretending that AI inference is verified fact.
 
 ## Decisions still to fill in
 
-- Initial incident family: `[choose one]`
+- Initial incident family: payment authorization decline-rate spike
 - Bedrock chat model: `[choose after access and cost review]`
 - AWS deployment services: `[choose during deployment milestone]`
 - Authentication approach: `[defer until the core flow works]`

@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-08-21
+Last updated: 2026-08-22
 
 ## Current milestone
 
@@ -14,25 +14,38 @@ Milestone 0 — Validate the foundation and agent workflow.
 - Created the initial monorepo and coding-agent scaffold.
 - Confirmed the Maven reactor builds locally.
 - Confirmed the latest pushed commit passes GitHub Actions CI.
+- Selected the payment authorization decline-rate spike as the first incident
+  family.
+- Implemented the synthetic alert intake, idempotent incident persistence,
+  tenant-scoped queue API, and operator queue in the working tree.
+- Verified backend unit and HTTP tests plus frontend tests, build, formatting,
+  and responsive visual states.
+- Verified all PostgreSQL/Testcontainers tests with Docker, Flyway migrations
+  V1 and V2 against PostgreSQL 17.11, and the Docker Compose configuration and
+  database health check.
+- Manually submitted the same synthetic alert twice, confirmed one persisted
+  incident, and verified the tenant-scoped queue projection and cross-tenant
+  exclusion.
+- Secured native database credentials in ignored `.env` and restored safe
+  `.env.example` placeholders; no committed revision contains the local
+  password.
+- Verified the application against native PostgreSQL 18.3 on port 5432 with
+  pgvector 0.8.6, Flyway V1/V2, persistence, atomic idempotency, tenant queue
+  isolation, and the live Angular proxy path.
+- Re-ran the full Maven reactor with Docker PostgreSQL 17.11 Testcontainers and
+  the frontend test and production-build suites.
 
 ## In progress
 
-- Complete local PostgreSQL/pgvector validation.
-- Choose the first payment incident family and alert contract.
+- Select the next explicit product task.
 
 ## Next
 
-1. Install or expose the Docker CLI and validate the Compose configuration.
-2. Choose one concrete payment incident scenario.
-3. Implement synthetic alert ingestion and the operator queue test-first.
-4. Initialize the Angular workspace only when the queue tests require it.
+1. Define the next task and its acceptance criteria before implementation.
 
 ## Blockers
 
-- Docker CLI is not available in the current development environment, so local
-  Compose and PostgreSQL validation remain unverified.
-- The active task requires a decision on the first incident family and sample
-  alert fields before implementation.
+- None.
 
 ## Known deliberate gaps
 

@@ -1,0 +1,5 @@
+ALTER TABLE incident
+    ADD COLUMN description VARCHAR(2000) NOT NULL DEFAULT '';
+
+ALTER TABLE incident
+    ALTER COLUMN description DROP DEFAULT;

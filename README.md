@@ -77,21 +77,77 @@ Prerequisites:
 
 - Java 21
 - Maven 3.9+
-- Docker with Docker Compose
-- Node.js when the Angular workspace is introduced
+- Node.js and npm
+- Either native PostgreSQL 18 with pgvector or Docker with Docker Compose
 
-Create local configuration:
+Create ignored local configuration from the safe placeholders:
 
-```bash
-cp .env.example .env
+```powershell
+Copy-Item .env.example .env
 ```
 
-Start PostgreSQL/pgvector:
+Put real local values only in `.env`. Never put them in `.env.example`.
+Git ignores `.env`, but verify with `git check-ignore .env` before adding new
+local variables.
 
-```bash
+### Native PostgreSQL 18 on port 5432
+
+Create a dedicated database and non-superuser login matching `.env`. Install
+pgvector for PostgreSQL 18 by following the
+[official Windows instructions](https://github.com/pgvector/pgvector#installation-notes---windows),
+then enable `vector` once in the project database as a database administrator.
+Do not put a password directly in SQL or shell history; use the interactive
+`psql` password prompt when provisioning the local role.
+
+Spring Boot does not load `.env` automatically. From the repository root, load
+the file into the current PowerShell process without printing its values, then
+start the API:
+
+```powershell
+$projectEnv = Resolve-Path .env
+Get-Content -LiteralPath $projectEnv | ForEach-Object {
+  if ($_ -match '^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$') {
+    [Environment]::SetEnvironmentVariable(
+      $matches[1],
+      $matches[2].Trim().Trim('"').Trim("'"),
+      'Process'
+    )
+  }
+}
+Push-Location backend/copilot-api
+mvn spring-boot:run
+Pop-Location
+```
+
+The current native verification target is PostgreSQL 18 on `localhost:5432`.
+Flyway applies V1 and V2 when the API starts.
+
+### Docker PostgreSQL 17.11 on port 5433
+
+The repeatable Docker baseline remains `pgvector/pgvector:pg17`, currently
+verified as PostgreSQL 17.11. When native PostgreSQL owns 5432, override only
+the Docker host port:
+
+```powershell
+$env:POSTGRES_PORT = '5433'
 docker compose up -d postgres
 docker compose ps
+docker compose port postgres 5432
 ```
+
+After loading `.env` as shown above, point a backend process at Docker without
+changing tracked configuration:
+
+```powershell
+$env:SPRING_DATASOURCE_URL = 'jdbc:postgresql://localhost:5433/payment_copilot'
+Push-Location backend/copilot-api
+mvn spring-boot:run
+Pop-Location
+```
+
+Compose reads `.env` automatically; Spring Boot does not. PostgreSQL container
+initialization variables apply only when a data volume is first created, so a
+preserved volume must be used with the credentials that initialized it.
 
 Build both Java services:
 
@@ -99,18 +155,28 @@ Build both Java services:
 mvn clean verify
 ```
 
-Run each service in a separate terminal:
+Run each service in a separate terminal after loading the required environment:
 
 ```bash
 mvn -pl backend/copilot-api -am spring-boot:run
 mvn -pl backend/operations-mcp-server -am spring-boot:run
 ```
 
-Default ports are `8080` for the copilot API, `8081` for the MCP server, and
-`5432` for PostgreSQL.
+Default application ports are `8080` for the copilot API and `8081` for the MCP
+server. Native PostgreSQL uses `5432`; the Docker baseline uses `5433` when both
+servers coexist.
 
-The Angular workspace is intentionally deferred until the active task needs its
-test harness. See [operator console setup](frontend/operator-console/README.md).
+Run the Angular operator console in another terminal:
+
+```bash
+cd frontend/operator-console
+npm ci
+npm start
+```
+
+The development server proxies `/api` requests to the copilot API on port
+`8080`. See the [operator console guide](frontend/operator-console/README.md)
+for its test and production-build commands.
 
 ## Agent development
 

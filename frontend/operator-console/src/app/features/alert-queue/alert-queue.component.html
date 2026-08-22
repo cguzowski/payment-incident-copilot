@@ -1,0 +1,102 @@
+<section class="queue" aria-labelledby="queue-title">
+  <div class="queue__heading">
+    <div>
+      <p class="eyebrow">Incident intake</p>
+      <h1 id="queue-title">Alert queue</h1>
+      <p class="queue__intro">
+        Review synthetic payment signals and choose the next incident to investigate.
+      </p>
+    </div>
+
+    <div class="environment" aria-label="Current environment">
+      <span class="environment__pulse" aria-hidden="true"></span>
+      <span>
+        <strong>Synthetic tenant</strong>
+        <small>Northstar Payments · Test data only</small>
+      </span>
+    </div>
+  </div>
+
+  @if (state() === 'loading') {
+    <div class="state-card state-card--loading" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <div>
+        <strong>Loading alert queue…</strong>
+        <p>Checking for new operational signals.</p>
+      </div>
+    </div>
+  } @else if (state() === 'error') {
+    <div class="state-card state-card--error" role="alert">
+      <span class="state-card__icon" aria-hidden="true">!</span>
+      <div>
+        <strong>We couldn’t load the alert queue.</strong>
+        <p>The copilot API may be unavailable. No incident data was changed.</p>
+        <button type="button" data-testid="retry" (click)="loadQueue()">Try again</button>
+      </div>
+    </div>
+  } @else if (incidents().length === 0) {
+    <div class="state-card state-card--empty" data-testid="empty-state">
+      <span class="state-card__icon state-card__icon--check" aria-hidden="true">✓</span>
+      <div>
+        <strong>No new incidents</strong>
+        <p>The queue is clear. New synthetic alerts will appear here automatically.</p>
+      </div>
+    </div>
+  } @else {
+    <div class="queue__toolbar">
+      <p>
+        <strong>{{ incidents().length }}</strong> new
+        {{ incidents().length === 1 ? 'incident' : 'incidents' }}
+      </p>
+      <label for="queue-sort">
+        Sort by
+        <select id="queue-sort" [value]="sort()" (change)="onSortChange($event)">
+          <option value="age">Newest detected</option>
+          <option value="severity">Highest severity</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="queue-table" role="region" aria-label="New payment incidents" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Severity</th>
+            <th scope="col">Incident</th>
+            <th scope="col">Detected</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (incident of sortedIncidents(); track incident.incidentId) {
+            <tr data-testid="queue-row">
+              <td data-label="Severity">
+                <span [class]="'severity severity--' + incident.severity.toLowerCase()">
+                  <span class="severity__mark" aria-hidden="true"></span>
+                  {{ incident.severity }}
+                </span>
+              </td>
+              <td data-label="Incident">
+                <div class="incident-title">{{ incident.title }}</div>
+                <div class="incident-meta">
+                  <span>{{ incidentTypeLabel() }}</span>
+                  <code>{{ incident.externalAlertId }}</code>
+                </div>
+              </td>
+              <td data-label="Detected">
+                <time [attr.datetime]="incident.detectedAt" [title]="incident.detectedAt">
+                  {{ incident.detectedAt | date: 'MMM d, HH:mm' : 'UTC' }} UTC
+                </time>
+              </td>
+              <td data-label="Status">
+                <span class="status">{{ incident.status }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="queue__note">Alerts are machine-generated signals, not confirmed root causes.</p>
+  }
+</section>
