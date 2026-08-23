@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SYNTHETIC_TENANT_ID } from '../../core/config/synthetic-tenant';
 import { AlertQueueItem } from './alert-queue.models';
-
-export const SYNTHETIC_TENANT_ID = '8b860d80-d17f-4e6b-8c48-af35f26a4d61';
 
 @Injectable({ providedIn: 'root' })
 export class AlertQueueApiService {

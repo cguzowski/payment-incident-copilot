@@ -10,5 +10,7 @@ interface IncidentRepository {
 
     Optional<Incident> findByTenantIdAndExternalAlertId(UUID tenantId, String externalAlertId);
 
+    Optional<Incident> findByTenantIdAndIncidentId(UUID tenantId, UUID incidentId);
+
     List<Incident> findQueueByTenantId(UUID tenantId);
 }

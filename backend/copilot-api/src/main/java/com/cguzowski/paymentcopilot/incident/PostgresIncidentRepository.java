@@ -64,6 +64,19 @@ class PostgresIncidentRepository implements IncidentRepository {
     }
 
     @Override
+    public Optional<Incident> findByTenantIdAndIncidentId(UUID tenantId, UUID incidentId) {
+        return jdbcClient.sql("""
+                        SELECT %s
+                        FROM incident
+                        WHERE tenant_id = :tenantId AND id = :incidentId
+                        """.formatted(INCIDENT_COLUMNS))
+                .param("tenantId", tenantId)
+                .param("incidentId", incidentId)
+                .query(PostgresIncidentRepository::mapIncident)
+                .optional();
+    }
+
+    @Override
     public List<Incident> findQueueByTenantId(UUID tenantId) {
         return jdbcClient.sql("""
                         SELECT %s

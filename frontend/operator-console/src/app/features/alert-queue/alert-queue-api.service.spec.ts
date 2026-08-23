@@ -1,7 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AlertQueueApiService, SYNTHETIC_TENANT_ID } from './alert-queue-api.service';
+import { SYNTHETIC_TENANT_ID } from '../../core/config/synthetic-tenant';
+import { AlertQueueApiService } from './alert-queue-api.service';
 
 describe('AlertQueueApiService', () => {
   let service: AlertQueueApiService;

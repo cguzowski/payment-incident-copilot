@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { AlertQueueApiService } from './alert-queue-api.service';
 import { AlertQueueItem, IncidentSeverity } from './alert-queue.models';
 
@@ -23,7 +24,7 @@ const severityRank: Record<IncidentSeverity, number> = {
 
 @Component({
   selector: 'app-alert-queue',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './alert-queue.component.html',
   styleUrl: './alert-queue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

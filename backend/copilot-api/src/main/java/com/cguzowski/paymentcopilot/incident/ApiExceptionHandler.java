@@ -30,6 +30,31 @@ class ApiExceptionHandler {
         return invalidAlert(List.of(new FieldValidationError("request", "contains malformed or unsupported data")));
     }
 
+    @ExceptionHandler(InvalidIncidentRequestException.class)
+    ResponseEntity<ProblemDetail> handleInvalidIncidentRequest(InvalidIncidentRequestException exception) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setType(URI.create("urn:problem:invalid-incident-request"));
+        problem.setTitle("Invalid incident request");
+        problem.setDetail("The incident detail request contains invalid fields.");
+        problem.setProperty("errors", List.of(new FieldValidationError(exception.field(), exception.getMessage())));
+
+        return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(problem);
+    }
+
+    @ExceptionHandler(IncidentNotFoundException.class)
+    ResponseEntity<ProblemDetail> handleIncidentNotFound() {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setType(URI.create("urn:problem:incident-not-found"));
+        problem.setTitle("Incident not found");
+        problem.setDetail("No incident was found for the requested tenant and incident ID.");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(problem);
+    }
+
     private ResponseEntity<ProblemDetail> invalidAlert(List<FieldValidationError> errors) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setType(URI.create("urn:problem:invalid-alert"));

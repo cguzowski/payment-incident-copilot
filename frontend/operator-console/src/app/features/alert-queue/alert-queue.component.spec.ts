@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { AlertQueueApiService } from './alert-queue-api.service';
 import { AlertQueueComponent } from './alert-queue.component';
@@ -14,7 +15,7 @@ describe('AlertQueueComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [AlertQueueComponent],
-      providers: [{ provide: AlertQueueApiService, useValue: api }],
+      providers: [{ provide: AlertQueueApiService, useValue: api }, provideRouter([])],
     }).compileComponents();
   });
 
@@ -54,6 +55,20 @@ describe('AlertQueueComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('CRITICAL');
     expect(fixture.nativeElement.textContent).toContain('NEW');
     expect(fixture.nativeElement.textContent).toContain('alert-auth-decline-002');
+  });
+
+  it('queueIncidentTitleLinksToIncidentDetailRoute', () => {
+    queueResponse = of(queueItems());
+    const fixture = TestBed.createComponent(AlertQueueComponent);
+
+    fixture.detectChanges();
+
+    const link = fixture.nativeElement.querySelector(
+      '[data-testid="incident-link"]',
+    ) as HTMLAnchorElement;
+    expect(link.tagName).toBe('A');
+    expect(link.textContent?.trim()).toBe('Issuer decline rate elevated');
+    expect(link.getAttribute('href')).toBe('/incidents/20ebde75-377d-48b0-85fd-089962e16c33');
   });
 
   it('shows an error state and retries the request', () => {

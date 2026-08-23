@@ -34,14 +34,20 @@ Milestone 0 — Validate the foundation and agent workflow.
   isolation, and the live Angular proxy path.
 - Re-ran the full Maven reactor with Docker PostgreSQL 17.11 Testcontainers and
   the frontend test and production-build suites.
+- Implemented and verified the tenant-scoped, read-only incident-detail API and
+  Angular detail route, including safe not-found behavior, responsive states,
+  and queue/back router navigation.
+- Added a Windows local-development launcher that safely loads the ignored
+  `.env`, checks prerequisites, and starts the API and operator console.
 
 ## In progress
 
-- Select the next explicit product task.
+- None.
 
 ## Next
 
-1. Define the next task and its acceptance criteria before implementation.
+1. Define the operator-triggered investigation-creation slice and its
+   acceptance criteria before implementation.
 
 ## Blockers
 
