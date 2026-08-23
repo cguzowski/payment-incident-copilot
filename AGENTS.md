@@ -109,3 +109,22 @@ Do not claim completion without evidence. A completed behavior change has:
 If a check cannot run, report the exact command, reason, and remaining risk. The
 final report must state what changed, why, affected files, verification, and any
 remaining limitations.
+
+## Current task update policy
+
+- `docs/agent/tasks/current.md` is the authoritative task contract.
+- Before implementation begins, the agent may clarify the task only with owner
+  approval.
+- After implementation begins, Goal, User story, Chosen contract, In scope,
+  Out of scope, Constraints, Test plan, Acceptance-criteria wording, and
+  Decisions needed are locked.
+- The agent may update Status, Progress notes, Completion evidence, Remaining
+  limitations, and acceptance-criteria checkbox state.
+- A checkbox may be marked complete only after the required verification has
+  actually executed and passed.
+- The agent must not remove, weaken, reinterpret, or silently bypass a
+  requirement to match its implementation.
+- If implementation reveals that a locked requirement must change, stop and
+  request owner approval before editing the task or continuing.
+- Preserve the previous completed task under
+  `docs/agent/tasks/completed/` before replacing `current.md`.

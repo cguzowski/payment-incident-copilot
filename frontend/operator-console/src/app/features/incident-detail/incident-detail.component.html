@@ -1,0 +1,83 @@
+<section class="detail" aria-labelledby="detail-title">
+  <a class="back-link" data-testid="back-to-queue" routerLink="/">← Back to alert queue</a>
+
+  @if (state() === 'loading') {
+    <div class="state-card" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <div>
+        <strong>Loading incident…</strong>
+        <p>Retrieving the complete synthetic alert context.</p>
+      </div>
+    </div>
+  } @else if (state() === 'not-found') {
+    <div class="state-card" data-testid="not-found-state">
+      <span class="state-card__icon" aria-hidden="true">?</span>
+      <div>
+        <strong>Incident not found</strong>
+        <p>This incident is unavailable for the configured synthetic tenant.</p>
+      </div>
+    </div>
+  } @else if (state() === 'error') {
+    <div class="state-card" role="alert">
+      <span class="state-card__icon" aria-hidden="true">!</span>
+      <div>
+        <strong>We couldn’t load this incident.</strong>
+        <p>The copilot API may be unavailable. No incident data was changed.</p>
+        <button type="button" data-testid="retry" (click)="loadDetail()">Try again</button>
+      </div>
+    </div>
+  } @else if (incident(); as incident) {
+    <article class="incident-card">
+      <header class="incident-card__heading">
+        <div>
+          <p class="eyebrow">Incident detail</p>
+          <h1 id="detail-title">{{ incident.title }}</h1>
+        </div>
+        <div class="badges" aria-label="Incident classification">
+          <span [class]="'severity severity--' + incident.severity.toLowerCase()">
+            {{ incident.severity }} severity
+          </span>
+          <span class="status">{{ incident.status }}</span>
+        </div>
+      </header>
+
+      <p class="description">{{ incident.description }}</p>
+
+      <dl class="facts">
+        <div>
+          <dt>External alert ID</dt>
+          <dd>
+            <code>{{ incident.externalAlertId }}</code>
+          </dd>
+        </div>
+        <div>
+          <dt>Incident type</dt>
+          <dd>
+            {{ incidentTypeLabel() }}
+            <code>{{ incident.incidentType }}</code>
+          </dd>
+        </div>
+        <div>
+          <dt>Detected</dt>
+          <dd>
+            <time [attr.datetime]="incident.detectedAt">
+              {{ incident.detectedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC
+            </time>
+          </dd>
+        </div>
+        <div>
+          <dt>Received</dt>
+          <dd>
+            <time [attr.datetime]="incident.receivedAt">
+              {{ incident.receivedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC
+            </time>
+          </dd>
+        </div>
+      </dl>
+
+      <p class="advisory-note">
+        This alert is a machine-generated signal, not a confirmed root cause.
+      </p>
+    </article>
+  }
+</section>

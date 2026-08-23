@@ -90,6 +90,16 @@ Put real local values only in `.env`. Never put them in `.env.example`.
 Git ignores `.env`, but verify with `git check-ignore .env` before adding new
 local variables.
 
+On Windows, after configuring `.env` and the database, double-click
+`start-local.bat` in the repository root. The launcher checks the local tools
+and database, installs locked frontend dependencies when needed, starts the
+copilot API and operator console in separate terminals, waits for both to be
+ready, and opens `http://localhost:4200`. Press `Ctrl+C` in both service
+terminals, or close them, to stop the application.
+
+Run `start-local.bat --CheckOnly` from a terminal to perform the startup
+preflight without starting either service.
+
 ### Native PostgreSQL 18 on port 5432
 
 Create a dedicated database and non-superuser login matching `.env`. Install

@@ -77,7 +77,13 @@
                 </span>
               </td>
               <td data-label="Incident">
-                <div class="incident-title">{{ incident.title }}</div>
+                <a
+                  class="incident-title"
+                  data-testid="incident-link"
+                  [routerLink]="['/incidents', incident.incidentId]"
+                >
+                  {{ incident.title }}
+                </a>
                 <div class="incident-meta">
                   <span>{{ incidentTypeLabel() }}</span>
                   <code>{{ incident.externalAlertId }}</code>
