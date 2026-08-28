@@ -58,22 +58,21 @@ Milestone 1 — Establish the operator investigation workflow.
 
 ## In progress
 
-- No implementation task is currently in progress; the completed task remains
-  in `docs/agent/tasks/current.md` until the next contract is approved.
+- The approved first deterministic MCP evidence slice is in implementation on
+  branch `codex/mcp-service-error-evidence`. Its locked contract is recorded in
+  `docs/agent/tasks/current.md`.
 
 ## Next
 
-1. Review the investigation workspace context and choose its future data
-   contract as a separate product task.
-2. Review and choose the next narrow vertical slice.
-3. A likely next slice is the first deterministic read-only operational
-   evidence tool and its tenant-safe investigation integration.
+1. Implement and contract-test `getRecentServiceErrors` over Streamable HTTP.
+2. Implement tenant-safe evidence persistence, collection APIs, and
+   observed-evidence workspace states through red-green-refactor.
+3. Defer workspace incident context, knowledge retrieval, Bedrock reports, and
+   human decisions to later product tasks.
 
 ## Blockers
 
-- None. The unrelated working-tree deletions of
-  `scripts/start-local.ps1` and `start-local.bat` remain user-owned and will not
-  be modified by this completed task.
+- None.
 
 ## Known deliberate gaps
 

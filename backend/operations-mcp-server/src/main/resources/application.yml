@@ -6,7 +6,10 @@ spring:
       server:
         name: operations-mcp-server
         version: 0.1.0
+        type: SYNC
         protocol: STREAMABLE
+        annotation-scanner:
+          enabled: false
         capabilities:
           completion: false
           prompt: false

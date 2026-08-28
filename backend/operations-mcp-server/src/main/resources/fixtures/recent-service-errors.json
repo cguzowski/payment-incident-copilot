@@ -1,0 +1,93 @@
+{
+  "scenarios": [
+    {
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "scenarioReference": "alert-auth-decline-001",
+      "status": "AVAILABLE",
+      "statusDetail": null,
+      "content": {
+        "serviceName": "payment-authorization",
+        "observedFrom": "2026-08-22T07:09:00Z",
+        "observedTo": "2026-08-22T07:14:00Z",
+        "errors": [
+          {
+            "sourceEventId": "service-error-001",
+            "observedAt": "2026-08-22T07:12:00Z",
+            "errorCode": "GATEWAY_TIMEOUT",
+            "count": 37
+          },
+          {
+            "sourceEventId": "service-error-002",
+            "observedAt": "2026-08-22T07:13:00Z",
+            "errorCode": "UPSTREAM_CONNECTION_RESET",
+            "count": 14
+          }
+        ]
+      }
+    },
+    {
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "scenarioReference": "alert-auth-decline-no-errors",
+      "status": "AVAILABLE",
+      "statusDetail": null,
+      "content": {
+        "serviceName": "payment-authorization",
+        "observedFrom": "2026-08-22T07:09:00Z",
+        "observedTo": "2026-08-22T07:14:00Z",
+        "errors": []
+      }
+    },
+    {
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "scenarioReference": "alert-auth-decline-partial",
+      "status": "PARTIAL",
+      "statusDetail": "Synthetic observability returned only one of two service partitions.",
+      "content": {
+        "serviceName": "payment-authorization",
+        "observedFrom": "2026-08-22T07:09:00Z",
+        "observedTo": "2026-08-22T07:14:00Z",
+        "errors": [
+          {
+            "sourceEventId": "service-error-partial-001",
+            "observedAt": "2026-08-22T07:12:30Z",
+            "errorCode": "GATEWAY_TIMEOUT",
+            "count": 18
+          }
+        ]
+      }
+    },
+    {
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "scenarioReference": "alert-auth-decline-unavailable",
+      "status": "UNAVAILABLE",
+      "statusDetail": "Synthetic observability source is unavailable.",
+      "content": null
+    },
+    {
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "scenarioReference": "alert-auth-decline-timeout",
+      "status": "TIMED_OUT",
+      "statusDetail": "Synthetic observability request timed out.",
+      "content": null
+    },
+    {
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "scenarioReference": "alert-auth-decline-malformed",
+      "status": "AVAILABLE",
+      "statusDetail": null,
+      "content": {
+        "serviceName": "payment-authorization",
+        "observedFrom": "2026-08-22T07:09:00Z",
+        "observedTo": "2026-08-22T07:14:00Z",
+        "errors": [
+          {
+            "sourceEventId": "service-error-malformed-001",
+            "observedAt": "2026-08-22T07:12:00Z",
+            "errorCode": "GATEWAY_TIMEOUT",
+            "count": -1
+          }
+        ]
+      }
+    }
+  ]
+}

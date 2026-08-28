@@ -36,4 +36,23 @@ describe('InvestigationApiService', () => {
     expect(request.request.method).toBe('GET');
     request.flush({});
   });
+
+  it('requestsEvidenceHistoryForConfiguredTenant', () => {
+    service.getEvidenceHistory('investigation/id').subscribe();
+    const request = http.expectOne(
+      `/api/investigations/investigation%2Fid/evidence-collections?tenantId=${SYNTHETIC_TENANT_ID}`,
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush([]);
+  });
+
+  it('startsEvidenceCollectionForConfiguredTenantWithoutARequestBody', () => {
+    service.collectEvidence('investigation/id').subscribe();
+    const request = http.expectOne(
+      `/api/investigations/investigation%2Fid/evidence-collections?tenantId=${SYNTHETIC_TENANT_ID}`,
+    );
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toBeNull();
+    request.flush({});
+  });
 });
