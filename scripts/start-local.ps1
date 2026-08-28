@@ -67,6 +67,40 @@ function Assert-RequiredEnvironmentVariables {
     }
 }
 
+function Set-DefaultEnvironmentVariable {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Name,
+
+        [Parameter(Mandatory)]
+        [string] $Value
+    )
+
+    $configuredValue = [Environment]::GetEnvironmentVariable($Name, 'Process')
+    if ([string]::IsNullOrWhiteSpace($configuredValue)) {
+        [Environment]::SetEnvironmentVariable($Name, $Value, 'Process')
+    }
+}
+
+function Get-McpHealthUri {
+    param(
+        [Parameter(Mandatory)]
+        [string] $BaseUrl
+    )
+
+    $parsedBaseUri = $null
+    if (-not [Uri]::TryCreate($BaseUrl, [UriKind]::Absolute, [ref] $parsedBaseUri) -or
+        $parsedBaseUri.Scheme -notin @('http', 'https')) {
+        throw 'OPERATIONS_MCP_BASE_URL must be an absolute HTTP or HTTPS URL.'
+    }
+
+    $healthUri = [UriBuilder]::new($parsedBaseUri)
+    $healthUri.Path = $parsedBaseUri.AbsolutePath.TrimEnd('/') + '/actuator/health'
+    $healthUri.Query = ''
+    $healthUri.Fragment = ''
+    return $healthUri.Uri.AbsoluteUri
+}
+
 function Assert-PostgresReachable {
     param(
         [Parameter(Mandatory)]
@@ -177,15 +211,22 @@ function Install-FrontendDependenciesIfNeeded {
 
 function Start-LocalApplication {
     $repositoryRoot = Split-Path -Parent $PSScriptRoot
+    $mcpDirectory = Join-Path $repositoryRoot 'backend/operations-mcp-server'
     $backendDirectory = Join-Path $repositoryRoot 'backend/copilot-api'
     $frontendDirectory = Join-Path $repositoryRoot 'frontend/operator-console'
 
     Import-DotEnv -Path (Join-Path $repositoryRoot '.env')
+    Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_BASE_URL' -Value 'http://localhost:8081'
+    Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_REQUEST_TIMEOUT' -Value '5s'
     Assert-RequiredEnvironmentVariables -Names @(
         'SPRING_DATASOURCE_URL',
         'SPRING_DATASOURCE_USERNAME',
-        'SPRING_DATASOURCE_PASSWORD'
+        'SPRING_DATASOURCE_PASSWORD',
+        'OPERATIONS_MCP_BASE_URL',
+        'OPERATIONS_MCP_REQUEST_TIMEOUT'
     )
+
+    $mcpHealthUri = Get-McpHealthUri -BaseUrl $env:OPERATIONS_MCP_BASE_URL
 
     $javaCommand = Get-RequiredCommand -Name 'java.exe' -InstallHint 'Install Java 21 and add it to PATH.'
     $null = Get-RequiredCommand -Name 'mvn.cmd' -InstallHint 'Install Maven 3.9+ and add it to PATH.'
@@ -201,8 +242,17 @@ function Start-LocalApplication {
     Install-FrontendDependenciesIfNeeded -FrontendDirectory $frontendDirectory -NpmCommand $npmCommand
 
     if ($CheckOnly) {
-        Write-Host 'Local startup preflight passed: configuration, tools, PostgreSQL, and frontend dependencies are ready.'
+        Write-Host 'Local startup preflight passed: MCP configuration, tools, PostgreSQL, and frontend dependencies are ready.'
         return
+    }
+
+    if (Test-HttpEndpoint -Uri $mcpHealthUri) {
+        Write-Host 'Operations MCP server is already running.'
+    } else {
+        Write-Host 'Starting the operations MCP server in a new terminal...'
+        Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'mvn spring-boot:run' `
+            -WorkingDirectory $mcpDirectory -WindowStyle Normal
+        Wait-ForHttpEndpoint -Name 'Operations MCP server' -Uri $mcpHealthUri
     }
 
     $apiHealthUri = 'http://localhost:8080/actuator/health'
@@ -227,7 +277,7 @@ function Start-LocalApplication {
 
     Start-Process $operatorConsoleUri
     Write-Host 'Payment Incident Copilot is available at http://localhost:4200.'
-    Write-Host 'Close the API and operator-console terminals, or press Ctrl+C in each, to stop the application.'
+    Write-Host 'Close the MCP, API, and operator-console terminals, or press Ctrl+C in each, to stop the application.'
 }
 
 try {

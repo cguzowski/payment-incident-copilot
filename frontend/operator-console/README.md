@@ -1,7 +1,8 @@
 # Operator Console
 
-Angular application for payment operations analysts to triage synthetic alerts
-and, in later milestones, review evidence and record human decisions.
+Angular application for payment operations analysts to triage synthetic alerts,
+start an investigation, and collect and review observed synthetic service-error
+evidence. AI-assisted reports and human decisions remain later milestones.
 
 ## Prerequisites
 

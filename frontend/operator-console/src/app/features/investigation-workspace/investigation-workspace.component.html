@@ -9,12 +9,7 @@
   } @else if (state() === 'error') {
     <p class="state-card" role="alert">
       <strong>We couldn’t load this investigation.</strong>
-      <button
-        class="button button--primary"
-        type="button"
-        data-testid="retry"
-        (click)="load()"
-      >
+      <button class="button button--primary" type="button" data-testid="retry" (click)="load()">
         Try again
       </button>
     </p>
@@ -30,15 +25,21 @@
       <dl class="facts">
         <div>
           <dt>Investigation ID</dt>
-          <dd><code>{{ item.investigationId }}</code></dd>
+          <dd>
+            <code>{{ item.investigationId }}</code>
+          </dd>
         </div>
         <div>
           <dt>Status</dt>
-          <dd><span class="status status--compact">{{ item.incidentStatus }}</span></dd>
+          <dd>
+            <span class="status status--compact">{{ item.incidentStatus }}</span>
+          </dd>
         </div>
         <div>
           <dt>Started by</dt>
-          <dd><code>{{ item.startedBy }}</code></dd>
+          <dd>
+            <code>{{ item.startedBy }}</code>
+          </dd>
         </div>
         <div>
           <dt>Started</dt>
@@ -78,8 +79,8 @@
 
       @if (collectionError()) {
         <p class="evidence-message evidence-message--error" role="alert">
-          Evidence collection could not be completed. Previous attempts remain available; try
-          again when ready.
+          Evidence collection could not be completed. Previous attempts remain available; try again
+          when ready.
         </p>
       }
 
@@ -116,9 +117,7 @@
               @if (attempt.statusDetail) {
                 <p class="evidence-attempt__detail">{{ attempt.statusDetail }}</p>
               } @else if (attempt.status === 'STARTED') {
-                <p class="evidence-attempt__detail">
-                  Collection did not reach a terminal status.
-                </p>
+                <p class="evidence-attempt__detail">Collection did not reach a terminal status.</p>
               }
 
               <dl class="evidence-provenance">
@@ -128,11 +127,15 @@
                 </div>
                 <div>
                   <dt>Source tool</dt>
-                  <dd><code>{{ attempt.sourceTool }}</code></dd>
+                  <dd>
+                    <code>{{ attempt.sourceTool }}</code>
+                  </dd>
                 </div>
                 <div>
                   <dt>Tool-call ID</dt>
-                  <dd><code>{{ attempt.toolCallId }}</code></dd>
+                  <dd>
+                    <code>{{ attempt.toolCallId }}</code>
+                  </dd>
                 </div>
                 <div>
                   <dt>Requested</dt>

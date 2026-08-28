@@ -2,7 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
-import { EvidenceCollection, EvidenceCollectionStatus, Investigation } from './investigation.models';
+import {
+  EvidenceCollection,
+  EvidenceCollectionStatus,
+  Investigation,
+} from './investigation.models';
 import { InvestigationApiService } from './investigation-api.service';
 import { InvestigationWorkspaceComponent } from './investigation-workspace.component';
 

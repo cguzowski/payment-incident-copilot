@@ -93,12 +93,13 @@ local variables.
 On Windows, after configuring `.env` and the database, double-click
 `start-local.bat` in the repository root. The launcher checks the local tools
 and database, installs locked frontend dependencies when needed, starts the
-copilot API and operator console in separate terminals, waits for both to be
-ready, and opens `http://localhost:4200`. Press `Ctrl+C` in both service
-terminals, or close them, to stop the application.
+operations MCP server, copilot API, and operator console in separate terminals,
+waits for all three to be ready in dependency order, and opens
+`http://localhost:4200`. Press `Ctrl+C` in each service terminal, or close the
+terminals, to stop the application.
 
 Run `start-local.bat --CheckOnly` from a terminal to perform the startup
-preflight without starting either service.
+preflight without starting any service.
 
 ### Native PostgreSQL 18 on port 5432
 
@@ -130,7 +131,7 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V3 when the API starts.
+Flyway applies V1 through V4 when the API starts.
 
 ### Docker PostgreSQL 17.11 on port 5433
 
@@ -168,8 +169,8 @@ mvn clean verify
 Run each service in a separate terminal after loading the required environment:
 
 ```bash
-mvn -pl backend/copilot-api -am spring-boot:run
 mvn -pl backend/operations-mcp-server -am spring-boot:run
+mvn -pl backend/copilot-api -am spring-boot:run
 ```
 
 Default application ports are `8080` for the copilot API and `8081` for the MCP

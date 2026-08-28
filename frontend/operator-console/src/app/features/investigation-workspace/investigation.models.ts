@@ -9,13 +9,7 @@ export interface Investigation {
 }
 
 export type EvidenceCollectionStatus =
-  | 'STARTED'
-  | 'AVAILABLE'
-  | 'PARTIAL'
-  | 'NOT_FOUND'
-  | 'UNAVAILABLE'
-  | 'TIMED_OUT'
-  | 'MALFORMED';
+  'STARTED' | 'AVAILABLE' | 'PARTIAL' | 'NOT_FOUND' | 'UNAVAILABLE' | 'TIMED_OUT' | 'MALFORMED';
 
 export interface ServiceErrorObservation {
   sourceEventId: string;

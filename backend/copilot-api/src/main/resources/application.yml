@@ -20,6 +20,8 @@ spring:
       client:
         initialized: false
         request-timeout: ${OPERATIONS_MCP_REQUEST_TIMEOUT:5s}
+        annotation-scanner:
+          enabled: false
         toolcallback:
           enabled: false
         streamable-http:
