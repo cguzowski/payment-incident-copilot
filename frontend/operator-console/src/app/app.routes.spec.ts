@@ -54,7 +54,10 @@ describe('App routes', () => {
         provideRouter(routes),
         {
           provide: InvestigationApiService,
-          useValue: { get: vi.fn(() => of(investigation())) },
+          useValue: {
+            get: vi.fn(() => of(investigation())),
+            getEvidenceHistory: vi.fn(() => of([])),
+          },
         },
       ],
     }).compileComponents();

@@ -38,7 +38,8 @@ Milestone 1 — Establish the operator investigation workflow.
   Angular detail route, including safe not-found behavior, responsive states,
   and queue/back router navigation.
 - Added a Windows local-development launcher that safely loads the ignored
-  `.env`, checks prerequisites, and starts the API and operator console.
+  `.env`, checks prerequisites, and starts the operations MCP server, API, and
+  operator console in dependency order.
 - Selected one tenant-scoped incident work queue that retains active incidents
   across status changes instead of separate alert and investigation queues.
 - Implemented the tenant-scoped incident work queue for `NEW` and
@@ -55,30 +56,38 @@ Milestone 1 — Establish the operator investigation workflow.
 - Verified the polished queue, detail, and workspace at desktop and 390 CSS
   pixels, and relabeled the two local synthetic verification records used for
   review with plausible payment-operations wording.
+- Implemented the first deterministic read-only MCP evidence slice with
+  `getRecentServiceErrors`, tenant-safe append-only persistence, explicit
+  collection/history APIs, and an observed-evidence workspace that remains
+  separate from future AI inference.
+- Verified every evidence availability outcome, MCP discovery and invocation,
+  Flyway V4, transaction boundaries, tenant isolation, retry history, the
+  three-service local workflow, and desktop/390-pixel UI regressions.
 
 ## In progress
 
-- No implementation task is currently in progress; the completed task remains
-  in `docs/agent/tasks/current.md` until the next contract is approved.
+- No executable task is in progress. A separate development-system proposal for
+  one authoritative local/CI verification entry point is recorded in
+  `docs/agent/tasks/current.md` for owner review.
 
 ## Next
 
-1. Review the investigation workspace context and choose its future data
-   contract as a separate product task.
-2. Review and choose the next narrow vertical slice.
-3. A likely next slice is the first deterministic read-only operational
-   evidence tool and its tenant-safe investigation integration.
+1. Review and approve the authoritative verification and CI-parity proposal.
+2. After that task is complete, consolidate duplicated PostgreSQL Testcontainers
+   setup and synthetic test fixtures in a separate task.
+3. Then add a lightweight ordered product roadmap before selecting the next
+   product slice; keep knowledge retrieval, AI analysis, and human decisions
+   separate from development-system work.
 
 ## Blockers
 
-- None. The unrelated working-tree deletions of
-  `scripts/start-local.ps1` and `start-local.bat` remain user-owned and will not
-  be modified by this completed task.
+- None.
 
 ## Known deliberate gaps
 
 - No authentication yet.
-- No MCP tools implemented yet.
+- Only `getRecentServiceErrors` is implemented; additional evidence domains and
+  operator-selected investigation areas remain future product tasks.
 - No Bedrock model configured yet.
 - No knowledge-ingestion pipeline yet.
 - No AWS infrastructure selected yet.
@@ -101,6 +110,16 @@ Milestone 1 — Establish the operator investigation workflow.
 - 2026-08-28: Live desktop and 390-pixel queue/detail/workspace checks passed
   with both timestamps visible, compact status/action layouts, no horizontal
   overflow, and no browser warnings or errors.
+- 2026-08-28: `mvn clean verify` passed 72/72 copilot API and operations MCP
+  tests with zero skips, including PostgreSQL 17.11 Testcontainers and Flyway
+  V1-V4. The MCP client started without the new sampling/elicitation warnings.
+- 2026-08-28: After `npm ci`, Angular tests passed 38/38 with zero skips;
+  Prettier and the production build passed, as did Docker Compose validation,
+  launcher parsing/preflight, and `git diff --check`.
+- 2026-08-28: Live MCP/API/PostgreSQL/console verification passed all seven
+  evidence outcomes, append-only retry history, structured 400/404 boundaries,
+  persisted provenance, queue/detail/resume/direct-refresh regressions, and
+  desktop/390-pixel checks with no browser warnings or overflowing elements.
 
 ## Update rule
 

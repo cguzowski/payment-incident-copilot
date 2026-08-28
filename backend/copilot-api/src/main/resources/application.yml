@@ -15,6 +15,20 @@ spring:
           time_zone: UTC
   flyway:
     enabled: true
+  ai:
+    mcp:
+      client:
+        initialized: false
+        request-timeout: ${OPERATIONS_MCP_REQUEST_TIMEOUT:5s}
+        annotation-scanner:
+          enabled: false
+        toolcallback:
+          enabled: false
+        streamable-http:
+          connections:
+            operations:
+              url: ${OPERATIONS_MCP_BASE_URL:http://localhost:8081}
+              endpoint: /mcp
 
 server:
   port: 8080

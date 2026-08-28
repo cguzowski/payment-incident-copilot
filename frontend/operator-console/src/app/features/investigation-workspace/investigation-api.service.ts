@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SYNTHETIC_OPERATOR_ID, SYNTHETIC_TENANT_ID } from '../../core/config/synthetic-tenant';
-import { Investigation } from './investigation.models';
+import { EvidenceCollection, Investigation } from './investigation.models';
 
 @Injectable({ providedIn: 'root' })
 export class InvestigationApiService {
@@ -20,6 +20,21 @@ export class InvestigationApiService {
   get(investigationId: string): Observable<Investigation> {
     return this.http.get<Investigation>(
       `/api/investigations/${encodeURIComponent(investigationId)}`,
+      { params: this.params },
+    );
+  }
+
+  getEvidenceHistory(investigationId: string): Observable<EvidenceCollection[]> {
+    return this.http.get<EvidenceCollection[]>(
+      `/api/investigations/${encodeURIComponent(investigationId)}/evidence-collections`,
+      { params: this.params },
+    );
+  }
+
+  collectEvidence(investigationId: string): Observable<EvidenceCollection> {
+    return this.http.post<EvidenceCollection>(
+      `/api/investigations/${encodeURIComponent(investigationId)}/evidence-collections`,
+      null,
       { params: this.params },
     );
   }

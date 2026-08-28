@@ -1,6 +1,6 @@
-# Task: Polish the operator workflow presentation
+# Task: Establish one authoritative verification entry point
 
-Status: Complete
+Status: Proposed
 
 Created: 2026-08-28
 
@@ -8,144 +8,161 @@ Owner: Christopher Guzowski
 
 ## Goal
 
-Make the implemented queue, incident detail, and investigation workspace read
-as one intentional operator console: queue ordering must be visually
-explainable, actions must use consistent accessible styling, status and action
-layouts must remain compact, and the desktop presentation must use space more
-efficiently.
+Make local and CI verification run the same complete repository checks through
+one versioned entry point, with pinned toolchains and explicit failure when any
+required test is skipped.
 
 ## User story
 
-As a payment operations analyst, I want the active-work workflow to communicate
-its ordering and available actions clearly so that I can scan incidents and
-move between the queue, detail, and investigation screens without mistaking
-polish defects for workflow defects.
+As a repository maintainer using Codex, I want one deterministic verification
+command locally and in CI so that an agent cannot accidentally claim completion
+after running only a service-specific or incomplete subset of checks.
 
-## Chosen contract
+## Context
 
-- The queue shows both `Received` and `Detected` timestamps for every incident.
-  The default `Newest received` sort therefore has a visible field that
-  explains row order. Existing sort membership and behavior do not change.
-- Queue refresh, retry, start, resume, incident-detail, and back-navigation
-  controls use a consistent visual language with intentional hover, focus,
-  disabled, and visited states. Native semantics and router navigation remain
-  unchanged.
-- Status pills keep intrinsic content width. Queue status and resume action,
-  incident-detail workflow actions, and the workspace incident-detail link use
-  deliberate spacing without oversized empty containers.
-- The queue header and surrounding spacing become more compact on desktop while
-  preserving the existing responsive behavior at 390 CSS pixels.
-- Repository-owned synthetic fixtures use plausible payment-operations names,
-  not implementation-verification names. Existing local database records are
-  not silently rewritten by application code.
-- The investigation workspace remains limited to its current exact API
-  contract. It does not gain incident title, severity, type, external alert ID,
-  breadcrumbs, or any other incident-context field in this task.
+The current GitHub Actions workflow runs only `mvn clean verify`. Frontend tests,
+formatting, production build, Docker Compose validation, and diff checks are
+documented but depend on an agent running several separate commands. Maven is
+not wrapped, Node is not pinned at repository level, Java formatting is not
+enforced, and the current runners do not fail merely because a test was skipped.
+
+This is a development-system task. It follows the completed service-error
+evidence slice and must not change product behavior.
+
+## Proposed contract
+
+- Add one repository-root PowerShell script as the authoritative verification
+  entry point. It must run on Windows PowerShell/PowerShell Core locally and
+  PowerShell Core on the Ubuntu GitHub Actions runner.
+- The script must perform, in a fixed and visible order:
+  1. prerequisite and pinned-version checks;
+  2. full Maven reactor clean verification through the Maven Wrapper;
+  3. a no-skipped-backend-tests gate based on generated Surefire reports;
+  4. locked frontend installation;
+  5. full non-watch frontend tests with an explicit no-skips gate;
+  6. frontend formatting verification;
+  7. frontend production build;
+  8. Docker Compose configuration validation;
+  9. `git diff --check`.
+- The script exits nonzero at the first failed required check and identifies the
+  failing check without hiding its underlying command output.
+- GitHub Actions performs only environment setup and then invokes that same
+  script. CI must not maintain a second list of verification commands.
+- Add and use the Maven Wrapper; CI and the authoritative script must not depend
+  on an independently installed Maven version.
+- Pin a supported Node.js line at repository level and make CI consume the same
+  pin. Preserve the existing npm lockfile and pinned npm package-manager version.
+- Add a Java formatting check to the Maven lifecycle. This task may mechanically
+  format existing Java sources only when required to establish the baseline; it
+  may not refactor or behaviorally alter them.
+- Update `docs/agent/QUALITY.md`, contributor-facing README instructions, and
+  project status so all completion guidance points to the authoritative command.
 
 ## In scope
 
-- Angular templates, component styles, and shared presentation styles for the
-  queue, incident detail, and investigation workspace.
-- Focused component tests covering the visible timestamp and control/layout
-  contracts.
-- Plausible repository-owned test/demo fixture wording where necessary.
-- Responsive and keyboard-accessibility verification.
-- Factual task and project-status updates after verification.
+- One cross-platform repository verification script.
+- Maven Wrapper files and a repository-level Node version pin.
+- CI parity with the local script.
+- Backend and frontend no-skips enforcement.
+- Java formatting enforcement and a mechanical baseline-format pass if needed.
+- Focused tests for script decision logic where it can be isolated without
+  spawning the full suite.
+- Factual development documentation updates.
 
 ## Out of scope
 
-- Backend, persistence, API, DTO, route, or domain changes.
-- Adding incident context to the investigation workspace.
-- Rewriting existing synthetic records in a developer's local PostgreSQL
-  database from application code.
-- Evidence collection, reports, human decisions, new workflow actions, or new
-  incident lifecycle states.
-- Changes to the global `Human review required` guardrail.
-- New dependencies or unrelated redesign.
+- Product, API, database, MCP, frontend behavior, or presentation changes.
+- Dependency upgrades unrelated to the wrapper, formatter, or verification
+  runner.
+- Shared Testcontainers fixtures or test-suite performance work; that is the
+  next separate recommendation.
+- Roadmap creation, contract extraction, feature-package reorganization, or
+  centralized UUID/problem handling.
+- Deployment, AWS, release automation, coverage thresholds, or artifact upload.
+- Replacing GitHub Actions or adding another CI provider.
 
 ## Constraints
 
-- Preserve the completed one-queue and start/resume behavior.
-- Preserve loading, empty, not-found, error, retry, and pending states.
-- Do not rely on color alone; retain semantic labels and native control
-  behavior.
-- Keep all screens usable without horizontal page overflow at 390 CSS pixels.
-- Follow red-green-refactor for visible production behavior.
+- Preserve every existing test and verification check; consolidation may not
+  weaken or silently drop one.
+- Do not make Docker/Testcontainers tests optional in the completion path.
+- Do not download or execute unpinned wrapper or formatter versions at runtime.
+- Do not print secrets or ignored `.env` values.
+- Do not generate tracked build output, test reports, caches, or local logs.
+- Keep each application independently buildable and testable outside the root
+  verification command.
+- Follow red-green-refactor for script decision logic and CI-contract checks.
 
 ## Acceptance criteria
 
-- [x] Each queue row visibly labels and displays both received and detected UTC
-      timestamps.
-- [x] The default newest-received ordering is still covered by a behavioral
-      test and is understandable from the visible Received values.
-- [x] Queue refresh and resume, detail start/resume, workspace incident-detail,
-      retry, and back-navigation controls opt into the shared intentional
-      control/link styling rather than browser-default or visited-purple
-      presentation.
-- [x] Status pills have intrinsic width, and status/action groups expose
-      explicit layout hooks with deliberate spacing.
-- [x] The incident-detail workflow action is compact and is not rendered as a
-      generic oversized state card.
-- [x] Desktop queue heading and content spacing are tightened while desktop and
-      390-pixel layouts remain usable and free of horizontal page overflow.
-- [x] Repository-owned fixture labels shown to users are plausible synthetic
-      payment-operations data rather than implementation-verification wording.
-- [x] No incident-context field or API-contract change is introduced in the
-      investigation workspace.
-- [x] Focused Angular tests, the full Angular suite, formatting, production
-      build, and `git diff --check` pass.
+- [ ] One documented root command runs every required backend, frontend,
+      formatting, build, Compose, no-skips, and diff check.
+- [ ] Windows local verification and GitHub Actions invoke the same versioned
+      script rather than duplicate command lists.
+- [ ] The Maven Wrapper is committed, pinned, and used by both local verification
+      and CI.
+- [ ] A supported Node.js line is pinned once and consumed by CI.
+- [ ] The verification command fails when any backend or frontend test is
+      reported skipped.
+- [ ] The verification command fails fast with the failed check named and the
+      original command output preserved.
+- [ ] Java and frontend formatting are checked without unrelated source changes.
+- [ ] Docker/Testcontainers remain mandatory and Docker Compose remains limited
+      to PostgreSQL.
+- [ ] Existing product behavior and all previously completed task baselines pass
+      unchanged.
+- [ ] CI, quality guidance, README instructions, and project status all describe
+      the same authoritative workflow.
+- [ ] The final diff contains no secrets, product behavior changes, unrelated
+      upgrades, generated output, or disabled tests.
 
 ## Test plan
 
-- `showsReceivedAndDetectedTimestampsThatExplainDefaultOrdering`
-- `usesIntentionalQueueControlAndActionStyles`
-- `usesCompactDetailWorkflowActionStyles`
-- `usesCompactWorkspaceStatusAndIncidentActionStyles`
-- Re-run the existing sorting, refresh, start/resume, routing, loading, empty,
-  not-found, and failure-state tests.
-- Manually inspect queue, detail, and workspace at desktop and 390 CSS pixels.
+- Add focused tests for prerequisite/version failure, child-command failure,
+  skipped-test report detection, and successful ordered execution using injected
+  command execution or a non-destructive test mode.
+- Prove the script rejects a synthetic Surefire report containing a skip and the
+  selected frontend machine-readable result containing a skip.
+- Prove the CI workflow invokes the authoritative script and does not duplicate
+  its command list.
+- Run the authoritative command locally with Docker available, then verify its
+  complete success path in GitHub Actions.
 
-## Progress notes
+## Expected approach
 
-- 2026-08-28: Owner approved timestamp clarity, consistent controls, compact
-  status/action layouts, and tighter/demo-ready presentation. Owner explicitly
-  deferred adding incident context to the investigation workspace.
-- 2026-08-28: Red phase added four named component regressions before template
-  or style changes. The Angular run failed those four tests for the expected
-  missing Received column and control/layout hooks while the other 26 passed.
-- 2026-08-28: Green phase added visible Received and Detected fields, shared
-  control/link styles, intrinsic-width status pills, compact action regions,
-  and denser queue/detail spacing. All 30 Angular tests passed.
-- 2026-08-28: The production build initially exposed a component-style budget
-  warning. Shared controls were moved to the global stylesheet; the repeated
-  component CSS was removed, and the warning-free build passed.
-- 2026-08-28: Desktop and 390-pixel browser checks covered queue, detail, and
-  workspace screens. All widths stayed within the viewport, both queue
-  timestamps remained visible, status pills stayed intrinsic-width, and no
-  browser warnings or errors were reported.
-- 2026-08-28: The two exact local synthetic verification records visible in the
-  review screenshots were relabeled with plausible alert identifiers, titles,
-  and descriptions. No migration or runtime data-rewrite behavior was added.
-
-## Completion evidence
-
-- Red evidence: `npm test -- --watch=false` failed 4/30 tests for the intended
-  missing timestamp and presentation hooks before production changes.
-- Green evidence: `npm test -- --watch=false` passed 30/30 tests across eight
-  files; `npx prettier --check .`, `npm run build`, and `git diff --check`
-  passed with no warnings.
-- Manual evidence: The live PostgreSQL/API/Angular workflow passed at 1280 and
-  390 CSS pixels with no horizontal overflow or browser-console warnings. The
-  queue displayed both timestamp columns, primary/secondary controls retained
-  intentional colors, and status pills measured narrower than their parent
-  cells.
-- Scope evidence: No backend/API file was changed for this follow-up, and the
-  investigation workspace still renders only its existing exact contract.
-
-## Remaining limitations
-
-- Investigation workspace context will be designed as a separate future task.
+1. Obtain owner approval for this exact contract and resolve the two decisions
+   below before editing executable files.
+2. Create a new `codex/` branch after the completed evidence changes have a clean
+   checkpoint.
+3. Write focused red tests for verification ordering, failure propagation, and
+   no-skips detection.
+4. Add the minimum script and report readers to pass those tests.
+5. Add the Maven Wrapper, Node pin, and Java formatting gate.
+6. Replace duplicated CI commands with the authoritative invocation.
+7. Run the new root command locally, inspect its generated/ignored outputs, and
+   confirm CI passes the same path.
+8. Review the final diff strictly for development-system scope.
 
 ## Decisions needed
 
-None.
+- Approve the repository Node.js pin. Recommended: the latest Angular-supported
+  Node 22 LTS patch available when implementation begins, pinned to an exact
+  version and consumed by CI.
+- Approve the Java formatter. Recommended: a pinned Spotless Maven plugin with
+  Palantir Java Format, enforced by `mvn verify` and used only for mechanical
+  formatting.
+
+## Progress notes
+
+- 2026-08-28: Repository audit identified local/CI verification parity as the
+  highest-value Codex development improvement. The completed evidence task was
+  archived before this proposal replaced `current.md`. No executable change has
+  begun and this contract is not locked until the owner approves it.
+
+## Completion evidence
+
+- Red-phase evidence:
+- Green-phase evidence:
+- Full verification:
+- Documentation updated:
+- Remaining limitations:
