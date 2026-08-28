@@ -7,17 +7,17 @@
 }
 
 .queue {
-  max-width: 1180px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 3.5rem 2rem 5rem;
+  padding: 2.25rem 2rem 4rem;
 }
 
 .queue__heading {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .eyebrow {
@@ -33,7 +33,7 @@ h1 {
   margin: 0;
   color: var(--ink-strong);
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 4.3rem);
+  font-size: clamp(2.3rem, 4vw, 3.65rem);
   font-weight: 560;
   letter-spacing: -0.055em;
   line-height: 0.95;
@@ -41,10 +41,10 @@ h1 {
 
 .queue__intro {
   max-width: 650px;
-  margin: 1rem 0 0;
+  margin: 0.75rem 0 0;
   color: var(--ink-muted);
   font-size: 1.05rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .environment {
@@ -52,8 +52,8 @@ h1 {
   flex: 0 0 auto;
   align-items: center;
   gap: 0.8rem;
-  min-width: 245px;
-  padding: 0.9rem 1rem;
+  min-width: 225px;
+  padding: 0.75rem 0.9rem;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.74);
@@ -90,8 +90,8 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  min-height: 60px;
-  padding: 0 1.25rem;
+  min-height: 54px;
+  padding: 0 1rem;
   border: 1px solid var(--line);
   border-bottom: 0;
   border-radius: 14px 14px 0 0;
@@ -139,7 +139,7 @@ table {
 }
 
 th {
-  padding: 0.85rem 1.25rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--line);
   color: var(--ink-faint);
   font-size: 0.68rem;
@@ -150,7 +150,7 @@ th {
 }
 
 td {
-  padding: 1.25rem;
+  padding: 1rem;
   border-bottom: 1px solid var(--line);
   color: var(--ink-muted);
   font-size: 0.86rem;
@@ -180,6 +180,14 @@ tbody tr:hover {
 }
 
 .incident-title:hover {
+  color: var(--accent);
+}
+
+.incident-title:visited {
+  color: var(--ink-strong);
+}
+
+.incident-title:visited:hover {
   color: var(--accent);
 }
 
@@ -224,6 +232,21 @@ code {
   padding: 0.36rem 0.56rem;
 }
 
+time {
+  white-space: nowrap;
+}
+
+.status-actions {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.status-actions .action-link {
+  white-space: nowrap;
+}
+
 .state-card strong {
   color: var(--ink-strong);
 }
@@ -234,19 +257,20 @@ code {
 }
 
 .queue__note {
-  margin: 1rem 0 0;
+  margin: 0.85rem 0 0;
   color: var(--ink-faint);
   font-size: 0.74rem;
 }
 
 @media (max-width: 760px) {
   .queue {
-    padding: 2.5rem 1rem 4rem;
+    padding: 2rem 1rem 3.5rem;
   }
 
   .queue__heading {
     align-items: stretch;
     flex-direction: column;
+    gap: 1.25rem;
   }
 
   .environment {

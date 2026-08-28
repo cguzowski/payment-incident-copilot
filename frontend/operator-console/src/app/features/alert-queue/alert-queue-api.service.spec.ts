@@ -21,7 +21,7 @@ describe('AlertQueueApiService', () => {
   it('loads the queue through the tenant-scoped endpoint', () => {
     service.getQueue().subscribe((items) => expect(items).toEqual([]));
 
-    const request = http.expectOne(`/api/tenants/${SYNTHETIC_TENANT_ID}/alert-queue`);
+    const request = http.expectOne(`/api/tenants/${SYNTHETIC_TENANT_ID}/incidents`);
     expect(request.request.method).toBe('GET');
     request.flush([]);
   });

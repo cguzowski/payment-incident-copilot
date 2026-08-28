@@ -1,5 +1,7 @@
 <section class="detail" aria-labelledby="detail-title">
-  <a class="back-link" data-testid="back-to-queue" routerLink="/">← Back to alert queue</a>
+  <a class="back-link action-link" data-testid="back-to-queue" routerLink="/">
+    ← Back to work queue
+  </a>
 
   @if (state() === 'loading') {
     <div class="state-card" role="status" aria-live="polite">
@@ -23,7 +25,14 @@
       <div>
         <strong>We couldn’t load this incident.</strong>
         <p>The copilot API may be unavailable. No incident data was changed.</p>
-        <button type="button" data-testid="retry" (click)="loadDetail()">Try again</button>
+        <button
+          class="button button--primary"
+          type="button"
+          data-testid="retry"
+          (click)="loadDetail()"
+        >
+          Try again
+        </button>
       </div>
     </div>
   } @else if (incident(); as incident) {
@@ -37,7 +46,7 @@
           <span [class]="'severity severity--' + incident.severity.toLowerCase()">
             {{ incident.severity }} severity
           </span>
-          <span class="status">{{ incident.status }}</span>
+          <span class="status status--compact">{{ incident.status }}</span>
         </div>
       </header>
 
@@ -74,6 +83,33 @@
           </dd>
         </div>
       </dl>
+
+      <div class="workflow-action" data-testid="workflow-action">
+        @if (incident.status === 'NEW') {
+          <button
+            class="button button--primary"
+            type="button"
+            data-testid="start-investigation"
+            [disabled]="starting()"
+            (click)="startInvestigation()"
+          >
+            {{ starting() ? 'Starting investigation…' : 'Start investigation' }}
+          </button>
+        } @else if (incident.activeInvestigationId) {
+          <a
+            class="button button--primary"
+            data-testid="resume-investigation"
+            [routerLink]="['/investigations', incident.activeInvestigationId]"
+          >
+            Resume investigation
+          </a>
+        }
+        @if (startError()) {
+          <p data-testid="start-error" role="alert">
+            We couldn’t start the investigation. Try again.
+          </p>
+        }
+      </div>
 
       <p class="advisory-note">
         This alert is a machine-generated signal, not a confirmed root cause.

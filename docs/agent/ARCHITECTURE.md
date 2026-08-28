@@ -1,12 +1,12 @@
 # Architecture
 
-Last reviewed: 2026-08-20
+Last reviewed: 2026-08-27
 
 ## System boundaries
 
 | Component | Owns | Does not own |
 |---|---|---|
-| Operator console | Alert and investigation UX, review and decision input | Investigation reasoning or persistence |
+| Operator console | Incident work queue, investigation UX, review and decision input | Investigation reasoning or persistence |
 | Copilot API | Workflow, persistence, retrieval, report generation, decisions, audit | Synthetic source-system behavior |
 | Operations MCP server | Deterministic synthetic operational tools and fixtures | LLM calls or investigation decisions |
 | PostgreSQL | Transactional application state and audit records | Unstructured object storage |
@@ -26,8 +26,8 @@ sequenceDiagram
 
     S->>A: Submit synthetic alert
     A->>D: Persist NEW incident
-    U->>A: Load alert queue
-    A-->>U: Alert summaries
+    U->>A: Load incident work queue
+    A-->>U: Active incident summaries
     U->>A: Start investigation
     A->>M: Call required read-only tools
     M-->>A: Sourced operational evidence
@@ -55,6 +55,23 @@ NEW -> INVESTIGATING -> AWAITING_REVIEW -> APPROVED
 
 Failure to gather sufficient evidence should remain visible and should not be
 misrepresented as a successful investigation.
+
+## Operator work queue
+
+The MVP uses one tenant-scoped incident work queue rather than separate alert
+and investigation queues. `NEW` means unprocessed, not recently received, so an
+incident remains visible regardless of age until its state changes.
+
+The same queue retains active incidents as they move through `NEW`,
+`INVESTIGATING`, and later `AWAITING_REVIEW`. Newly received incidents appear
+first by default, and the operator may change the sort without changing queue
+membership. When terminal states are implemented, they may be hidden by default
+and exposed through a filter or history mode within the same incident surface.
+
+Starting an investigation updates the existing incident row's workflow state;
+it does not transfer the incident into a separate list. Queue projections may
+carry the active investigation identifier needed for a resume action, but they
+must not expose tenant or internal persistence metadata.
 
 ## Multi-tenant preparation
 

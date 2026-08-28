@@ -6,18 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-class AlertQueueService {
+class IncidentWorkQueueService {
 
     private final IncidentRepository incidentRepository;
 
-    AlertQueueService(IncidentRepository incidentRepository) {
+    IncidentWorkQueueService(IncidentRepository incidentRepository) {
         this.incidentRepository = incidentRepository;
     }
 
     @Transactional(readOnly = true)
-    List<AlertQueueSummary> getQueue(UUID tenantId) {
-        return incidentRepository.findQueueByTenantId(tenantId).stream()
-                .map(AlertQueueSummary::from)
+    List<IncidentWorkQueueItem> getQueue(UUID tenantId) {
+        return incidentRepository.findActiveByTenantId(tenantId).stream()
+                .map(IncidentWorkQueueItem::from)
                 .toList();
     }
 }

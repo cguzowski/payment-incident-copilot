@@ -14,8 +14,12 @@ import org.springframework.stereotype.Repository;
 class PostgresIncidentRepository implements IncidentRepository {
 
     private static final String INCIDENT_COLUMNS = """
-            id, tenant_id, external_alert_id, incident_type, severity, status,
-            summary, description, occurred_at, received_at
+            incident.id AS id, incident.tenant_id AS tenant_id,
+            incident.external_alert_id AS external_alert_id,
+            incident.incident_type AS incident_type, incident.severity AS severity,
+            incident.status AS status, incident.summary AS summary,
+            incident.description AS description, incident.occurred_at AS occurred_at,
+            incident.received_at AS received_at
             """;
 
     private final JdbcClient jdbcClient;
@@ -77,15 +81,39 @@ class PostgresIncidentRepository implements IncidentRepository {
     }
 
     @Override
-    public List<Incident> findQueueByTenantId(UUID tenantId) {
+    public Optional<IncidentWorkQueueEntry> findViewByTenantIdAndIncidentId(UUID tenantId, UUID incidentId) {
         return jdbcClient.sql("""
-                        SELECT %s
+                        SELECT %s, investigation.id AS active_investigation_id
                         FROM incident
-                        WHERE tenant_id = :tenantId AND status = 'NEW'
-                        ORDER BY received_at DESC
+                        LEFT JOIN investigation
+                          ON investigation.tenant_id = incident.tenant_id
+                         AND investigation.incident_id = incident.id
+                        WHERE incident.tenant_id = :tenantId AND incident.id = :incidentId
                         """.formatted(INCIDENT_COLUMNS))
                 .param("tenantId", tenantId)
-                .query(PostgresIncidentRepository::mapIncident)
+                .param("incidentId", incidentId)
+                .query((resultSet, rowNumber) -> new IncidentWorkQueueEntry(
+                        mapIncident(resultSet, rowNumber),
+                        resultSet.getObject("active_investigation_id", UUID.class)))
+                .optional();
+    }
+
+    @Override
+    public List<IncidentWorkQueueEntry> findActiveByTenantId(UUID tenantId) {
+        return jdbcClient.sql("""
+                        SELECT %s, investigation.id AS active_investigation_id
+                        FROM incident
+                        LEFT JOIN investigation
+                          ON investigation.tenant_id = incident.tenant_id
+                         AND investigation.incident_id = incident.id
+                        WHERE incident.tenant_id = :tenantId
+                          AND incident.status IN ('NEW', 'INVESTIGATING')
+                        ORDER BY incident.received_at DESC
+                        """.formatted(INCIDENT_COLUMNS))
+                .param("tenantId", tenantId)
+                .query((resultSet, rowNumber) -> new IncidentWorkQueueEntry(
+                        mapIncident(resultSet, rowNumber),
+                        resultSet.getObject("active_investigation_id", UUID.class)))
                 .list();
     }
 

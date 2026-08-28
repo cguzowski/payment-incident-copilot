@@ -12,5 +12,7 @@ interface IncidentRepository {
 
     Optional<Incident> findByTenantIdAndIncidentId(UUID tenantId, UUID incidentId);
 
-    List<Incident> findQueueByTenantId(UUID tenantId);
+    Optional<IncidentWorkQueueEntry> findViewByTenantIdAndIncidentId(UUID tenantId, UUID incidentId);
+
+    List<IncidentWorkQueueEntry> findActiveByTenantId(UUID tenantId);
 }

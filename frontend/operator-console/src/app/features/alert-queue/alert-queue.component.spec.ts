@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { AlertQueueApiService } from './alert-queue-api.service';
@@ -12,98 +12,143 @@ describe('AlertQueueComponent', () => {
   beforeEach(async () => {
     queueResponse = new Subject<AlertQueueItem[]>().asObservable();
     api = { getQueue: vi.fn(() => queueResponse) };
-
     await TestBed.configureTestingModule({
       imports: [AlertQueueComponent],
       providers: [{ provide: AlertQueueApiService, useValue: api }, provideRouter([])],
     }).compileComponents();
   });
 
-  it('shows a loading state while the queue request is pending', () => {
-    const fixture = TestBed.createComponent(AlertQueueComponent);
+  it('shows loading, empty, and retryable error states', () => {
+    const loading = TestBed.createComponent(AlertQueueComponent);
+    loading.detectChanges();
+    expect(loading.nativeElement.querySelector('[role="status"]').textContent).toContain('Loading');
 
-    fixture.detectChanges();
-
-    const status = fixture.nativeElement.querySelector('[role="status"]') as HTMLElement;
-    expect(status.textContent).toContain('Loading alert queue');
-  });
-
-  it('shows the empty state when there are no new incidents', () => {
     queueResponse = of([]);
-    const fixture = TestBed.createComponent(AlertQueueComponent);
+    const empty = TestBed.createComponent(AlertQueueComponent);
+    empty.detectChanges();
+    expect(empty.nativeElement.querySelector('[data-testid="empty-state"]').textContent).toContain(
+      'No active incidents',
+    );
 
-    fixture.detectChanges();
-
-    const emptyState = fixture.nativeElement.querySelector(
-      '[data-testid="empty-state"]',
-    ) as HTMLElement;
-    expect(emptyState.textContent).toContain('No new incidents');
-    expect(fixture.nativeElement.querySelectorAll('[data-testid="queue-row"]')).toHaveLength(0);
+    queueResponse = throwError(() => new Error('unavailable'));
+    const error = TestBed.createComponent(AlertQueueComponent);
+    error.detectChanges();
+    const retry = error.nativeElement.querySelector('[data-testid="retry"]') as HTMLButtonElement;
+    expect(retry.classList).toContain('button');
+    expect(retry.classList).toContain('button--primary');
   });
 
-  it('renders the triage fields returned by a successful queue request', () => {
+  it('sortsNewestReceivedByDefaultAndLinksToIncidentDetail', () => {
     queueResponse = of(queueItems());
     const fixture = TestBed.createComponent(AlertQueueComponent);
-
     fixture.detectChanges();
 
+    expect(firstRow(fixture).textContent).toContain('Gateway cohort decline spike');
+    expect(
+      (
+        fixture.nativeElement.querySelector('[data-testid="incident-link"]') as HTMLAnchorElement
+      ).getAttribute('href'),
+    ).toBe('/incidents/f4749ecb-49b0-4277-a140-cb69485b082f');
+  });
+
+  it('showsReceivedAndDetectedTimestampsThatExplainDefaultOrdering', () => {
+    queueResponse = of(queueItems());
+    const fixture = TestBed.createComponent(AlertQueueComponent);
+    fixture.detectChanges();
+
+    const headings = Array.from(
+      fixture.nativeElement.querySelectorAll('th') as NodeListOf<HTMLElement>,
+      (heading) => heading.textContent?.trim(),
+    );
     const rows = fixture.nativeElement.querySelectorAll(
       '[data-testid="queue-row"]',
     ) as NodeListOf<HTMLElement>;
-    expect(rows).toHaveLength(2);
-    expect(fixture.nativeElement.textContent).toContain('Gateway cohort decline spike');
-    expect(fixture.nativeElement.textContent).toContain('CRITICAL');
-    expect(fixture.nativeElement.textContent).toContain('NEW');
-    expect(fixture.nativeElement.textContent).toContain('alert-auth-decline-002');
+
+    expect(headings).toContain('Received');
+    expect(headings).toContain('Detected');
+    expect(rows[0].querySelector('[data-testid="received-at"]')?.getAttribute('datetime')).toBe(
+      '2026-08-22T07:20:00Z',
+    );
+    expect(rows[0].querySelector('[data-testid="detected-at"]')?.getAttribute('datetime')).toBe(
+      '2026-08-22T07:14:00Z',
+    );
+    expect(rows[1].querySelector('[data-testid="received-at"]')?.getAttribute('datetime')).toBe(
+      '2026-08-22T07:16:00Z',
+    );
   });
 
-  it('queueIncidentTitleLinksToIncidentDetailRoute', () => {
+  it('usesIntentionalQueueControlAndActionStyles', () => {
     queueResponse = of(queueItems());
     const fixture = TestBed.createComponent(AlertQueueComponent);
-
     fixture.detectChanges();
 
-    const link = fixture.nativeElement.querySelector(
-      '[data-testid="incident-link"]',
+    const refresh = fixture.nativeElement.querySelector(
+      '[data-testid="refresh"]',
+    ) as HTMLButtonElement;
+    const resume = fixture.nativeElement.querySelector(
+      '[data-testid="resume-investigation"]',
     ) as HTMLAnchorElement;
-    expect(link.tagName).toBe('A');
-    expect(link.textContent?.trim()).toBe('Issuer decline rate elevated');
-    expect(link.getAttribute('href')).toBe('/incidents/20ebde75-377d-48b0-85fd-089962e16c33');
+    const statusActions = resume.closest('[data-testid="status-actions"]');
+
+    expect(refresh.classList).toContain('button');
+    expect(refresh.classList).toContain('button--secondary');
+    expect(resume.classList).toContain('action-link');
+    expect(statusActions).not.toBeNull();
   });
 
-  it('shows an error state and retries the request', () => {
-    queueResponse = throwError(() => new Error('network unavailable'));
-    const fixture = TestBed.createComponent(AlertQueueComponent);
-    fixture.detectChanges();
-
-    const errorState = fixture.nativeElement.querySelector('[role="alert"]') as HTMLElement;
-    expect(errorState.textContent).toContain('We couldn’t load the alert queue');
-
-    queueResponse = of([]);
-    const retry = fixture.nativeElement.querySelector('[data-testid="retry"]') as HTMLButtonElement;
-    retry.click();
-    fixture.detectChanges();
-
-    expect(api.getQueue).toHaveBeenCalledTimes(2);
-    expect(fixture.nativeElement.querySelector('[data-testid="empty-state"]')).not.toBeNull();
-  });
-
-  it('lets the operator sort incidents by severity', () => {
+  it('sortsByEveryChosenQueueField', () => {
     queueResponse = of(queueItems());
     const fixture = TestBed.createComponent(AlertQueueComponent);
     fixture.detectChanges();
+    const sort = fixture.nativeElement.querySelector('#queue-sort') as HTMLSelectElement;
+    const expected: Record<string, string> = {
+      'received-desc': 'Gateway cohort decline spike',
+      'received-asc': 'Issuer decline rate elevated',
+      'detected-desc': 'Issuer decline rate elevated',
+      severity: 'Gateway cohort decline spike',
+      status: 'Issuer decline rate elevated',
+    };
 
+    for (const [value, title] of Object.entries(expected)) {
+      sort.value = value;
+      sort.dispatchEvent(new Event('change'));
+      fixture.detectChanges();
+      expect(firstRow(fixture).textContent).toContain(title);
+    }
+  });
+
+  it('refreshesWithoutResettingSort', () => {
+    queueResponse = of(queueItems());
+    const fixture = TestBed.createComponent(AlertQueueComponent);
+    fixture.detectChanges();
     const sort = fixture.nativeElement.querySelector('#queue-sort') as HTMLSelectElement;
     sort.value = 'severity';
     sort.dispatchEvent(new Event('change'));
+
+    (fixture.nativeElement.querySelector('[data-testid="refresh"]') as HTMLButtonElement).click();
     fixture.detectChanges();
 
-    const rows = fixture.nativeElement.querySelectorAll(
-      '[data-testid="queue-row"]',
-    ) as NodeListOf<HTMLElement>;
-    expect(rows[0].textContent).toContain('Gateway cohort decline spike');
-    expect(rows[1].textContent).toContain('Issuer decline rate elevated');
+    expect(api.getQueue).toHaveBeenCalledTimes(2);
+    expect(sort.value).toBe('severity');
   });
+
+  it('keepsInvestigatingIncidentInQueueWithResumeRoute', () => {
+    queueResponse = of(queueItems());
+    const fixture = TestBed.createComponent(AlertQueueComponent);
+    fixture.detectChanges();
+
+    const resume = fixture.nativeElement.querySelector(
+      '[data-testid="resume-investigation"]',
+    ) as HTMLAnchorElement;
+    expect(resume.textContent).toContain('Resume investigation');
+    expect(resume.getAttribute('href')).toBe(
+      '/investigations/a012c9cb-85a6-4d77-9703-3b53377b56c3',
+    );
+  });
+
+  function firstRow(fixture: ComponentFixture<AlertQueueComponent>): HTMLElement {
+    return fixture.nativeElement.querySelector('[data-testid="queue-row"]') as HTMLElement;
+  }
 
   function queueItems(): AlertQueueItem[] {
     return [
@@ -116,16 +161,18 @@ describe('AlertQueueComponent', () => {
         title: 'Issuer decline rate elevated',
         detectedAt: '2026-08-22T07:16:00Z',
         receivedAt: '2026-08-22T07:16:00Z',
+        activeInvestigationId: null,
       },
       {
         incidentId: 'f4749ecb-49b0-4277-a140-cb69485b082f',
         externalAlertId: 'alert-auth-decline-002',
         incidentType: 'AUTHORIZATION_DECLINE_RATE_SPIKE',
         severity: 'CRITICAL',
-        status: 'NEW',
+        status: 'INVESTIGATING',
         title: 'Gateway cohort decline spike',
         detectedAt: '2026-08-22T07:14:00Z',
-        receivedAt: '2026-08-22T07:15:00Z',
+        receivedAt: '2026-08-22T07:20:00Z',
+        activeInvestigationId: 'a012c9cb-85a6-4d77-9703-3b53377b56c3',
       },
     ];
   }

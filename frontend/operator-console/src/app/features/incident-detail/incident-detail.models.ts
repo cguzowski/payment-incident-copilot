@@ -10,4 +10,5 @@ export interface IncidentDetail {
   description: string;
   detectedAt: string;
   receivedAt: string;
+  activeInvestigationId: string | null;
 }

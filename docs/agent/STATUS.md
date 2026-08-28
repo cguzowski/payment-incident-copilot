@@ -1,10 +1,10 @@
 # Project status
 
-Last updated: 2026-08-22
+Last updated: 2026-08-28
 
 ## Current milestone
 
-Milestone 0 — Validate the foundation and agent workflow.
+Milestone 1 — Establish the operator investigation workflow.
 
 ## Completed
 
@@ -39,19 +39,41 @@ Milestone 0 — Validate the foundation and agent workflow.
   and queue/back router navigation.
 - Added a Windows local-development launcher that safely loads the ignored
   `.env`, checks prerequisites, and starts the API and operator console.
+- Selected one tenant-scoped incident work queue that retains active incidents
+  across status changes instead of separate alert and investigation queues.
+- Implemented the tenant-scoped incident work queue for `NEW` and
+  `INVESTIGATING` incidents with no age cutoff, five client-side sort modes,
+  sort-preserving refresh, and start/resume navigation.
+- Added Flyway V3, tenant-safe one-investigation-per-incident persistence,
+  atomic/idempotent investigation creation, structured errors, and the minimal
+  read-only investigation workspace.
+- Verified the completed slice through unit, HTTP, PostgreSQL/Testcontainers,
+  concurrency, Angular, build, formatting, and responsive browser checks.
+- Polished the operator workflow so queue ordering is explained by visible
+  Received and Detected timestamps, controls share intentional accessible
+  styling, status/action layouts are compact, and desktop spacing is denser.
+- Verified the polished queue, detail, and workspace at desktop and 390 CSS
+  pixels, and relabeled the two local synthetic verification records used for
+  review with plausible payment-operations wording.
 
 ## In progress
 
-- None.
+- No implementation task is currently in progress; the completed task remains
+  in `docs/agent/tasks/current.md` until the next contract is approved.
 
 ## Next
 
-1. Define the operator-triggered investigation-creation slice and its
-   acceptance criteria before implementation.
+1. Review the investigation workspace context and choose its future data
+   contract as a separate product task.
+2. Review and choose the next narrow vertical slice.
+3. A likely next slice is the first deterministic read-only operational
+   evidence tool and its tenant-safe investigation integration.
 
 ## Blockers
 
-- None.
+- None. The unrelated working-tree deletions of
+  `scripts/start-local.ps1` and `start-local.bat` remain user-owned and will not
+  be modified by this completed task.
 
 ## Known deliberate gaps
 
@@ -60,6 +82,25 @@ Milestone 0 — Validate the foundation and agent workflow.
 - No Bedrock model configured yet.
 - No knowledge-ingestion pipeline yet.
 - No AWS infrastructure selected yet.
+- The investigation workspace intentionally does not repeat incident context;
+  that design and any API evolution are deferred to a future task.
+
+## Latest local verification
+
+- 2026-08-27: `mvn clean verify` passed 39/39 tests with zero skips, including
+  16 PostgreSQL 17.11 Testcontainers tests and Flyway V1-V3.
+- 2026-08-27: Native PostgreSQL 18.3 also migrated through V3 and passed all 16
+  PostgreSQL integration scenarios with zero skips.
+- 2026-08-27: After `npm ci`, Angular tests passed 26/26; Prettier and the
+  production build passed with zero npm audit vulnerabilities.
+- 2026-08-27: Docker Compose configuration, `git diff --check`, the full live
+  browser workflow, and 390-pixel responsive checks passed without horizontal
+  page overflow or unexpected successful-path console output.
+- 2026-08-28: Angular tests passed 30/30; Prettier, the warning-free production
+  build, and `git diff --check` passed.
+- 2026-08-28: Live desktop and 390-pixel queue/detail/workspace checks passed
+  with both timestamps visible, compact status/action layouts, no horizontal
+  overflow, and no browser warnings or errors.
 
 ## Update rule
 

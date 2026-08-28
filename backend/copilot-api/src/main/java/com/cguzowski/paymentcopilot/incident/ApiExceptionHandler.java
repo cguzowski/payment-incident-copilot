@@ -1,5 +1,6 @@
 package com.cguzowski.paymentcopilot.incident;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
@@ -26,7 +27,11 @@ class ApiExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    ResponseEntity<ProblemDetail> handleUnreadableAlert() {
+    ResponseEntity<ProblemDetail> handleUnreadableRequest(HttpServletRequest request) {
+        if (request.getRequestURI().endsWith("/investigations")) {
+            return handleInvalidInvestigationRequest(new InvalidInvestigationRequestException(
+                    "request", "contains malformed or unsupported data"));
+        }
         return invalidAlert(List.of(new FieldValidationError("request", "contains malformed or unsupported data")));
     }
 
@@ -51,6 +56,44 @@ class ApiExceptionHandler {
         problem.setDetail("No incident was found for the requested tenant and incident ID.");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(problem);
+    }
+
+    @ExceptionHandler(InvalidInvestigationRequestException.class)
+    ResponseEntity<ProblemDetail> handleInvalidInvestigationRequest(
+            InvalidInvestigationRequestException exception) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setType(URI.create("urn:problem:invalid-investigation-request"));
+        problem.setTitle("Invalid investigation request");
+        problem.setDetail("The investigation request contains invalid fields.");
+        problem.setProperty("errors", List.of(new FieldValidationError(exception.field(), exception.getMessage())));
+
+        return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(problem);
+    }
+
+    @ExceptionHandler(InvestigationNotFoundException.class)
+    ResponseEntity<ProblemDetail> handleInvestigationNotFound() {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setType(URI.create("urn:problem:investigation-not-found"));
+        problem.setTitle("Investigation not found");
+        problem.setDetail("No investigation was found for the requested tenant and investigation ID.");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(problem);
+    }
+
+    @ExceptionHandler(InvestigationConflictException.class)
+    ResponseEntity<ProblemDetail> handleInvestigationConflict() {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setType(URI.create("urn:problem:investigation-state-conflict"));
+        problem.setTitle("Investigation state conflict");
+        problem.setDetail("The incident cannot start or resume an investigation in its current state.");
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON)
                 .body(problem);
     }

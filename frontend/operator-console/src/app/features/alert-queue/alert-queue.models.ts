@@ -11,4 +11,5 @@ export interface AlertQueueItem {
   title: string;
   detectedAt: string;
   receivedAt: string;
+  activeInvestigationId: string | null;
 }

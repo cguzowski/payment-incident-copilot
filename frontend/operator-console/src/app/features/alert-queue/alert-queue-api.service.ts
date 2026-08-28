@@ -9,6 +9,6 @@ export class AlertQueueApiService {
   private readonly http = inject(HttpClient);
 
   getQueue(): Observable<AlertQueueItem[]> {
-    return this.http.get<AlertQueueItem[]>(`/api/tenants/${SYNTHETIC_TENANT_ID}/alert-queue`);
+    return this.http.get<AlertQueueItem[]>(`/api/tenants/${SYNTHETIC_TENANT_ID}/incidents`);
   }
 }

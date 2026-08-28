@@ -1,0 +1,39 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { SYNTHETIC_OPERATOR_ID, SYNTHETIC_TENANT_ID } from '../../core/config/synthetic-tenant';
+import { InvestigationApiService } from './investigation-api.service';
+
+describe('InvestigationApiService', () => {
+  let service: InvestigationApiService;
+  let http: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [InvestigationApiService, provideHttpClient(), provideHttpClientTesting()],
+    });
+    service = TestBed.inject(InvestigationApiService);
+    http = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => http.verify());
+
+  it('startsNewIncidentWithConfiguredTenantAndOperator', () => {
+    service.start('incident/id').subscribe();
+    const request = http.expectOne(
+      `/api/incidents/incident%2Fid/investigations?tenantId=${SYNTHETIC_TENANT_ID}`,
+    );
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ operatorId: SYNTHETIC_OPERATOR_ID });
+    request.flush({});
+  });
+
+  it('requestsTenantScopedInvestigationWorkspace', () => {
+    service.get('investigation/id').subscribe();
+    const request = http.expectOne(
+      `/api/investigations/investigation%2Fid?tenantId=${SYNTHETIC_TENANT_ID}`,
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush({});
+  });
+});

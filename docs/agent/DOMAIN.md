@@ -1,6 +1,6 @@
 # Domain glossary
 
-Last reviewed: 2026-08-20
+Last reviewed: 2026-08-27
 
 ## Core terms
 
@@ -15,6 +15,12 @@ through investigation and human decision.
 **Investigation**  
 A bounded attempt to collect evidence, retrieve applicable knowledge, and
 produce a reviewable explanation for an incident.
+
+**Incident work queue**
+
+The operator's single tenant-scoped view of active incident work. `NEW`
+incidents remain in the queue regardless of age, and the same incident remains
+discoverable as it moves into investigation and review states.
 
 **Evidence item**  
 A normalized fact retrieved from a named source. It includes the source,

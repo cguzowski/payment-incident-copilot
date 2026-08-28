@@ -19,6 +19,7 @@ class IncidentDetailServiceTest {
     private static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
     private static final UUID OTHER_TENANT_ID = UUID.fromString("076a18a3-d54f-486a-b3ec-189e1048fd28");
     private static final UUID INCIDENT_ID = UUID.fromString("f4749ecb-49b0-4277-a140-cb69485b082f");
+    private static final UUID INVESTIGATION_ID = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
 
     @Mock
     private IncidentRepository incidentRepository;
@@ -26,19 +27,20 @@ class IncidentDetailServiceTest {
     @Test
     void returnsIncidentDetailForOwningTenant() {
         Incident incident = incident();
-        when(incidentRepository.findByTenantIdAndIncidentId(TENANT_ID, INCIDENT_ID))
-                .thenReturn(Optional.of(incident));
+        IncidentWorkQueueEntry entry = new IncidentWorkQueueEntry(incident, INVESTIGATION_ID);
+        when(incidentRepository.findViewByTenantIdAndIncidentId(TENANT_ID, INCIDENT_ID))
+                .thenReturn(Optional.of(entry));
         IncidentDetailService service = new IncidentDetailService(incidentRepository);
 
         IncidentDetailResponse response = service.getDetail(TENANT_ID, INCIDENT_ID);
 
-        assertThat(response).isEqualTo(IncidentDetailResponse.from(incident));
-        verify(incidentRepository).findByTenantIdAndIncidentId(TENANT_ID, INCIDENT_ID);
+        assertThat(response).isEqualTo(IncidentDetailResponse.from(entry));
+        verify(incidentRepository).findViewByTenantIdAndIncidentId(TENANT_ID, INCIDENT_ID);
     }
 
     @Test
     void returnsNotFoundWhenIncidentDoesNotExist() {
-        when(incidentRepository.findByTenantIdAndIncidentId(TENANT_ID, INCIDENT_ID))
+        when(incidentRepository.findViewByTenantIdAndIncidentId(TENANT_ID, INCIDENT_ID))
                 .thenReturn(Optional.empty());
         IncidentDetailService service = new IncidentDetailService(incidentRepository);
 
@@ -48,13 +50,13 @@ class IncidentDetailServiceTest {
 
     @Test
     void returnsNotFoundWhenIncidentBelongsToAnotherTenant() {
-        when(incidentRepository.findByTenantIdAndIncidentId(OTHER_TENANT_ID, INCIDENT_ID))
+        when(incidentRepository.findViewByTenantIdAndIncidentId(OTHER_TENANT_ID, INCIDENT_ID))
                 .thenReturn(Optional.empty());
         IncidentDetailService service = new IncidentDetailService(incidentRepository);
 
         assertThatThrownBy(() -> service.getDetail(OTHER_TENANT_ID, INCIDENT_ID))
                 .isInstanceOf(IncidentNotFoundException.class);
-        verify(incidentRepository).findByTenantIdAndIncidentId(OTHER_TENANT_ID, INCIDENT_ID);
+        verify(incidentRepository).findViewByTenantIdAndIncidentId(OTHER_TENANT_ID, INCIDENT_ID);
     }
 
     private static Incident incident() {

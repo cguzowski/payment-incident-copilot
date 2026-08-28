@@ -1,1 +1,2 @@
 export const SYNTHETIC_TENANT_ID = '8b860d80-d17f-4e6b-8c48-af35f26a4d61';
+export const SYNTHETIC_OPERATOR_ID = '7b636625-53d1-46f7-92a9-9c8c27a243d1';

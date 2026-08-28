@@ -1,6 +1,6 @@
 # Project definition
 
-Last reviewed: 2026-08-22
+Last reviewed: 2026-08-27
 Owner: Christopher Guzowski
 Status: Foundation
 
@@ -29,7 +29,7 @@ snapshot without pretending that AI inference is verified fact.
 ## Primary scenario
 
 1. A synthetic alert enters the platform.
-2. The operator sees it in the alert queue.
+2. The operator sees it in one incident work queue containing all active work.
 3. The operator starts an investigation.
 4. The platform calls synthetic operational systems through MCP tools.
 5. Relevant runbooks and policies are retrieved from approved knowledge.
@@ -43,7 +43,7 @@ snapshot without pretending that AI inference is verified fact.
 
 - One synthetic financial-services tenant
 - One payment incident family
-- Synthetic alert ingestion and queue
+- Synthetic alert ingestion and one tenant-scoped incident work queue
 - Operator-triggered investigation
 - A small set of read-only MCP tools
 - Markdown runbook and policy ingestion
@@ -78,7 +78,6 @@ snapshot without pretending that AI inference is verified fact.
 
 ## Decisions still to fill in
 
-- Initial incident family: payment authorization decline-rate spike
 - Bedrock chat model: `[choose after access and cost review]`
 - AWS deployment services: `[choose during deployment milestone]`
 - Authentication approach: `[defer until the core flow works]`

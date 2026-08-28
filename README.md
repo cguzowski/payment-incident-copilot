@@ -12,7 +12,7 @@ system. See the factual [project status](docs/agent/STATUS.md) and the active
 
 ```text
 synthetic alert
--> operator queue
+-> incident work queue
 -> operator starts investigation
 -> read-only MCP tools gather evidence
 -> approved runbooks and policies are retrieved
@@ -25,7 +25,7 @@ synthetic alert
 
 | Component | Responsibility |
 |---|---|
-| `frontend/operator-console` | Alert triage, investigation review, and human decisions |
+| `frontend/operator-console` | Active incident triage, investigation review, and human decisions |
 | `backend/copilot-api` | Workflow, persistence, retrieval, report generation, and audit history |
 | `backend/operations-mcp-server` | Deterministic synthetic evidence exposed through read-only MCP tools |
 | PostgreSQL/pgvector | Application state, approved knowledge, and vector retrieval |
@@ -130,7 +130,7 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 and V2 when the API starts.
+Flyway applies V1 through V3 when the API starts.
 
 ### Docker PostgreSQL 17.11 on port 5433
 

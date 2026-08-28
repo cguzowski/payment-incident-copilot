@@ -10,10 +10,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { AlertQueueApiService } from './alert-queue-api.service';
-import { AlertQueueItem, IncidentSeverity } from './alert-queue.models';
+import { AlertQueueItem, IncidentSeverity, IncidentStatus } from './alert-queue.models';
 
 type QueueState = 'loading' | 'success' | 'error';
-type QueueSort = 'age' | 'severity';
+type QueueSort = 'received-desc' | 'received-asc' | 'detected-desc' | 'severity' | 'status';
 
 const severityRank: Record<IncidentSeverity, number> = {
   CRITICAL: 4,
@@ -21,6 +21,7 @@ const severityRank: Record<IncidentSeverity, number> = {
   MEDIUM: 2,
   LOW: 1,
 };
+const statusRank: Record<IncidentStatus, number> = { NEW: 1, INVESTIGATING: 2 };
 
 @Component({
   selector: 'app-alert-queue',
@@ -35,19 +36,31 @@ export class AlertQueueComponent {
 
   protected readonly state = signal<QueueState>('loading');
   protected readonly incidents = signal<AlertQueueItem[]>([]);
-  protected readonly sort = signal<QueueSort>('age');
+  protected readonly sort = signal<QueueSort>('received-desc');
   protected readonly sortedIncidents = computed(() => {
     const incidents = [...this.incidents()];
-    if (this.sort() === 'severity') {
-      return incidents.sort(
-        (left, right) =>
-          severityRank[right.severity] - severityRank[left.severity] ||
-          Date.parse(right.detectedAt) - Date.parse(left.detectedAt),
-      );
+    const received = (left: AlertQueueItem, right: AlertQueueItem) =>
+      Date.parse(right.receivedAt) - Date.parse(left.receivedAt);
+    switch (this.sort()) {
+      case 'received-asc':
+        return incidents.sort((left, right) => -received(left, right));
+      case 'detected-desc':
+        return incidents.sort(
+          (left, right) => Date.parse(right.detectedAt) - Date.parse(left.detectedAt),
+        );
+      case 'severity':
+        return incidents.sort(
+          (left, right) =>
+            severityRank[right.severity] - severityRank[left.severity] || received(left, right),
+        );
+      case 'status':
+        return incidents.sort(
+          (left, right) =>
+            statusRank[left.status] - statusRank[right.status] || received(left, right),
+        );
+      default:
+        return incidents.sort(received);
     }
-    return incidents.sort(
-      (left, right) => Date.parse(right.detectedAt) - Date.parse(left.detectedAt),
-    );
   });
 
   constructor() {
@@ -73,8 +86,8 @@ export class AlertQueueComponent {
 
   protected onSortChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
-    if (value === 'age' || value === 'severity') {
-      this.sort.set(value);
+    if (['received-desc', 'received-asc', 'detected-desc', 'severity', 'status'].includes(value)) {
+      this.sort.set(value as QueueSort);
     }
   }
 

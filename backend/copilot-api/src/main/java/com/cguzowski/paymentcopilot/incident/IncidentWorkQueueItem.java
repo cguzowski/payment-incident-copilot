@@ -3,7 +3,7 @@ package com.cguzowski.paymentcopilot.incident;
 import java.time.Instant;
 import java.util.UUID;
 
-public record AlertQueueSummary(
+public record IncidentWorkQueueItem(
         UUID incidentId,
         String externalAlertId,
         IncidentType incidentType,
@@ -11,10 +11,12 @@ public record AlertQueueSummary(
         IncidentStatus status,
         String title,
         Instant detectedAt,
-        Instant receivedAt) {
+        Instant receivedAt,
+        UUID activeInvestigationId) {
 
-    static AlertQueueSummary from(Incident incident) {
-        return new AlertQueueSummary(
+    static IncidentWorkQueueItem from(IncidentWorkQueueEntry entry) {
+        Incident incident = entry.incident();
+        return new IncidentWorkQueueItem(
                 incident.id(),
                 incident.externalAlertId(),
                 incident.incidentType(),
@@ -22,6 +24,7 @@ public record AlertQueueSummary(
                 incident.status(),
                 incident.title(),
                 incident.detectedAt(),
-                incident.receivedAt());
+                incident.receivedAt(),
+                entry.activeInvestigationId());
     }
 }

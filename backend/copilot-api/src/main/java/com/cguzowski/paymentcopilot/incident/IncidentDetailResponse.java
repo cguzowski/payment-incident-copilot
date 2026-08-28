@@ -12,9 +12,11 @@ public record IncidentDetailResponse(
         String title,
         String description,
         Instant detectedAt,
-        Instant receivedAt) {
+        Instant receivedAt,
+        UUID activeInvestigationId) {
 
-    static IncidentDetailResponse from(Incident incident) {
+    static IncidentDetailResponse from(IncidentWorkQueueEntry entry) {
+        Incident incident = entry.incident();
         return new IncidentDetailResponse(
                 incident.id(),
                 incident.externalAlertId(),
@@ -24,6 +26,7 @@ public record IncidentDetailResponse(
                 incident.title(),
                 incident.description(),
                 incident.detectedAt(),
-                incident.receivedAt());
+                incident.receivedAt(),
+                entry.activeInvestigationId());
     }
 }

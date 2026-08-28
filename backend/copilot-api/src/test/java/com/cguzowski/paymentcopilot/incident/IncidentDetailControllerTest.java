@@ -20,6 +20,7 @@ class IncidentDetailControllerTest {
 
     private static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
     private static final UUID INCIDENT_ID = UUID.fromString("f4749ecb-49b0-4277-a140-cb69485b082f");
+    private static final UUID INVESTIGATION_ID = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
 
     private IncidentDetailService incidentDetailService;
     private MockMvc mockMvc;
@@ -40,7 +41,7 @@ class IncidentDetailControllerTest {
         mockMvc.perform(get("/api/incidents/{incidentId}", INCIDENT_ID)
                         .queryParam("tenantId", TENANT_ID.toString()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(9)))
+                .andExpect(jsonPath("$.*", hasSize(10)))
                 .andExpect(jsonPath("$.incidentId").value(INCIDENT_ID.toString()))
                 .andExpect(jsonPath("$.externalAlertId").value("alert-auth-decline-001"))
                 .andExpect(jsonPath("$.incidentType").value("AUTHORIZATION_DECLINE_RATE_SPIKE"))
@@ -51,6 +52,7 @@ class IncidentDetailControllerTest {
                         .value("Synthetic authorization declines exceeded 25% for five minutes."))
                 .andExpect(jsonPath("$.detectedAt").value("2026-08-22T07:14:00Z"))
                 .andExpect(jsonPath("$.receivedAt").value("2026-08-22T07:15:00Z"))
+                .andExpect(jsonPath("$.activeInvestigationId").value(INVESTIGATION_ID.toString()))
                 .andExpect(jsonPath("$.tenantId").doesNotExist())
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
@@ -110,6 +112,7 @@ class IncidentDetailControllerTest {
                 "Authorization decline rate above threshold",
                 "Synthetic authorization declines exceeded 25% for five minutes.",
                 Instant.parse("2026-08-22T07:14:00Z"),
-                Instant.parse("2026-08-22T07:15:00Z"));
+                Instant.parse("2026-08-22T07:15:00Z"),
+                INVESTIGATION_ID);
     }
 }

@@ -2,7 +2,7 @@
   <div class="queue__heading">
     <div>
       <p class="eyebrow">Incident intake</p>
-      <h1 id="queue-title">Alert queue</h1>
+      <h1 id="queue-title">Incident work queue</h1>
       <p class="queue__intro">
         Review synthetic payment signals and choose the next incident to investigate.
       </p>
@@ -21,48 +21,67 @@
     <div class="state-card state-card--loading" role="status" aria-live="polite">
       <span class="spinner" aria-hidden="true"></span>
       <div>
-        <strong>Loading alert queue…</strong>
-        <p>Checking for new operational signals.</p>
+        <strong>Loading incident work queue…</strong>
+        <p>Checking active incident work.</p>
       </div>
     </div>
   } @else if (state() === 'error') {
     <div class="state-card state-card--error" role="alert">
       <span class="state-card__icon" aria-hidden="true">!</span>
       <div>
-        <strong>We couldn’t load the alert queue.</strong>
+        <strong>We couldn’t load the incident work queue.</strong>
         <p>The copilot API may be unavailable. No incident data was changed.</p>
-        <button type="button" data-testid="retry" (click)="loadQueue()">Try again</button>
+        <button
+          class="button button--primary"
+          type="button"
+          data-testid="retry"
+          (click)="loadQueue()"
+        >
+          Try again
+        </button>
       </div>
     </div>
   } @else if (incidents().length === 0) {
     <div class="state-card state-card--empty" data-testid="empty-state">
       <span class="state-card__icon state-card__icon--check" aria-hidden="true">✓</span>
       <div>
-        <strong>No new incidents</strong>
-        <p>The queue is clear. New synthetic alerts will appear here automatically.</p>
+        <strong>No active incidents</strong>
+        <p>The work queue is clear.</p>
       </div>
     </div>
   } @else {
     <div class="queue__toolbar">
       <p>
-        <strong>{{ incidents().length }}</strong> new
+        <strong>{{ incidents().length }}</strong> active
         {{ incidents().length === 1 ? 'incident' : 'incidents' }}
       </p>
       <label for="queue-sort">
         Sort by
         <select id="queue-sort" [value]="sort()" (change)="onSortChange($event)">
-          <option value="age">Newest detected</option>
+          <option value="received-desc">Newest received</option>
+          <option value="received-asc">Oldest received</option>
+          <option value="detected-desc">Newest detected</option>
           <option value="severity">Highest severity</option>
+          <option value="status">Status</option>
         </select>
       </label>
+      <button
+        class="button button--secondary"
+        type="button"
+        data-testid="refresh"
+        (click)="loadQueue()"
+      >
+        Refresh
+      </button>
     </div>
 
-    <div class="queue-table" role="region" aria-label="New payment incidents" tabindex="0">
+    <div class="queue-table" role="region" aria-label="Incident work queue" tabindex="0">
       <table>
         <thead>
           <tr>
             <th scope="col">Severity</th>
             <th scope="col">Incident</th>
+            <th scope="col">Received</th>
             <th scope="col">Detected</th>
             <th scope="col">Status</th>
           </tr>
@@ -89,13 +108,37 @@
                   <code>{{ incident.externalAlertId }}</code>
                 </div>
               </td>
+              <td data-label="Received">
+                <time
+                  data-testid="received-at"
+                  [attr.datetime]="incident.receivedAt"
+                  [title]="incident.receivedAt"
+                >
+                  {{ incident.receivedAt | date: 'MMM d, HH:mm' : 'UTC' }} UTC
+                </time>
+              </td>
               <td data-label="Detected">
-                <time [attr.datetime]="incident.detectedAt" [title]="incident.detectedAt">
+                <time
+                  data-testid="detected-at"
+                  [attr.datetime]="incident.detectedAt"
+                  [title]="incident.detectedAt"
+                >
                   {{ incident.detectedAt | date: 'MMM d, HH:mm' : 'UTC' }} UTC
                 </time>
               </td>
               <td data-label="Status">
-                <span class="status">{{ incident.status }}</span>
+                <div class="status-actions" data-testid="status-actions">
+                  <span class="status status--compact">{{ incident.status }}</span>
+                  @if (incident.activeInvestigationId) {
+                    <a
+                      class="action-link"
+                      data-testid="resume-investigation"
+                      [routerLink]="['/investigations', incident.activeInvestigationId]"
+                    >
+                      Resume investigation
+                    </a>
+                  }
+                </div>
               </td>
             </tr>
           }
