@@ -1,8 +1,10 @@
 # Operator Console
 
 Angular application for payment operations analysts to triage synthetic alerts,
-start an investigation, and collect and review observed synthetic service-error
-evidence. AI-assisted reports and human decisions remain later milestones.
+start an investigation, review observed synthetic service-error evidence, and
+retrieve approved synthetic runbook and policy excerpts. Approved knowledge is
+kept separate from observed evidence; AI-assisted reports and human decisions
+remain later milestones.
 
 ## Prerequisites
 
@@ -27,6 +29,7 @@ npm run build
 npx prettier --check "src/**/*.{ts,html,scss}" "*.json"
 ```
 
-The alert queue tests cover loading, empty, populated, error/retry, sorting,
-and the tenant-scoped API request. The console uses synthetic data only and
-keeps the human-review requirement visible in the application shell.
+The tests cover the alert queue, incident and investigation routes, evidence
+collection, approved-knowledge retrieval history and failure states, retries,
+and tenant-scoped API requests. The console uses synthetic data only and keeps
+source material separate from future AI inference and recommendation.

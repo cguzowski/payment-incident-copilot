@@ -63,33 +63,48 @@ Milestone 1 — Establish the operator investigation workflow.
 - Verified every evidence availability outcome, MCP discovery and invocation,
   Flyway V4, transaction boundaries, tenant isolation, retry history, the
   three-service local workflow, and desktop/390-pixel UI regressions.
+- Implemented the approved operational-knowledge slice: explicit versioned
+  Markdown ingestion, validated Titan V2 embedding requests, Flyway V5,
+  tenant-safe exact hybrid PostgreSQL retrieval with RRF, persisted retrieval
+  snapshots/history, and a responsive approved-knowledge workspace.
+- Verified the complete deterministic slice through unit, HTTP, PostgreSQL/
+  pgvector integration, transaction-boundary, Angular, build, formatting,
+  Compose, scope, secret, and desktop/390-pixel browser checks.
 
 ## In progress
 
-- No executable task is in progress. A separate development-system proposal for
-  one authoritative local/CI verification entry point is recorded in
-  `docs/agent/tasks/current.md` for owner review.
+- Approved operational-knowledge retrieval is implementation-complete. Its
+  contract and acceptance checks are satisfied; authorized live Bedrock smoke
+  verification remains pending before the active task is closed.
+- The authoritative local/CI verification entry point remains a future
+  development-system proposal under `docs/agent/tasks/proposed/`.
 
 ## Next
 
-1. Review and approve the authoritative verification and CI-parity proposal.
-2. After that task is complete, consolidate duplicated PostgreSQL Testcontainers
-   setup and synthetic test fixtures in a separate task.
-3. Then add a lightweight ordered product roadmap before selecting the next
-   product slice; keep knowledge retrieval, AI analysis, and human decisions
-   separate from development-system work.
+1. Run the documented one-shot embedding smoke and explicit importer in an
+   environment authorized for `amazon.titan-embed-text-v2:0`.
+2. Close P1 after owner review, then prepare P2 report generation as a separate
+   proposed contract without changing the current task.
+3. Keep report generation, human decisions, and additional evidence tools out
+   of the current task.
+4. Keep shared Testcontainers fixtures and other internal consolidation in the
+   maintenance backlog unless they measurably block the product slice.
 
 ## Blockers
 
-- None.
+- No authorized AWS credential/profile was available in this task environment,
+  so live Titan V2 smoke verification remains external.
 
 ## Known deliberate gaps
 
 - No authentication yet.
 - Only `getRecentServiceErrors` is implemented; additional evidence domains and
   operator-selected investigation areas remain future product tasks.
-- No Bedrock model configured yet.
-- No knowledge-ingestion pipeline yet.
+- Live Amazon Titan Text Embeddings V2 authorization, region availability, and
+  returned-vector behavior have not yet been verified in an authorized AWS
+  environment; local and CI verification use the deterministic embedding double.
+- Knowledge ingestion is intentionally explicit and disabled during normal
+  startup; there is no continuous content-management pipeline yet.
 - No AWS infrastructure selected yet.
 - The investigation workspace intentionally does not repeat incident context;
   that design and any API evolution are deferred to a future task.
@@ -120,6 +135,16 @@ Milestone 1 — Establish the operator investigation workflow.
   evidence outcomes, append-only retry history, structured 400/404 boundaries,
   persisted provenance, queue/detail/resume/direct-refresh regressions, and
   desktop/390-pixel checks with no browser warnings or overflowing elements.
+- 2026-08-28: `mvn clean verify` passed 97 copilot API and 9 operations MCP
+  tests with zero failures, errors, or skips, including PostgreSQL 17.11,
+  pgvector exact cosine search, Flyway V1-V5, filtered FTS/vector ranking, RRF,
+  retrieval persistence, and the full retrieval API path.
+- 2026-08-28: After a clean `npm ci` with zero audit vulnerabilities, Angular
+  passed 46/46 tests; Prettier and the 299.28 kB production build passed.
+- 2026-08-28: Docker Compose validation, `git diff --check`, changed-file
+  sensitive-pattern review, and desktop/390-pixel approved-knowledge checks
+  passed with one panel after observed evidence, no horizontal overflow or
+  off-viewport actions, and no browser warnings or errors.
 
 ## Update rule
 

@@ -16,6 +16,14 @@ spring:
   flyway:
     enabled: true
   ai:
+    model:
+      embedding: ${AI_MODEL_EMBEDDING:none}
+    bedrock:
+      aws:
+        region: ${AWS_REGION:eu-central-1}
+      titan:
+        embedding:
+          model: amazon.titan-embed-text-v2:0
     mcp:
       client:
         initialized: false
@@ -42,3 +50,10 @@ management:
     health:
       probes:
         enabled: true
+
+app:
+  knowledge:
+    ingestion:
+      enabled: false
+    embedding-smoke-test:
+      enabled: false

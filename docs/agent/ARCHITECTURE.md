@@ -1,6 +1,6 @@
 # Architecture
 
-Last reviewed: 2026-08-27
+Last reviewed: 2026-08-28
 
 ## System boundaries
 
@@ -31,8 +31,13 @@ sequenceDiagram
     U->>A: Start investigation
     A->>M: Call required read-only tools
     M-->>A: Sourced operational evidence
-    A->>D: Retrieve runbooks and policies
+    A->>D: Persist evidence and retrieval STARTED
+    A->>B: Embed bounded derived retrieval query
+    B-->>A: Normalized 1,024-dimension vector
+    A->>D: Filtered full-text plus exact vector search
     D-->>A: Tenant-filtered knowledge chunks
+    A->>D: Persist immutable retrieval snapshot
+    A-->>U: Approved source excerpts and provenance
     A->>A: Normalize and classify evidence
     A->>B: Evidence plus versioned report schema
     B-->>A: Structured proposed report

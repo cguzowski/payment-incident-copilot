@@ -29,7 +29,7 @@ synthetic alert
 | `backend/copilot-api` | Workflow, persistence, retrieval, report generation, and audit history |
 | `backend/operations-mcp-server` | Deterministic synthetic evidence exposed through read-only MCP tools |
 | PostgreSQL/pgvector | Application state, approved knowledge, and vector retrieval |
-| Amazon Bedrock | Planned embeddings and structured report generation |
+| Amazon Bedrock | Titan V2 knowledge embeddings; structured report generation remains planned |
 
 The applications share one repository but remain independently buildable and
 deployable. See [Architecture](docs/agent/ARCHITECTURE.md) for ownership and
@@ -131,7 +131,7 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V4 when the API starts.
+Flyway applies V1 through V5 when the API starts.
 
 ### Docker PostgreSQL 17.11 on port 5433
 
@@ -176,6 +176,31 @@ mvn -pl backend/copilot-api -am spring-boot:run
 Default application ports are `8080` for the copilot API and `8081` for the MCP
 server. Native PostgreSQL uses `5432`; the Docker baseline uses `5433` when both
 servers coexist.
+
+### Approved-knowledge ingestion and Bedrock smoke test
+
+Normal startup does not call Bedrock or mutate the knowledge index. In an
+authorized AWS environment, use the default AWS credential chain and enable
+Titan V2 explicitly; never add credentials to `.env` or tracked files.
+
+After loading `.env` and pointing the API at a running PostgreSQL/pgvector
+database, run the safe model-contract smoke test as a one-shot application:
+
+```powershell
+$env:AI_MODEL_EMBEDDING = 'bedrock-titan'
+$env:APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = 'true'
+Push-Location backend/copilot-api
+mvn "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
+Pop-Location
+```
+
+The smoke test sends one fixed synthetic string and reports only the model ID,
+dimension count, and normalization result. To explicitly ingest the two
+repository-owned approved Markdown sources, use the same command with
+`APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED=false` and
+`APP_KNOWLEDGE_INGESTION_ENABLED=true`. Re-importing unchanged sources is
+idempotent; changed content or embedding metadata requires a new document
+version.
 
 Run the Angular operator console in another terminal:
 
