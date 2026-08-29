@@ -55,4 +55,24 @@ describe('InvestigationApiService', () => {
     expect(request.request.body).toBeNull();
     request.flush({});
   });
+
+  it('requestsKnowledgeHistoryForConfiguredTenant', () => {
+    service.getKnowledgeHistory('investigation/id').subscribe();
+    const request = http.expectOne(
+      `/api/investigations/investigation%2Fid/knowledge-retrievals?tenantId=${SYNTHETIC_TENANT_ID}`,
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush([]);
+  });
+
+  it('startsKnowledgeRetrievalWithoutClientQueryParameters', () => {
+    service.retrieveKnowledge('investigation/id').subscribe();
+    const request = http.expectOne(
+      `/api/investigations/investigation%2Fid/knowledge-retrievals?tenantId=${SYNTHETIC_TENANT_ID}`,
+    );
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toBeNull();
+    expect(request.request.params.keys()).toEqual(['tenantId']);
+    request.flush({});
+  });
 });

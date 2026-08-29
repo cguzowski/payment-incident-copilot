@@ -57,6 +57,7 @@ describe('App routes', () => {
           useValue: {
             get: vi.fn(() => of(investigation())),
             getEvidenceHistory: vi.fn(() => of([])),
+            getKnowledgeHistory: vi.fn(() => of([])),
           },
         },
       ],

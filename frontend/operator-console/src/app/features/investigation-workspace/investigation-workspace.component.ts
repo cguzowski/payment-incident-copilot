@@ -5,7 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
 import { InvestigationApiService } from './investigation-api.service';
-import { EvidenceCollection, Investigation } from './investigation.models';
+import { EvidenceCollection, Investigation, KnowledgeRetrieval } from './investigation.models';
 
 @Component({
   selector: 'app-investigation-workspace',
@@ -27,6 +27,10 @@ export class InvestigationWorkspaceComponent {
   protected readonly evidenceAttempts = signal<EvidenceCollection[]>([]);
   protected readonly collecting = signal(false);
   protected readonly collectionError = signal(false);
+  protected readonly knowledgeState = signal<'loading' | 'success' | 'error'>('loading');
+  protected readonly knowledgeAttempts = signal<KnowledgeRetrieval[]>([]);
+  protected readonly retrievingKnowledge = signal(false);
+  protected readonly knowledgeRetrievalError = signal(false);
 
   constructor() {
     this.load();
@@ -42,6 +46,7 @@ export class InvestigationWorkspaceComponent {
           this.investigation.set(item);
           this.state.set('success');
           this.loadEvidence();
+          this.loadKnowledge();
         },
         error: (error: unknown) =>
           this.state.set(
@@ -82,6 +87,41 @@ export class InvestigationWorkspaceComponent {
           this.evidenceState.set('success');
         },
         error: () => this.collectionError.set(true),
+      });
+  }
+
+  protected loadKnowledge(): void {
+    this.knowledgeState.set('loading');
+    this.api
+      .getKnowledgeHistory(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (attempts) => {
+          this.knowledgeAttempts.set(attempts);
+          this.knowledgeState.set('success');
+        },
+        error: () => this.knowledgeState.set('error'),
+      });
+  }
+
+  protected retrieveKnowledge(): void {
+    if (this.retrievingKnowledge()) {
+      return;
+    }
+    this.retrievingKnowledge.set(true);
+    this.knowledgeRetrievalError.set(false);
+    this.api
+      .retrieveKnowledge(this.id)
+      .pipe(
+        finalize(() => this.retrievingKnowledge.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (attempt) => {
+          this.knowledgeAttempts.update((attempts) => [attempt, ...attempts]);
+          this.knowledgeState.set('success');
+        },
+        error: () => this.knowledgeRetrievalError.set(true),
       });
   }
 }

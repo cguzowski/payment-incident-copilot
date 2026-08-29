@@ -190,5 +190,171 @@
         </div>
       }
     </section>
+
+    <section
+      class="knowledge-panel"
+      aria-labelledby="knowledge-title"
+      data-testid="knowledge-panel"
+    >
+      <div class="knowledge-panel__heading">
+        <div>
+          <p class="eyebrow">Approved knowledge</p>
+          <h2 id="knowledge-title">Runbooks and policy</h2>
+        </div>
+        <button
+          class="button button--primary"
+          type="button"
+          data-testid="retrieve-knowledge"
+          [disabled]="retrievingKnowledge()"
+          (click)="retrieveKnowledge()"
+        >
+          {{ retrievingKnowledge() ? 'Retrieving…' : 'Retrieve approved knowledge' }}
+        </button>
+      </div>
+      <p class="knowledge-panel__boundary">
+        Synthetic approved source material for operator review. It is not an AI conclusion or
+        executable instruction. No AI inference or recommendation has been generated.
+      </p>
+
+      @if (knowledgeRetrievalError()) {
+        <p class="evidence-message evidence-message--error" role="alert">
+          Knowledge retrieval could not be completed. Previous attempts remain available; try again
+          when ready.
+        </p>
+      }
+
+      @if (knowledgeState() === 'loading') {
+        <p class="evidence-message" role="status" data-testid="knowledge-loading">
+          Loading approved knowledge history…
+        </p>
+      } @else if (knowledgeState() === 'error') {
+        <div class="evidence-message evidence-message--error" role="alert">
+          <strong>We couldn’t load approved knowledge history.</strong>
+          <button
+            class="button button--secondary"
+            type="button"
+            data-testid="retry-knowledge-history"
+            (click)="loadKnowledge()"
+          >
+            Try again
+          </button>
+        </div>
+      } @else if (knowledgeAttempts().length === 0) {
+        <p class="evidence-message">Approved knowledge has not been retrieved.</p>
+      } @else {
+        <div class="knowledge-history" aria-label="Approved knowledge retrieval history">
+          @for (attempt of knowledgeAttempts(); track attempt.retrievalId) {
+            <article class="knowledge-attempt" data-testid="knowledge-attempt">
+              <div class="knowledge-attempt__heading">
+                <div>
+                  <p class="evidence-attempt__label">Retrieval attempt</p>
+                  <code>{{ attempt.retrievalId }}</code>
+                </div>
+                <span class="status status--compact">{{ attempt.status }}</span>
+              </div>
+
+              @if (attempt.statusDetail) {
+                <p class="knowledge-attempt__detail">{{ attempt.statusDetail }}</p>
+              } @else if (attempt.status === 'STARTED') {
+                <p class="knowledge-attempt__detail">Retrieval did not reach a terminal status.</p>
+              } @else if (attempt.status === 'NO_MATCH') {
+                <p class="knowledge-attempt__detail">
+                  No eligible approved knowledge matched this investigation.
+                </p>
+              }
+
+              <dl class="knowledge-provenance">
+                <div>
+                  <dt>Requested</dt>
+                  <dd>{{ attempt.requestedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+                </div>
+                <div>
+                  <dt>Completed</dt>
+                  <dd>
+                    @if (attempt.completedAt) {
+                      {{ attempt.completedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC
+                    } @else {
+                      Not completed
+                    }
+                  </dd>
+                </div>
+                <div>
+                  <dt>Embedding model</dt>
+                  <dd>
+                    <code>{{ attempt.embeddingModelId }}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Retrieval rules</dt>
+                  <dd>
+                    <code>{{ attempt.rankingVersion }}</code>
+                  </dd>
+                </div>
+              </dl>
+
+              @if (attempt.results.length > 0) {
+                <div class="knowledge-results" aria-label="Selected approved knowledge chunks">
+                  @for (result of attempt.results; track result.chunkId) {
+                    <article class="knowledge-result">
+                      <div class="knowledge-result__heading">
+                        <div>
+                          <p class="knowledge-result__type">{{ result.documentType }}</p>
+                          <h3>{{ result.documentTitle }}</h3>
+                          <p class="knowledge-result__section">
+                            Version {{ result.documentVersion }} · {{ result.sectionPath }}
+                          </p>
+                        </div>
+                        <span class="knowledge-result__position"
+                          >#{{ result.selectedPosition }}</span
+                        >
+                      </div>
+                      <blockquote>{{ result.rawContent }}</blockquote>
+                      <dl class="knowledge-result__provenance">
+                        <div>
+                          <dt>Document ID</dt>
+                          <dd>
+                            <code>{{ result.documentId }}</code>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Version ID</dt>
+                          <dd>
+                            <code>{{ result.documentVersionId }}</code>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Chunk ID</dt>
+                          <dd>
+                            <code>{{ result.chunkId }}</code>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Source lines</dt>
+                          <dd>{{ result.sourceStartLine }}–{{ result.sourceEndLine }}</dd>
+                        </div>
+                        <div>
+                          <dt>Approved</dt>
+                          <dd>{{ result.approvedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+                        </div>
+                        <div>
+                          <dt>Approved by</dt>
+                          <dd>
+                            <code>{{ result.approvedBy }}</code>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Effective</dt>
+                          <dd>{{ result.effectiveAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+                        </div>
+                      </dl>
+                    </article>
+                  }
+                </div>
+              }
+            </article>
+          }
+        </div>
+      }
+    </section>
   }
 </section>
