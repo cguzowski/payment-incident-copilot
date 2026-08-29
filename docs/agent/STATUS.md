@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 ## Current milestone
 
@@ -70,25 +70,30 @@ Milestone 1 — Establish the operator investigation workflow.
 - Verified the complete deterministic slice through unit, HTTP, PostgreSQL/
   pgvector integration, transaction-boundary, Angular, build, formatting,
   Compose, scope, secret, and desktop/390-pixel browser checks.
+- Implemented the B01-B06 codebase boundaries: enforced copilot feature
+  ownership, tenant-scoped incident/evidence snapshot ports, composed Angular
+  investigation panels, centralized synthetic HTTP request context, one
+  immutable MCP v1 contract artifact, and a shared local/CI verification gate.
+- Pinned Node.js 24.14.1, npm 10.8.3, Maven Wrapper 3.9.16, Spotless 3.9.0,
+  and Palantir Java Format 2.96.0; CI delegates its backend, frontend, and
+  repository checks to the root verification implementation.
+- Completed B01-B06 acceptance after the Windows restart: the authoritative
+  aggregate gate passed every backend, frontend, formatting, build, Compose,
+  and diff check with zero skipped tests, followed by live desktop and
+  390-CSS-pixel workspace verification.
 
 ## In progress
 
-- Approved operational-knowledge retrieval is implementation-complete. Its
-  contract and acceptance checks are satisfied; authorized live Bedrock smoke
-  verification remains pending before the active task is closed.
-- The authoritative local/CI verification entry point remains a future
-  development-system proposal under `docs/agent/tasks/proposed/`.
+- Authorized live Bedrock smoke verification remains pending as the preserved
+  external limitation from the completed approved-knowledge task.
 
 ## Next
 
 1. Run the documented one-shot embedding smoke and explicit importer in an
    environment authorized for `amazon.titan-embed-text-v2:0`.
-2. Close P1 after owner review, then prepare P2 report generation as a separate
-   proposed contract without changing the current task.
-3. Keep report generation, human decisions, and additional evidence tools out
-   of the current task.
-4. Keep shared Testcontainers fixtures and other internal consolidation in the
-   maintenance backlog unless they measurably block the product slice.
+2. Prepare report generation as a separate proposed task after owner review.
+3. Keep human decisions and additional evidence tools out of that proposal
+   unless separately approved.
 
 ## Blockers
 
@@ -145,6 +150,36 @@ Milestone 1 — Establish the operator investigation workflow.
   sensitive-pattern review, and desktop/390-pixel approved-knowledge checks
   passed with one panel after observed evidence, no horizontal overflow or
   off-viewport actions, and no browser warnings or errors.
+- 2026-08-29: `./verify.ps1 -Scope Repository` passed the PowerShell verification
+  contract, Maven-wrapper portability regression, Docker Compose configuration,
+  and `git diff --check`.
+- 2026-08-29: The repository scope also passed under Windows PowerShell 5.1 and
+  PowerShell Core after a regression exposed and removed a Core-only platform
+  variable from wrapper selection.
+- 2026-08-29: `./verify.ps1 -Scope Frontend` passed 45/45 Angular tests with
+  zero skips, Prettier, and the 306.66 kB production build after `npm ci`
+  reported zero vulnerabilities.
+- 2026-08-29: `./verify.ps1` compiled both Java deployables, passed all 85
+  non-PostgreSQL copilot tests and all 9 operations MCP tests, including two
+  live random-port MCP contract tests and eight architecture rules. The gate
+  then failed as designed because Docker was unavailable and 31 PostgreSQL
+  tests were skipped; this is not recorded as a backend pass.
+- 2026-08-29: After the Windows restart, `./verify.ps1` passed 116/116 copilot
+  API tests and 9/9 operations MCP tests with zero failures, errors, or skips,
+  including PostgreSQL 17.11 Testcontainers, Flyway V1-V5, tenant isolation,
+  snapshot semantics, transaction boundaries, architecture rules, and live MCP
+  contracts. It then passed 45/45 Angular tests with zero skips, npm audit,
+  Spotless, Prettier, the 306.66 kB production build, Compose validation, and
+  `git diff --check`.
+- 2026-08-29: Live direct-route investigation verification at 1280x720 and
+  390x844 rendered the investigation shell plus independently loaded evidence
+  and approved-knowledge histories with no horizontal overflow, off-viewport
+  interactive controls, browser warnings, or browser errors.
+- 2026-08-29: Corrected the Ubuntu repository-job failure caused by constructing
+  a synthetic Windows wrapper path through the host PowerShell drive provider.
+  The strengthened nonexistent-drive regression passed in PowerShell Core and
+  Windows PowerShell 5.1; repository verification passed, followed by 116/116
+  copilot and 9/9 MCP-server backend tests with zero skips.
 
 ## Update rule
 

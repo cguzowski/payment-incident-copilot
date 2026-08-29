@@ -44,19 +44,12 @@ class InvestigationServiceTest {
         InvestigationStartResult result = service.start(TENANT_ID, INCIDENT_ID, OPERATOR_ID);
 
         assertThat(result.created()).isTrue();
-        assertThat(result.response()).isEqualTo(new InvestigationResponse(
-                INVESTIGATION_ID,
-                INCIDENT_ID,
-                IncidentStatus.INVESTIGATING,
-                OPERATOR_ID,
-                STARTED_AT));
-        verify(investigationRepository).insert(new Investigation(
-                INVESTIGATION_ID,
-                TENANT_ID,
-                INCIDENT_ID,
-                OPERATOR_ID,
-                STARTED_AT,
-                CORRELATION_ID));
+        assertThat(result.response())
+                .isEqualTo(new InvestigationResponse(
+                        INVESTIGATION_ID, INCIDENT_ID, IncidentStatus.INVESTIGATING, OPERATOR_ID, STARTED_AT));
+        verify(investigationRepository)
+                .insert(new Investigation(
+                        INVESTIGATION_ID, TENANT_ID, INCIDENT_ID, OPERATOR_ID, STARTED_AT, CORRELATION_ID));
     }
 
     @Test
@@ -71,15 +64,14 @@ class InvestigationServiceTest {
         InvestigationStartResult result = service.start(TENANT_ID, INCIDENT_ID, OPERATOR_ID);
 
         assertThat(result.created()).isFalse();
-        assertThat(result.response()).isEqualTo(InvestigationResponse.from(
-                new InvestigationView(existing, IncidentStatus.INVESTIGATING)));
+        assertThat(result.response())
+                .isEqualTo(InvestigationResponse.from(new InvestigationView(existing, IncidentStatus.INVESTIGATING)));
         verify(investigationRepository, never()).insert(existing);
     }
 
     @Test
     void returnsIncidentNotFoundWithoutTenantLeakage() {
-        when(investigationRepository.lockIncidentStatus(TENANT_ID, INCIDENT_ID))
-                .thenReturn(Optional.empty());
+        when(investigationRepository.lockIncidentStatus(TENANT_ID, INCIDENT_ID)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service().start(TENANT_ID, INCIDENT_ID, OPERATOR_ID))
                 .isInstanceOf(IncidentNotFoundException.class);
@@ -99,18 +91,10 @@ class InvestigationServiceTest {
 
     private InvestigationService service() {
         return new InvestigationService(
-                investigationRepository,
-                identifierGenerator,
-                Clock.fixed(STARTED_AT, ZoneOffset.UTC));
+                investigationRepository, identifierGenerator, Clock.fixed(STARTED_AT, ZoneOffset.UTC));
     }
 
     private static Investigation investigation() {
-        return new Investigation(
-                INVESTIGATION_ID,
-                TENANT_ID,
-                INCIDENT_ID,
-                OPERATOR_ID,
-                STARTED_AT,
-                CORRELATION_ID);
+        return new Investigation(INVESTIGATION_ID, TENANT_ID, INCIDENT_ID, OPERATOR_ID, STARTED_AT, CORRELATION_ID);
     }
 }

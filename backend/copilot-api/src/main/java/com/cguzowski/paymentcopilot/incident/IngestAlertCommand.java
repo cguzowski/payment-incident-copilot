@@ -9,5 +9,4 @@ public record IngestAlertCommand(
         IncidentSeverity severity,
         Instant detectedAt,
         String title,
-        String description) {
-}
+        String description) {}

@@ -35,6 +35,13 @@
     </dependencies>
 
     <build>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/../../contracts/mcp/get-recent-service-errors/v1</directory>
+                <targetPath>contracts/mcp/get-recent-service-errors/v1</targetPath>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

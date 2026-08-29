@@ -13,5 +13,4 @@ public record Incident(
         String title,
         String description,
         Instant detectedAt,
-        Instant receivedAt) {
-}
+        Instant receivedAt) {}

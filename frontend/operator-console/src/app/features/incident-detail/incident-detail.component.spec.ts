@@ -9,7 +9,7 @@ import {
 } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
-import { InvestigationApiService } from '../investigation-workspace/investigation-api.service';
+import { InvestigationApiService } from '../../core/api/investigations/investigation-api.service';
 import { IncidentDetailApiService } from './incident-detail-api.service';
 import { IncidentDetail } from './incident-detail.models';
 import { IncidentDetailComponent } from './incident-detail.component';

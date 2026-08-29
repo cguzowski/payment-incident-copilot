@@ -8,16 +8,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextExceptionHandler;
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 class AlertControllerTest {
 
@@ -31,10 +35,13 @@ class AlertControllerTest {
     void setUp() {
         alertIngestionService = mock(AlertIngestionService.class);
         Validator validator = validator();
-        mockMvc = MockMvcBuilders.standaloneSetup(new AlertController(alertIngestionService))
-                .setControllerAdvice(new ApiExceptionHandler())
+        JacksonJsonHttpMessageConverter converter = new JacksonJsonHttpMessageConverter(
+                JsonMapper.builder().enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES));
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                        new AlertController(alertIngestionService, new SyntheticRequestContextResolver()))
+                .setControllerAdvice(new ApiExceptionHandler(), new SyntheticRequestContextExceptionHandler())
                 .setValidator(validator)
-                .setMessageConverters(new JacksonJsonHttpMessageConverter())
+                .setMessageConverters(converter)
                 .build();
     }
 
@@ -55,10 +62,10 @@ class AlertControllerTest {
                 .thenReturn(new AlertIngestionResult(incident, true));
 
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
                                   "externalAlertId": "alert-auth-decline-001",
                                   "severity": "CRITICAL",
                                   "detectedAt": "2026-08-22T07:14:00Z",
@@ -76,6 +83,7 @@ class AlertControllerTest {
     @Test
     void missingRequiredFieldsReturnStructuredBadRequest() throws Exception {
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest())
@@ -84,22 +92,21 @@ class AlertControllerTest {
                 .andExpect(jsonPath("$.title").value("Invalid alert"))
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.detail").value("The alert request contains invalid fields."))
-                .andExpect(jsonPath("$.errors.length()").value(6))
+                .andExpect(jsonPath("$.errors.length()").value(5))
                 .andExpect(jsonPath("$.errors[0].field").value("description"))
                 .andExpect(jsonPath("$.errors[1].field").value("detectedAt"))
                 .andExpect(jsonPath("$.errors[2].field").value("externalAlertId"))
                 .andExpect(jsonPath("$.errors[3].field").value("severity"))
-                .andExpect(jsonPath("$.errors[4].field").value("tenantId"))
-                .andExpect(jsonPath("$.errors[5].field").value("title"));
+                .andExpect(jsonPath("$.errors[4].field").value("title"));
     }
 
     @Test
     void unsupportedSeverityReturnsStructuredBadRequest() throws Exception {
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
                                   "externalAlertId": "alert-auth-decline-001",
                                   "severity": "URGENT",
                                   "detectedAt": "2026-08-22T07:14:00Z",
@@ -112,6 +119,31 @@ class AlertControllerTest {
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-alert"))
                 .andExpect(jsonPath("$.title").value("Invalid alert"))
                 .andExpect(jsonPath("$.errors[0].field").value("request"));
+    }
+
+    @Test
+    void requiresTenantHeaderAndRejectsLegacyTenantBody() throws Exception {
+        String body = """
+                {
+                  "externalAlertId": "alert-auth-decline-001",
+                  "severity": "CRITICAL",
+                  "detectedAt": "2026-08-22T07:14:00Z",
+                  "title": "Authorization decline rate above threshold",
+                  "description": "Synthetic authorization declines exceeded 25% for five minutes."
+                }
+                """;
+        mockMvc.perform(post("/api/alerts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"));
+
+        mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body.replaceFirst("\\{", "{\"tenantId\":\"" + TENANT_ID + "\",")))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-alert"));
     }
 
     private static Validator validator() {

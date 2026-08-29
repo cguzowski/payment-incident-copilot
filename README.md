@@ -76,8 +76,8 @@ infra/                      Deployment infrastructure when selected
 Prerequisites:
 
 - Java 21
-- Maven 3.9+
-- Node.js and npm
+- Node.js 24.14.1 and npm 10.8.3
+- PowerShell 7 on non-Windows hosts
 - Either native PostgreSQL 18 with pgvector or Docker with Docker Compose
 
 Create ignored local configuration from the safe placeholders:
@@ -126,7 +126,7 @@ Get-Content -LiteralPath $projectEnv | ForEach-Object {
   }
 }
 Push-Location backend/copilot-api
-mvn spring-boot:run
+../../mvnw.cmd spring-boot:run
 Pop-Location
 ```
 
@@ -152,7 +152,7 @@ changing tracked configuration:
 ```powershell
 $env:SPRING_DATASOURCE_URL = 'jdbc:postgresql://localhost:5433/payment_copilot'
 Push-Location backend/copilot-api
-mvn spring-boot:run
+../../mvnw.cmd spring-boot:run
 Pop-Location
 ```
 
@@ -160,22 +160,46 @@ Compose reads `.env` automatically; Spring Boot does not. PostgreSQL container
 initialization variables apply only when a data volume is first created, so a
 preserved volume must be used with the credentials that initialized it.
 
-Build both Java services:
+Run the authoritative repository verification from the root:
 
-```bash
-mvn clean verify
+```powershell
+./verify.ps1
+```
+
+It uses the pinned Maven Wrapper, locked frontend installation, backend and
+frontend zero-skip checks, formatting, the Angular production build, Compose
+validation, and diff-integrity checks. `-Scope Backend`, `-Scope Frontend`, and
+`-Scope Repository` are available for focused work; the unscoped command is the
+completion gate and is also used by CI.
+
+Build both Java services directly when iterating on backend code. Use
+`./mvnw.cmd` on Windows PowerShell and `sh ./mvnw` on non-Windows PowerShell:
+
+```powershell
+./mvnw.cmd clean verify
 ```
 
 Run each service in a separate terminal after loading the required environment:
 
-```bash
-mvn -pl backend/operations-mcp-server -am spring-boot:run
-mvn -pl backend/copilot-api -am spring-boot:run
+```powershell
+./mvnw.cmd -pl backend/operations-mcp-server -am spring-boot:run
+./mvnw.cmd -pl backend/copilot-api -am spring-boot:run
 ```
 
 Default application ports are `8080` for the copilot API and `8081` for the MCP
 server. Native PostgreSQL uses `5432`; the Docker baseline uses `5433` when both
 servers coexist.
+
+### Synthetic HTTP request context
+
+Application HTTP calls carry the demonstration tenant in the required
+`X-Synthetic-Tenant-Id` header. Operator-attributed mutations carry
+`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
+Resource identifiers remain in paths, queue reads use `GET /api/incidents`,
+and tenant/operator identity is not accepted in resource paths, query
+parameters, or request bodies. These caller-supplied synthetic headers are a
+local portfolio convention, not authentication or a production authorization
+claim.
 
 ### Approved-knowledge ingestion and Bedrock smoke test
 
@@ -190,7 +214,7 @@ database, run the safe model-contract smoke test as a one-shot application:
 $env:AI_MODEL_EMBEDDING = 'bedrock-titan'
 $env:APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = 'true'
 Push-Location backend/copilot-api
-mvn "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
+../../mvnw.cmd "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
 Pop-Location
 ```
 

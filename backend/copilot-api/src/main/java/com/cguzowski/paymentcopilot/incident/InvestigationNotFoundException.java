@@ -1,4 +1,3 @@
 package com.cguzowski.paymentcopilot.incident;
 
-class InvestigationNotFoundException extends RuntimeException {
-}
+public class InvestigationNotFoundException extends RuntimeException {}

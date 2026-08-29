@@ -16,5 +16,4 @@ public record RecentServiceErrorsResult(
         EvidenceAvailabilityStatus status,
         @JsonProperty(required = false) @Nullable String statusDetail,
         String contentSchemaVersion,
-        @JsonProperty(required = false) @Nullable RecentServiceErrorsContent content) {
-}
+        @JsonProperty(required = false) @Nullable RecentServiceErrorsContent content) {}

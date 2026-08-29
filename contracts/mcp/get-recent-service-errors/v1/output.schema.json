@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:payment-incident-copilot:mcp:getRecentServiceErrors:output:v1",
+  "title": "getRecentServiceErrors output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sourceSystem",
+    "sourceTool",
+    "retrievedAt",
+    "correlationId",
+    "toolCallId",
+    "status",
+    "contentSchemaVersion"
+  ],
+  "properties": {
+    "sourceSystem": { "type": "string", "const": "synthetic-observability" },
+    "sourceTool": { "type": "string", "const": "getRecentServiceErrors" },
+    "retrievedAt": { "type": "string", "format": "date-time" },
+    "correlationId": { "type": "string", "format": "uuid" },
+    "toolCallId": { "type": "string", "format": "uuid" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "AVAILABLE",
+        "PARTIAL",
+        "NOT_FOUND",
+        "UNAVAILABLE",
+        "TIMED_OUT",
+        "MALFORMED"
+      ]
+    },
+    "statusDetail": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "contentSchemaVersion": { "type": "string", "const": "service-errors/v1" },
+    "content": { "$ref": "#/$defs/content" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "status": { "enum": ["AVAILABLE", "PARTIAL"] } },
+        "required": ["status"]
+      },
+      "then": { "required": ["content"] },
+      "else": { "not": { "required": ["content"] } }
+    }
+  ],
+  "$defs": {
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serviceName", "observedFrom", "observedTo", "errors"],
+      "properties": {
+        "serviceName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "observedFrom": { "type": "string", "format": "date-time" },
+        "observedTo": { "type": "string", "format": "date-time" },
+        "errors": {
+          "type": "array",
+          "maxItems": 100,
+          "items": { "$ref": "#/$defs/observation" }
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceEventId", "observedAt", "errorCode", "count"],
+      "properties": {
+        "sourceEventId": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "errorCode": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "count": { "type": "integer", "minimum": 1, "maximum": 1000000 }
+      }
+    }
+  }
+}

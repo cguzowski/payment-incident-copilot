@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextExceptionHandler;
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,8 +34,9 @@ class InvestigationControllerTest {
     @BeforeEach
     void setUp() {
         investigationService = mock(InvestigationService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new InvestigationController(investigationService))
-                .setControllerAdvice(new ApiExceptionHandler())
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                        new InvestigationController(investigationService, new SyntheticRequestContextResolver()))
+                .setControllerAdvice(new ApiExceptionHandler(), new SyntheticRequestContextExceptionHandler())
                 .setMessageConverters(new JacksonJsonHttpMessageConverter())
                 .build();
     }
@@ -43,8 +46,7 @@ class InvestigationControllerTest {
         when(investigationService.start(TENANT_ID, INCIDENT_ID, OPERATOR_ID))
                 .thenReturn(new InvestigationStartResult(response(), true));
 
-        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(),
-                        "{\"operatorId\":\"7b636625-53d1-46f7-92a9-9c8c27a243d1\"}"))
+        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(), OPERATOR_ID.toString()))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/api/investigations/" + INVESTIGATION_ID))
                 .andExpect(jsonPath("$.*", hasSize(5)))
@@ -60,31 +62,52 @@ class InvestigationControllerTest {
         when(investigationService.start(TENANT_ID, INCIDENT_ID, OPERATOR_ID))
                 .thenReturn(new InvestigationStartResult(response(), false));
 
-        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(),
-                        "{\"operatorId\":\"7b636625-53d1-46f7-92a9-9c8c27a243d1\"}"))
+        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(), OPERATOR_ID.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.investigationId").value(INVESTIGATION_ID.toString()));
     }
 
     @Test
     void rejectsMalformedTenantIncidentInvestigationAndOperatorIds() throws Exception {
-        String body = "{\"operatorId\":\"not-a-uuid\"}";
-        mockMvc.perform(startRequest("not-an-incident", "not-a-tenant", body))
+        mockMvc.perform(startRequest(INCIDENT_ID, "not-a-tenant", OPERATOR_ID.toString()))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.type").value("urn:problem:invalid-investigation-request"));
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"))
+                .andExpect(jsonPath("$.errors[0].field").value("tenantId"));
 
-        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(), body))
+        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(), "not-an-operator"))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"))
                 .andExpect(jsonPath("$.errors[0].field").value("operatorId"));
 
-        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(), "null"))
+        mockMvc.perform(startRequest("not-an-incident", TENANT_ID.toString(), OPERATOR_ID.toString()))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-investigation-request"));
 
         mockMvc.perform(get("/api/investigations/not-an-investigation")
-                        .queryParam("tenantId", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-investigation-request"));
+    }
+
+    @Test
+    void requiresOperatorHeaderAndRejectsLegacyIdentityTransport() throws Exception {
+        mockMvc.perform(post("/api/incidents/{incidentId}/investigations", INCIDENT_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"))
+                .andExpect(jsonPath("$.errors[0].field").value("operatorId"));
+
+        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(), OPERATOR_ID.toString())
+                        .queryParam("tenantId", TENANT_ID.toString()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"));
+
+        mockMvc.perform(startRequest(INCIDENT_ID, TENANT_ID.toString(), OPERATOR_ID.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"operatorId\":\"" + OPERATOR_ID + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-investigation-request"))
+                .andExpect(jsonPath("$.errors[0].field").value("request"));
     }
 
     @Test
@@ -92,7 +115,7 @@ class InvestigationControllerTest {
         when(investigationService.get(TENANT_ID, INVESTIGATION_ID)).thenReturn(response());
 
         mockMvc.perform(get("/api/investigations/{investigationId}", INVESTIGATION_ID)
-                        .queryParam("tenantId", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(5)))
                 .andExpect(jsonPath("$.investigationId").value(INVESTIGATION_ID.toString()))
@@ -101,11 +124,10 @@ class InvestigationControllerTest {
 
     @Test
     void returnsInvestigationNotFoundWithoutTenantLeakage() throws Exception {
-        when(investigationService.get(TENANT_ID, INVESTIGATION_ID))
-                .thenThrow(new InvestigationNotFoundException());
+        when(investigationService.get(TENANT_ID, INVESTIGATION_ID)).thenThrow(new InvestigationNotFoundException());
 
         mockMvc.perform(get("/api/investigations/{investigationId}", INVESTIGATION_ID)
-                        .queryParam("tenantId", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.type").value("urn:problem:investigation-not-found"))
                 .andExpect(jsonPath("$.tenantId").doesNotExist())
@@ -121,10 +143,9 @@ class InvestigationControllerTest {
                 Instant.parse("2026-08-27T18:30:00Z"));
     }
 
-    private static MockHttpServletRequestBuilder startRequest(Object incidentId, String tenantId, String body) {
+    private static MockHttpServletRequestBuilder startRequest(Object incidentId, String tenantId, String operatorId) {
         return post("/api/incidents/{incidentId}/investigations", incidentId)
-                .queryParam("tenantId", tenantId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body);
+                .header("X-Synthetic-Tenant-Id", tenantId)
+                .header("X-Synthetic-Operator-Id", operatorId);
     }
 }

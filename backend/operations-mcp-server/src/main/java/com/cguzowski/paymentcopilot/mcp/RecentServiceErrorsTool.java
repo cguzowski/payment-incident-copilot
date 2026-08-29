@@ -26,11 +26,12 @@ public class RecentServiceErrorsTool {
             name = TOOL_NAME,
             description = "Returns deterministic recent payment-authorization service errors for a synthetic scenario.",
             generateOutputSchema = true,
-            annotations = @McpTool.McpAnnotations(
-                    readOnlyHint = true,
-                    destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = false))
+            annotations =
+                    @McpTool.McpAnnotations(
+                            readOnlyHint = true,
+                            destructiveHint = false,
+                            idempotentHint = true,
+                            openWorldHint = false))
     public RecentServiceErrorsResult getRecentServiceErrors(
             @McpToolParam(description = "Synthetic tenant UUID") UUID tenantId,
             @McpToolParam(description = "Opaque synthetic alert scenario reference") String scenarioReference,
@@ -38,7 +39,8 @@ public class RecentServiceErrorsTool {
             @McpToolParam(description = "Unique tool-call UUID") UUID toolCallId) {
         validate(tenantId, scenarioReference, correlationId, toolCallId);
         Instant retrievedAt = Instant.now(clock);
-        return repository.find(tenantId, scenarioReference)
+        return repository
+                .find(tenantId, scenarioReference)
                 .map(scenario -> result(retrievedAt, correlationId, toolCallId, scenario))
                 .orElseGet(() -> new RecentServiceErrorsResult(
                         SOURCE_SYSTEM,
@@ -52,11 +54,7 @@ public class RecentServiceErrorsTool {
                         null));
     }
 
-    private static void validate(
-            UUID tenantId,
-            String scenarioReference,
-            UUID correlationId,
-            UUID toolCallId) {
+    private static void validate(UUID tenantId, String scenarioReference, UUID correlationId, UUID toolCallId) {
         if (tenantId == null
                 || scenarioReference == null
                 || scenarioReference.isBlank()
@@ -68,10 +66,7 @@ public class RecentServiceErrorsTool {
     }
 
     private static RecentServiceErrorsResult result(
-            Instant retrievedAt,
-            UUID correlationId,
-            UUID toolCallId,
-            RecentServiceErrorScenario scenario) {
+            Instant retrievedAt, UUID correlationId, UUID toolCallId, RecentServiceErrorScenario scenario) {
         return new RecentServiceErrorsResult(
                 SOURCE_SYSTEM,
                 TOOL_NAME,

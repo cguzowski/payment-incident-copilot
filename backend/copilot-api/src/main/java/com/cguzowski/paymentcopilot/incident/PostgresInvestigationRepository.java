@@ -8,7 +8,8 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 @Repository
-class PostgresInvestigationRepository implements InvestigationRepository {
+class PostgresInvestigationRepository
+        implements InvestigationRepository, InvestigationSnapshotProvider, EvidenceCollectionContextProvider {
 
     private final JdbcClient jdbcClient;
 
@@ -18,7 +19,8 @@ class PostgresInvestigationRepository implements InvestigationRepository {
 
     @Override
     public Optional<IncidentStatus> lockIncidentStatus(UUID tenantId, UUID incidentId) {
-        return jdbcClient.sql("""
+        return jdbcClient
+                .sql("""
                         SELECT status
                         FROM incident
                         WHERE tenant_id = :tenantId AND id = :incidentId
@@ -33,7 +35,8 @@ class PostgresInvestigationRepository implements InvestigationRepository {
 
     @Override
     public void insert(Investigation investigation) {
-        jdbcClient.sql("""
+        jdbcClient
+                .sql("""
                         INSERT INTO investigation (
                             id, tenant_id, incident_id, started_by, started_at, correlation_id
                         ) VALUES (
@@ -51,14 +54,16 @@ class PostgresInvestigationRepository implements InvestigationRepository {
 
     @Override
     public boolean transitionIncidentToInvestigating(UUID tenantId, UUID incidentId) {
-        return jdbcClient.sql("""
+        return jdbcClient
+                        .sql("""
                         UPDATE incident
                         SET status = 'INVESTIGATING'
                         WHERE tenant_id = :tenantId AND id = :incidentId AND status = 'NEW'
                         """)
-                .param("tenantId", tenantId)
-                .param("incidentId", incidentId)
-                .update() == 1;
+                        .param("tenantId", tenantId)
+                        .param("incidentId", incidentId)
+                        .update()
+                == 1;
     }
 
     @Override
@@ -71,8 +76,63 @@ class PostgresInvestigationRepository implements InvestigationRepository {
         return find("investigation.id = :lookupId", tenantId, investigationId);
     }
 
+    @Override
+    public Optional<InvestigationSnapshot> findKnowledgeRetrievalSnapshot(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT investigation.tenant_id,
+                               investigation.id AS investigation_id,
+                               investigation.correlation_id,
+                               incident.incident_type,
+                               incident.summary,
+                               incident.description
+                        FROM investigation
+                        JOIN incident
+                          ON incident.tenant_id = investigation.tenant_id
+                         AND incident.id = investigation.incident_id
+                        WHERE investigation.tenant_id = :tenantId
+                          AND investigation.id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new InvestigationSnapshot(
+                        resultSet.getObject("tenant_id", UUID.class),
+                        resultSet.getObject("investigation_id", UUID.class),
+                        resultSet.getObject("correlation_id", UUID.class),
+                        resultSet.getString("incident_type"),
+                        resultSet.getString("summary"),
+                        resultSet.getString("description")))
+                .optional();
+    }
+
+    @Override
+    public Optional<EvidenceCollectionContext> findEvidenceCollectionContext(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT investigation.tenant_id,
+                               investigation.id AS investigation_id,
+                               investigation.correlation_id,
+                               incident.external_alert_id
+                        FROM investigation
+                        JOIN incident
+                          ON incident.tenant_id = investigation.tenant_id
+                         AND incident.id = investigation.incident_id
+                        WHERE investigation.tenant_id = :tenantId
+                          AND investigation.id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new EvidenceCollectionContext(
+                        resultSet.getObject("tenant_id", UUID.class),
+                        resultSet.getObject("investigation_id", UUID.class),
+                        resultSet.getObject("correlation_id", UUID.class),
+                        resultSet.getString("external_alert_id")))
+                .optional();
+    }
+
     private Optional<InvestigationView> find(String predicate, UUID tenantId, UUID lookupId) {
-        return jdbcClient.sql("""
+        return jdbcClient
+                .sql("""
                         SELECT investigation.id, investigation.tenant_id,
                                investigation.incident_id, investigation.started_by,
                                investigation.started_at, investigation.correlation_id,

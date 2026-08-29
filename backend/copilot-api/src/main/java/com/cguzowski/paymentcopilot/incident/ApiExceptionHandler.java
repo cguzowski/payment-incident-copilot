@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-class ApiExceptionHandler {
+public class ApiExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ProblemDetail> handleInvalidAlert(MethodArgumentNotValidException exception) {
@@ -29,8 +29,8 @@ class ApiExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ProblemDetail> handleUnreadableRequest(HttpServletRequest request) {
         if (request.getRequestURI().endsWith("/investigations")) {
-            return handleInvalidInvestigationRequest(new InvalidInvestigationRequestException(
-                    "request", "contains malformed or unsupported data"));
+            return handleInvalidInvestigationRequest(
+                    new InvalidInvestigationRequestException("request", "contains malformed or unsupported data"));
         }
         return invalidAlert(List.of(new FieldValidationError("request", "contains malformed or unsupported data")));
     }
@@ -61,8 +61,7 @@ class ApiExceptionHandler {
     }
 
     @ExceptionHandler(InvalidInvestigationRequestException.class)
-    ResponseEntity<ProblemDetail> handleInvalidInvestigationRequest(
-            InvalidInvestigationRequestException exception) {
+    ResponseEntity<ProblemDetail> handleInvalidInvestigationRequest(InvalidInvestigationRequestException exception) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setType(URI.create("urn:problem:invalid-investigation-request"));
         problem.setTitle("Invalid investigation request");
@@ -110,6 +109,5 @@ class ApiExceptionHandler {
                 .body(problem);
     }
 
-    private record FieldValidationError(String field, String message) {
-    }
+    private record FieldValidationError(String field, String message) {}
 }

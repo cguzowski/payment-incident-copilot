@@ -1,32 +1,27 @@
 package com.cguzowski.paymentcopilot.incident;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/tenants/{tenantId}/incidents")
+@RequestMapping("/api/incidents")
 class IncidentWorkQueueController {
 
     private final IncidentWorkQueueService incidentWorkQueueService;
+    private final SyntheticRequestContextResolver requestContext;
 
-    IncidentWorkQueueController(IncidentWorkQueueService incidentWorkQueueService) {
+    IncidentWorkQueueController(
+            IncidentWorkQueueService incidentWorkQueueService, SyntheticRequestContextResolver requestContext) {
         this.incidentWorkQueueService = incidentWorkQueueService;
+        this.requestContext = requestContext;
     }
 
     @GetMapping
-    List<IncidentWorkQueueItem> getQueue(@PathVariable String tenantId) {
-        return incidentWorkQueueService.getQueue(parseTenantId(tenantId));
-    }
-
-    private static UUID parseTenantId(String tenantId) {
-        try {
-            return UUID.fromString(tenantId.trim());
-        } catch (IllegalArgumentException exception) {
-            throw new InvalidIncidentRequestException("tenantId", "must be a valid UUID");
-        }
+    List<IncidentWorkQueueItem> getQueue(HttpServletRequest request) {
+        return incidentWorkQueueService.getQueue(requestContext.tenantId(request));
     }
 }

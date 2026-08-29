@@ -1,24 +1,30 @@
 # Quality and validation
 
-Last reviewed: 2026-08-21
+Last reviewed: 2026-08-29
 
 ## Standard commands
 
-From the repository root:
+The authoritative completion gate is:
 
-```bash
-mvn clean verify
-docker compose config
+```powershell
+./verify.ps1
 ```
 
-After the Angular application is generated:
+It verifies Java 21, Node.js 24.14.1, npm 10.8.3, the verification script's
+PowerShell tests, the pinned Maven Wrapper build, zero skipped backend and
+frontend tests, locked frontend installation, Prettier, the Angular production
+build, Compose configuration, and `git diff --check`. CI delegates to this same
+implementation.
 
-```bash
-cd frontend/operator-console
-npm ci
-npm test -- --watch=false
-npm run build
+Focused scopes are available during development:
+
+```powershell
+./verify.ps1 -Scope Backend
+./verify.ps1 -Scope Frontend
+./verify.ps1 -Scope Repository
 ```
+
+Focused scopes do not replace the unscoped completion gate.
 
 ## Test-driven development
 

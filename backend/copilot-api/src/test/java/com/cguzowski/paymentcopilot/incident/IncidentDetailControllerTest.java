@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextExceptionHandler;
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +30,9 @@ class IncidentDetailControllerTest {
     @BeforeEach
     void setUp() {
         incidentDetailService = mock(IncidentDetailService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new IncidentDetailController(incidentDetailService))
-                .setControllerAdvice(new ApiExceptionHandler())
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                        new IncidentDetailController(incidentDetailService, new SyntheticRequestContextResolver()))
+                .setControllerAdvice(new ApiExceptionHandler(), new SyntheticRequestContextExceptionHandler())
                 .setMessageConverters(new JacksonJsonHttpMessageConverter())
                 .build();
     }
@@ -39,7 +42,7 @@ class IncidentDetailControllerTest {
         when(incidentDetailService.getDetail(TENANT_ID, INCIDENT_ID)).thenReturn(detailResponse());
 
         mockMvc.perform(get("/api/incidents/{incidentId}", INCIDENT_ID)
-                        .queryParam("tenantId", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(10)))
                 .andExpect(jsonPath("$.incidentId").value(INCIDENT_ID.toString()))
@@ -62,20 +65,20 @@ class IncidentDetailControllerTest {
         mockMvc.perform(get("/api/incidents/{incidentId}", INCIDENT_ID))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", "application/problem+json"))
-                .andExpect(jsonPath("$.type").value("urn:problem:invalid-incident-request"))
-                .andExpect(jsonPath("$.title").value("Invalid incident request"))
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"))
+                .andExpect(jsonPath("$.title").value("Invalid synthetic request context"))
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.errors[0].field").value("tenantId"));
 
-        mockMvc.perform(get("/api/incidents/{incidentId}", INCIDENT_ID).queryParam("tenantId", " "))
+        mockMvc.perform(get("/api/incidents/{incidentId}", INCIDENT_ID).header("X-Synthetic-Tenant-Id", " "))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.type").value("urn:problem:invalid-incident-request"))
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"))
                 .andExpect(jsonPath("$.errors[0].field").value("tenantId"));
     }
 
     @Test
     void returnsBadRequestWhenIncidentIdIsMalformed() throws Exception {
-        mockMvc.perform(get("/api/incidents/not-a-uuid").queryParam("tenantId", TENANT_ID.toString()))
+        mockMvc.perform(get("/api/incidents/not-a-uuid").header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", "application/problem+json"))
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-incident-request"))
@@ -86,18 +89,17 @@ class IncidentDetailControllerTest {
 
     @Test
     void returnsStructuredNotFoundForUnavailableIncident() throws Exception {
-        when(incidentDetailService.getDetail(TENANT_ID, INCIDENT_ID))
-                .thenThrow(new IncidentNotFoundException());
+        when(incidentDetailService.getDetail(TENANT_ID, INCIDENT_ID)).thenThrow(new IncidentNotFoundException());
 
         mockMvc.perform(get("/api/incidents/{incidentId}", INCIDENT_ID)
-                        .queryParam("tenantId", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isNotFound())
                 .andExpect(header().string("Content-Type", "application/problem+json"))
                 .andExpect(jsonPath("$.type").value("urn:problem:incident-not-found"))
                 .andExpect(jsonPath("$.title").value("Incident not found"))
                 .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.detail")
-                        .value("No incident was found for the requested tenant and incident ID."))
+                .andExpect(
+                        jsonPath("$.detail").value("No incident was found for the requested tenant and incident ID."))
                 .andExpect(jsonPath("$.tenantId").doesNotExist())
                 .andExpect(jsonPath("$.incidentId").doesNotExist());
     }
