@@ -30,7 +30,8 @@ class PostgresIncidentRepository implements IncidentRepository {
 
     @Override
     public boolean insertIfAbsent(Incident incident) {
-        int inserted = jdbcClient.sql("""
+        int inserted = jdbcClient
+                .sql("""
                         INSERT INTO incident (
                             id, tenant_id, external_alert_id, incident_type, severity, status,
                             summary, description, occurred_at, received_at
@@ -56,7 +57,8 @@ class PostgresIncidentRepository implements IncidentRepository {
 
     @Override
     public Optional<Incident> findByTenantIdAndExternalAlertId(UUID tenantId, String externalAlertId) {
-        return jdbcClient.sql("""
+        return jdbcClient
+                .sql("""
                         SELECT %s
                         FROM incident
                         WHERE tenant_id = :tenantId AND external_alert_id = :externalAlertId
@@ -69,7 +71,8 @@ class PostgresIncidentRepository implements IncidentRepository {
 
     @Override
     public Optional<Incident> findByTenantIdAndIncidentId(UUID tenantId, UUID incidentId) {
-        return jdbcClient.sql("""
+        return jdbcClient
+                .sql("""
                         SELECT %s
                         FROM incident
                         WHERE tenant_id = :tenantId AND id = :incidentId
@@ -82,7 +85,8 @@ class PostgresIncidentRepository implements IncidentRepository {
 
     @Override
     public Optional<IncidentWorkQueueEntry> findViewByTenantIdAndIncidentId(UUID tenantId, UUID incidentId) {
-        return jdbcClient.sql("""
+        return jdbcClient
+                .sql("""
                         SELECT %s, investigation.id AS active_investigation_id
                         FROM incident
                         LEFT JOIN investigation
@@ -93,14 +97,14 @@ class PostgresIncidentRepository implements IncidentRepository {
                 .param("tenantId", tenantId)
                 .param("incidentId", incidentId)
                 .query((resultSet, rowNumber) -> new IncidentWorkQueueEntry(
-                        mapIncident(resultSet, rowNumber),
-                        resultSet.getObject("active_investigation_id", UUID.class)))
+                        mapIncident(resultSet, rowNumber), resultSet.getObject("active_investigation_id", UUID.class)))
                 .optional();
     }
 
     @Override
     public List<IncidentWorkQueueEntry> findActiveByTenantId(UUID tenantId) {
-        return jdbcClient.sql("""
+        return jdbcClient
+                .sql("""
                         SELECT %s, investigation.id AS active_investigation_id
                         FROM incident
                         LEFT JOIN investigation
@@ -112,8 +116,7 @@ class PostgresIncidentRepository implements IncidentRepository {
                         """.formatted(INCIDENT_COLUMNS))
                 .param("tenantId", tenantId)
                 .query((resultSet, rowNumber) -> new IncidentWorkQueueEntry(
-                        mapIncident(resultSet, rowNumber),
-                        resultSet.getObject("active_investigation_id", UUID.class)))
+                        mapIncident(resultSet, rowNumber), resultSet.getObject("active_investigation_id", UUID.class)))
                 .list();
     }
 

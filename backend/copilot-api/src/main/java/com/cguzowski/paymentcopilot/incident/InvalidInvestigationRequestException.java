@@ -1,15 +1,15 @@
 package com.cguzowski.paymentcopilot.incident;
 
-class InvalidInvestigationRequestException extends RuntimeException {
+public class InvalidInvestigationRequestException extends RuntimeException {
 
     private final String field;
 
-    InvalidInvestigationRequestException(String field, String message) {
+    public InvalidInvestigationRequestException(String field, String message) {
         super(message);
         this.field = field;
     }
 
-    String field() {
+    public String field() {
         return field;
     }
 }

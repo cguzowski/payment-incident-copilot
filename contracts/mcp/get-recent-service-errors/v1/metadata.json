@@ -1,0 +1,21 @@
+{
+  "contractVersion": "v1",
+  "tool": {
+    "name": "getRecentServiceErrors",
+    "description": "Returns deterministic recent payment-authorization service errors for a synthetic scenario.",
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  "contentSchemaVersion": "service-errors/v1",
+  "inputSchema": "input.schema.json",
+  "outputSchema": "output.schema.json",
+  "canonicalRequest": "fixtures/request.json",
+  "canonicalResponses": [
+    "fixtures/available-response.json",
+    "fixtures/unavailable-response.json"
+  ]
+}

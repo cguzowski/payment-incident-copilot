@@ -32,9 +32,8 @@ class AlertIngestionServiceTest {
     @Test
     void validAlertIsPersistedAsANewAuthorizationDeclineRateIncident() {
         when(incidentRepository.insertIfAbsent(any(Incident.class))).thenReturn(true);
-        AlertIngestionService service = new AlertIngestionService(
-                incidentRepository,
-                Clock.fixed(RECEIVED_AT, ZoneOffset.UTC));
+        AlertIngestionService service =
+                new AlertIngestionService(incidentRepository, Clock.fixed(RECEIVED_AT, ZoneOffset.UTC));
 
         AlertIngestionResult result = service.ingest(new IngestAlertCommand(
                 TENANT_ID,
@@ -70,9 +69,8 @@ class AlertIngestionServiceTest {
         when(incidentRepository.insertIfAbsent(any(Incident.class))).thenReturn(false);
         when(incidentRepository.findByTenantIdAndExternalAlertId(TENANT_ID, "alert-auth-decline-001"))
                 .thenReturn(Optional.of(existing));
-        AlertIngestionService service = new AlertIngestionService(
-                incidentRepository,
-                Clock.fixed(RECEIVED_AT, ZoneOffset.UTC));
+        AlertIngestionService service =
+                new AlertIngestionService(incidentRepository, Clock.fixed(RECEIVED_AT, ZoneOffset.UTC));
 
         AlertIngestionResult result = service.ingest(new IngestAlertCommand(
                 TENANT_ID,

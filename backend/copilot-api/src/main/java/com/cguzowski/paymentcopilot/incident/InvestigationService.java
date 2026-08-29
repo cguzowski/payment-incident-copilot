@@ -24,7 +24,8 @@ class InvestigationService {
 
     @Transactional
     InvestigationStartResult start(UUID tenantId, UUID incidentId, UUID operatorId) {
-        IncidentStatus status = investigationRepository.lockIncidentStatus(tenantId, incidentId)
+        IncidentStatus status = investigationRepository
+                .lockIncidentStatus(tenantId, incidentId)
                 .orElseThrow(IncidentNotFoundException::new);
 
         if (status == IncidentStatus.INVESTIGATING) {
@@ -39,12 +40,7 @@ class InvestigationService {
 
         Instant startedAt = Instant.now(clock);
         Investigation investigation = new Investigation(
-                identifierGenerator.next(),
-                tenantId,
-                incidentId,
-                operatorId,
-                startedAt,
-                identifierGenerator.next());
+                identifierGenerator.next(), tenantId, incidentId, operatorId, startedAt, identifierGenerator.next());
         investigationRepository.insert(investigation);
         if (!investigationRepository.transitionIncidentToInvestigating(tenantId, incidentId)) {
             throw new InvestigationConflictException();
@@ -56,7 +52,8 @@ class InvestigationService {
 
     @Transactional(readOnly = true)
     InvestigationResponse get(UUID tenantId, UUID investigationId) {
-        return investigationRepository.findByTenantIdAndInvestigationId(tenantId, investigationId)
+        return investigationRepository
+                .findByTenantIdAndInvestigationId(tenantId, investigationId)
                 .map(InvestigationResponse::from)
                 .orElseThrow(InvestigationNotFoundException::new);
     }

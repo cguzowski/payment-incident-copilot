@@ -15,6 +15,9 @@ spring:
           time_zone: UTC
   flyway:
     enabled: true
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
   ai:
     model:
       embedding: ${AI_MODEL_EMBEDDING:none}

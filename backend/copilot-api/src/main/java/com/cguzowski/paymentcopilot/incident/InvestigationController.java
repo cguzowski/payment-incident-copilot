@@ -1,5 +1,7 @@
 package com.cguzowski.paymentcopilot.incident;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
@@ -7,27 +9,31 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 class InvestigationController {
 
     private final InvestigationService investigationService;
+    private final SyntheticRequestContextResolver requestContext;
 
-    InvestigationController(InvestigationService investigationService) {
+    InvestigationController(InvestigationService investigationService, SyntheticRequestContextResolver requestContext) {
         this.investigationService = investigationService;
+        this.requestContext = requestContext;
     }
 
     @PostMapping("/api/incidents/{incidentId}/investigations")
     ResponseEntity<InvestigationResponse> start(
+            HttpServletRequest request,
             @PathVariable String incidentId,
-            @RequestParam(required = false) String tenantId,
-            @RequestBody InvestigationStartRequest request) {
+            @RequestBody(required = false) String requestBody) {
+        if (requestBody != null) {
+            throw new InvalidInvestigationRequestException("request", "must not include a body");
+        }
         InvestigationStartResult result = investigationService.start(
-                parseRequiredUuid("tenantId", tenantId),
+                requestContext.tenantId(request),
                 parseRequiredUuid("incidentId", incidentId),
-                parseRequiredUuid("operatorId", request.operatorId()));
+                requestContext.operatorId(request));
         if (result.created()) {
             URI location = URI.create("/api/investigations/" + result.response().investigationId());
             return ResponseEntity.created(location).body(result.response());
@@ -36,12 +42,9 @@ class InvestigationController {
     }
 
     @GetMapping("/api/investigations/{investigationId}")
-    InvestigationResponse get(
-            @PathVariable String investigationId,
-            @RequestParam(required = false) String tenantId) {
+    InvestigationResponse get(HttpServletRequest request, @PathVariable String investigationId) {
         return investigationService.get(
-                parseRequiredUuid("tenantId", tenantId),
-                parseRequiredUuid("investigationId", investigationId));
+                requestContext.tenantId(request), parseRequiredUuid("investigationId", investigationId));
     }
 
     private static UUID parseRequiredUuid(String field, String value) {

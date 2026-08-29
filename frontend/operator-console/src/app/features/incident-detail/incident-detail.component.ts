@@ -2,8 +2,8 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { InvestigationApiService } from '../../core/api/investigations/investigation-api.service';
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
-import { InvestigationApiService } from '../investigation-workspace/investigation-api.service';
 import { IncidentDetailApiService } from './incident-detail-api.service';
 import { IncidentDetail } from './incident-detail.models';
 

@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextExceptionHandler;
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -28,8 +30,9 @@ class IncidentWorkQueueControllerTest {
     @BeforeEach
     void setUp() {
         incidentWorkQueueService = mock(IncidentWorkQueueService.class);
-        mockMvc = MockMvcBuilders.standaloneSetup(new IncidentWorkQueueController(incidentWorkQueueService))
-                .setControllerAdvice(new ApiExceptionHandler())
+        mockMvc = MockMvcBuilders.standaloneSetup(new IncidentWorkQueueController(
+                        incidentWorkQueueService, new SyntheticRequestContextResolver()))
+                .setControllerAdvice(new ApiExceptionHandler(), new SyntheticRequestContextExceptionHandler())
                 .setMessageConverters(new JacksonJsonHttpMessageConverter())
                 .build();
     }
@@ -38,7 +41,7 @@ class IncidentWorkQueueControllerTest {
     void returnsAllActiveIncidentsForTenantWithoutAgeCutoff() throws Exception {
         when(incidentWorkQueueService.getQueue(TENANT_ID)).thenReturn(List.of(queueItem()));
 
-        mockMvc.perform(get("/api/tenants/{tenantId}/incidents", TENANT_ID))
+        mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].incidentId").value(INCIDENT_ID.toString()))
@@ -50,10 +53,15 @@ class IncidentWorkQueueControllerTest {
     }
 
     @Test
-    void rejectsMalformedTenantIdentifier() throws Exception {
-        mockMvc.perform(get("/api/tenants/not-a-uuid/incidents"))
+    void rejectsMissingAndMalformedTenantContext() throws Exception {
+        mockMvc.perform(get("/api/incidents"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.type").value("urn:problem:invalid-incident-request"))
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"))
+                .andExpect(jsonPath("$.errors[0].field").value("tenantId"));
+
+        mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", "not-a-uuid"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"))
                 .andExpect(jsonPath("$.errors[0].field").value("tenantId"));
     }
 

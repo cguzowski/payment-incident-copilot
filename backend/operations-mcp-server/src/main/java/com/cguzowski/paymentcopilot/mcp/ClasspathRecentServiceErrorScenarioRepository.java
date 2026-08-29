@@ -36,10 +36,11 @@ class ClasspathRecentServiceErrorScenarioRepository implements RecentServiceErro
             if (document == null || document.scenarios() == null) {
                 throw new IllegalStateException("Synthetic service-error fixture has no scenarios.");
             }
-            return document.scenarios().stream().collect(Collectors.toUnmodifiableMap(
-                    ClasspathRecentServiceErrorScenarioRepository::key,
-                    ClasspathRecentServiceErrorScenarioRepository::scenario,
-                    rejectingDuplicates()));
+            return document.scenarios().stream()
+                    .collect(Collectors.toUnmodifiableMap(
+                            ClasspathRecentServiceErrorScenarioRepository::key,
+                            ClasspathRecentServiceErrorScenarioRepository::scenario,
+                            rejectingDuplicates()));
         } catch (IOException | RuntimeException exception) {
             throw new IllegalStateException("Could not load synthetic service-error fixtures.", exception);
         }
@@ -96,10 +97,7 @@ class ClasspathRecentServiceErrorScenarioRepository implements RecentServiceErro
                 .map(ClasspathRecentServiceErrorScenarioRepository::observation)
                 .toList();
         return new RecentServiceErrorsContent(
-                fixture.serviceName(),
-                fixture.observedFrom(),
-                fixture.observedTo(),
-                observations);
+                fixture.serviceName(), fixture.observedFrom(), fixture.observedTo(), observations);
     }
 
     private static RecentServiceErrorObservation observation(FixtureObservation fixture) {
@@ -112,44 +110,22 @@ class ClasspathRecentServiceErrorScenarioRepository implements RecentServiceErro
             throw new IllegalArgumentException("Invalid service-error observation.");
         }
         return new RecentServiceErrorObservation(
-                fixture.sourceEventId(),
-                fixture.observedAt(),
-                fixture.errorCode(),
-                fixture.count());
+                fixture.sourceEventId(), fixture.observedAt(), fixture.errorCode(), fixture.count());
     }
 
     private static RecentServiceErrorScenario malformed() {
-        return new RecentServiceErrorScenario(
-                EvidenceAvailabilityStatus.MALFORMED,
-                MALFORMED_DETAIL,
-                null);
+        return new RecentServiceErrorScenario(EvidenceAvailabilityStatus.MALFORMED, MALFORMED_DETAIL, null);
     }
 
-    private record ScenarioKey(UUID tenantId, String scenarioReference) {
-    }
+    private record ScenarioKey(UUID tenantId, String scenarioReference) {}
 
-    private record FixtureDocument(List<FixtureScenario> scenarios) {
-    }
+    private record FixtureDocument(List<FixtureScenario> scenarios) {}
 
     private record FixtureScenario(
-            UUID tenantId,
-            String scenarioReference,
-            String status,
-            String statusDetail,
-            FixtureContent content) {
-    }
+            UUID tenantId, String scenarioReference, String status, String statusDetail, FixtureContent content) {}
 
     private record FixtureContent(
-            String serviceName,
-            Instant observedFrom,
-            Instant observedTo,
-            List<FixtureObservation> errors) {
-    }
+            String serviceName, Instant observedFrom, Instant observedTo, List<FixtureObservation> errors) {}
 
-    private record FixtureObservation(
-            String sourceEventId,
-            Instant observedAt,
-            String errorCode,
-            int count) {
-    }
+    private record FixtureObservation(String sourceEventId, Instant observedAt, String errorCode, int count) {}
 }

@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { SYNTHETIC_TENANT_ID } from '../../core/config/synthetic-tenant';
 import { AlertQueueApiService } from './alert-queue-api.service';
 
 describe('AlertQueueApiService', () => {
@@ -21,7 +20,7 @@ describe('AlertQueueApiService', () => {
   it('loads the queue through the tenant-scoped endpoint', () => {
     service.getQueue().subscribe((items) => expect(items).toEqual([]));
 
-    const request = http.expectOne(`/api/tenants/${SYNTHETIC_TENANT_ID}/incidents`);
+    const request = http.expectOne('/api/incidents');
     expect(request.request.method).toBe('GET');
     request.flush([]);
   });

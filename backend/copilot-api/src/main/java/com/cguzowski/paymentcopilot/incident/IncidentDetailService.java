@@ -15,7 +15,8 @@ class IncidentDetailService {
 
     @Transactional(readOnly = true)
     IncidentDetailResponse getDetail(UUID tenantId, UUID incidentId) {
-        return incidentRepository.findViewByTenantIdAndIncidentId(tenantId, incidentId)
+        return incidentRepository
+                .findViewByTenantIdAndIncidentId(tenantId, incidentId)
                 .map(IncidentDetailResponse::from)
                 .orElseThrow(IncidentNotFoundException::new);
     }

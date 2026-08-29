@@ -25,49 +25,36 @@ class RecentServiceErrorsToolTest {
                 Instant.parse("2026-08-22T07:09:00Z"),
                 Instant.parse("2026-08-22T07:14:00Z"),
                 List.of(new RecentServiceErrorObservation(
-                        "service-error-001",
-                        Instant.parse("2026-08-22T07:12:00Z"),
-                        "GATEWAY_TIMEOUT",
-                        37)));
+                        "service-error-001", Instant.parse("2026-08-22T07:12:00Z"), "GATEWAY_TIMEOUT", 37)));
         RecentServiceErrorScenarioRepository repository = (tenantId, scenarioReference) ->
-                Optional.of(new RecentServiceErrorScenario(
+                Optional.of(new RecentServiceErrorScenario(EvidenceAvailabilityStatus.AVAILABLE, null, content));
+        RecentServiceErrorsTool tool =
+                new RecentServiceErrorsTool(repository, Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
+
+        RecentServiceErrorsResult result =
+                tool.getRecentServiceErrors(TENANT_ID, "alert-auth-decline-001", CORRELATION_ID, TOOL_CALL_ID);
+
+        assertThat(result)
+                .isEqualTo(new RecentServiceErrorsResult(
+                        "synthetic-observability",
+                        "getRecentServiceErrors",
+                        RETRIEVED_AT,
+                        CORRELATION_ID,
+                        TOOL_CALL_ID,
                         EvidenceAvailabilityStatus.AVAILABLE,
                         null,
+                        "service-errors/v1",
                         content));
-        RecentServiceErrorsTool tool = new RecentServiceErrorsTool(
-                repository,
-                Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
-
-        RecentServiceErrorsResult result = tool.getRecentServiceErrors(
-                TENANT_ID,
-                "alert-auth-decline-001",
-                CORRELATION_ID,
-                TOOL_CALL_ID);
-
-        assertThat(result).isEqualTo(new RecentServiceErrorsResult(
-                "synthetic-observability",
-                "getRecentServiceErrors",
-                RETRIEVED_AT,
-                CORRELATION_ID,
-                TOOL_CALL_ID,
-                EvidenceAvailabilityStatus.AVAILABLE,
-                null,
-                "service-errors/v1",
-                content));
     }
 
     @Test
     void returnsNotFoundWithoutFabricatingContentForUnknownScenario() {
         RecentServiceErrorScenarioRepository repository = (tenantId, scenarioReference) -> Optional.empty();
-        RecentServiceErrorsTool tool = new RecentServiceErrorsTool(
-                repository,
-                Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
+        RecentServiceErrorsTool tool =
+                new RecentServiceErrorsTool(repository, Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
 
-        RecentServiceErrorsResult result = tool.getRecentServiceErrors(
-                TENANT_ID,
-                "unknown-scenario",
-                CORRELATION_ID,
-                TOOL_CALL_ID);
+        RecentServiceErrorsResult result =
+                tool.getRecentServiceErrors(TENANT_ID, "unknown-scenario", CORRELATION_ID, TOOL_CALL_ID);
 
         assertThat(result.status()).isEqualTo(EvidenceAvailabilityStatus.NOT_FOUND);
         assertThat(result.statusDetail())
@@ -83,25 +70,21 @@ class RecentServiceErrorsToolTest {
                 EvidenceAvailabilityStatus.UNAVAILABLE,
                 EvidenceAvailabilityStatus.TIMED_OUT,
                 EvidenceAvailabilityStatus.MALFORMED)) {
-            RecentServiceErrorsContent content = status == EvidenceAvailabilityStatus.AVAILABLE
-                            || status == EvidenceAvailabilityStatus.PARTIAL
-                    ? new RecentServiceErrorsContent(
-                            "payment-authorization",
-                            Instant.parse("2026-08-22T07:09:00Z"),
-                            Instant.parse("2026-08-22T07:14:00Z"),
-                            List.of())
-                    : null;
+            RecentServiceErrorsContent content =
+                    status == EvidenceAvailabilityStatus.AVAILABLE || status == EvidenceAvailabilityStatus.PARTIAL
+                            ? new RecentServiceErrorsContent(
+                                    "payment-authorization",
+                                    Instant.parse("2026-08-22T07:09:00Z"),
+                                    Instant.parse("2026-08-22T07:14:00Z"),
+                                    List.of())
+                            : null;
             RecentServiceErrorScenarioRepository repository = (tenantId, scenarioReference) -> Optional.of(
                     new RecentServiceErrorScenario(status, status.name().toLowerCase(), content));
-            RecentServiceErrorsTool tool = new RecentServiceErrorsTool(
-                    repository,
-                    Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
+            RecentServiceErrorsTool tool =
+                    new RecentServiceErrorsTool(repository, Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
 
             RecentServiceErrorsResult result = tool.getRecentServiceErrors(
-                    TENANT_ID,
-                    "scenario-" + status.name().toLowerCase(),
-                    CORRELATION_ID,
-                    TOOL_CALL_ID);
+                    TENANT_ID, "scenario-" + status.name().toLowerCase(), CORRELATION_ID, TOOL_CALL_ID);
 
             assertThat(result.status()).isEqualTo(status);
             assertThat(result.content()).isEqualTo(content);
@@ -111,15 +94,13 @@ class RecentServiceErrorsToolTest {
     @Test
     void rejectsInvalidToolArguments() {
         RecentServiceErrorsTool tool = new RecentServiceErrorsTool(
-                (tenantId, scenarioReference) -> Optional.empty(),
-                Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
+                (tenantId, scenarioReference) -> Optional.empty(), Clock.fixed(RETRIEVED_AT, ZoneOffset.UTC));
 
         assertThatThrownBy(() -> tool.getRecentServiceErrors(null, "scenario", CORRELATION_ID, TOOL_CALL_ID))
                 .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> tool.getRecentServiceErrors(TENANT_ID, " ", CORRELATION_ID, TOOL_CALL_ID))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> tool.getRecentServiceErrors(
-                        TENANT_ID, "x".repeat(121), CORRELATION_ID, TOOL_CALL_ID))
+        assertThatThrownBy(() -> tool.getRecentServiceErrors(TENANT_ID, "x".repeat(121), CORRELATION_ID, TOOL_CALL_ID))
                 .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> tool.getRecentServiceErrors(TENANT_ID, "scenario", null, TOOL_CALL_ID))
                 .isInstanceOf(IllegalArgumentException.class);

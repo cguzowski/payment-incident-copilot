@@ -1,0 +1,28 @@
+{
+  "sourceSystem": "synthetic-observability",
+  "sourceTool": "getRecentServiceErrors",
+  "retrievedAt": "2026-08-28T10:00:00Z",
+  "correlationId": "a5d978b5-34c7-42da-9076-22f8e5169315",
+  "toolCallId": "21fdc56b-267a-4cb5-81b9-50f092e0ef35",
+  "status": "AVAILABLE",
+  "contentSchemaVersion": "service-errors/v1",
+  "content": {
+    "serviceName": "payment-authorization",
+    "observedFrom": "2026-08-22T07:09:00Z",
+    "observedTo": "2026-08-22T07:14:00Z",
+    "errors": [
+      {
+        "sourceEventId": "service-error-001",
+        "observedAt": "2026-08-22T07:12:00Z",
+        "errorCode": "GATEWAY_TIMEOUT",
+        "count": 37
+      },
+      {
+        "sourceEventId": "service-error-002",
+        "observedAt": "2026-08-22T07:13:00Z",
+        "errorCode": "UPSTREAM_CONNECTION_RESET",
+        "count": 14
+      }
+    ]
+  }
+}

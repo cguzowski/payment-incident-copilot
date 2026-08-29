@@ -1,5 +1,7 @@
 package com.cguzowski.paymentcopilot.incident;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 class AlertController {
 
     private final AlertIngestionService alertIngestionService;
+    private final SyntheticRequestContextResolver requestContext;
 
-    AlertController(AlertIngestionService alertIngestionService) {
+    AlertController(AlertIngestionService alertIngestionService, SyntheticRequestContextResolver requestContext) {
         this.alertIngestionService = alertIngestionService;
+        this.requestContext = requestContext;
     }
 
     @PostMapping
-    ResponseEntity<AlertResponse> ingest(@Valid @RequestBody AlertRequest request) {
-        AlertIngestionResult result = alertIngestionService.ingest(request.toCommand());
+    ResponseEntity<AlertResponse> ingest(HttpServletRequest httpRequest, @Valid @RequestBody AlertRequest request) {
+        AlertIngestionResult result =
+                alertIngestionService.ingest(request.toCommand(requestContext.tenantId(httpRequest)));
         AlertResponse response = AlertResponse.from(result.incident());
         if (result.created()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(response);

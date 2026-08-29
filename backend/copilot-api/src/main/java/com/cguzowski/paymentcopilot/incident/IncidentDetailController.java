@@ -1,10 +1,11 @@
 package com.cguzowski.paymentcopilot.incident;
 
+import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -12,18 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 class IncidentDetailController {
 
     private final IncidentDetailService incidentDetailService;
+    private final SyntheticRequestContextResolver requestContext;
 
-    IncidentDetailController(IncidentDetailService incidentDetailService) {
+    IncidentDetailController(
+            IncidentDetailService incidentDetailService, SyntheticRequestContextResolver requestContext) {
         this.incidentDetailService = incidentDetailService;
+        this.requestContext = requestContext;
     }
 
     @GetMapping("/{incidentId}")
-    IncidentDetailResponse getDetail(
-            @PathVariable String incidentId,
-            @RequestParam(required = false) String tenantId) {
+    IncidentDetailResponse getDetail(HttpServletRequest request, @PathVariable String incidentId) {
         return incidentDetailService.getDetail(
-                parseRequiredUuid("tenantId", tenantId),
-                parseRequiredUuid("incidentId", incidentId));
+                requestContext.tenantId(request), parseRequiredUuid("incidentId", incidentId));
     }
 
     private static UUID parseRequiredUuid(String field, String value) {

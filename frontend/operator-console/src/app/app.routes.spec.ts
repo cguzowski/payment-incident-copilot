@@ -4,7 +4,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { IncidentDetailApiService } from './features/incident-detail/incident-detail-api.service';
 import { IncidentDetailComponent } from './features/incident-detail/incident-detail.component';
-import { InvestigationApiService } from './features/investigation-workspace/investigation-api.service';
+import { InvestigationApiService } from './core/api/investigations/investigation-api.service';
 import { InvestigationWorkspaceComponent } from './features/investigation-workspace/investigation-workspace.component';
 import { routes } from './app.routes';
 

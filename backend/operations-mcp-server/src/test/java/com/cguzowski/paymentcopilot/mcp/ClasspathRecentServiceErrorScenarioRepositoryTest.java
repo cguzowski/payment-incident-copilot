@@ -15,12 +15,10 @@ class ClasspathRecentServiceErrorScenarioRepositoryTest {
 
     @Test
     void loadsAvailableAndAvailableEmptySyntheticScenarios() {
-        RecentServiceErrorScenario available = repository
-                .find(TENANT_ID, "alert-auth-decline-001")
-                .orElseThrow();
-        RecentServiceErrorScenario empty = repository
-                .find(TENANT_ID, "alert-auth-decline-no-errors")
-                .orElseThrow();
+        RecentServiceErrorScenario available =
+                repository.find(TENANT_ID, "alert-auth-decline-001").orElseThrow();
+        RecentServiceErrorScenario empty =
+                repository.find(TENANT_ID, "alert-auth-decline-no-errors").orElseThrow();
 
         assertThat(available.status()).isEqualTo(EvidenceAvailabilityStatus.AVAILABLE);
         assertThat(available.content().errors()).hasSize(2);
@@ -36,9 +34,8 @@ class ClasspathRecentServiceErrorScenarioRepositoryTest {
 
     @Test
     void detectsMalformedFixtureDataWithoutReturningObservations() {
-        RecentServiceErrorScenario malformed = repository
-                .find(TENANT_ID, "alert-auth-decline-malformed")
-                .orElseThrow();
+        RecentServiceErrorScenario malformed =
+                repository.find(TENANT_ID, "alert-auth-decline-malformed").orElseThrow();
 
         assertThat(malformed.status()).isEqualTo(EvidenceAvailabilityStatus.MALFORMED);
         assertThat(malformed.statusDetail()).isEqualTo("Synthetic fixture data failed validation.");

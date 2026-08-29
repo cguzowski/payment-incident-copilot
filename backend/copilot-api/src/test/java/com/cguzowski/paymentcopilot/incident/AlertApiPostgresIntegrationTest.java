@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -76,6 +76,7 @@ class AlertApiPostgresIntegrationTest {
     @Test
     void validAlertIsPersistedWithNewStatus() throws Exception {
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validAlertJson()))
                 .andExpect(status().isCreated())
@@ -85,9 +86,7 @@ class AlertApiPostgresIntegrationTest {
                         SELECT tenant_id, external_alert_id, incident_type, severity, status,
                                summary, description
                         FROM incident
-                        """)
-                .query()
-                .singleRow();
+                        """).query().singleRow();
         assertThat(incident)
                 .containsEntry("tenant_id", TENANT_ID)
                 .containsEntry("external_alert_id", "alert-auth-decline-001")
@@ -101,20 +100,22 @@ class AlertApiPostgresIntegrationTest {
     @Test
     void repeatedTenantAndExternalAlertIdDoesNotCreateADuplicate() throws Exception {
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validAlertJson()))
                 .andExpect(status().isCreated());
-        UUID incidentId = jdbcClient.sql("SELECT id FROM incident")
-                .query(UUID.class)
-                .single();
+        UUID incidentId =
+                jdbcClient.sql("SELECT id FROM incident").query(UUID.class).single();
 
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validAlertJson()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.incidentId").value(incidentId.toString()));
 
-        Integer count = jdbcClient.sql("SELECT COUNT(*) FROM incident")
+        Integer count = jdbcClient
+                .sql("SELECT COUNT(*) FROM incident")
                 .query(Integer.class)
                 .single();
         assertThat(count).isOne();
@@ -123,13 +124,15 @@ class AlertApiPostgresIntegrationTest {
     @Test
     void invalidAlertReturnsStructuredBadRequestWithoutPersistence() throws Exception {
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-alert"))
-                .andExpect(jsonPath("$.errors.length()").value(6));
+                .andExpect(jsonPath("$.errors.length()").value(5));
 
-        Integer count = jdbcClient.sql("SELECT COUNT(*) FROM incident")
+        Integer count = jdbcClient
+                .sql("SELECT COUNT(*) FROM incident")
                 .query(Integer.class)
                 .single();
         assertThat(count).isZero();
@@ -137,7 +140,7 @@ class AlertApiPostgresIntegrationTest {
 
     @Test
     void emptyTenantQueueReturnsAnEmptyList() throws Exception {
-        mockMvc.perform(get("/api/tenants/{tenantId}/incidents", TENANT_ID))
+        mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
@@ -148,11 +151,15 @@ class AlertApiPostgresIntegrationTest {
         UUID newerInvestigatingIncidentId = UUID.fromString("724547d4-76d7-45d3-a6a5-afdf2096229b");
         UUID investigationId = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
         insertIncident(oldNewIncidentId, TENANT_ID, "alert-old-new", "NEW", "2026-07-01T07:15:00Z");
-        insertIncident(newerInvestigatingIncidentId, TENANT_ID, "alert-newer-investigating",
-                "INVESTIGATING", "2026-08-20T07:15:00Z");
+        insertIncident(
+                newerInvestigatingIncidentId,
+                TENANT_ID,
+                "alert-newer-investigating",
+                "INVESTIGATING",
+                "2026-08-20T07:15:00Z");
         insertInvestigation(investigationId, TENANT_ID, newerInvestigatingIncidentId);
 
-        mockMvc.perform(get("/api/tenants/{tenantId}/incidents", TENANT_ID))
+        mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].incidentId").value(newerInvestigatingIncidentId.toString()))
@@ -165,12 +172,20 @@ class AlertApiPostgresIntegrationTest {
 
     @Test
     void workQueueExcludesOtherTenantIncidents() throws Exception {
-        insertIncident(UUID.fromString("057ced7b-1a45-4695-ae0e-f2ad9fc1bd73"), TENANT_ID,
-                "alert-owning-tenant", "NEW", "2026-08-20T07:15:00Z");
-        insertIncident(UUID.fromString("724547d4-76d7-45d3-a6a5-afdf2096229b"), OTHER_TENANT_ID,
-                "alert-other-tenant", "NEW", "2026-08-21T07:15:00Z");
+        insertIncident(
+                UUID.fromString("057ced7b-1a45-4695-ae0e-f2ad9fc1bd73"),
+                TENANT_ID,
+                "alert-owning-tenant",
+                "NEW",
+                "2026-08-20T07:15:00Z");
+        insertIncident(
+                UUID.fromString("724547d4-76d7-45d3-a6a5-afdf2096229b"),
+                OTHER_TENANT_ID,
+                "alert-other-tenant",
+                "NEW",
+                "2026-08-21T07:15:00Z");
 
-        mockMvc.perform(get("/api/tenants/{tenantId}/incidents", TENANT_ID))
+        mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].externalAlertId").value("alert-owning-tenant"));
@@ -178,8 +193,7 @@ class AlertApiPostgresIntegrationTest {
 
     @Test
     void retiredAlertQueueEndpointIsNotAvailable() throws Exception {
-        mockMvc.perform(get("/api/tenants/{tenantId}/alert-queue", TENANT_ID))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/tenants/{tenantId}/alert-queue", TENANT_ID)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -187,14 +201,14 @@ class AlertApiPostgresIntegrationTest {
         UUID incidentId = createIncident();
 
         mockMvc.perform(post("/api/incidents/{incidentId}/investigations", incidentId)
-                        .queryParam("tenantId", TENANT_ID.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(startInvestigationJson()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", "7b636625-53d1-46f7-92a9-9c8c27a243d1"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.incidentId").value(incidentId.toString()))
                 .andExpect(jsonPath("$.incidentStatus").value("INVESTIGATING"));
 
-        Map<String, Object> persisted = jdbcClient.sql("""
+        Map<String, Object> persisted =
+                jdbcClient.sql("""
                         SELECT investigation.id AS investigation_id, investigation.tenant_id,
                                investigation.started_by, investigation.started_at,
                                investigation.correlation_id, incident.status
@@ -202,10 +216,7 @@ class AlertApiPostgresIntegrationTest {
                         JOIN incident ON incident.tenant_id = investigation.tenant_id
                                      AND incident.id = investigation.incident_id
                         WHERE investigation.incident_id = :incidentId
-                        """)
-                .param("incidentId", incidentId)
-                .query()
-                .singleRow();
+                        """).param("incidentId", incidentId).query().singleRow();
         assertThat(persisted)
                 .containsEntry("tenant_id", TENANT_ID)
                 .containsEntry("started_by", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
@@ -213,7 +224,7 @@ class AlertApiPostgresIntegrationTest {
         assertThat(persisted.get("correlation_id")).isNotNull();
 
         mockMvc.perform(get("/api/investigations/{investigationId}", persisted.get("investigation_id"))
-                        .queryParam("tenantId", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.incidentId").value(incidentId.toString()))
                 .andExpect(jsonPath("$.incidentStatus").value("INVESTIGATING"));
@@ -223,21 +234,18 @@ class AlertApiPostgresIntegrationTest {
     void repeatedStartPreservesOriginalInvestigationMetadata() throws Exception {
         UUID incidentId = createIncident();
         mockMvc.perform(post("/api/incidents/{incidentId}/investigations", incidentId)
-                        .queryParam("tenantId", TENANT_ID.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(startInvestigationJson()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", "7b636625-53d1-46f7-92a9-9c8c27a243d1"))
                 .andExpect(status().isCreated());
         Map<String, Object> before = persistedInvestigation(incidentId);
 
         mockMvc.perform(post("/api/incidents/{incidentId}/investigations", incidentId)
-                        .queryParam("tenantId", TENANT_ID.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"operatorId":"5481b654-1834-4f9b-b8c7-90dbf007e906"}
-                                """))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", "5481b654-1834-4f9b-b8c7-90dbf007e906"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.investigationId").value(before.get("id").toString()))
-                .andExpect(jsonPath("$.startedBy").value(before.get("started_by").toString()));
+                .andExpect(
+                        jsonPath("$.startedBy").value(before.get("started_by").toString()));
 
         assertThat(persistedInvestigation(incidentId)).isEqualTo(before);
         assertThat(investigationCount()).isOne();
@@ -266,8 +274,7 @@ class AlertApiPostgresIntegrationTest {
             InvestigationStartResult secondResult = second.get(10, TimeUnit.SECONDS);
             assertThat(firstResult.response().investigationId())
                     .isEqualTo(secondResult.response().investigationId());
-            assertThat(List.of(firstResult.created(), secondResult.created()))
-                    .containsExactlyInAnyOrder(true, false);
+            assertThat(List.of(firstResult.created(), secondResult.created())).containsExactlyInAnyOrder(true, false);
         } finally {
             executor.shutdownNow();
         }
@@ -281,16 +288,15 @@ class AlertApiPostgresIntegrationTest {
         UUID incidentId = createIncident();
 
         mockMvc.perform(post("/api/incidents/{incidentId}/investigations", incidentId)
-                        .queryParam("tenantId", OTHER_TENANT_ID.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(startInvestigationJson()))
+                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", "7b636625-53d1-46f7-92a9-9c8c27a243d1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.type").value("urn:problem:incident-not-found"));
         assertThat(investigationCount()).isZero();
         assertThat(incidentStatus(incidentId)).isEqualTo("NEW");
 
         mockMvc.perform(get("/api/investigations/{investigationId}", UUID.randomUUID())
-                        .queryParam("tenantId", OTHER_TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID.toString()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.type").value("urn:problem:investigation-not-found"));
     }
@@ -319,22 +325,20 @@ class AlertApiPostgresIntegrationTest {
                           RETURN NEW;
                         END;
                         $$ LANGUAGE plpgsql
-                        """)
-                .update();
+                        """).update();
         jdbcClient.sql("""
                         CREATE TRIGGER reject_investigating_transition
                         BEFORE UPDATE ON incident
                         FOR EACH ROW EXECUTE FUNCTION reject_investigating_transition()
-                        """)
-                .update();
+                        """).update();
         try {
             assertThatThrownBy(() -> investigationService.start(
-                            TENANT_ID,
-                            incidentId,
-                            UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1")))
+                            TENANT_ID, incidentId, UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1")))
                     .isInstanceOf(RuntimeException.class);
         } finally {
-            jdbcClient.sql("DROP TRIGGER reject_investigating_transition ON incident").update();
+            jdbcClient
+                    .sql("DROP TRIGGER reject_investigating_transition ON incident")
+                    .update();
             jdbcClient.sql("DROP FUNCTION reject_investigating_transition()").update();
         }
 
@@ -352,7 +356,7 @@ class AlertApiPostgresIntegrationTest {
         assertThat(incident.orElseThrow().description())
                 .isEqualTo("Synthetic authorization declines exceeded 25% for five minutes.");
         mockMvc.perform(get("/api/incidents/{incidentId}", incidentId)
-                        .queryParam("tenantId", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.incidentId").value(incidentId.toString()))
                 .andExpect(jsonPath("$.description")
@@ -363,13 +367,14 @@ class AlertApiPostgresIntegrationTest {
     void doesNotFindIncidentForDifferentTenant() throws Exception {
         UUID incidentId = createIncident();
 
-        assertThat(incidentRepository.findByTenantIdAndIncidentId(OTHER_TENANT_ID, incidentId)).isEmpty();
+        assertThat(incidentRepository.findByTenantIdAndIncidentId(OTHER_TENANT_ID, incidentId))
+                .isEmpty();
         mockMvc.perform(get("/api/incidents/{incidentId}", incidentId)
-                        .queryParam("tenantId", OTHER_TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID.toString()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.type").value("urn:problem:incident-not-found"))
-                .andExpect(jsonPath("$.detail")
-                        .value("No incident was found for the requested tenant and incident ID."));
+                .andExpect(
+                        jsonPath("$.detail").value("No incident was found for the requested tenant and incident ID."));
     }
 
     @Test
@@ -379,13 +384,14 @@ class AlertApiPostgresIntegrationTest {
 
         for (int request = 0; request < 2; request++) {
             mockMvc.perform(get("/api/incidents/{incidentId}", incidentId)
-                            .queryParam("tenantId", TENANT_ID.toString()))
+                            .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value("NEW"));
         }
 
         assertThat(persistedIncident(incidentId)).isEqualTo(before);
-        Integer count = jdbcClient.sql("SELECT COUNT(*) FROM incident")
+        Integer count = jdbcClient
+                .sql("SELECT COUNT(*) FROM incident")
                 .query(Integer.class)
                 .single();
         assertThat(count).isOne();
@@ -393,12 +399,11 @@ class AlertApiPostgresIntegrationTest {
 
     private UUID createIncident() throws Exception {
         mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validAlertJson()))
                 .andExpect(status().isCreated());
-        return jdbcClient.sql("SELECT id FROM incident")
-                .query(UUID.class)
-                .single();
+        return jdbcClient.sql("SELECT id FROM incident").query(UUID.class).single();
     }
 
     private Map<String, Object> persistedIncident(UUID incidentId) {
@@ -407,10 +412,7 @@ class AlertApiPostgresIntegrationTest {
                                summary, description, occurred_at, received_at
                         FROM incident
                         WHERE id = :incidentId
-                        """)
-                .param("incidentId", incidentId)
-                .query()
-                .singleRow();
+                        """).param("incidentId", incidentId).query().singleRow();
     }
 
     private Map<String, Object> persistedInvestigation(UUID incidentId) {
@@ -418,32 +420,28 @@ class AlertApiPostgresIntegrationTest {
                         SELECT id, tenant_id, incident_id, started_by, started_at, correlation_id
                         FROM investigation
                         WHERE incident_id = :incidentId
-                        """)
-                .param("incidentId", incidentId)
-                .query()
-                .singleRow();
+                        """).param("incidentId", incidentId).query().singleRow();
     }
 
     private int investigationCount() {
-        return jdbcClient.sql("SELECT COUNT(*) FROM investigation")
+        return jdbcClient
+                .sql("SELECT COUNT(*) FROM investigation")
                 .query(Integer.class)
                 .single();
     }
 
     private String incidentStatus(UUID incidentId) {
-        return jdbcClient.sql("SELECT status FROM incident WHERE id = :incidentId")
+        return jdbcClient
+                .sql("SELECT status FROM incident WHERE id = :incidentId")
                 .param("incidentId", incidentId)
                 .query(String.class)
                 .single();
     }
 
     private void insertIncident(
-            UUID incidentId,
-            UUID tenantId,
-            String externalAlertId,
-            String status,
-            String receivedAt) {
-        jdbcClient.sql("""
+            UUID incidentId, UUID tenantId, String externalAlertId, String status, String receivedAt) {
+        jdbcClient
+                .sql("""
                         INSERT INTO incident (
                             id, tenant_id, external_alert_id, incident_type, severity, status,
                             summary, description, occurred_at, received_at
@@ -465,7 +463,8 @@ class AlertApiPostgresIntegrationTest {
     }
 
     private void insertInvestigation(UUID investigationId, UUID tenantId, UUID incidentId) {
-        jdbcClient.sql("""
+        jdbcClient
+                .sql("""
                         INSERT INTO investigation (
                             id, tenant_id, incident_id, started_by, started_at, correlation_id
                         ) VALUES (
@@ -484,19 +483,12 @@ class AlertApiPostgresIntegrationTest {
     private static String validAlertJson() {
         return """
                 {
-                  "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
                   "externalAlertId": "alert-auth-decline-001",
                   "severity": "CRITICAL",
                   "detectedAt": "2026-08-22T07:14:00Z",
                   "title": "Authorization decline rate above threshold",
                   "description": "Synthetic authorization declines exceeded 25% for five minutes."
                 }
-                """;
-    }
-
-    private static String startInvestigationJson() {
-        return """
-                {"operatorId":"7b636625-53d1-46f7-92a9-9c8c27a243d1"}
                 """;
     }
 }

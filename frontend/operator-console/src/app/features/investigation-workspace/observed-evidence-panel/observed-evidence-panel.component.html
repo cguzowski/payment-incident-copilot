@@ -1,0 +1,132 @@
+<section class="evidence-panel" aria-labelledby="evidence-title">
+  <div class="evidence-panel__heading">
+    <div>
+      <p class="eyebrow">Observed evidence</p>
+      <h2 id="evidence-title">Service-error evidence</h2>
+    </div>
+    <button
+      class="button button--primary"
+      type="button"
+      data-testid="collect-evidence"
+      [disabled]="collecting()"
+      (click)="collect()"
+    >
+      {{ collecting() ? 'Collecting…' : 'Collect service-error evidence' }}
+    </button>
+  </div>
+  <p class="evidence-panel__boundary">
+    Observed synthetic evidence. No AI inference or recommendation has been generated.
+  </p>
+
+  @if (collectionError()) {
+    <p class="evidence-message evidence-message--error" role="alert">
+      Evidence collection could not be completed. Previous attempts remain available; try again when
+      ready.
+    </p>
+  }
+
+  @if (state() === 'loading') {
+    <p class="evidence-message" role="status" data-testid="evidence-loading">
+      Loading evidence history…
+    </p>
+  } @else if (state() === 'error') {
+    <div class="evidence-message evidence-message--error" role="alert">
+      <strong>We couldn’t load evidence history.</strong>
+      <button
+        class="button button--secondary"
+        type="button"
+        data-testid="retry-evidence"
+        (click)="load()"
+      >
+        Try again
+      </button>
+    </div>
+  } @else if (attempts().length === 0) {
+    <p class="evidence-message">Evidence collection has not started.</p>
+  } @else {
+    <div class="evidence-history" aria-label="Evidence collection history">
+      @for (attempt of attempts(); track attempt.evidenceId) {
+        <article class="evidence-attempt" data-testid="evidence-attempt">
+          <div class="evidence-attempt__heading">
+            <div>
+              <p class="evidence-attempt__label">Collection attempt</p>
+              <code>{{ attempt.evidenceId }}</code>
+            </div>
+            <span class="status status--compact">{{ attempt.status }}</span>
+          </div>
+
+          @if (attempt.statusDetail) {
+            <p class="evidence-attempt__detail">{{ attempt.statusDetail }}</p>
+          } @else if (attempt.status === 'STARTED') {
+            <p class="evidence-attempt__detail">Collection did not reach a terminal status.</p>
+          }
+
+          <dl class="evidence-provenance">
+            <div>
+              <dt>Source system</dt>
+              <dd>{{ attempt.sourceSystem }}</dd>
+            </div>
+            <div>
+              <dt>Source tool</dt>
+              <dd>
+                <code>{{ attempt.sourceTool }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Tool-call ID</dt>
+              <dd>
+                <code>{{ attempt.toolCallId }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Requested</dt>
+              <dd>{{ attempt.requestedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+            </div>
+            <div>
+              <dt>Retrieved</dt>
+              <dd>
+                @if (attempt.retrievedAt) {
+                  {{ attempt.retrievedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC
+                } @else {
+                  Not available
+                }
+              </dd>
+            </div>
+          </dl>
+
+          @if (attempt.content; as content) {
+            <div class="evidence-content">
+              <h3>{{ content.serviceName }}</h3>
+              <p class="evidence-content__window">
+                Observed {{ content.observedFrom | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC–{{
+                  content.observedTo | date: 'MMM d, y, HH:mm:ss' : 'UTC'
+                }}
+                UTC
+              </p>
+              @if (content.errors.length === 0) {
+                <p class="evidence-message evidence-message--success">
+                  No service errors were observed in this window.
+                </p>
+              } @else {
+                <ul class="error-observations" aria-label="Observed service errors">
+                  @for (error of content.errors; track error.sourceEventId + error.observedAt) {
+                    <li>
+                      <div>
+                        <strong>{{ error.errorCode }}</strong>
+                        <span>Count {{ error.count }}</span>
+                      </div>
+                      <p>
+                        {{ error.observedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC ·
+                        <code>{{ error.sourceEventId }}</code>
+                      </p>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>

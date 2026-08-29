@@ -18,5 +18,43 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-      - name: Verify Java modules
-        run: mvn --batch-mode clean verify
+      - name: Verify backend
+        shell: pwsh
+        run: ./verify.ps1 -Scope Backend
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: frontend/operator-console/package-lock.json
+      - name: Activate pinned npm
+        run: npm install --global npm@10.8.3
+      - name: Verify frontend
+        shell: pwsh
+        run: ./verify.ps1 -Scope Frontend
+
+  repository:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify repository contracts
+        shell: pwsh
+        run: ./verify.ps1 -Scope Repository
+
+  ci:
+    if: ${{ always() }}
+    needs: [backend, frontend, repository]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every verification scope
+        shell: pwsh
+        run: |
+          if ('${{ needs.backend.result }}' -ne 'success' -or
+              '${{ needs.frontend.result }}' -ne 'success' -or
+              '${{ needs.repository.result }}' -ne 'success') {
+            throw 'One or more verification scopes failed.'
+          }
