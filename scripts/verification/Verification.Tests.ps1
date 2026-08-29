@@ -111,9 +111,9 @@ Invoke-VerificationTest 'rejectsUnexpectedPinnedVersions' {
 
 Invoke-VerificationTest 'buildsPortableMavenWrapperInvocations' {
     $windowsInvocation = Get-MavenWrapperInvocation `
-        -RepositoryRoot 'C:\synthetic-repository' `
+        -RepositoryRoot 'Z:\synthetic-repository' `
         -WindowsPlatform $true
-    if ($windowsInvocation.Executable -ne 'C:\synthetic-repository\mvnw.cmd') {
+    if ($windowsInvocation.Executable -ne 'Z:\synthetic-repository\mvnw.cmd') {
         throw "Windows Maven executable differs: '$($windowsInvocation.Executable)'."
     }
     Assert-Equal @('--batch-mode', 'clean', 'verify') `

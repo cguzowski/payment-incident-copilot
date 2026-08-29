@@ -176,8 +176,9 @@ function Get-MavenWrapperInvocation {
     )
 
     if ($WindowsPlatform) {
+        $windowsRepositoryRoot = $RepositoryRoot.TrimEnd('/', '\')
         return [pscustomobject]@{
-            Executable = Join-Path $RepositoryRoot 'mvnw.cmd'
+            Executable = '{0}\mvnw.cmd' -f $windowsRepositoryRoot
             Arguments = @('--batch-mode', 'clean', 'verify')
         }
     }

@@ -302,6 +302,14 @@ on 2026-08-29.
   Testcontainers recovered. The unscoped root gate passed with zero skipped
   tests, and live desktop/390-CSS-pixel workspace verification completed the
   remaining acceptance criteria.
+- 2026-08-29: Reopened B05 after GitHub's Ubuntu repository job exposed that
+  the portability regression test constructed its synthetic Windows wrapper
+  path through the host PowerShell provider. The aggregate `ci` failure is a
+  downstream result of that repository-scope failure.
+- 2026-08-29: Replaced provider-dependent Windows wrapper path joining with
+  deterministic path composition and strengthened the regression with a
+  nonexistent synthetic drive. PowerShell Core, Windows PowerShell 5.1, the
+  repository scope, and the Docker-backed backend scope all passed.
 
 ## Completion evidence
 
@@ -326,6 +334,11 @@ on 2026-08-29.
   390x844. Both states had no document overflow, off-viewport interactive
   controls, browser warnings, or browser errors; direct-route history,
   provenance, degraded states, and actions remained visible.
+- Post-completion CI regression: the strengthened Maven-wrapper portability
+  test failed locally on a nonexistent `Z:` drive before the fix, then passed
+  under PowerShell Core and Windows PowerShell 5.1. `./verify.ps1 -Scope
+  Repository` passed the exact failed GitHub scope, and `./verify.ps1 -Scope
+  Backend` passed 116/116 copilot tests and 9/9 MCP-server tests with zero skips.
 - Documentation updated: root and operator-console READMEs, architecture,
   quality contract, ADR-0003 through ADR-0005, project status, and this task.
 - Remaining limitations: none within B01-B06. The previously documented

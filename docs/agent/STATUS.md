@@ -175,6 +175,11 @@ Milestone 1 — Establish the operator investigation workflow.
   390x844 rendered the investigation shell plus independently loaded evidence
   and approved-knowledge histories with no horizontal overflow, off-viewport
   interactive controls, browser warnings, or browser errors.
+- 2026-08-29: Corrected the Ubuntu repository-job failure caused by constructing
+  a synthetic Windows wrapper path through the host PowerShell drive provider.
+  The strengthened nonexistent-drive regression passed in PowerShell Core and
+  Windows PowerShell 5.1; repository verification passed, followed by 116/116
+  copilot and 9/9 MCP-server backend tests with zero skips.
 
 ## Update rule
 
