@@ -6,6 +6,9 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$localEnvironmentModule = Join-Path $PSScriptRoot 'local/LocalEnvironment.psm1'
+Import-Module $localEnvironmentModule -Force
+
 function Get-RequiredCommand {
     param(
         [Parameter(Mandatory)]
@@ -215,7 +218,9 @@ function Start-LocalApplication {
     $backendDirectory = Join-Path $repositoryRoot 'backend/copilot-api'
     $frontendDirectory = Join-Path $repositoryRoot 'frontend/operator-console'
 
-    Import-DotEnv -Path (Join-Path $repositoryRoot '.env')
+    $dotEnvPath = Join-Path $repositoryRoot '.env'
+    Assert-DotEnvDoesNotContainBedrockBearerToken -Path $dotEnvPath
+    Import-DotEnv -Path $dotEnvPath
     Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_BASE_URL' -Value 'http://localhost:8081'
     Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_REQUEST_TIMEOUT' -Value '5s'
     Assert-RequiredEnvironmentVariables -Names @(
@@ -242,37 +247,57 @@ function Start-LocalApplication {
     Install-FrontendDependenciesIfNeeded -FrontendDirectory $frontendDirectory -NpmCommand $npmCommand
 
     if ($CheckOnly) {
-        Write-Host 'Local startup preflight passed: MCP configuration, tools, PostgreSQL, and frontend dependencies are ready.'
+        $bedrockTokenSource = Invoke-WithBedrockBearerTokenForApiLaunch `
+            -BeforeApiLaunch {} `
+            -ApiLaunch {} `
+            -AfterApiLaunch {}
+        $bedrockStatus = if ($null -eq $bedrockTokenSource) {
+            'Bedrock API key was not visible to this process.'
+        } else {
+            "Bedrock API authentication is available from external $bedrockTokenSource scope."
+        }
+        Write-Host "Local startup preflight passed: MCP configuration, tools, PostgreSQL, and frontend dependencies are ready. $bedrockStatus"
         return
     }
 
-    if (Test-HttpEndpoint -Uri $mcpHealthUri) {
-        Write-Host 'Operations MCP server is already running.'
-    } else {
-        Write-Host 'Starting the operations MCP server in a new terminal...'
-        Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'mvn spring-boot:run' `
-            -WorkingDirectory $mcpDirectory -WindowStyle Normal
-        Wait-ForHttpEndpoint -Name 'Operations MCP server' -Uri $mcpHealthUri
-    }
-
     $apiHealthUri = 'http://localhost:8080/actuator/health'
-    if (Test-HttpEndpoint -Uri $apiHealthUri) {
-        Write-Host 'Copilot API is already running.'
-    } else {
-        Write-Host 'Starting the copilot API in a new terminal...'
-        Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'mvn spring-boot:run' `
-            -WorkingDirectory $backendDirectory -WindowStyle Normal
-        Wait-ForHttpEndpoint -Name 'Copilot API' -Uri $apiHealthUri
-    }
-
     $operatorConsoleUri = 'http://localhost:4200'
-    if (Test-HttpEndpoint -Uri $operatorConsoleUri) {
-        Write-Host 'Operator console is already running.'
+    $bedrockTokenSource = Invoke-WithBedrockBearerTokenForApiLaunch `
+        -BeforeApiLaunch {
+            if (Test-HttpEndpoint -Uri $mcpHealthUri) {
+                Write-Host 'Operations MCP server is already running.'
+            } else {
+                Write-Host 'Starting the operations MCP server in a new terminal...'
+                Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'mvn spring-boot:run' `
+                    -WorkingDirectory $mcpDirectory -WindowStyle Normal
+                Wait-ForHttpEndpoint -Name 'Operations MCP server' -Uri $mcpHealthUri
+            }
+        } `
+        -ApiLaunch {
+            if (Test-HttpEndpoint -Uri $apiHealthUri) {
+                Write-Host 'Copilot API is already running. Restart it through this launcher to apply changed Bedrock authentication.'
+            } else {
+                Write-Host 'Starting the copilot API in a new terminal...'
+                Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'mvn spring-boot:run' `
+                    -WorkingDirectory $backendDirectory -WindowStyle Normal
+                Wait-ForHttpEndpoint -Name 'Copilot API' -Uri $apiHealthUri
+            }
+        } `
+        -AfterApiLaunch {
+            if (Test-HttpEndpoint -Uri $operatorConsoleUri) {
+                Write-Host 'Operator console is already running.'
+            } else {
+                Write-Host 'Starting the operator console in a new terminal...'
+                Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'npm start' `
+                    -WorkingDirectory $frontendDirectory -WindowStyle Normal
+                Wait-ForHttpEndpoint -Name 'Operator console' -Uri $operatorConsoleUri
+            }
+        }
+
+    if ($null -eq $bedrockTokenSource) {
+        Write-Host 'Bedrock API key was not visible to the launcher; model calls require external AWS authentication.'
     } else {
-        Write-Host 'Starting the operator console in a new terminal...'
-        Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'npm start' `
-            -WorkingDirectory $frontendDirectory -WindowStyle Normal
-        Wait-ForHttpEndpoint -Name 'Operator console' -Uri $operatorConsoleUri
+        Write-Host "Bedrock API authentication was supplied to the copilot API from external $bedrockTokenSource scope."
     }
 
     Start-Process $operatorConsoleUri

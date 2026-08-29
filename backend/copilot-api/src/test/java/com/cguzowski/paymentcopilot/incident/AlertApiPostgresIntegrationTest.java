@@ -146,24 +146,24 @@ class AlertApiPostgresIntegrationTest {
     }
 
     @Test
-    void workQueueRetainsNewAndInvestigatingIncidentsWithoutAgeCutoff() throws Exception {
+    void workQueueRetainsNewAndAwaitingReviewIncidentsWithoutAgeCutoff() throws Exception {
         UUID oldNewIncidentId = UUID.fromString("057ced7b-1a45-4695-ae0e-f2ad9fc1bd73");
-        UUID newerInvestigatingIncidentId = UUID.fromString("724547d4-76d7-45d3-a6a5-afdf2096229b");
+        UUID newerAwaitingReviewIncidentId = UUID.fromString("724547d4-76d7-45d3-a6a5-afdf2096229b");
         UUID investigationId = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
         insertIncident(oldNewIncidentId, TENANT_ID, "alert-old-new", "NEW", "2026-07-01T07:15:00Z");
         insertIncident(
-                newerInvestigatingIncidentId,
+                newerAwaitingReviewIncidentId,
                 TENANT_ID,
-                "alert-newer-investigating",
-                "INVESTIGATING",
+                "alert-newer-awaiting-review",
+                "AWAITING_REVIEW",
                 "2026-08-20T07:15:00Z");
-        insertInvestigation(investigationId, TENANT_ID, newerInvestigatingIncidentId);
+        insertInvestigation(investigationId, TENANT_ID, newerAwaitingReviewIncidentId);
 
         mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].incidentId").value(newerInvestigatingIncidentId.toString()))
-                .andExpect(jsonPath("$[0].status").value("INVESTIGATING"))
+                .andExpect(jsonPath("$[0].incidentId").value(newerAwaitingReviewIncidentId.toString()))
+                .andExpect(jsonPath("$[0].status").value("AWAITING_REVIEW"))
                 .andExpect(jsonPath("$[0].activeInvestigationId").value(investigationId.toString()))
                 .andExpect(jsonPath("$[1].incidentId").value(oldNewIncidentId.toString()))
                 .andExpect(jsonPath("$[1].status").value("NEW"))

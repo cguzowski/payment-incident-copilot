@@ -47,6 +47,20 @@ An organizational or compliance rule that constrains investigation or action.
 **Recommendation**  
 A proposed next step for the operator. In the MVP it is advisory only.
 
+**Source reference**
+
+A stable pointer from a report claim to the exact persisted evidence attempt or
+approved-knowledge chunk that supports it. Displayed provenance is resolved by
+the application, not accepted from model-supplied source text.
+
+**Proposed incident report**
+
+An application-owned, schema-valid AI-assisted artifact that keeps observations,
+inferences, probable cause, confidence, recommendation, contradictions, and
+evidence gaps distinct and source-linked. Proposed means available for human
+review, not approved or authoritative; a report may explicitly conclude that
+evidence is insufficient.
+
 **Human decision**  
 An explicit approval or rejection recorded by the operator with identity,
 timestamp, and reason where required.

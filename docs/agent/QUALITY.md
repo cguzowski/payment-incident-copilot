@@ -11,10 +11,10 @@ The authoritative completion gate is:
 ```
 
 It verifies Java 21, Node.js 24.14.1, npm 10.8.3, the verification script's
-PowerShell tests, the pinned Maven Wrapper build, zero skipped backend and
-frontend tests, locked frontend installation, Prettier, the Angular production
-build, Compose configuration, and `git diff --check`. CI delegates to this same
-implementation.
+PowerShell tests, repository credential safety, the pinned Maven Wrapper build,
+zero skipped backend and frontend tests, locked frontend installation,
+Prettier, the Angular production build, Compose configuration, and
+`git diff --check`. CI delegates to this same implementation.
 
 Focused scopes are available during development:
 

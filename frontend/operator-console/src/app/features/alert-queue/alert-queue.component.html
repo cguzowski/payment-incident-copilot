@@ -135,7 +135,11 @@
                       data-testid="resume-investigation"
                       [routerLink]="['/investigations', incident.activeInvestigationId]"
                     >
-                      Resume investigation
+                      {{
+                        incident.status === 'AWAITING_REVIEW'
+                          ? 'Review proposed report'
+                          : 'Resume investigation'
+                      }}
                     </a>
                   }
                 </div>

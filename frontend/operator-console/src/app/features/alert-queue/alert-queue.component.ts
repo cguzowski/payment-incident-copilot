@@ -21,7 +21,11 @@ const severityRank: Record<IncidentSeverity, number> = {
   MEDIUM: 2,
   LOW: 1,
 };
-const statusRank: Record<IncidentStatus, number> = { NEW: 1, INVESTIGATING: 2 };
+const statusRank: Record<IncidentStatus, number> = {
+  NEW: 1,
+  INVESTIGATING: 2,
+  AWAITING_REVIEW: 3,
+};
 
 @Component({
   selector: 'app-alert-queue',

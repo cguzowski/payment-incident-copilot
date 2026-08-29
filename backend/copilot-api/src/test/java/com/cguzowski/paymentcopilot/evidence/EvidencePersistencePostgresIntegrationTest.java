@@ -59,6 +59,12 @@ class EvidencePersistencePostgresIntegrationTest {
     @Autowired
     private EvidenceSnapshotProvider evidenceSnapshots;
 
+    @Autowired
+    private ReportEvidenceSnapshotProvider reportEvidenceSnapshots;
+
+    @Autowired
+    private com.cguzowski.paymentcopilot.incident.ReportInvestigationSnapshotProvider reportInvestigationSnapshots;
+
     @BeforeEach
     void setUpInvestigation() {
         jdbcClient.sql("DELETE FROM evidence_collection_attempt").update();
@@ -185,6 +191,18 @@ class EvidencePersistencePostgresIntegrationTest {
                         "Synthetic authorization decline incident."));
         assertThat(investigationSnapshots.findKnowledgeRetrievalSnapshot(OTHER_TENANT_ID, INVESTIGATION_ID))
                 .isEmpty();
+        assertThat(reportInvestigationSnapshots.findForReport(TENANT_ID, INVESTIGATION_ID))
+                .contains(new com.cguzowski.paymentcopilot.incident.ReportInvestigationSnapshot(
+                        TENANT_ID,
+                        INVESTIGATION_ID,
+                        INCIDENT_ID,
+                        CORRELATION_ID,
+                        "INVESTIGATING",
+                        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                        "Authorization decline rate above threshold",
+                        "Synthetic authorization decline incident."));
+        assertThat(reportInvestigationSnapshots.findForReport(OTHER_TENANT_ID, INVESTIGATION_ID))
+                .isEmpty();
     }
 
     @Test
@@ -235,6 +253,25 @@ class EvidencePersistencePostgresIntegrationTest {
                         "payment-authorization-service",
                         List.of(new EvidenceErrorCount("UPSTREAM_TIMEOUT", 17))));
         assertThat(evidenceSnapshots.findByTenantIdAndInvestigationId(OTHER_TENANT_ID, INVESTIGATION_ID))
+                .isEmpty();
+        assertThat(reportEvidenceSnapshots.findForReport(TENANT_ID, INVESTIGATION_ID))
+                .contains(new ReportEvidenceSnapshot(
+                        unavailable.evidenceId(),
+                        "UNAVAILABLE",
+                        available.evidenceId(),
+                        "payment-authorization-service",
+                        List.of(
+                                new ReportEvidenceObservation(
+                                        "service-error-001",
+                                        java.time.Instant.parse("2026-08-28T09:58:00Z"),
+                                        "UPSTREAM_TIMEOUT",
+                                        14),
+                                new ReportEvidenceObservation(
+                                        "service-error-002",
+                                        java.time.Instant.parse("2026-08-28T09:59:00Z"),
+                                        "UPSTREAM_TIMEOUT",
+                                        3))));
+        assertThat(reportEvidenceSnapshots.findForReport(OTHER_TENANT_ID, INVESTIGATION_ID))
                 .isEmpty();
     }
 

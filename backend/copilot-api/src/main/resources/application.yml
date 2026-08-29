@@ -20,6 +20,7 @@ spring:
       fail-on-unknown-properties: true
   ai:
     model:
+      chat: ${AI_MODEL_CHAT:none}
       embedding: ${AI_MODEL_EMBEDDING:none}
     bedrock:
       aws:
@@ -27,6 +28,11 @@ spring:
       titan:
         embedding:
           model: amazon.titan-embed-text-v2:0
+      converse:
+        chat:
+          model: ${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}
+          temperature: 0
+          max-tokens: 4096
     mcp:
       client:
         initialized: false
@@ -55,6 +61,9 @@ management:
         enabled: true
 
 app:
+  report:
+    smoke-test:
+      enabled: false
   knowledge:
     ingestion:
       enabled: false

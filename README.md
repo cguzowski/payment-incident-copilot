@@ -29,7 +29,7 @@ synthetic alert
 | `backend/copilot-api` | Workflow, persistence, retrieval, report generation, and audit history |
 | `backend/operations-mcp-server` | Deterministic synthetic evidence exposed through read-only MCP tools |
 | PostgreSQL/pgvector | Application state, approved knowledge, and vector retrieval |
-| Amazon Bedrock | Titan V2 knowledge embeddings; structured report generation remains planned |
+| Amazon Bedrock | Titan V2 knowledge embeddings and Nova 2 Lite evidence-linked report generation |
 
 The applications share one repository but remain independently buildable and
 deployable. See [Architecture](docs/agent/ARCHITECTURE.md) for ownership and
@@ -86,9 +86,10 @@ Create ignored local configuration from the safe placeholders:
 Copy-Item .env.example .env
 ```
 
-Put real local values only in `.env`. Never put them in `.env.example`.
-Git ignores `.env`, but verify with `git check-ignore .env` before adding new
-local variables.
+Put database and other non-AWS local values only in `.env`. Never put a Bedrock
+API key, AWS access key, or AWS session token in `.env`, `.env.example`, or any
+other repository file. Git ignores `.env`, but the launcher and repository
+verification deliberately reject a Bedrock bearer-token assignment there.
 
 On Windows, after configuring `.env` and the database, double-click
 `start-local.bat` in the repository root. The launcher checks the local tools
@@ -98,8 +99,43 @@ waits for all three to be ready in dependency order, and opens
 `http://localhost:4200`. Press `Ctrl+C` in each service terminal, or close the
 terminals, to stop the application.
 
+The launcher resolves Bedrock API authentication only from the external Windows
+Process, User, or Machine environment. It temporarily exposes the variable only
+while creating the copilot API child process; the MCP server and Angular process
+do not inherit it. The value is never printed, passed on a command line, or
+loaded from the project `.env`.
+
 Run `start-local.bat --CheckOnly` from a terminal to perform the startup
 preflight without starting any service.
+
+### Local Bedrock API-key safety
+
+Keep the 30-day Bedrock API key in the Windows environment under the AWS-defined
+`AWS_BEARER_TOKEN_BEDROCK` name. Do not copy the value into this repository,
+shell profiles, Maven settings, IDE project configuration, screenshots, issue
+text, or terminal commands that will be retained in history.
+
+After creating or rotating the Windows environment variable, start a new
+terminal so child processes inherit the change. You can check which scope is
+visible without reading or printing the value:
+
+```powershell
+$bedrockVariableName = 'AWS_BEARER_TOKEN_BEDROCK'
+@('Process', 'User', 'Machine') | ForEach-Object {
+  $isPresent = -not [string]::IsNullOrWhiteSpace(
+    [Environment]::GetEnvironmentVariable($bedrockVariableName, $_)
+  )
+  "$_ scope present: $isPresent"
+}
+```
+
+`start-local.bat --CheckOnly` also reports only the selected scope, never the
+credential. If all scopes are false, the key exists only in another process and
+cannot be inherited; launch from that same terminal or save it through the
+Windows user-environment UI, then reopen the terminal. Before the AWS-reported
+expiry, rotate the key, replace the external environment value, restart the API,
+and revoke the old key. Production deployment must use an IAM role or another
+short-lived workload identity instead of this local-development key.
 
 ### Native PostgreSQL 18 on port 5432
 
@@ -131,7 +167,7 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V5 when the API starts.
+Flyway applies V1 through V6 when the API starts.
 
 ### Docker PostgreSQL 17.11 on port 5433
 
@@ -168,9 +204,13 @@ Run the authoritative repository verification from the root:
 
 It uses the pinned Maven Wrapper, locked frontend installation, backend and
 frontend zero-skip checks, formatting, the Angular production build, Compose
-validation, and diff-integrity checks. `-Scope Backend`, `-Scope Frontend`, and
-`-Scope Repository` are available for focused work; the unscoped command is the
-completion gate and is also used by CI.
+validation, credential-safety scanning, and diff-integrity checks. The scanner
+checks tracked and non-ignored untracked files plus ignored root `.env*` files
+other than `.env.example`; when it finds likely credential material, it names
+only the file and suppresses the matched content. `-Scope Backend`,
+`-Scope Frontend`, and `-Scope Repository`
+are available for focused work; the unscoped command is the completion gate and
+is also used by CI.
 
 Build both Java services directly when iterating on backend code. Use
 `./mvnw.cmd` on Windows PowerShell and `sh ./mvnw` on non-Windows PowerShell:
@@ -194,7 +234,8 @@ servers coexist.
 
 Application HTTP calls carry the demonstration tenant in the required
 `X-Synthetic-Tenant-Id` header. Operator-attributed mutations carry
-`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
+`X-Synthetic-Operator-Id`; investigation start and explicit report generation
+are the current operator-attributed mutations.
 Resource identifiers remain in paths, queue reads use `GET /api/incidents`,
 and tenant/operator identity is not accepted in resource paths, query
 parameters, or request bodies. These caller-supplied synthetic headers are a
@@ -204,11 +245,13 @@ claim.
 ### Approved-knowledge ingestion and Bedrock smoke test
 
 Normal startup does not call Bedrock or mutate the knowledge index. In an
-authorized AWS environment, use the default AWS credential chain and enable
-Titan V2 explicitly; never add credentials to `.env` or tracked files.
+authorized AWS environment, the AWS SDK for Java can use the externally stored
+Bedrock bearer token or its default AWS credential chain. Enable Titan V2
+explicitly; never add credentials to `.env` or tracked files.
 
-After loading `.env` and pointing the API at a running PostgreSQL/pgvector
-database, run the safe model-contract smoke test as a one-shot application:
+From a fresh terminal that can see the external Bedrock environment variable,
+load `.env`, point the API at a running PostgreSQL/pgvector database, and run
+the safe model-contract smoke test as a one-shot application:
 
 ```powershell
 $env:AI_MODEL_EMBEDDING = 'bedrock-titan'
@@ -225,6 +268,25 @@ repository-owned approved Markdown sources, use the same command with
 `APP_KNOWLEDGE_INGESTION_ENABLED=true`. Re-importing unchanged sources is
 idempotent; changed content or embedding metadata requires a new document
 version.
+
+Normal startup also keeps chat calls disabled. In an authorized AWS environment,
+run the one-shot report contract smoke from the same fresh terminal after
+loading `.env` and pointing the API at PostgreSQL:
+
+```powershell
+$env:AI_MODEL_CHAT = 'bedrock-converse'
+$env:BEDROCK_CHAT_MODEL = 'global.amazon.nova-2-lite-v1:0'
+$env:APP_REPORT_SMOKE_TEST_ENABLED = 'true'
+Push-Location backend/copilot-api
+../../mvnw.cmd "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
+Pop-Location
+```
+
+The report smoke sends one bounded synthetic incident/evidence snapshot, asks
+for prompt-guided `report-v1` JSON, and applies the same strict schema and
+citation validation as the HTTP workflow. It logs only the model ID, schema
+version, disposition, and validation result—not the prompt, source content,
+model payload, credentials, or provider error details.
 
 Run the Angular operator console in another terminal:
 

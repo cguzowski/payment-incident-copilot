@@ -53,6 +53,9 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
     @Autowired
     private KnowledgeRetrievalPersistenceService persistence;
 
+    @Autowired
+    private ReportKnowledgeSnapshotProvider reportKnowledgeSnapshots;
+
     @BeforeEach
     void setUp() {
         jdbcClient.sql("DELETE FROM knowledge_retrieval_result").update();
@@ -105,6 +108,20 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                         .query(String.class)
                         .single())
                 .isEqualTo("INVESTIGATING");
+        assertThat(reportKnowledgeSnapshots.findForReport(TENANT_ID, INVESTIGATION_ID))
+                .contains(new ReportKnowledgeSnapshot(
+                        RETRIEVAL_ID,
+                        "AVAILABLE",
+                        List.of(new ReportKnowledgeChunk(
+                                candidate().chunkId(),
+                                candidate().documentId(),
+                                "RUNBOOK",
+                                "Authorization Decline Runbook",
+                                "1.0.0",
+                                "Gateway Failures > Diagnosis",
+                                "Inspect GATEWAY_TIMEOUT observations."))));
+        assertThat(reportKnowledgeSnapshots.findForReport(OTHER_TENANT_ID, INVESTIGATION_ID))
+                .isEmpty();
     }
 
     private static KnowledgeRetrievalAttempt started(

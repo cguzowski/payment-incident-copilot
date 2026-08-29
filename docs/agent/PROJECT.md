@@ -76,8 +76,12 @@ snapshot without pretending that AI inference is verified fact.
 - Auditable evidence and decision provenance
 - Docker, CI, testing, and AWS deployment
 
+## Selected implementation decisions
+
+- Bedrock chat model default:
+  `${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}` (ADR-0006).
+
 ## Decisions still to fill in
 
-- Bedrock chat model: `[choose after access and cost review]`
 - AWS deployment services: `[choose during deployment milestone]`
 - Authentication approach: `[defer until the core flow works]`

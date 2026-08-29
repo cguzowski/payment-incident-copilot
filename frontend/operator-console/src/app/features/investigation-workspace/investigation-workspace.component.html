@@ -17,7 +17,9 @@
     <article class="incident-card">
       <p class="eyebrow">Investigation workspace</p>
       <h1 id="detail-title">Investigation</h1>
-      @if (hasEvidence()) {
+      @if (item.incidentStatus === 'AWAITING_REVIEW') {
+        <p class="description">A proposed report is ready for human review.</p>
+      } @else if (hasEvidence()) {
         <p class="description">Service-error evidence collection is tracked below.</p>
       } @else {
         <p class="description">Evidence collection has not started.</p>
@@ -62,5 +64,10 @@
       (historyPresence)="hasEvidence.set($event)"
     />
     <app-approved-knowledge-panel [investigationId]="investigationId" />
+    <app-report-panel
+      [investigationId]="investigationId"
+      [incidentStatus]="item.incidentStatus"
+      (reportAvailable)="markAwaitingReview()"
+    />
   }
 </section>

@@ -146,6 +146,22 @@ describe('AlertQueueComponent', () => {
     );
   });
 
+  it('keepsAwaitingReviewIncidentInQueueWithReviewRoute', () => {
+    const awaiting = queueItems();
+    awaiting[1] = { ...awaiting[1], status: 'AWAITING_REVIEW' };
+    queueResponse = of(awaiting);
+    const fixture = TestBed.createComponent(AlertQueueComponent);
+    fixture.detectChanges();
+
+    const review = fixture.nativeElement.querySelector(
+      '[data-testid="resume-investigation"]',
+    ) as HTMLAnchorElement;
+    expect(review.textContent).toContain('Review proposed report');
+    expect(review.getAttribute('href')).toBe(
+      '/investigations/a012c9cb-85a6-4d77-9703-3b53377b56c3',
+    );
+  });
+
   function firstRow(fixture: ComponentFixture<AlertQueueComponent>): HTMLElement {
     return fixture.nativeElement.querySelector('[data-testid="queue-row"]') as HTMLElement;
   }

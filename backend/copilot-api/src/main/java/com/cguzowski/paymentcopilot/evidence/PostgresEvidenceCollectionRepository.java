@@ -17,7 +17,8 @@ import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
 @Repository
-class PostgresEvidenceCollectionRepository implements EvidenceCollectionRepository, EvidenceSnapshotProvider {
+class PostgresEvidenceCollectionRepository
+        implements EvidenceCollectionRepository, EvidenceSnapshotProvider, ReportEvidenceSnapshotProvider {
 
     private final JdbcClient jdbcClient;
     private final JsonMapper jsonMapper;
@@ -58,6 +59,41 @@ class PostgresEvidenceCollectionRepository implements EvidenceCollectionReposito
                 .param("tenantId", tenantId)
                 .param("investigationId", investigationId)
                 .query(this::mapSnapshot)
+                .optional();
+    }
+
+    @Override
+    public Optional<ReportEvidenceSnapshot> findForReport(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT latest.id AS latest_evidence_id,
+                               latest.status AS latest_evidence_status,
+                               applicable.id AS applicable_evidence_id,
+                               applicable.content AS applicable_evidence_content
+                        FROM (
+                            SELECT id, status
+                            FROM evidence_collection_attempt
+                            WHERE tenant_id = :tenantId
+                              AND investigation_id = :investigationId
+                              AND source_tool = 'getRecentServiceErrors'
+                              AND status <> 'STARTED'
+                            ORDER BY requested_at DESC, id DESC
+                            LIMIT 1
+                        ) latest
+                        LEFT JOIN LATERAL (
+                            SELECT id, content
+                            FROM evidence_collection_attempt
+                            WHERE tenant_id = :tenantId
+                              AND investigation_id = :investigationId
+                              AND source_tool = 'getRecentServiceErrors'
+                              AND status IN ('AVAILABLE', 'PARTIAL')
+                            ORDER BY requested_at DESC, id DESC
+                            LIMIT 1
+                        ) applicable ON TRUE
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query(this::mapReportSnapshot)
                 .optional();
     }
 
@@ -182,6 +218,27 @@ class PostgresEvidenceCollectionRepository implements EvidenceCollectionReposito
                 countsByCode.entrySet().stream()
                         .map(entry -> new EvidenceErrorCount(entry.getKey(), entry.getValue()))
                         .toList());
+    }
+
+    private ReportEvidenceSnapshot mapReportSnapshot(ResultSet resultSet, int rowNumber) throws SQLException {
+        UUID applicableAttemptId = resultSet.getObject("applicable_evidence_id", UUID.class);
+        String applicableContentJson = resultSet.getString("applicable_evidence_content");
+        ServiceErrorEvidenceContent content = applicableContentJson == null ? null : readContent(applicableContentJson);
+        List<ReportEvidenceObservation> observations = content == null
+                ? List.of()
+                : content.errors().stream()
+                        .map(observation -> new ReportEvidenceObservation(
+                                observation.sourceEventId(),
+                                observation.observedAt(),
+                                observation.errorCode(),
+                                observation.count()))
+                        .toList();
+        return new ReportEvidenceSnapshot(
+                resultSet.getObject("latest_evidence_id", UUID.class),
+                resultSet.getString("latest_evidence_status"),
+                applicableAttemptId,
+                content == null ? null : content.serviceName(),
+                observations);
     }
 
     private String writeContent(ServiceErrorEvidenceContent content) {
