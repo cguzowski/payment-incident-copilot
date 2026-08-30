@@ -75,6 +75,50 @@ describe('ReportPanelComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('TIMED_OUT');
   });
 
+  it.each<ReportGenerationStatus>(['AVAILABLE', 'UNAVAILABLE', 'TIMED_OUT', 'MALFORMED'])(
+    'clearsGeneratingForThe%sTerminalGenerationResponse',
+    (status) => {
+      historyResponse = of([attempt('UNAVAILABLE', false, 'previous')]);
+      generationResponse = of(attempt(status));
+      const fixture = create();
+      fixture.detectChanges();
+
+      fixture.nativeElement.querySelector('[data-testid="generate-report"]').click();
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector(
+        '[data-testid="generate-report"]',
+      ) as HTMLButtonElement;
+      expect(button.textContent).toContain('Generate proposed report');
+      expect(fixture.nativeElement.textContent).not.toContain('Generating proposed report');
+      expect(fixture.nativeElement.textContent).toContain(status);
+      expect(fixture.nativeElement.textContent).toContain('attempt-UNAVAILABLE-previous');
+    },
+  );
+
+  it.each([
+    [409, 'Report generation is not ready'],
+    [404, 'Investigation not found'],
+    [503, 'Report generation could not be requested'],
+  ])('clearsGeneratingForThe%sGenerationHttpErrorAndPreservesHistory', (status, expected) => {
+    historyResponse = of([attempt('TIMED_OUT', false, 'previous')]);
+    generationResponse = throwError(() => new ApiRequestError('failure', status));
+    const fixture = create();
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('[data-testid="generate-report"]').click();
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector(
+      '[data-testid="generate-report"]',
+    ) as HTMLButtonElement;
+    expect(button.disabled).toBe(false);
+    expect(button.textContent).toContain('Generate proposed report');
+    expect(fixture.nativeElement.textContent).not.toContain('Generating proposed report');
+    expect(fixture.nativeElement.textContent).toContain(expected);
+    expect(fixture.nativeElement.textContent).toContain('attempt-TIMED_OUT-previous');
+  });
+
   it('distinguishesInsufficientUnavailableTimedOutMalformedAndInterruptedStates', () => {
     const cases: [ReportGenerationStatus, string][] = [
       ['UNAVAILABLE', 'The report model is unavailable.'],
@@ -126,9 +170,13 @@ describe('ReportPanelComponent', () => {
     return fixture;
   }
 
-  function attempt(status: ReportGenerationStatus, insufficient = false): ReportGenerationAttempt {
+  function attempt(
+    status: ReportGenerationStatus,
+    insufficient = false,
+    suffix?: string,
+  ): ReportGenerationAttempt {
     return {
-      attemptId: `attempt-${status}`,
+      attemptId: `attempt-${status}${suffix ? `-${suffix}` : ''}`,
       investigationId: 'investigation-1',
       status,
       requestedAt: '2026-08-29T10:00:00Z',

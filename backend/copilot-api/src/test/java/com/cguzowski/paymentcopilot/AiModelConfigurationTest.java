@@ -16,7 +16,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 class AiModelConfigurationTest {
 
     @Test
-    void usesOllamaForLocalRuntimeAndDisablesProvidersInTests() throws IOException {
+    void configuresOneAuditableModelCallAndABoundedReportDeadline() throws IOException {
         List<PropertySource<?>> localSources =
                 new YamlPropertySourceLoader().load("application", new ClassPathResource("application.yml"));
         assertThat(localSources).hasSize(1);
@@ -28,6 +28,8 @@ class AiModelConfigurationTest {
         assertThat(local.getProperty("spring.ai.ollama.chat.model")).isEqualTo("qwen3.5:4b");
         assertThat(local.getProperty("spring.ai.ollama.chat.temperature")).isEqualTo(0);
         assertThat(local.getProperty("spring.ai.ollama.embedding.model")).isEqualTo("nomic-embed-text");
+        assertThat(local.getProperty("spring.ai.retry.max-attempts")).isEqualTo(1);
+        assertThat(local.getProperty("app.report.generation-timeout")).isEqualTo("${REPORT_GENERATION_TIMEOUT:2m}");
         assertThat(local.getProperty("spring.ai.bedrock.aws.region")).isNull();
         assertThat(local.getProperty("app.report.smoke-test.enabled")).isEqualTo(false);
 

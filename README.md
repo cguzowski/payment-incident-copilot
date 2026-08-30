@@ -218,6 +218,13 @@ The API uses Ollama at `http://localhost:11434`. It never pulls models
 automatically. Normal startup does not invoke a model or mutate the knowledge
 index, and no AWS credential is required for local development.
 
+Each Generate action makes one auditable provider call. Report generation has
+a two-minute total deadline so provider retries or a stalled model cannot leave
+the operator console busy indefinitely. A refused provider is recorded as
+`UNAVAILABLE`; exceeding the deadline is recorded as `TIMED_OUT`, and either
+outcome can be retried explicitly. Slower local hardware can set the positive
+Spring duration `REPORT_GENERATION_TIMEOUT` (for example `3m`) in `.env`.
+
 After loading `.env` and pointing the API at a running PostgreSQL/pgvector
 database, run the safe model-contract smoke test as a one-shot application:
 

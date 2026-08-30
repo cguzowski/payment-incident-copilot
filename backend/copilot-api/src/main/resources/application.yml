@@ -19,6 +19,8 @@ spring:
     deserialization:
       fail-on-unknown-properties: true
   ai:
+    retry:
+      max-attempts: 1
     model:
       chat: ollama
       embedding: ollama
@@ -60,6 +62,7 @@ management:
 
 app:
   report:
+    generation-timeout: ${REPORT_GENERATION_TIMEOUT:2m}
     smoke-test:
       enabled: false
   knowledge:
