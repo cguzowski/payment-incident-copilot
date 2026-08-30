@@ -132,6 +132,54 @@ describe('AlertQueueComponent', () => {
     expect(sort.value).toBe('severity');
   });
 
+  it('automaticallyRefreshesTheCurrentViewAndStopsWhenDestroyed', () => {
+    vi.useFakeTimers();
+    try {
+      queueResponse = of([queueItems()[0]]);
+      const fixture = TestBed.createComponent(AlertQueueComponent);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelectorAll('[data-testid="queue-row"]')).toHaveLength(1);
+
+      const refreshedQueue = new Subject<AlertQueueItem[]>();
+      queueResponse = refreshedQueue.asObservable();
+      vi.advanceTimersByTime(5_000);
+      fixture.detectChanges();
+
+      expect(api.getQueue).toHaveBeenCalledTimes(2);
+      expect(api.getQueue).toHaveBeenLastCalledWith('active');
+      expect(fixture.nativeElement.querySelectorAll('[data-testid="queue-row"]')).toHaveLength(1);
+
+      refreshedQueue.next(queueItems());
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelectorAll('[data-testid="queue-row"]')).toHaveLength(2);
+
+      fixture.destroy();
+      vi.advanceTimersByTime(5_000);
+      expect(api.getQueue).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('keepsThePopulatedQueueVisibleWhenAutomaticRefreshFails', () => {
+    vi.useFakeTimers();
+    try {
+      queueResponse = of([queueItems()[0]]);
+      const fixture = TestBed.createComponent(AlertQueueComponent);
+      fixture.detectChanges();
+
+      queueResponse = throwError(() => new Error('temporarily unavailable'));
+      vi.advanceTimersByTime(5_000);
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelectorAll('[data-testid="queue-row"]')).toHaveLength(1);
+      expect(fixture.nativeElement.querySelector('[data-testid="error-state"]')).toBeNull();
+      fixture.destroy();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('keepsInvestigatingIncidentInQueueWithResumeRoute', () => {
     queueResponse = of(queueItems());
     const fixture = TestBed.createComponent(AlertQueueComponent);

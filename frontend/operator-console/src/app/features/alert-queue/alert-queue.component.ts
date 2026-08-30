@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { interval } from 'rxjs';
 import { AlertQueueApiService } from './alert-queue-api.service';
 import { AlertQueueItem, IncidentSeverity, IncidentStatus } from './alert-queue.models';
 
@@ -16,6 +17,7 @@ type QueueState = 'loading' | 'success' | 'error';
 type QueueSort = 'received-desc' | 'received-asc' | 'detected-desc' | 'severity' | 'status';
 type QueueView = 'active' | 'completed';
 
+const AUTO_REFRESH_INTERVAL_MS = 5_000;
 const severityRank: Record<IncidentSeverity, number> = {
   CRITICAL: 4,
   HIGH: 3,
@@ -73,10 +75,15 @@ export class AlertQueueComponent {
 
   constructor() {
     this.loadQueue();
+    interval(AUTO_REFRESH_INTERVAL_MS)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadQueue(false));
   }
 
-  protected loadQueue(): void {
-    this.state.set('loading');
+  protected loadQueue(showLoadingState = true): void {
+    if (showLoadingState) {
+      this.state.set('loading');
+    }
     this.alertQueueApi
       .getQueue(this.view())
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -86,8 +93,10 @@ export class AlertQueueComponent {
           this.state.set('success');
         },
         error: () => {
-          this.incidents.set([]);
-          this.state.set('error');
+          if (showLoadingState) {
+            this.incidents.set([]);
+            this.state.set('error');
+          }
         },
       });
   }

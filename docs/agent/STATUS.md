@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-08-30
+Last updated: 2026-08-31
 
 ## Current milestone
 
@@ -104,6 +104,9 @@ Milestone 1 — Establish the operator investigation workflow.
   operator attribution, and Active/Completed queue behavior. The authoritative
   gate passes every backend, PostgreSQL, HTTP, concurrency, architecture,
   frontend, formatting, build, Compose, and diff check with zero skipped tests.
+- Added lifecycle-bound five-second polling to the incident work queue so new
+  alerts appear without a manual refresh while visible queue results remain
+  stable during background requests and transient failures.
 
 ## In progress
 
@@ -256,6 +259,11 @@ Milestone 1 — Establish the operator investigation workflow.
   182/182 copilot API, 9/9 MCP server, and 75/75 Angular tests with zero failures,
   errors, or skips, plus formatting, builds, npm audit, Compose, verification
   contracts, and diff checks.
+- 2026-08-31: Queue auto-refresh red-green regressions passed 11/11 focused
+  tests. The frontend gate passed 77/77 tests, Prettier, and the production
+  build; the authoritative `./verify.ps1` gate passed 182/182 copilot API, 9/9
+  MCP server, and 77/77 Angular tests with zero skips, plus all repository
+  checks.
 
 ## Update rule
 
