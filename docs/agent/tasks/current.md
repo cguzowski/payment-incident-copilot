@@ -1,6 +1,6 @@
 # Task: Record the human decision and audit trail
 
-Status: In Progress
+Status: Completed
 Created: 2026-08-30
 Owner: Christopher Guzowski
 
@@ -250,7 +250,7 @@ does not execute the recommendation.
 - [x] Active work remains the default queue view; approved and rejected
       incidents remain discoverable in the completed view and open the existing
       investigation route.
-- [ ] Backend, PostgreSQL, HTTP, concurrency, architecture, frontend,
+- [x] Backend, PostgreSQL, HTTP, concurrency, architecture, frontend,
       formatting, build, Compose, diff, desktop, and 390-CSS-pixel checks pass
       with zero skipped tests.
 
@@ -451,6 +451,15 @@ and Active/Completed views in the existing work queue.
   overflow, no off-viewport decision controls, and no clean-run browser warnings
   or errors. The automation surface could not drive Tab/Space in the live form,
   so a final hands-on keyboard-only submission remains outstanding.
+- 2026-08-30: Reproduced the pushed backend failure with Docker/Testcontainers:
+  five existing integration requests omitted the newly required synthetic
+  operator header, and one completed-queue fixture reused a unique investigation
+  correlation identifier. Corrected only those test fixtures, preserving the
+  implemented API and persistence contracts.
+- 2026-08-30: The 22-test focused PostgreSQL regression run, backend CI scope,
+  and authoritative aggregate gate passed with zero skipped tests. P3 is
+  acceptance-complete; the hands-on keyboard check and live Ollama smoke remain
+  additive local-development follow-ups.
 
 ## Completion evidence
 
@@ -459,17 +468,18 @@ and Active/Completed views in the existing work queue.
   timeline-panel, and workspace tests failed for their intended missing behavior
   before production changes.
 - Green-phase evidence: Focused deterministic backend and architecture tests
-  pass; 75/75 Angular tests pass with zero skips; frontend and repository scopes
-  pass. Native PostgreSQL 18.3 migration, transaction, rollback, concurrency,
-  tenant, timeline, and queue smokes pass.
+  pass; the repaired 22-test PostgreSQL/API regression set passes; 182/182
+  copilot API, 9/9 MCP server, and 75/75 Angular tests pass with zero skips.
+  Native PostgreSQL 18.3 migration, transaction, rollback, concurrency, tenant,
+  timeline, and queue smokes pass.
 - Acceptance-criteria coverage: Every behavioral criterion is checked through
-  passing deterministic tests plus native PostgreSQL/HTTP/browser evidence. The
-  aggregate zero-skip completion criterion remains unchecked until Docker-backed
-  Testcontainers execute.
-- Full verification: `./verify.ps1 -Scope Backend` fails only at
-  `backend-no-skips` after 136/182 copilot tests and 9/9 MCP tests pass; 46
-  PostgreSQL tests are skipped because no valid Docker environment is available.
-  The unscoped authoritative gate is therefore not recorded as passing.
+  passing deterministic tests, PostgreSQL/HTTP/browser evidence, and the
+  authoritative zero-skip aggregate gate.
+- Full verification: `./verify.ps1 -Scope Backend` and `./verify.ps1` pass with
+  182/182 copilot API, 9/9 MCP server, and 75/75 Angular tests, including all 46
+  PostgreSQL/Testcontainers tests. Spotless, Prettier, npm audit, the Angular
+  production build, Compose validation, verification-contract tests, and diff
+  checks also pass.
 - Manual verification: Native PostgreSQL approval, rejection, replay, conflict,
   concurrent conflict, stale-transition rollback, cross-tenant access,
   historical unattributed retries, direct refresh, and Active/Completed
@@ -479,9 +489,8 @@ and Active/Completed views in the existing work queue.
 - Documentation updated: ADR-0008, architecture, domain, roadmap, status,
   README, completed-task archive, and this active evidence record match the
   implemented working tree and verification state.
-- Remaining limitations: The authoritative gate is still red because Docker
-  Desktop 4.87.0 repeatedly fails while creating local Unix-socket reparse
-  points, causing 46 PostgreSQL tests to skip. A hands-on keyboard-only form
-  smoke also remains. Recoverable runtime-directory backups remain at
-  `run.stale-20260830-1427` and `docker-secrets-engine.stale-20260830-1436` in
-  the user's Docker app-data directories.
+- Remaining limitations: A hands-on keyboard-only form smoke and live Ollama
+  verification remain additive local-development checks; neither is part of the
+  deterministic completion gate. Recoverable runtime-directory backups remain
+  at `run.stale-20260830-1427` and `docker-secrets-engine.stale-20260830-1436`
+  in the user's Docker app-data directories.

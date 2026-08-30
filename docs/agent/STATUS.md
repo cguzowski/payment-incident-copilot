@@ -100,40 +100,29 @@ Milestone 1 — Establish the operator investigation workflow.
   deadline, disabled hidden Spring AI retries inside one auditable attempt, and
   verified that the report panel recovers from every terminal response and HTTP
   error while preserving attempt history.
+- Completed P3 human decisions, terminal lifecycle, projected audit timeline,
+  operator attribution, and Active/Completed queue behavior. The authoritative
+  gate passes every backend, PostgreSQL, HTTP, concurrency, architecture,
+  frontend, formatting, build, Compose, and diff check with zero skipped tests.
 
 ## In progress
 
-- P3 human-decision, terminal lifecycle, projected audit timeline, operator
-  attribution, and Active/Completed queue behavior are implemented in the
-  working tree. Deterministic backend tests, architecture rules, all 75 Angular
-  tests, frontend formatting/build, Compose validation, repository checks,
-  native PostgreSQL 18.3 transaction/concurrency smokes, and responsive browser
-  verification pass. Only the repeatable Docker/Testcontainers zero-skip gate
-  remains blocked.
 - Live Ollama smoke verification remains pending outside the deterministic
   automated suite.
 
 ## Next
 
-1. Repair or reinstall Docker Desktop, then run `./verify.ps1 -Scope Backend`
-   and the unscoped authoritative gate with all PostgreSQL tests executing.
-2. Perform a final hands-on keyboard-only decision-form check; semantic form,
+1. Perform a final hands-on keyboard-only decision-form check; semantic form,
    focus, and validation behavior are automated, but the browser-control surface
    could not drive Tab/Space during the live smoke.
-3. Install Ollama outside the repository, pull `qwen3.5:4b` and
+2. Install Ollama outside the repository, pull `qwen3.5:4b` and
    `nomic-embed-text`, and run the documented embedding and report smokes.
-4. Activate P4 only after P3's blocked verification is complete.
+3. Activate P4 when its behavioral contract is selected and approved.
 
 ## Blockers
 
 - Ollama and its pinned models are not installed in this task environment, so
   live embedding and report smoke verification remains external.
-- Docker Desktop 4.87.0 repeatedly exits while creating local Unix-socket
-  reparse points, including `sailor-ingest.sock`; Testcontainers therefore
-  skips all 46 PostgreSQL tests and the backend zero-skip gate fails. Recoverable
-  pre-recovery directories remain as `run.stale-20260830-1427` and
-  `docker-secrets-engine.stale-20260830-1436` under the user's Docker app-data
-  directories.
 
 ## Known deliberate gaps
 
@@ -147,8 +136,6 @@ Milestone 1 — Establish the operator investigation workflow.
 - Knowledge ingestion is intentionally explicit and disabled during normal
   startup; there is no continuous content-management pipeline yet.
 - No AWS infrastructure selected yet.
-- P3 is not acceptance-complete until the authoritative Docker-backed gate
-  executes successfully with zero skipped tests.
 - The investigation workspace intentionally does not repeat incident context;
   that design and any API evolution are deferred to a future task.
 
@@ -262,6 +249,13 @@ Milestone 1 — Establish the operator investigation workflow.
   overflow, off-viewport decision controls, browser warnings, or browser errors.
   The approval and rejection records remain as synthetic review fixtures; the
   internal concurrency and rollback fixtures were removed after verification.
+- 2026-08-30: Reproduced the pushed backend CI failure locally with Docker and
+  corrected five stale operator-attributed HTTP fixtures plus one duplicate
+  investigation-correlation fixture. The focused 22-test PostgreSQL/API run,
+  `./verify.ps1 -Scope Backend`, and authoritative `./verify.ps1` gate pass:
+  182/182 copilot API, 9/9 MCP server, and 75/75 Angular tests with zero failures,
+  errors, or skips, plus formatting, builds, npm audit, Compose, verification
+  contracts, and diff checks.
 
 ## Update rule
 

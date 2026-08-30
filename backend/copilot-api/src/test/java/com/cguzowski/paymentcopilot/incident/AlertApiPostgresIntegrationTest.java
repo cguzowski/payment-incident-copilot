@@ -500,7 +500,7 @@ class AlertApiPostgresIntegrationTest {
                 .param("tenantId", tenantId)
                 .param("incidentId", incidentId)
                 .param("startedBy", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
-                .param("correlationId", UUID.fromString("a5d978b5-34c7-42da-9076-22f8e5169315"))
+                .param("correlationId", investigationId)
                 .update();
     }
 
