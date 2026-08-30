@@ -103,4 +103,38 @@ class FeatureArchitectureTest {
             .dependOnClassesThat()
             .resideInAnyPackage("..incident..", "..evidence..", "..knowledge.catalog..", "..knowledge.retrieval..")
             .because("the report persistence adapter must own and query only report storage");
+
+    @ArchTest
+    static final ArchRule upstreamFeaturesDoNotDependOnDecisionOrAudit = noClasses()
+            .that()
+            .resideInAnyPackage("..incident..", "..evidence..", "..knowledge..", "..report..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage("..decision..", "..audit..");
+
+    @ArchTest
+    static final ArchRule decisionDoesNotDependOnEvidenceKnowledgeOrAudit = noClasses()
+            .that()
+            .resideInAPackage("..decision..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage("..evidence..", "..knowledge..", "..audit..");
+
+    @ArchTest
+    static final ArchRule decisionPersistenceOwnsOnlyDecisionTypes = noClasses()
+            .that()
+            .haveSimpleNameStartingWith("Postgres")
+            .and()
+            .resideInAPackage("..decision..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage("..incident..", "..evidence..", "..knowledge..", "..report..", "..audit..");
+
+    @ArchTest
+    static final ArchRule auditDoesNotDependOnPersistenceAdapters = noClasses()
+            .that()
+            .resideInAPackage("..audit..")
+            .should()
+            .dependOnClassesThat()
+            .haveSimpleNameStartingWith("Postgres");
 }

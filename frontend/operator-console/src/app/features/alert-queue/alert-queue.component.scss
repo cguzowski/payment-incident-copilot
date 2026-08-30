@@ -74,6 +74,33 @@ h1 {
   display: block;
 }
 
+.queue-views {
+  display: inline-flex;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  padding: 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-raised);
+}
+
+.queue-views button {
+  min-height: 40px;
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.queue-views button[aria-current='page'] {
+  background: var(--accent);
+  color: white;
+}
+
 .environment strong {
   color: var(--ink-strong);
   font-size: 0.82rem;

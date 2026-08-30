@@ -15,4 +15,6 @@ interface IncidentRepository {
     Optional<IncidentWorkQueueEntry> findViewByTenantIdAndIncidentId(UUID tenantId, UUID incidentId);
 
     List<IncidentWorkQueueEntry> findActiveByTenantId(UUID tenantId);
+
+    List<IncidentWorkQueueEntry> findCompletedByTenantId(UUID tenantId);
 }

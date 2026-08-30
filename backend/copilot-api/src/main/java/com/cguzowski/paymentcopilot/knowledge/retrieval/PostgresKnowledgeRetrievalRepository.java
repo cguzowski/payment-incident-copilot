@@ -18,7 +18,8 @@ import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
 @Repository
-class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalRepository, ReportKnowledgeSnapshotProvider {
+class PostgresKnowledgeRetrievalRepository
+        implements KnowledgeRetrievalRepository, ReportKnowledgeSnapshotProvider, KnowledgeTimelineSnapshotProvider {
 
     private final JdbcClient jdbcClient;
     private final JsonMapper jsonMapper;
@@ -36,14 +37,14 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
         jdbcClient
                 .sql("""
                         INSERT INTO knowledge_retrieval_attempt (
-                            id, tenant_id, investigation_id, investigation_correlation_id,
+                            id, tenant_id, investigation_id, investigation_correlation_id, requested_by,
                             status, requested_at, query_text, query_template_version,
                             contributing_evidence_ids, embedding_model_id,
                             embedding_dimensions, metadata_filters, ranking_version,
                             rrf_k, candidate_depth, minimum_lexical_rank,
                             minimum_vector_similarity
                         ) VALUES (
-                            :id, :tenantId, :investigationId, :correlationId,
+                            :id, :tenantId, :investigationId, :correlationId, :requestedBy,
                             'STARTED', :requestedAt, :queryText, :queryTemplateVersion,
                             CAST(:evidenceIds AS UUID[]), :embeddingModelId,
                             :embeddingDimensions, CAST(:metadataFilters AS JSONB), :rankingVersion,
@@ -55,6 +56,7 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
                 .param("tenantId", attempt.tenantId())
                 .param("investigationId", attempt.investigationId())
                 .param("correlationId", attempt.investigationCorrelationId())
+                .param("requestedBy", attempt.requestedBy())
                 .param("requestedAt", utc(attempt.requestedAt()))
                 .param("queryText", attempt.queryText())
                 .param("queryTemplateVersion", attempt.queryTemplateVersion())
@@ -105,7 +107,7 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
         List<KnowledgeRetrievalAttempt> attempts = jdbcClient
                 .sql("""
                         SELECT id, tenant_id, investigation_id,
-                               investigation_correlation_id, status, requested_at,
+                               investigation_correlation_id, requested_by, status, requested_at,
                                completed_at, query_text, query_template_version,
                                contributing_evidence_ids, embedding_model_id,
                                embedding_dimensions, metadata_filters, ranking_version,
@@ -123,6 +125,28 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
         return attempts.stream()
                 .map(attempt -> withResults(attempt, findResults(tenantId, attempt.retrievalId())))
                 .toList();
+    }
+
+    @Override
+    public List<KnowledgeTimelineSnapshot> findTimelineSnapshots(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT id, investigation_correlation_id, requested_by,
+                               status, requested_at, completed_at
+                        FROM knowledge_retrieval_attempt
+                        WHERE tenant_id = :tenantId
+                          AND investigation_id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new KnowledgeTimelineSnapshot(
+                        resultSet.getObject("id", UUID.class),
+                        resultSet.getObject("investigation_correlation_id", UUID.class),
+                        resultSet.getObject("requested_by", UUID.class),
+                        resultSet.getString("status"),
+                        resultSet.getTimestamp("requested_at").toInstant(),
+                        instantOrNull(resultSet, "completed_at")))
+                .list();
     }
 
     @Override
@@ -154,6 +178,7 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
                 resultSet.getObject("tenant_id", UUID.class),
                 resultSet.getObject("investigation_id", UUID.class),
                 resultSet.getObject("investigation_correlation_id", UUID.class),
+                resultSet.getObject("requested_by", UUID.class),
                 KnowledgeRetrievalStatus.valueOf(resultSet.getString("status")),
                 resultSet.getTimestamp("requested_at").toInstant(),
                 instantOrNull(resultSet, "completed_at"),
@@ -300,6 +325,7 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
                 attempt.tenantId(),
                 attempt.investigationId(),
                 attempt.investigationCorrelationId(),
+                attempt.requestedBy(),
                 attempt.status(),
                 attempt.requestedAt(),
                 attempt.completedAt(),

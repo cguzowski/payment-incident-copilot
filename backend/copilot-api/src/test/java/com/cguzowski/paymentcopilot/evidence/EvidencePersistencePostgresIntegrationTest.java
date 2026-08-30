@@ -30,6 +30,7 @@ class EvidencePersistencePostgresIntegrationTest {
     private static final UUID INCIDENT_ID = UUID.fromString("f4749ecb-49b0-4277-a140-cb69485b082f");
     private static final UUID INVESTIGATION_ID = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
     private static final UUID CORRELATION_ID = UUID.fromString("a5d978b5-34c7-42da-9076-22f8e5169315");
+    private static final UUID REQUESTED_BY = UUID.fromString("71f7e754-8ec7-40c5-819d-080720e578d9");
 
     @Container
     static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("pgvector/pgvector:pg17")
@@ -217,6 +218,9 @@ class EvidencePersistencePostgresIntegrationTest {
                 "2026-08-28T10:01:00Z");
         evidenceCollectionRepository.insertStarted(available);
         evidenceCollectionRepository.insertStarted(unavailable);
+        assertThat(evidenceCollectionRepository.findAll(TENANT_ID, INVESTIGATION_ID))
+                .extracting(EvidenceCollectionAttempt::requestedBy)
+                .containsOnly(REQUESTED_BY);
         ServiceErrorEvidenceContent content = new ServiceErrorEvidenceContent(
                 "payment-authorization-service",
                 java.time.Instant.parse("2026-08-28T09:55:00Z"),
@@ -383,6 +387,7 @@ class EvidencePersistencePostgresIntegrationTest {
                 INVESTIGATION_ID,
                 toolCallId,
                 CORRELATION_ID,
+                REQUESTED_BY,
                 "synthetic-observability",
                 "getRecentServiceErrors",
                 "alert-auth-decline-001",

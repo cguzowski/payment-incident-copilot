@@ -18,7 +18,7 @@ synthetic alert
 -> approved runbooks and policies are retrieved
 -> the configured Spring AI chat model proposes an evidence-linked report
 -> operator approves or rejects
--> evidence, model metadata, report, and decision remain auditable
+-> the final decision and complete projected audit timeline remain reviewable
 ```
 
 ## Components
@@ -133,7 +133,9 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V7 when the API starts.
+Flyway applies V1 through V8 when the API starts. V8 adds append-only final
+human decisions plus nullable historical attribution for evidence and retrieval
+attempts; new attempts always persist their requesting operator.
 
 ### Docker PostgreSQL 17.11 on port 5433
 
@@ -196,7 +198,8 @@ servers coexist.
 
 Application HTTP calls carry the demonstration tenant in the required
 `X-Synthetic-Tenant-Id` header. Operator-attributed mutations carry
-`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
+`X-Synthetic-Operator-Id`; investigation start, evidence collection, knowledge
+retrieval, report generation, and final human decisions all require it.
 Resource identifiers remain in paths, queue reads use `GET /api/incidents`,
 and tenant/operator identity is not accepted in resource paths, query
 parameters, or request bodies. These caller-supplied synthetic headers are a

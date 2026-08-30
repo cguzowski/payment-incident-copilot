@@ -1,0 +1,105 @@
+<section class="decision-panel" aria-labelledby="decision-title">
+  <div class="decision-panel__heading">
+    <div>
+      <p class="eyebrow">Human authority</p>
+      <h2 id="decision-title">Final decision</h2>
+    </div>
+    @if (state() !== 'loading') {
+      <button class="button button--secondary" type="button" (click)="load()">Refresh</button>
+    }
+  </div>
+
+  <p class="decision-panel__boundary">
+    The proposed report is advisory. You own this final decision; recording it is final in this MVP,
+    and no recommendation will be executed.
+  </p>
+
+  @if (state() === 'loading') {
+    <p class="state-card" role="status">Loading human decision…</p>
+  } @else if (state() === 'not-found') {
+    <p class="state-card">Investigation not found.</p>
+  } @else if (state() === 'error') {
+    <div class="state-card" role="alert">
+      <strong>We couldn’t load the human decision.</strong>
+      <button class="button button--primary" type="button" (click)="load()">Try again</button>
+    </div>
+  } @else if (decision(); as item) {
+    <article class="decision-card" data-testid="stored-decision">
+      <div class="decision-card__heading">
+        <h3>Final human decision</h3>
+        <span class="status status--compact">{{ item.outcome }}</span>
+      </div>
+      <p class="decision-card__reason">{{ item.reason }}</p>
+      <dl>
+        <div>
+          <dt>Decided by</dt>
+          <dd>
+            <code>{{ item.decidedBy }}</code>
+          </dd>
+        </div>
+        <div>
+          <dt>Decided</dt>
+          <dd>{{ item.decidedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+        </div>
+        <div>
+          <dt>Report attempt</dt>
+          <dd>
+            <code>{{ item.reportAttemptId }}</code>
+          </dd>
+        </div>
+        <div>
+          <dt>Decision ID</dt>
+          <dd>
+            <code>{{ item.decisionId }}</code>
+          </dd>
+        </div>
+      </dl>
+    </article>
+  } @else if (incidentStatus() === 'AWAITING_REVIEW') {
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <fieldset>
+        <legend>Decision outcome</legend>
+        <label><input type="radio" formControlName="outcome" value="APPROVED" /> Approve</label>
+        <label><input type="radio" formControlName="outcome" value="REJECTED" /> Reject</label>
+      </fieldset>
+      @if (form.controls.outcome.touched && form.controls.outcome.invalid) {
+        <p class="field-error">Choose Approve or Reject.</p>
+      }
+      <label class="reason-field" for="decision-reason">
+        Reason
+        <textarea
+          id="decision-reason"
+          formControlName="reason"
+          maxlength="1000"
+          rows="5"
+        ></textarea>
+      </label>
+      <p class="field-help">Required · maximum 1,000 characters.</p>
+      @if (form.controls.reason.touched && form.controls.reason.invalid) {
+        <p class="field-error">Enter a reason between 1 and 1,000 characters.</p>
+      }
+      @if (submissionError() === 'validation') {
+        <p class="submission-error" role="alert">Check the outcome and reason, then try again.</p>
+      } @else if (submissionError() === 'not-found') {
+        <p class="submission-error" role="alert">Investigation not found. Return to the queue.</p>
+      } @else if (submissionError() === 'conflict') {
+        <p class="submission-error" role="alert">
+          The decision state changed. The authoritative investigation and decision are being
+          reloaded.
+        </p>
+      } @else if (submissionError() === 'error') {
+        <p class="submission-error" role="alert">
+          We couldn’t record the decision. No local success was assumed; try again.
+        </p>
+      }
+      <button
+        class="button button--primary"
+        type="submit"
+        data-testid="record-decision"
+        [disabled]="submitting()"
+      >
+        {{ submitting() ? 'Recording final decision…' : 'Record final decision' }}
+      </button>
+    </form>
+  }
+</section>

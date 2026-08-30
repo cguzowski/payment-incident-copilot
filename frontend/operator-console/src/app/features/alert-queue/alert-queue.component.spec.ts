@@ -162,6 +162,24 @@ describe('AlertQueueComponent', () => {
     );
   });
 
+  it('keepsTerminalIncidentsDiscoverableInCompletedView', () => {
+    queueResponse = of([{ ...queueItems()[1], status: 'APPROVED' }]);
+    const fixture = TestBed.createComponent(AlertQueueComponent);
+    fixture.detectChanges();
+
+    (
+      fixture.nativeElement.querySelector('[data-testid="completed-view"]') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+
+    expect(api.getQueue).toHaveBeenLastCalledWith('completed');
+    const link = fixture.nativeElement.querySelector(
+      '[data-testid="resume-investigation"]',
+    ) as HTMLAnchorElement;
+    expect(link.textContent).toContain('View decision and timeline');
+    expect(link.getAttribute('href')).toBe('/investigations/a012c9cb-85a6-4d77-9703-3b53377b56c3');
+  });
+
   function firstRow(fixture: ComponentFixture<AlertQueueComponent>): HTMLElement {
     return fixture.nativeElement.querySelector('[data-testid="queue-row"]') as HTMLElement;
   }

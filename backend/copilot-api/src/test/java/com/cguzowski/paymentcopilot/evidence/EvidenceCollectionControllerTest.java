@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 class EvidenceCollectionControllerTest {
 
     private static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
+    private static final UUID OPERATOR_ID = UUID.fromString("6904706f-d9e6-4543-a1bf-fc4b729e4c05");
     private static final UUID INVESTIGATION_ID = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
     private static final UUID EVIDENCE_ID = UUID.fromString("a8bab9d4-dccc-4e70-acfe-174ac63a3b12");
     private static final UUID TOOL_CALL_ID = UUID.fromString("21fdc56b-267a-4cb5-81b9-50f092e0ef35");
@@ -47,10 +48,11 @@ class EvidenceCollectionControllerTest {
 
     @Test
     void returnsCreatedForRecordedUnavailableAttempt() throws Exception {
-        when(service.collect(TENANT_ID, INVESTIGATION_ID)).thenReturn(unavailableResponse());
+        when(service.collect(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID)).thenReturn(unavailableResponse());
 
         mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(
                                 "Location", "/api/investigations/" + INVESTIGATION_ID + "/evidence-collections"))
@@ -99,21 +101,32 @@ class EvidenceCollectionControllerTest {
     @Test
     void rejectsMalformedIdentifiersAndAnyRequestBodyWithoutCollection() throws Exception {
         mockMvc.perform(post("/api/investigations/not-an-investigation/evidence-collections")
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-investigation-request"));
         mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", "not-a-tenant"))
+                        .header("X-Synthetic-Tenant-Id", "not-a-tenant")
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"));
         mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0].field").value("operatorId"));
+        mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
                         .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors[0].field").value("request"));
 
-        verify(service, never()).collect(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());
+        verify(service, never())
+                .collect(
+                        org.mockito.ArgumentMatchers.any(),
+                        org.mockito.ArgumentMatchers.any(),
+                        org.mockito.ArgumentMatchers.any());
     }
 
     @Test

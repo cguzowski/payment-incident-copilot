@@ -13,7 +13,10 @@ class PostgresInvestigationRepository
                 InvestigationSnapshotProvider,
                 EvidenceCollectionContextProvider,
                 ReportInvestigationSnapshotProvider,
-                ReportLifecyclePort {
+                ReportLifecyclePort,
+                DecisionInvestigationSnapshotProvider,
+                DecisionLifecyclePort,
+                IncidentTimelineSnapshotProvider {
 
     private final JdbcClient jdbcClient;
 
@@ -181,6 +184,82 @@ class PostgresInvestigationRepository
                         .param("incidentId", incidentId)
                         .update()
                 == 1;
+    }
+
+    @Override
+    public Optional<DecisionInvestigationSnapshot> findForDecision(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT investigation.tenant_id,
+                               investigation.id AS investigation_id,
+                               investigation.incident_id,
+                               investigation.correlation_id,
+                               incident.status
+                        FROM investigation
+                        JOIN incident
+                          ON incident.tenant_id = investigation.tenant_id
+                         AND incident.id = investigation.incident_id
+                        WHERE investigation.tenant_id = :tenantId
+                          AND investigation.id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new DecisionInvestigationSnapshot(
+                        resultSet.getObject("tenant_id", UUID.class),
+                        resultSet.getObject("investigation_id", UUID.class),
+                        resultSet.getObject("incident_id", UUID.class),
+                        resultSet.getObject("correlation_id", UUID.class),
+                        IncidentStatus.valueOf(resultSet.getString("status"))))
+                .optional();
+    }
+
+    @Override
+    public boolean transitionFromAwaitingReview(UUID tenantId, UUID incidentId, IncidentStatus terminalStatus) {
+        if (terminalStatus != IncidentStatus.APPROVED && terminalStatus != IncidentStatus.REJECTED) {
+            throw new IllegalArgumentException("A human decision requires a terminal incident status.");
+        }
+        return jdbcClient
+                        .sql("""
+                        UPDATE incident
+                        SET status = :terminalStatus
+                        WHERE tenant_id = :tenantId
+                          AND id = :incidentId
+                          AND status = 'AWAITING_REVIEW'
+                        """)
+                        .param("terminalStatus", terminalStatus.name())
+                        .param("tenantId", tenantId)
+                        .param("incidentId", incidentId)
+                        .update()
+                == 1;
+    }
+
+    @Override
+    public Optional<IncidentTimelineSnapshot> findTimelineSnapshot(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT incident.id AS incident_id,
+                               incident.received_at,
+                               investigation.id AS investigation_id,
+                               investigation.correlation_id,
+                               investigation.started_at,
+                               investigation.started_by
+                        FROM investigation
+                        JOIN incident
+                          ON incident.tenant_id = investigation.tenant_id
+                         AND incident.id = investigation.incident_id
+                        WHERE investigation.tenant_id = :tenantId
+                          AND investigation.id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new IncidentTimelineSnapshot(
+                        resultSet.getObject("incident_id", UUID.class),
+                        resultSet.getObject("investigation_id", UUID.class),
+                        resultSet.getObject("correlation_id", UUID.class),
+                        resultSet.getTimestamp("received_at").toInstant(),
+                        resultSet.getTimestamp("started_at").toInstant(),
+                        resultSet.getObject("started_by", UUID.class)))
+                .optional();
     }
 
     private Optional<InvestigationView> find(String predicate, UUID tenantId, UUID lookupId) {

@@ -9,6 +9,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -17,7 +18,8 @@ import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
 @Repository
-class PostgresReportGenerationRepository implements ReportGenerationRepository {
+class PostgresReportGenerationRepository
+        implements ReportGenerationRepository, ReviewCandidateProvider, ReportTimelineSnapshotProvider {
 
     private final JdbcClient jdbcClient;
     private final JsonMapper jsonMapper;
@@ -168,6 +170,55 @@ class PostgresReportGenerationRepository implements ReportGenerationRepository {
                 .param("tenantId", tenantId)
                 .param("investigationId", investigationId)
                 .query(this::mapAttempt)
+                .list();
+    }
+
+    @Override
+    public Optional<ReviewCandidate> findReviewCandidate(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT tenant_id, investigation_id, incident_id,
+                               investigation_correlation_id, id
+                        FROM report_generation_attempt
+                        WHERE tenant_id = :tenantId
+                          AND investigation_id = :investigationId
+                          AND status = 'AVAILABLE'
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new ReviewCandidate(
+                        resultSet.getObject("tenant_id", UUID.class),
+                        resultSet.getObject("investigation_id", UUID.class),
+                        resultSet.getObject("incident_id", UUID.class),
+                        resultSet.getObject("investigation_correlation_id", UUID.class),
+                        resultSet.getObject("id", UUID.class)))
+                .optional();
+    }
+
+    @Override
+    public List<ReportTimelineSnapshot> findTimelineSnapshots(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT id, investigation_correlation_id, requested_by,
+                               status, requested_at, completed_at, model_id,
+                               prompt_version, schema_version, disposition
+                        FROM report_generation_attempt
+                        WHERE tenant_id = :tenantId
+                          AND investigation_id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new ReportTimelineSnapshot(
+                        resultSet.getObject("id", UUID.class),
+                        resultSet.getObject("investigation_correlation_id", UUID.class),
+                        resultSet.getObject("requested_by", UUID.class),
+                        resultSet.getString("status"),
+                        resultSet.getTimestamp("requested_at").toInstant(),
+                        instantOrNull(resultSet, "completed_at"),
+                        resultSet.getString("model_id"),
+                        resultSet.getString("prompt_version"),
+                        resultSet.getString("schema_version"),
+                        resultSet.getString("disposition")))
                 .list();
     }
 

@@ -20,7 +20,15 @@ describe('AlertQueueApiService', () => {
   it('loads the queue through the tenant-scoped endpoint', () => {
     service.getQueue().subscribe((items) => expect(items).toEqual([]));
 
-    const request = http.expectOne('/api/incidents');
+    const request = http.expectOne('/api/incidents?view=active');
+    expect(request.request.method).toBe('GET');
+    request.flush([]);
+  });
+
+  it('loads completed incidents through the validated view', () => {
+    service.getQueue('completed').subscribe((items) => expect(items).toEqual([]));
+
+    const request = http.expectOne('/api/incidents?view=completed');
     expect(request.request.method).toBe('GET');
     request.flush([]);
   });

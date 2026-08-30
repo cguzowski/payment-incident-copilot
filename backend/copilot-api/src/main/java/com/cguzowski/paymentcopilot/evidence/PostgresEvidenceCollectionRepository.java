@@ -18,7 +18,10 @@ import tools.jackson.databind.json.JsonMapper;
 
 @Repository
 class PostgresEvidenceCollectionRepository
-        implements EvidenceCollectionRepository, EvidenceSnapshotProvider, ReportEvidenceSnapshotProvider {
+        implements EvidenceCollectionRepository,
+                EvidenceSnapshotProvider,
+                ReportEvidenceSnapshotProvider,
+                EvidenceTimelineSnapshotProvider {
 
     private final JdbcClient jdbcClient;
     private final JsonMapper jsonMapper;
@@ -106,12 +109,12 @@ class PostgresEvidenceCollectionRepository
                 .sql("""
                         INSERT INTO evidence_collection_attempt (
                             id, tenant_id, investigation_id, tool_call_id,
-                            investigation_correlation_id, source_system, source_tool,
+                            investigation_correlation_id, requested_by, source_system, source_tool,
                             scenario_reference, status, requested_at,
                             content_schema_version
                         ) VALUES (
                             :id, :tenantId, :investigationId, :toolCallId,
-                            :correlationId, :sourceSystem, :sourceTool,
+                            :correlationId, :requestedBy, :sourceSystem, :sourceTool,
                             :scenarioReference, :status, :requestedAt,
                             :contentSchemaVersion
                         )
@@ -121,6 +124,7 @@ class PostgresEvidenceCollectionRepository
                 .param("investigationId", attempt.investigationId())
                 .param("toolCallId", attempt.toolCallId())
                 .param("correlationId", attempt.investigationCorrelationId())
+                .param("requestedBy", attempt.requestedBy())
                 .param("sourceSystem", attempt.sourceSystem())
                 .param("sourceTool", attempt.sourceTool())
                 .param("scenarioReference", attempt.scenarioReference())
@@ -166,7 +170,7 @@ class PostgresEvidenceCollectionRepository
         return jdbcClient
                 .sql("""
                         SELECT id, tenant_id, investigation_id, tool_call_id,
-                               investigation_correlation_id, source_system, source_tool,
+                               investigation_correlation_id, requested_by, source_system, source_tool,
                                scenario_reference, status, requested_at, retrieved_at,
                                completed_at, content_schema_version, content, status_detail
                         FROM evidence_collection_attempt
@@ -180,6 +184,29 @@ class PostgresEvidenceCollectionRepository
                 .list();
     }
 
+    @Override
+    public List<EvidenceTimelineSnapshot> findTimelineSnapshots(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT id, investigation_correlation_id, requested_by,
+                               tool_call_id, status, requested_at, completed_at
+                        FROM evidence_collection_attempt
+                        WHERE tenant_id = :tenantId
+                          AND investigation_id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new EvidenceTimelineSnapshot(
+                        resultSet.getObject("id", UUID.class),
+                        resultSet.getObject("investigation_correlation_id", UUID.class),
+                        resultSet.getObject("requested_by", UUID.class),
+                        resultSet.getObject("tool_call_id", UUID.class),
+                        resultSet.getString("status"),
+                        resultSet.getTimestamp("requested_at").toInstant(),
+                        instantOrNull(resultSet, "completed_at")))
+                .list();
+    }
+
     private EvidenceCollectionAttempt mapAttempt(ResultSet resultSet, int rowNumber) throws SQLException {
         String contentJson = resultSet.getString("content");
         return new EvidenceCollectionAttempt(
@@ -188,6 +215,7 @@ class PostgresEvidenceCollectionRepository
                 resultSet.getObject("investigation_id", UUID.class),
                 resultSet.getObject("tool_call_id", UUID.class),
                 resultSet.getObject("investigation_correlation_id", UUID.class),
+                resultSet.getObject("requested_by", UUID.class),
                 resultSet.getString("source_system"),
                 resultSet.getString("source_tool"),
                 resultSet.getString("scenario_reference"),

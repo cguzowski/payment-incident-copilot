@@ -4,7 +4,9 @@ import { Observable, Subject, of, throwError } from 'rxjs';
 import { InvestigationApiService } from '../../core/api/investigations/investigation-api.service';
 import { Investigation } from '../../core/api/investigations/investigation.models';
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
+import { AuditTimelineApiService } from './audit-timeline-panel/audit-timeline-api.service';
 import { ApprovedKnowledgeApiService } from './approved-knowledge-panel/approved-knowledge-api.service';
+import { DecisionApiService } from './decision-panel/decision-api.service';
 import { ObservedEvidenceApiService } from './observed-evidence-panel/observed-evidence-api.service';
 import { ReportApiService } from './report-panel/report-api.service';
 import { InvestigationWorkspaceComponent } from './investigation-workspace.component';
@@ -20,6 +22,11 @@ describe('InvestigationWorkspaceComponent', () => {
         { provide: InvestigationApiService, useValue: { get: vi.fn(() => response) } },
         { provide: ObservedEvidenceApiService, useValue: { getHistory: vi.fn(() => of([])) } },
         { provide: ApprovedKnowledgeApiService, useValue: { getHistory: vi.fn(() => of([])) } },
+        { provide: AuditTimelineApiService, useValue: { getTimeline: vi.fn(() => of([])) } },
+        {
+          provide: DecisionApiService,
+          useValue: { getHistory: vi.fn(() => of([])), record: vi.fn() },
+        },
         {
           provide: ReportApiService,
           useValue: { getHistory: vi.fn(() => of([])), generate: vi.fn() },
@@ -74,6 +81,20 @@ describe('InvestigationWorkspaceComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain(
       'Service-error evidence collection is tracked below',
+    );
+  });
+
+  it('composesDecisionThenTimelineAfterTheReportForReview', () => {
+    response = of({ ...investigation(), incidentStatus: 'AWAITING_REVIEW' });
+    const fixture = TestBed.createComponent(InvestigationWorkspaceComponent);
+    fixture.detectChanges();
+
+    const report = fixture.nativeElement.querySelector('app-report-panel');
+    const decision = fixture.nativeElement.querySelector('app-decision-panel');
+    const timeline = fixture.nativeElement.querySelector('app-audit-timeline-panel');
+    expect(report.compareDocumentPosition(decision) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+    expect(decision.compareDocumentPosition(timeline) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(
+      0,
     );
   });
 

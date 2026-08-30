@@ -31,6 +31,7 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
     private static final UUID INVESTIGATION_ID = UUID.fromString("7f50162a-8dc5-45b0-9c88-dc2f77135e0f");
     private static final UUID CORRELATION_ID = UUID.fromString("133767cf-8ec8-487d-a09d-19d5efcece07");
     private static final UUID RETRIEVAL_ID = UUID.fromString("a74f88ed-e295-4caf-9404-a22f733d86ec");
+    private static final UUID REQUESTED_BY = UUID.fromString("71f7e754-8ec7-40c5-819d-080720e578d9");
     private static final UUID EVIDENCE_AVAILABLE_ID = UUID.fromString("d3a12cd9-ef1d-4328-b63d-2ecea6558e2d");
     private static final UUID EVIDENCE_UNAVAILABLE_ID = UUID.fromString("5b8e57e4-e194-4f51-81dc-4d2e6e47103a");
     private static final Instant REQUESTED_AT = Instant.parse("2026-08-28T10:00:00Z");
@@ -93,6 +94,7 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
         List<KnowledgeRetrievalAttempt> history = persistence.findAll(TENANT_ID, INVESTIGATION_ID);
         assertThat(history).extracting(KnowledgeRetrievalAttempt::retrievalId).containsExactly(retryId, RETRIEVAL_ID);
         assertThat(history.getFirst().status()).isEqualTo(KnowledgeRetrievalStatus.STARTED);
+        assertThat(history).extracting(KnowledgeRetrievalAttempt::requestedBy).containsOnly(REQUESTED_BY);
         assertThat(history.getLast().status()).isEqualTo(KnowledgeRetrievalStatus.AVAILABLE);
         assertThat(history.getLast().results()).hasSize(1);
         KnowledgeRetrievalResult result = history.getLast().results().getFirst();
@@ -131,6 +133,7 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
         return KnowledgeRetrievalAttempt.started(
                 retrievalId,
                 context,
+                REQUESTED_BY,
                 requestedAt,
                 query,
                 new KnowledgeMetadataFilters(

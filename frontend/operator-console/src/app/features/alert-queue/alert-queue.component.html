@@ -17,12 +17,31 @@
     </div>
   </div>
 
+  <nav class="queue-views" aria-label="Incident queue view">
+    <button
+      type="button"
+      data-testid="active-view"
+      [attr.aria-current]="view() === 'active' ? 'page' : null"
+      (click)="selectView('active')"
+    >
+      Active
+    </button>
+    <button
+      type="button"
+      data-testid="completed-view"
+      [attr.aria-current]="view() === 'completed' ? 'page' : null"
+      (click)="selectView('completed')"
+    >
+      Completed
+    </button>
+  </nav>
+
   @if (state() === 'loading') {
     <div class="state-card state-card--loading" role="status" aria-live="polite">
       <span class="spinner" aria-hidden="true"></span>
       <div>
         <strong>Loading incident work queue…</strong>
-        <p>Checking active incident work.</p>
+        <p>Checking {{ view() }} incident work.</p>
       </div>
     </div>
   } @else if (state() === 'error') {
@@ -45,14 +64,18 @@
     <div class="state-card state-card--empty" data-testid="empty-state">
       <span class="state-card__icon state-card__icon--check" aria-hidden="true">✓</span>
       <div>
-        <strong>No active incidents</strong>
-        <p>The work queue is clear.</p>
+        <strong>No {{ view() }} incidents</strong>
+        <p>
+          {{
+            view() === 'active' ? 'The work queue is clear.' : 'No terminal decisions are recorded.'
+          }}
+        </p>
       </div>
     </div>
   } @else {
     <div class="queue__toolbar">
       <p>
-        <strong>{{ incidents().length }}</strong> active
+        <strong>{{ incidents().length }}</strong> {{ view() }}
         {{ incidents().length === 1 ? 'incident' : 'incidents' }}
       </p>
       <label for="queue-sort">
@@ -136,9 +159,11 @@
                       [routerLink]="['/investigations', incident.activeInvestigationId]"
                     >
                       {{
-                        incident.status === 'AWAITING_REVIEW'
-                          ? 'Review proposed report'
-                          : 'Resume investigation'
+                        incident.status === 'APPROVED' || incident.status === 'REJECTED'
+                          ? 'View decision and timeline'
+                          : incident.status === 'AWAITING_REVIEW'
+                            ? 'Review proposed report'
+                            : 'Resume investigation'
                       }}
                     </a>
                   }

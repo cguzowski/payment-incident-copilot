@@ -103,22 +103,37 @@ Milestone 1 — Establish the operator investigation workflow.
 
 ## In progress
 
-- No implementation slice is active. Live Ollama smoke verification remains
-  pending outside the deterministic automated suite.
+- P3 human-decision, terminal lifecycle, projected audit timeline, operator
+  attribution, and Active/Completed queue behavior are implemented in the
+  working tree. Deterministic backend tests, architecture rules, all 75 Angular
+  tests, frontend formatting/build, Compose validation, repository checks,
+  native PostgreSQL 18.3 transaction/concurrency smokes, and responsive browser
+  verification pass. Only the repeatable Docker/Testcontainers zero-skip gate
+  remains blocked.
+- Live Ollama smoke verification remains pending outside the deterministic
+  automated suite.
 
 ## Next
 
-1. Install Ollama outside the repository, pull `qwen3.5:4b` and
+1. Repair or reinstall Docker Desktop, then run `./verify.ps1 -Scope Backend`
+   and the unscoped authoritative gate with all PostgreSQL tests executing.
+2. Perform a final hands-on keyboard-only decision-form check; semantic form,
+   focus, and validation behavior are automated, but the browser-control surface
+   could not drive Tab/Space during the live smoke.
+3. Install Ollama outside the repository, pull `qwen3.5:4b` and
    `nomic-embed-text`, and run the documented embedding and report smokes.
-2. Prepare P3 human decision and audit-trail scope for owner review; do not
-   begin implementation without activation.
-3. Add further evidence tools only after report-quality evaluation demonstrates
-   a concrete gap.
+4. Activate P4 only after P3's blocked verification is complete.
 
 ## Blockers
 
 - Ollama and its pinned models are not installed in this task environment, so
   live embedding and report smoke verification remains external.
+- Docker Desktop 4.87.0 repeatedly exits while creating local Unix-socket
+  reparse points, including `sailor-ingest.sock`; Testcontainers therefore
+  skips all 46 PostgreSQL tests and the backend zero-skip gate fails. Recoverable
+  pre-recovery directories remain as `run.stale-20260830-1427` and
+  `docker-secrets-engine.stale-20260830-1436` under the user's Docker app-data
+  directories.
 
 ## Known deliberate gaps
 
@@ -132,7 +147,8 @@ Milestone 1 — Establish the operator investigation workflow.
 - Knowledge ingestion is intentionally explicit and disabled during normal
   startup; there is no continuous content-management pipeline yet.
 - No AWS infrastructure selected yet.
-- Human approval/rejection and the complete audit timeline remain P3.
+- P3 is not acceptance-complete until the authoritative Docker-backed gate
+  executes successfully with zero skipped tests.
 - The investigation workspace intentionally does not repeat incident context;
   that design and any API evolution are deferred to a future task.
 
@@ -225,6 +241,27 @@ Milestone 1 — Establish the operator investigation workflow.
   errors, or skips. Spotless, Prettier, the 324.41 kB production build,
   zero-vulnerability npm audit, Compose validation, and `git diff --check` all
   passed; the same fix was verified on all three active local branches.
+- 2026-08-30: P3 focused backend decision, timeline, request-context, queue, and
+  architecture tests passed. The backend build executed 136/182 copilot tests
+  plus 9/9 MCP tests without failures, and Spotless passed, but the backend gate
+  correctly failed because Docker unavailability skipped 46 PostgreSQL tests,
+  including all 7 new decision/timeline persistence and concurrency scenarios.
+- 2026-08-30: `./verify.ps1 -Scope Frontend` passed 75/75 Angular tests with
+  zero skips, locked installation with zero vulnerabilities, Prettier, and the
+  386.21 kB production build. `./verify.ps1 -Scope Repository` also passed
+  verification-contract tests, Compose validation, and `git diff --check`.
+- 2026-08-30: The production API applied Flyway V8 to native PostgreSQL 18.3 and
+  started successfully. Native smokes passed approval, rejection, exact replay,
+  conflicting and truly concurrent decisions, transactional rollback after a
+  forced lifecycle race, exact report binding, preserved report content, actor
+  persistence, tenant isolation, Active/Completed discovery, and direct refresh.
+- 2026-08-30: A historical native timeline returned all 30 expected unique
+  events oldest-first, including 12 evidence, 8 retrieval, and 8 report attempts,
+  28 failure/unavailable states, and 20 honest `UNATTRIBUTED` actors. Live
+  1280x720 and 390x844 approval/completed/direct-refresh checks had no horizontal
+  overflow, off-viewport decision controls, browser warnings, or browser errors.
+  The approval and rejection records remain as synthetic review fixtures; the
+  internal concurrency and rollback fixtures were removed after verification.
 
 ## Update rule
 

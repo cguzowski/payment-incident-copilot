@@ -1,6 +1,6 @@
 # Domain glossary
 
-Last reviewed: 2026-08-27
+Last reviewed: 2026-08-30
 
 ## Core terms
 
@@ -18,9 +18,9 @@ produce a reviewable explanation for an incident.
 
 **Incident work queue**
 
-The operator's single tenant-scoped view of active incident work. `NEW`
-incidents remain in the queue regardless of age, and the same incident remains
-discoverable as it moves into investigation and review states.
+The operator's single tenant-scoped incident surface. Its Active view contains
+`NEW`, `INVESTIGATING`, and `AWAITING_REVIEW` work; its Completed view keeps
+terminal `APPROVED` and `REJECTED` incidents discoverable.
 
 **Evidence item**  
 A normalized fact retrieved from a named source. It includes the source,
@@ -62,12 +62,21 @@ review, not approved or authoritative; a report may explicitly conclude that
 evidence is insufficient.
 
 **Human decision**  
-An explicit approval or rejection recorded by the operator with identity,
-timestamp, and reason where required.
+An explicit, final approval or rejection of the exact proposed report under
+review, recorded separately with the synthetic operator identity, UTC timestamp
+and required bounded reason. It does not mutate the report or execute its
+recommendation.
 
-**Audit event**  
-An append-oriented record of a meaningful action, state transition, tool call,
-report generation event, or human decision.
+**Audit timeline event**
+A safe chronological projection of one authoritative alert, investigation,
+evidence, retrieval, report, or human-decision record. The timeline preserves
+attempt outcomes and provenance without copying raw evidence, prompts, model
+payloads, stack traces or secrets into a second write model.
+
+**Unattributed actor**
+An honest marker for a historical evidence or retrieval attempt created before
+operator attribution was persisted. It must not be replaced with an invented
+operator.
 
 **Tenant**  
 The financial-services organization whose incidents, knowledge, and audit data

@@ -20,6 +20,8 @@ function isOperatorMutation(method: string, url: string): boolean {
   return (
     method === 'POST' &&
     (/^\/api\/incidents\/[^/]+\/investigations$/.test(url) ||
-      /^\/api\/investigations\/[^/]+\/reports$/.test(url))
+      /^\/api\/investigations\/[^/]+\/(evidence-collections|knowledge-retrievals|reports|decisions)$/.test(
+        url,
+      ))
   );
 }

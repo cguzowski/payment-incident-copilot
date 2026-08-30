@@ -36,10 +36,21 @@ describe('syntheticRequestContextInterceptor', () => {
 
   it('attachesOperatorContextToOperatorAttributedMutations', () => {
     client.post('/api/incidents/incident-1/investigations', null).subscribe();
+    client.post('/api/investigations/investigation-1/evidence-collections', null).subscribe();
+    client.post('/api/investigations/investigation-1/knowledge-retrievals', null).subscribe();
     client.post('/api/investigations/investigation-1/reports', null).subscribe();
+    client
+      .post('/api/investigations/investigation-1/decisions', {
+        outcome: 'APPROVED',
+        reason: 'Reviewed.',
+      })
+      .subscribe();
     for (const url of [
       '/api/incidents/incident-1/investigations',
+      '/api/investigations/investigation-1/evidence-collections',
+      '/api/investigations/investigation-1/knowledge-retrievals',
       '/api/investigations/investigation-1/reports',
+      '/api/investigations/investigation-1/decisions',
     ]) {
       const request = http.expectOne(url);
       expect(request.request.headers.get(SYNTHETIC_TENANT_HEADER)).toBe(SYNTHETIC_TENANT_ID);

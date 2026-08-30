@@ -30,6 +30,7 @@ class KnowledgeRetrievalServiceTest {
 
     private static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
     private static final UUID OTHER_TENANT_ID = UUID.fromString("076a18a3-d54f-486a-b3ec-189e1048fd28");
+    private static final UUID OPERATOR_ID = UUID.fromString("6904706f-d9e6-4543-a1bf-fc4b729e4c05");
     private static final UUID INVESTIGATION_ID = UUID.fromString("7f50162a-8dc5-45b0-9c88-dc2f77135e0f");
     private static final UUID CORRELATION_ID = UUID.fromString("133767cf-8ec8-487d-a09d-19d5efcece07");
     private static final UUID RETRIEVAL_ID = UUID.fromString("a74f88ed-e295-4caf-9404-a22f733d86ec");
@@ -53,7 +54,7 @@ class KnowledgeRetrievalServiceTest {
         when(fixture.searchRepository.search(any())).thenReturn(List.of(candidate()));
         when(fixture.persistence.complete(any())).thenReturn(true);
 
-        KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID);
+        KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
 
         InOrder order = inOrder(
                 fixture.contextAssembler, fixture.persistence, fixture.embeddingClient, fixture.searchRepository);
@@ -66,6 +67,7 @@ class KnowledgeRetrievalServiceTest {
         ArgumentCaptor<KnowledgeRetrievalAttempt> started = ArgumentCaptor.forClass(KnowledgeRetrievalAttempt.class);
         verify(fixture.persistence).insertStarted(started.capture());
         assertThat(started.getValue().status()).isEqualTo(KnowledgeRetrievalStatus.STARTED);
+        assertThat(started.getValue().requestedBy()).isEqualTo(OPERATOR_ID);
         assertThat(started.getValue().completedAt()).isNull();
         assertThat(started.getValue().results()).isEmpty();
 
@@ -93,7 +95,7 @@ class KnowledgeRetrievalServiceTest {
         when(fixture.searchRepository.search(any())).thenReturn(List.of(candidate()));
         when(fixture.persistence.complete(any())).thenReturn(true);
 
-        KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID);
+        KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
 
         ArgumentCaptor<KnowledgeSearchRequest> search = ArgumentCaptor.forClass(KnowledgeSearchRequest.class);
         verify(fixture.searchRepository).search(search.capture());
@@ -117,7 +119,7 @@ class KnowledgeRetrievalServiceTest {
             when(fixture.searchRepository.search(any())).thenReturn(List.of());
             when(fixture.persistence.complete(any())).thenReturn(true);
 
-            KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID);
+            KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
 
             assertThat(response.status()).isEqualTo(failure.expectedStatus());
             assertThat(response.results()).isEmpty();
@@ -133,7 +135,7 @@ class KnowledgeRetrievalServiceTest {
         when(fixture.searchRepository.search(any())).thenReturn(List.of());
         when(fixture.persistence.complete(any())).thenReturn(true);
 
-        KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID);
+        KnowledgeRetrievalResponse response = fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
 
         assertThat(response.status()).isEqualTo(KnowledgeRetrievalStatus.NO_MATCH);
         assertThat(response.results()).isEmpty();
@@ -143,7 +145,7 @@ class KnowledgeRetrievalServiceTest {
     void doesNotEmbedOrPersistForCrossTenantInvestigation() {
         Fixture fixture = fixture(OTHER_TENANT_ID, Optional.empty());
 
-        assertThatThrownBy(() -> fixture.service.retrieve(OTHER_TENANT_ID, INVESTIGATION_ID))
+        assertThatThrownBy(() -> fixture.service.retrieve(OTHER_TENANT_ID, INVESTIGATION_ID, OPERATOR_ID))
                 .isInstanceOf(KnowledgeInvestigationNotFoundException.class);
         verify(fixture.embeddingClient, never()).embed(any());
         verify(fixture.persistence, never()).insertStarted(any());
@@ -157,7 +159,7 @@ class KnowledgeRetrievalServiceTest {
                         KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, unitVector()));
         when(fixture.searchRepository.search(any())).thenThrow(new IllegalStateException("database interrupted"));
 
-        assertThatThrownBy(() -> fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID))
+        assertThatThrownBy(() -> fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID))
                 .isInstanceOf(IllegalStateException.class);
         verify(fixture.persistence).insertStarted(any());
         verify(fixture.persistence, never()).complete(any());

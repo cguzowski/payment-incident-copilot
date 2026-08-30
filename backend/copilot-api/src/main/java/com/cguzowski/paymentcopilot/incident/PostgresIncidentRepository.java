@@ -120,6 +120,25 @@ class PostgresIncidentRepository implements IncidentRepository {
                 .list();
     }
 
+    @Override
+    public List<IncidentWorkQueueEntry> findCompletedByTenantId(UUID tenantId) {
+        return jdbcClient
+                .sql("""
+                        SELECT %s, investigation.id AS active_investigation_id
+                        FROM incident
+                        JOIN investigation
+                          ON investigation.tenant_id = incident.tenant_id
+                         AND investigation.incident_id = incident.id
+                        WHERE incident.tenant_id = :tenantId
+                          AND incident.status IN ('APPROVED', 'REJECTED')
+                        ORDER BY incident.received_at DESC
+                        """.formatted(INCIDENT_COLUMNS))
+                .param("tenantId", tenantId)
+                .query((resultSet, rowNumber) -> new IncidentWorkQueueEntry(
+                        mapIncident(resultSet, rowNumber), resultSet.getObject("active_investigation_id", UUID.class)))
+                .list();
+    }
+
     private static Incident mapIncident(ResultSet resultSet, int rowNumber) throws SQLException {
         return new Incident(
                 resultSet.getObject("id", UUID.class),
