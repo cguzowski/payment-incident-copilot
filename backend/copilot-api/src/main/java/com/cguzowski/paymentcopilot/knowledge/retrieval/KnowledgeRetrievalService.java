@@ -2,6 +2,7 @@ package com.cguzowski.paymentcopilot.knowledge.retrieval;
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbedding;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingMalformedException;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingTimedOutException;
@@ -72,9 +73,9 @@ class KnowledgeRetrievalService {
         persistence.insertStarted(started);
 
         EmbeddingFailure failure = null;
-        float[] queryEmbedding = null;
+        KnowledgeEmbedding queryEmbedding = null;
         try {
-            queryEmbedding = embeddingClient.embed(query.text()).vector();
+            queryEmbedding = embeddingClient.embed(query.text());
         } catch (KnowledgeEmbeddingUnavailableException exception) {
             failure = EmbeddingFailure.unavailable();
         } catch (KnowledgeEmbeddingTimedOutException exception) {
@@ -88,7 +89,9 @@ class KnowledgeRetrievalService {
                 context.incidentFamily(),
                 requestedAt,
                 query.text(),
-                queryEmbedding,
+                queryEmbedding == null ? KnowledgeEmbeddingClient.MODEL_ID : queryEmbedding.modelId(),
+                queryEmbedding == null ? KnowledgeEmbeddingClient.DIMENSIONS : queryEmbedding.dimensions(),
+                queryEmbedding == null ? null : queryEmbedding.vector(),
                 CANDIDATE_DEPTH,
                 RRF_K,
                 MINIMUM_LEXICAL_RANK,

@@ -51,6 +51,8 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                    c.source_start_line,
                                    c.source_end_line,
                                    c.embedding,
+                                   c.embedding_model_id,
+                                   c.embedding_dimensions,
                                    d.document_id,
                                    d.document_type,
                                    d.title AS document_title,
@@ -104,6 +106,8 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                        AS vector_similarity
                             FROM eligible e
                             WHERE CAST(:queryVector AS TEXT) IS NOT NULL
+                              AND e.embedding_model_id = :embeddingModelId
+                              AND e.embedding_dimensions = :embeddingDimensions
                         ),
                         vector_ranked AS (
                             SELECT vector_scored.*,
@@ -175,6 +179,8 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                 .param("incidentFamily", request.incidentFamily())
                 .param("minimumLexicalRank", request.minimumLexicalRank())
                 .param("queryVector", new SqlParameterValue(Types.VARCHAR, vector))
+                .param("embeddingModelId", request.embeddingModelId())
+                .param("embeddingDimensions", request.embeddingDimensions())
                 .param("minimumVectorSimilarity", request.minimumVectorSimilarity())
                 .param("candidateDepth", request.candidateDepth())
                 .param("rrfK", request.rrfK())

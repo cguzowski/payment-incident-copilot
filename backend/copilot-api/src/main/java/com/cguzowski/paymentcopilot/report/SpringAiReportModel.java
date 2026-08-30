@@ -3,22 +3,21 @@ package com.cguzowski.paymentcopilot.report;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
-import org.springframework.ai.bedrock.converse.BedrockChatOptions;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-class BedrockReportModel implements ReportModel {
+class SpringAiReportModel implements ReportModel {
 
     private final Optional<ChatModel> chatModel;
     private final String modelId;
 
-    BedrockReportModel(
-            Optional<ChatModel> chatModel,
-            @Value("${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}") String modelId) {
+    SpringAiReportModel(
+            Optional<ChatModel> chatModel, @Value("${spring.ai.ollama.chat.model:qwen3.5:4b}") String modelId) {
         this.chatModel = chatModel;
         this.modelId = modelId;
     }
@@ -31,7 +30,7 @@ class BedrockReportModel implements ReportModel {
     @Override
     public ReportModelResponse generate(String promptText) {
         ChatModel provider = chatModel.orElseThrow(ReportModelUnavailableException::new);
-        BedrockChatOptions options = BedrockChatOptions.builder()
+        OllamaChatOptions options = OllamaChatOptions.builder()
                 .model(modelId)
                 .temperature(0.0)
                 .maxTokens(4_096)

@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
 import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextExceptionHandler;
 import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
 import java.time.Instant;
@@ -112,8 +113,8 @@ class KnowledgeRetrievalControllerTest {
                 "Incident type: AUTHORIZATION_DECLINE_RATE_SPIKE",
                 "knowledge-query/v1",
                 List.of(),
-                "amazon.titan-embed-text-v2:0",
-                1024,
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
                 new KnowledgeMetadataFilters(
                         "AUTHORIZATION_DECLINE_RATE_SPIKE",
                         List.of(KnowledgeDocumentType.RUNBOOK, KnowledgeDocumentType.POLICY),

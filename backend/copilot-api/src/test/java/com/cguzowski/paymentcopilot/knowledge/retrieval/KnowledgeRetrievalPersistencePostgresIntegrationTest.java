@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -290,7 +291,7 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                             :rawHash, :embeddingHash,
                             'embedding-input/v1', 'markdown-sections/v1',
                             :sourceStartLine, :sourceEndLine, 10,
-                            'amazon.titan-embed-text-v2:0', 1024,
+                            'nomic-embed-text', 768,
                             TRUE, :embeddedAt, CAST(:embedding AS vector)
                         )
                         """)
@@ -339,7 +340,7 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
     }
 
     private static float[] unitVector() {
-        float[] vector = new float[1024];
+        float[] vector = new float[KnowledgeEmbeddingClient.DIMENSIONS];
         vector[0] = 1.0f;
         return vector;
     }

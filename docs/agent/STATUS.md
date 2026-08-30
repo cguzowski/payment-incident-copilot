@@ -81,10 +81,9 @@ Milestone 1 — Establish the operator investigation workflow.
   aggregate gate passed every backend, frontend, formatting, build, Compose,
   and diff check with zero skipped tests, followed by live desktop and
   390-CSS-pixel workspace verification.
-- Accepted ADR-0006 with
-  `${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}` as the report model
-  default and `INSUFFICIENT_EVIDENCE` as a reviewable outcome that moves the
-  incident to `AWAITING_REVIEW`.
+- Accepted ADR-0006 with Nova 2 Lite as the original report-provider choice and
+  `INSUFFICIENT_EVIDENCE` as a reviewable outcome that moves the incident to
+  `AWAITING_REVIEW`; ADR-0007 now selects Ollama for active local development.
 - Implemented P2 evidence-linked report generation with exact tenant-scoped
   evidence/knowledge snapshots, strict `report-v1` validation, append-only
   Flyway V6 persistence, explicit create/history APIs, atomic
@@ -92,39 +91,40 @@ Milestone 1 — Establish the operator investigation workflow.
 - Verified P2 through focused and unscoped backend, PostgreSQL, HTTP,
   architecture, Angular, formatting, build, Compose, diff, desktop, and
   390-CSS-pixel checks with zero skipped tests.
+- Switched the active local Spring AI provider to Ollama with `qwen3.5:4b`
+  report generation and normalized 768-dimensional `nomic-embed-text`
+  embeddings while keeping automated tests network-free.
+- Preserved report-persistence Flyway V6 and added Flyway V7 for compatible
+  local embedding dimensions and model/dimension-filtered vector scoring.
 
 ## In progress
 
-- Authorized live Bedrock smoke verification remains pending for the completed
-  P1 embedding and P2 report slices.
+- No implementation slice is active; live local Ollama smoke verification is
+  pending for the completed embedding and report paths.
 
 ## Next
 
-1. Prepare P3 human decision and audit-trail scope for owner review; do not
+1. Install Ollama outside the repository, pull `qwen3.5:4b` and
+   `nomic-embed-text`, and run the documented embedding and report smokes.
+2. Prepare P3 human decision and audit-trail scope for owner review; do not
    begin implementation without activation.
-2. Run the documented one-shot embedding and report smokes in an explicitly
-   authorized AWS environment with an isolated PostgreSQL smoke database.
 3. Add further evidence tools only after report-quality evaluation demonstrates
    a concrete gap.
 
 ## Blockers
 
-- No explicitly authorized AWS credential/profile and isolated PostgreSQL smoke
-  database were available in this task environment, so live Titan V2 embedding
-  and Nova 2 Lite report verification remain external.
+- Ollama and its pinned models are not installed in this task environment, so
+  live embedding and report smoke verification remains external.
 
 ## Known deliberate gaps
 
 - No authentication yet.
 - Only `getRecentServiceErrors` is implemented; additional evidence domains and
   operator-selected investigation areas remain future product tasks.
-- Live Amazon Titan Text Embeddings V2 authorization, region availability, and
-  returned-vector behavior have not yet been verified in an authorized AWS
-  environment; local and CI verification use the deterministic embedding double.
-- Live `global.amazon.nova-2-lite-v1:0` report authorization, prompt-guided JSON,
-  and provider response behavior have not yet been verified in an authorized
-  AWS environment; local and CI verification use the deterministic report-model
-  double and strict application validation.
+- Live Ollama embedding and report behavior has not yet been verified on this
+  machine; local and CI verification use mocked or deterministic model doubles.
+- Historical Titan rows remain auditable and lexically retrievable but are not
+  vector-compared with `nomic-embed-text` queries or silently re-embedded.
 - Knowledge ingestion is intentionally explicit and disabled during normal
   startup; there is no continuous content-management pipeline yet.
 - No AWS infrastructure selected yet.
@@ -207,6 +207,15 @@ Milestone 1 — Establish the operator investigation workflow.
   evidence and approved knowledge at 1280x720 and 390x844 with adjacent source
   references, visible keyboard focus, no horizontal overflow or off-viewport
   controls, and no browser warnings or errors.
+- 2026-08-30: Recovered the completed P2 report snapshot onto `main` and the
+  active local Ollama branch; the active AWS Bedrock branch already contained
+  the identical report implementation. The local adapter now uses Ollama while
+  preserving the report UI/API, V6 persistence checksum, prompt, and schema.
+- 2026-08-30: The authoritative `./verify.ps1` gate passed 150/150 copilot API,
+  9/9 operations MCP server, and 53/53 Angular tests with zero failures,
+  errors, or skips. Flyway V1-V7, PostgreSQL 17.11 Testcontainers, Spotless,
+  Prettier, the 324.41 kB production build, zero-vulnerability npm audit,
+  Compose validation, and `git diff --check` all passed.
 
 ## Update rule
 

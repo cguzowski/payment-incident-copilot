@@ -1,6 +1,6 @@
 # Project definition
 
-Last reviewed: 2026-08-27
+Last reviewed: 2026-08-30
 Owner: Christopher Guzowski
 Status: Foundation
 
@@ -34,7 +34,8 @@ snapshot without pretending that AI inference is verified fact.
 4. The platform calls synthetic operational systems through MCP tools.
 5. Relevant runbooks and policies are retrieved from approved knowledge.
 6. Evidence is normalized with source and retrieval metadata.
-7. Amazon Bedrock generates a report matching a predefined schema.
+7. The configured Spring AI chat model generates a report matching a
+   predefined schema; local development uses Ollama.
 8. The operator reviews the evidence, inference, and recommendation.
 9. The operator approves or rejects the report and supplies a reason.
 10. The platform preserves the complete audit history.
@@ -48,7 +49,7 @@ snapshot without pretending that AI inference is verified fact.
 - A small set of read-only MCP tools
 - Markdown runbook and policy ingestion
 - PostgreSQL and pgvector retrieval
-- Structured Bedrock report generation
+- Structured report generation with Ollama locally
 - Evidence citations and retrieval status
 - Approve/reject human decision
 - Immutable-style audit timeline
@@ -68,7 +69,8 @@ snapshot without pretending that AI inference is verified fact.
 ## Portfolio signals
 
 - Java 21 and modern Spring Boot development
-- Spring AI and Amazon Bedrock integration
+- Spring AI orchestration with Ollama locally and an optional Bedrock
+  production profile near deployment
 - MCP tool design and orchestration
 - PostgreSQL, pgvector, SQL migrations, and data modeling
 - Angular workflow-oriented UI
@@ -76,12 +78,8 @@ snapshot without pretending that AI inference is verified fact.
 - Auditable evidence and decision provenance
 - Docker, CI, testing, and AWS deployment
 
-## Selected implementation decisions
-
-- Bedrock chat model default:
-  `${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}` (ADR-0006).
-
 ## Decisions still to fill in
 
+- Bedrock production-profile details: `[choose during deployment milestone]`
 - AWS deployment services: `[choose during deployment milestone]`
 - Authentication approach: `[defer until the core flow works]`
