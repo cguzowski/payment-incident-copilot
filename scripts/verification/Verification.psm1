@@ -23,7 +23,13 @@ function Get-VerificationStepNames {
             )
         }
         'Repository' {
-            return @('check-repository-tools', 'verification-system-tests', 'compose-config', 'diff-check')
+            return @(
+                'check-repository-tools',
+                'verification-system-tests',
+                'credential-safety',
+                'compose-config',
+                'diff-check'
+            )
         }
         default {
             return @(
@@ -32,6 +38,7 @@ function Get-VerificationStepNames {
                 'check-npm',
                 'check-repository-tools',
                 'verification-system-tests',
+                'credential-safety',
                 'maven-verify',
                 'backend-no-skips',
                 'frontend-install',
@@ -105,6 +112,59 @@ function Assert-JUnitReportsHaveNoSkippedTests {
         Assert-JUnitXmlHasNoSkippedTests `
             -XmlContent (Get-Content -Raw -LiteralPath $reportPath) `
             -Source $reportPath
+    }
+}
+
+function Assert-TextHasNoBedrockBearerToken {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)] [AllowEmptyString()] [string] $Content,
+        [Parameter(Mandatory)] [string] $Source
+    )
+
+    $tokenPattern = '(?i)(?:ABSK[A-Za-z0-9._/+==-]{16,}|bedrock-api-key-[A-Za-z0-9._/+==-]{16,})'
+    $assignmentPattern = '(?im)^\s*(?:(?:export|set)\s+|\$env:)?AWS_BEARER_TOKEN_BEDROCK\s*='
+    $setxPattern = '(?im)^\s*setx\s+AWS_BEARER_TOKEN_BEDROCK\b'
+    if ($Content -match $tokenPattern -or
+        $Content -match $assignmentPattern -or
+        $Content -match $setxPattern) {
+        throw "Potential Amazon Bedrock bearer credential detected in '$Source'. Remove it from the repository and rotate the key; matched content is intentionally suppressed."
+    }
+}
+
+function Assert-RepositoryContainsNoBedrockBearerTokens {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)] [string] $RepositoryRoot
+    )
+
+    $candidatePaths = @(& git -C $RepositoryRoot ls-files --cached --others --exclude-standard)
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Git could not enumerate repository files for credential safety.'
+    }
+
+    foreach ($relativePath in $candidatePaths) {
+        $path = Join-Path $RepositoryRoot $relativePath
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+            continue
+        }
+        Assert-TextHasNoBedrockBearerToken `
+            -Content ([IO.File]::ReadAllText($path)) `
+            -Source $relativePath
+    }
+
+    $localEnvironmentFiles = @(
+        Get-ChildItem `
+            -Path (Join-Path $RepositoryRoot '.env*') `
+            -File `
+            -Force `
+            -ErrorAction SilentlyContinue |
+            Where-Object Name -ne '.env.example'
+    )
+    foreach ($environmentFile in $localEnvironmentFiles) {
+        Assert-TextHasNoBedrockBearerToken `
+            -Content ([IO.File]::ReadAllText($environmentFile.FullName)) `
+            -Source $environmentFile.Name
     }
 }
 
@@ -244,6 +304,10 @@ function Invoke-RepositoryVerificationStep {
         }
         'verification-system-tests' {
             & (Join-Path $RepositoryRoot 'scripts/verification/Verification.Tests.ps1')
+            & (Join-Path $RepositoryRoot 'scripts/local/LocalEnvironment.Tests.ps1')
+        }
+        'credential-safety' {
+            Assert-RepositoryContainsNoBedrockBearerTokens -RepositoryRoot $RepositoryRoot
         }
         'maven-verify' {
             $invocation = Get-MavenWrapperInvocation `
@@ -301,6 +365,8 @@ Export-ModuleMember -Function @(
     'Assert-ExactVersion',
     'Assert-JUnitXmlHasNoSkippedTests',
     'Assert-JUnitReportsHaveNoSkippedTests',
+    'Assert-TextHasNoBedrockBearerToken',
+    'Assert-RepositoryContainsNoBedrockBearerTokens',
     'Invoke-VerificationPlan',
     'Invoke-ExternalCommand',
     'Get-MavenWrapperInvocation',

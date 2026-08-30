@@ -78,6 +78,11 @@ snapshot without pretending that AI inference is verified fact.
 - Auditable evidence and decision provenance
 - Docker, CI, testing, and AWS deployment
 
+## Selected implementation decisions
+
+- Bedrock chat model default:
+  `${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}` (ADR-0006).
+
 ## Decisions still to fill in
 
 - Bedrock production-profile details: `[choose during deployment milestone]`

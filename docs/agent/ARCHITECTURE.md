@@ -44,6 +44,16 @@ through an incident-owned read port. Its persistence adapter owns only evidence
 tables. Tenant identity remains an explicit argument through every application
 and persistence port.
 
+Report generation composes three narrow tenant-scoped snapshots before it
+records `STARTED`: the incident and investigation lifecycle snapshot, the newest
+terminal evidence attempt plus newest applicable observations, and the newest
+terminal retrieval with its persisted selected chunks. Its persistence adapter
+owns only report tables. A validated report update and the incident transition
+to `AWAITING_REVIEW` share one transaction; the Bedrock call occurs outside that
+transaction. Nova 2 Lite receives a versioned prompt containing the immutable
+`report-v1` JSON Schema, and the application independently validates structure,
+semantics and source membership before making a report reviewable.
+
 ## Operator workspace composition
 
 `InvestigationWorkspaceComponent` is the route-level investigation loader and
@@ -58,7 +68,8 @@ do not import sibling component stylesheets.
 
 Application HTTP requests carry tenant identity in
 `X-Synthetic-Tenant-Id`. Operator-attributed mutations also carry
-`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
+`X-Synthetic-Operator-Id`; investigation start and report generation are the
+current operator-attributed mutations.
 Resource identifiers remain in paths, while tenant and operator identity do not
 appear in resource paths, query parameters, or request bodies. A single backend
 resolver validates the headers, and a single frontend interceptor attaches
@@ -112,7 +123,7 @@ sequenceDiagram
     A->>O: Evidence plus versioned report schema
     O-->>A: Structured proposed report
     A->>A: Validate schema and citations
-    A->>D: Persist report, evidence, and metadata
+    A->>D: Persist report, normalized citations, and metadata
     A-->>U: Reviewable investigation snapshot
     U->>A: Approve or reject with reason
     A->>D: Append decision audit event

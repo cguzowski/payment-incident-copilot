@@ -66,6 +66,7 @@ Invoke-VerificationTest 'buildsTheCompletePlanInRequiredOrder' {
         'check-npm'
         'check-repository-tools'
         'verification-system-tests'
+        'credential-safety'
         'maven-verify'
         'backend-no-skips'
         'frontend-install'
@@ -97,6 +98,7 @@ Invoke-VerificationTest 'buildsIndependentBackendAndFrontendPlans' {
     Assert-Equal @(
         'check-repository-tools'
         'verification-system-tests'
+        'credential-safety'
         'compose-config'
         'diff-check'
     ) (Get-VerificationStepNames -Scope Repository) 'Repository verification scope differs.'
@@ -136,6 +138,70 @@ Invoke-VerificationTest 'rejectsSkippedJUnitResults' {
     Assert-Throws {
         Assert-JUnitXmlHasNoSkippedTests -XmlContent '<testsuite tests="2" failures="0" errors="0" skipped="1"><testcase><skipped/></testcase></testsuite>' -Source 'skipped.xml'
     } '*skipped.xml*skipped*'
+}
+
+Invoke-VerificationTest 'rejectsTokenShapedRepositoryContentWithoutEchoingValue' {
+    $syntheticToken = 'AB' + 'SKSyntheticBedrockCredentialMaterial1234567890'
+    try {
+        Assert-TextHasNoBedrockBearerToken `
+            -Content "safe-prefix $syntheticToken safe-suffix" `
+            -Source 'synthetic.txt'
+    }
+    catch {
+        if ($_.Exception.Message.Contains($syntheticToken)) {
+            throw 'Credential-safety failure echoed the matched token.'
+        }
+        if ($_.Exception.Message -notlike '*synthetic.txt*') {
+            throw "Credential-safety failure did not identify the source file."
+        }
+        return
+    }
+    throw 'Token-shaped repository content was accepted.'
+}
+
+Invoke-VerificationTest 'rejectsIgnoredDotEnvVariantsWithoutEchoingValue' {
+    $temporaryRepository = Join-Path `
+        ([IO.Path]::GetTempPath()) `
+        ("payment-copilot-verification-" + [guid]::NewGuid().ToString('N'))
+    $syntheticToken = 'AB' + 'SKIgnoredEnvironmentCredentialMaterial1234567890'
+    [IO.Directory]::CreateDirectory($temporaryRepository) | Out-Null
+    try {
+        [IO.File]::WriteAllText((Join-Path $temporaryRepository '.gitignore'), ".env.*`n")
+        [IO.File]::WriteAllText(
+            (Join-Path $temporaryRepository '.env.local'),
+            "AWS_BEARER_TOKEN_BEDROCK=$syntheticToken"
+        )
+        & git -C $temporaryRepository init --quiet
+        if ($LASTEXITCODE -ne 0) {
+            throw 'Could not initialize the temporary Git repository.'
+        }
+
+        try {
+            Assert-RepositoryContainsNoBedrockBearerTokens `
+                -RepositoryRoot $temporaryRepository
+        }
+        catch {
+            if ($_.Exception.Message.Contains($syntheticToken)) {
+                throw 'Credential-safety failure echoed the ignored environment credential.'
+            }
+            if ($_.Exception.Message -notlike '*.env.local*') {
+                throw 'Credential-safety failure did not identify the ignored environment file.'
+            }
+            return
+        }
+        throw 'Token-shaped content in an ignored root environment file was accepted.'
+    }
+    finally {
+        $resolvedTemporaryRepository = [IO.Path]::GetFullPath($temporaryRepository)
+        $resolvedTemporaryRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())
+        if (-not $resolvedTemporaryRepository.StartsWith(
+                $resolvedTemporaryRoot,
+                [StringComparison]::OrdinalIgnoreCase
+            )) {
+            throw 'Refusing to remove a temporary repository outside the system temp directory.'
+        }
+        Remove-Item -LiteralPath $resolvedTemporaryRepository -Recurse -Force
+    }
 }
 
 Invoke-VerificationTest 'stopsAtTheFirstFailedStepAndNamesIt' {
