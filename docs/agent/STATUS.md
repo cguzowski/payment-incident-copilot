@@ -96,22 +96,23 @@ Milestone 1 — Establish the operator investigation workflow.
   embeddings while keeping automated tests network-free.
 - Preserved report-persistence Flyway V6 and added Flyway V7 for compatible
   local embedding dimensions and model/dimension-filtered vector scoring.
+- Bounded every report model invocation with a configurable two-minute total
+  deadline, disabled hidden Spring AI retries inside one auditable attempt, and
+  verified that the report panel recovers from every terminal response and HTTP
+  error while preserving attempt history.
 
 ## In progress
 
-- A bounded report-generation defect fix is active after a refused Ollama
-  connection exposed Spring AI's long hidden retry schedule and an indefinitely
-  busy Generate action. Focused backend and frontend regressions pass; aggregate
-  verification and propagation to the other active branches remain pending.
+- No implementation slice is active. Live Ollama smoke verification remains
+  pending outside the deterministic automated suite.
 
 ## Next
 
-1. Complete and propagate the bounded report-generation defect fix.
-2. Install Ollama outside the repository, pull `qwen3.5:4b` and
+1. Install Ollama outside the repository, pull `qwen3.5:4b` and
    `nomic-embed-text`, and run the documented embedding and report smokes.
-3. Prepare P3 human decision and audit-trail scope for owner review; do not
+2. Prepare P3 human decision and audit-trail scope for owner review; do not
    begin implementation without activation.
-4. Add further evidence tools only after report-quality evaluation demonstrates
+3. Add further evidence tools only after report-quality evaluation demonstrates
    a concrete gap.
 
 ## Blockers
@@ -219,6 +220,11 @@ Milestone 1 — Establish the operator investigation workflow.
   errors, or skips. Flyway V1-V7, PostgreSQL 17.11 Testcontainers, Spotless,
   Prettier, the 324.41 kB production build, zero-vulnerability npm audit,
   Compose validation, and `git diff --check` all passed.
+- 2026-08-30: The bounded-generation `./verify.ps1` gate passed 154/154 copilot
+  API, 9/9 operations MCP server, and 60/60 Angular tests with zero failures,
+  errors, or skips. Spotless, Prettier, the 324.41 kB production build,
+  zero-vulnerability npm audit, Compose validation, and `git diff --check` all
+  passed; the same fix was verified on all three active local branches.
 
 ## Update rule
 
