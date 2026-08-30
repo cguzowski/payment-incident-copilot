@@ -45,13 +45,17 @@ class KnowledgeIngestionServiceTest {
         order.verify(persistence).findSourceContentHash(document.tenantId(), document.documentId(), document.version());
         order.verify(embeddingClient).embed(draft.embeddingInput());
         order.verify(persistence)
-                .insert(org.mockito.ArgumentMatchers.argThat(indexed -> indexed.document()
-                                .equals(document)
-                        && indexed.sourceContentHash().equals(sourceHash(document))
-                        && indexed.importedAt().equals(NOW)
-                        && indexed.chunks().size() == 1
-                        && indexed.chunks().getFirst().draft().equals(draft)
-                        && indexed.chunks().getFirst().embedding().modelId().equals("amazon.titan-embed-text-v2:0")));
+                .insert(org.mockito.ArgumentMatchers.argThat(
+                        indexed -> indexed.document().equals(document)
+                                && indexed.sourceContentHash().equals(sourceHash(document))
+                                && indexed.importedAt().equals(NOW)
+                                && indexed.chunks().size() == 1
+                                && indexed.chunks().getFirst().draft().equals(draft)
+                                && indexed.chunks()
+                                        .getFirst()
+                                        .embedding()
+                                        .modelId()
+                                        .equals(KnowledgeEmbeddingClient.MODEL_ID)));
     }
 
     @Test
@@ -128,9 +132,10 @@ class KnowledgeIngestionServiceTest {
     }
 
     private static KnowledgeEmbedding embedding() {
-        float[] vector = new float[1024];
+        float[] vector = new float[KnowledgeEmbeddingClient.DIMENSIONS];
         vector[0] = 1.0f;
-        return new KnowledgeEmbedding("amazon.titan-embed-text-v2:0", 1024, true, vector);
+        return new KnowledgeEmbedding(
+                KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, vector);
     }
 
     private static String sourceHash(ApprovedKnowledgeDocument document) {

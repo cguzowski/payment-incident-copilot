@@ -1,6 +1,6 @@
 # Quality and validation
 
-Last reviewed: 2026-08-29
+Last reviewed: 2026-08-30
 
 ## Standard commands
 
@@ -46,6 +46,17 @@ add the closest meaningful automated coverage.
 Changes with no executable behavior, such as documentation-only edits, do not
 require artificial tests. Run the relevant static or structural validation and
 record that evidence instead.
+
+## Model-provider testing
+
+- Automated tests explicitly set `spring.ai.model.chat=none` and
+  `spring.ai.model.embedding=none`.
+- Tests at a model-facing boundary use mocked responses or deterministic
+  doubles and cover malformed output, unavailability, and timeout behavior.
+- Normal automated verification never depends on Ollama, Bedrock, AWS
+  credentials, model downloads, or external network access.
+- Live Ollama smoke checks are explicit local-development checks and do not
+  replace the deterministic completion gate.
 
 ## Coverage expectations
 

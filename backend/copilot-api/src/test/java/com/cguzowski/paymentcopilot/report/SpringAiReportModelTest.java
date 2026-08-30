@@ -12,23 +12,23 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.ai.bedrock.converse.BedrockChatOptions;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 
-class BedrockReportModelTest {
+class SpringAiReportModelTest {
 
-    private static final String MODEL_ID = "global.amazon.nova-2-lite-v1:0";
+    private static final String MODEL_ID = "qwen3.5:4b";
 
     @Test
     void callsConverseOnceWithDeterministicBoundedOptionsAndNoTools() {
         ChatModel chatModel = mock(ChatModel.class);
         when(chatModel.call(any(Prompt.class)))
                 .thenReturn(new ChatResponse(List.of(new Generation(new AssistantMessage("{\"result\":true}")))));
-        BedrockReportModel model = new BedrockReportModel(Optional.of(chatModel), MODEL_ID);
+        SpringAiReportModel model = new SpringAiReportModel(Optional.of(chatModel), MODEL_ID);
 
         ReportModelResponse result = model.generate("prompt");
 
@@ -36,7 +36,7 @@ class BedrockReportModelTest {
         ArgumentCaptor<Prompt> prompt = ArgumentCaptor.forClass(Prompt.class);
         verify(chatModel).call(prompt.capture());
         assertThat(prompt.getValue().getContents()).isEqualTo("prompt");
-        BedrockChatOptions options = (BedrockChatOptions) prompt.getValue().getOptions();
+        OllamaChatOptions options = (OllamaChatOptions) prompt.getValue().getOptions();
         assertThat(options.getModel()).isEqualTo(MODEL_ID);
         assertThat(options.getTemperature()).isZero();
         assertThat(options.getMaxTokens()).isEqualTo(4096);
@@ -46,7 +46,7 @@ class BedrockReportModelTest {
 
     @Test
     void mapsMissingProviderAndTimeoutWithoutLeakingProviderDetails() {
-        assertThatThrownBy(() -> new BedrockReportModel(Optional.empty(), MODEL_ID).generate("prompt"))
+        assertThatThrownBy(() -> new SpringAiReportModel(Optional.empty(), MODEL_ID).generate("prompt"))
                 .isInstanceOf(ReportModelUnavailableException.class)
                 .hasMessage(null);
 
@@ -54,7 +54,7 @@ class BedrockReportModelTest {
         when(chatModel.call(any(Prompt.class)))
                 .thenThrow(new RuntimeException(new SocketTimeoutException("provider detail")));
 
-        assertThatThrownBy(() -> new BedrockReportModel(Optional.of(chatModel), MODEL_ID).generate("prompt"))
+        assertThatThrownBy(() -> new SpringAiReportModel(Optional.of(chatModel), MODEL_ID).generate("prompt"))
                 .isInstanceOf(ReportModelTimedOutException.class)
                 .hasMessage(null);
     }

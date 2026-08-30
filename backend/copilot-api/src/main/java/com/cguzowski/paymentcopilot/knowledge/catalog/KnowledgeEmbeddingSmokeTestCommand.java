@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(prefix = "app.knowledge.embedding-smoke-test", name = "enabled", havingValue = "true")
 class KnowledgeEmbeddingSmokeTestCommand implements ApplicationRunner {
 
-    static final String SMOKE_INPUT = "Synthetic Bedrock embedding contract smoke test.";
+    static final String SMOKE_INPUT = "Synthetic local embedding contract smoke test.";
     private static final Logger LOGGER = LoggerFactory.getLogger(KnowledgeEmbeddingSmokeTestCommand.class);
 
     private final KnowledgeEmbeddingClient embeddingClient;
@@ -24,21 +24,21 @@ class KnowledgeEmbeddingSmokeTestCommand implements ApplicationRunner {
     public void run(ApplicationArguments arguments) {
         try {
             KnowledgeEmbedding embedding = embeddingClient.embed(SMOKE_INPUT);
-            if (!SpringAiTitanKnowledgeEmbeddingClient.MODEL_ID.equals(embedding.modelId())
-                    || embedding.dimensions() != SpringAiTitanKnowledgeEmbeddingClient.DIMENSIONS
+            if (!KnowledgeEmbeddingClient.MODEL_ID.equals(embedding.modelId())
+                    || embedding.dimensions() != KnowledgeEmbeddingClient.DIMENSIONS
                     || !embedding.normalized()
-                    || embedding.vector().length != SpringAiTitanKnowledgeEmbeddingClient.DIMENSIONS) {
-                throw new IllegalStateException("Bedrock embedding smoke test failed its model contract.");
+                    || embedding.vector().length != KnowledgeEmbeddingClient.DIMENSIONS) {
+                throw new IllegalStateException("Embedding smoke test failed its model contract.");
             }
             LOGGER.info(
-                    "Bedrock embedding smoke test passed: modelId={}, dimensions={}, normalized={}",
+                    "Embedding smoke test passed: modelId={}, dimensions={}, normalized={}",
                     embedding.modelId(),
                     embedding.dimensions(),
                     embedding.normalized());
         } catch (KnowledgeEmbeddingUnavailableException
                 | KnowledgeEmbeddingTimedOutException
                 | KnowledgeEmbeddingMalformedException exception) {
-            LOGGER.error("Bedrock embedding smoke test failed safely: {}", exception.getMessage());
+            LOGGER.error("Embedding smoke test failed safely: {}", exception.getMessage());
             throw exception;
         }
     }

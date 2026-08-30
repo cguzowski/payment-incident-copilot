@@ -234,7 +234,7 @@ class KnowledgeRetrievalApiPostgresIntegrationTest {
     }
 
     private static KnowledgeEmbedding normalizedEmbedding() {
-        float[] vector = new float[1024];
+        float[] vector = new float[KnowledgeEmbeddingClient.DIMENSIONS];
         vector[0] = 1.0f;
         return new KnowledgeEmbedding(
                 KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, vector);

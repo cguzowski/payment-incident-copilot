@@ -1,6 +1,6 @@
 # Architecture
 
-Last reviewed: 2026-08-29
+Last reviewed: 2026-08-30
 
 ## System boundaries
 
@@ -11,7 +11,7 @@ Last reviewed: 2026-08-29
 | Operations MCP server | Deterministic synthetic operational tools and fixtures | LLM calls or investigation decisions |
 | PostgreSQL | Transactional application state and audit records | Unstructured object storage |
 | pgvector | Tenant-filtered knowledge chunks and embeddings | Final report truth |
-| Amazon Bedrock | Embeddings and prompt-guided report generation | Autonomous operational authority |
+| Spring AI provider boundary | Ollama embeddings and report generation locally; optional Bedrock production profile later | Autonomous operational authority |
 
 ## Copilot API feature ownership
 
@@ -24,7 +24,7 @@ five explicit feature areas:
 | `evidence` | Evidence collection, normalized evidence snapshots, MCP client adapter, evidence persistence and HTTP behavior | Incident read ports only |
 | `knowledge.catalog` | Approved source loading, parsing, chunking, hashing, embeddings, ingestion and index writes | No incident or evidence implementation |
 | `knowledge.retrieval` | Investigation-time query derivation, search, selection, attempts, history and HTTP behavior | Incident and evidence snapshot ports; catalog-owned index contracts where retrieval requires them |
-| `report` | Exact report-input composition, prompt/schema validation, model invocation, append-only attempts, cited report persistence and HTTP behavior | Published incident, evidence and knowledge-retrieval report snapshot ports only |
+| `report` | Versioned prompts/schema, strict validation, generation attempts, report persistence and HTTP behavior | Published incident, evidence and retrieval report-snapshot ports only |
 
 Architecture tests enforce the allowed package directions and keep persistence
 adapters within their owning features. There is no global common package or
@@ -44,34 +44,21 @@ through an incident-owned read port. Its persistence adapter owns only evidence
 tables. Tenant identity remains an explicit argument through every application
 and persistence port.
 
-Report generation composes three narrow tenant-scoped snapshots before it
-records `STARTED`: the incident and investigation lifecycle snapshot, the newest
-terminal evidence attempt plus newest applicable observations, and the newest
-terminal retrieval with its persisted selected chunks. Its persistence adapter
-owns only report tables. A validated report update and the incident transition
-to `AWAITING_REVIEW` share one transaction; the Bedrock call occurs outside that
-transaction. Nova 2 Lite receives a versioned prompt containing the immutable
-`report-v1` JSON Schema, and the application independently validates structure,
-semantics and source membership before making a report reviewable.
-
 ## Operator workspace composition
 
 `InvestigationWorkspaceComponent` is the route-level investigation loader and
 composition shell. Independently tested observed-evidence, approved-knowledge,
-and report panels own their API calls, models, state, templates, styles, loading
-and retry behavior. The report panel follows approved knowledge, labels the
-content advisory and unreviewed, and keeps citations beside each claim without
-offering decision controls. Investigation lifecycle API code shared by incident
-detail and the workspace lives under `core/api/investigations`. Shared
-presentation is limited to deliberate SCSS mixins; feature components do not
-import sibling component stylesheets.
+and proposed-report panels own their API calls, models, state, templates,
+styles, loading and retry behavior. Investigation lifecycle API code shared by
+incident detail and the workspace lives under `core/api/investigations`.
+Shared presentation is limited to deliberate SCSS mixins; feature components
+do not import sibling component stylesheets.
 
 ## Synthetic HTTP request context
 
 Application HTTP requests carry tenant identity in
 `X-Synthetic-Tenant-Id`. Operator-attributed mutations also carry
-`X-Synthetic-Operator-Id`; investigation start and report generation are the
-current operator-attributed mutations.
+`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
 Resource identifiers remain in paths, while tenant and operator identity do not
 appear in resource paths, query parameters, or request bodies. A single backend
 resolver validates the headers, and a single frontend interceptor attaches
@@ -105,7 +92,7 @@ sequenceDiagram
     participant D as PostgreSQL/pgvector
     participant U as Operator Console
     participant M as Operations MCP Server
-    participant B as Amazon Bedrock
+    participant O as Ollama (local)
 
     S->>A: Submit synthetic alert
     A->>D: Persist NEW incident
@@ -115,22 +102,34 @@ sequenceDiagram
     A->>M: Call required read-only tools
     M-->>A: Sourced operational evidence
     A->>D: Persist evidence and retrieval STARTED
-    A->>B: Embed bounded derived retrieval query
-    B-->>A: Normalized 1,024-dimension vector
+    A->>O: Embed bounded derived retrieval query
+    O-->>A: Normalized 768-dimension vector
     A->>D: Filtered full-text plus exact vector search
     D-->>A: Tenant-filtered knowledge chunks
     A->>D: Persist immutable retrieval snapshot
     A-->>U: Approved source excerpts and provenance
     A->>A: Normalize and classify evidence
-    A->>B: Evidence plus versioned prompt-guided report schema
-    B-->>A: Proposed report JSON
+    A->>O: Evidence plus versioned report schema
+    O-->>A: Structured proposed report
     A->>A: Validate schema and citations
-    A->>D: Persist report, normalized citations, and metadata
+    A->>D: Persist report, evidence, and metadata
     A-->>U: Reviewable investigation snapshot
     U->>A: Approve or reject with reason
     A->>D: Append decision audit event
     A-->>U: Updated final state
 ```
+
+The current local AI flow is:
+
+```text
+Spring Boot -> Ollama embeddings -> PostgreSQL/pgvector
+Spring Boot -> pgvector retrieval -> Ollama chat model -> report
+```
+
+Both paths are implemented. Report generation uses the application-owned
+`report-v1` prompt/schema contract and validates every source reference before
+persistence. Tests disable chat and embedding provider auto-configuration and
+replace model responses with mocks or deterministic doubles.
 
 ## Primary states
 
@@ -176,6 +175,7 @@ Keep the initial deployment simple:
 - One copilot API container
 - One synthetic MCP server container
 - One managed PostgreSQL instance with pgvector
-- Amazon Bedrock through IAM roles
+- Optional Amazon Bedrock production profile through least-privilege IAM roles
 
-Document the chosen AWS services in an ADR when deployment work begins.
+Local development uses Ollama and never requires AWS credentials. Document and
+implement the optional Bedrock profile only when deployment work begins.

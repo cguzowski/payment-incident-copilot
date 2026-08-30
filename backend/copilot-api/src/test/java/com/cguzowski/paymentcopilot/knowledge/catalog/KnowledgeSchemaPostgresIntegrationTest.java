@@ -25,6 +25,7 @@ class KnowledgeSchemaPostgresIntegrationTest {
     private static final UUID DOCUMENT_ID = UUID.fromString("66a84fed-3d77-4e7e-9a1b-e25ff37e2280");
     private static final UUID DOCUMENT_VERSION_ID = UUID.fromString("a37cd2fa-a938-4e4e-b7f3-956f8d293f28");
     private static final UUID CHUNK_ID = UUID.fromString("b0f6a021-e6d3-4f05-bbad-7a2cb7652714");
+    private static final UUID HISTORICAL_CHUNK_ID = UUID.fromString("c0f6a021-e6d3-4f05-bbad-7a2cb7652714");
 
     @Container
     static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("pgvector/pgvector:pg17")
@@ -51,9 +52,35 @@ class KnowledgeSchemaPostgresIntegrationTest {
     }
 
     @Test
-    void storesExactDualChunkFormsAndEnforcesTenantAndVectorDimension() {
+    void preservesPreviouslyAppliedReportMigrationBeforeOllamaMigration() {
+        assertThat(jdbcClient.sql("""
+                                SELECT version, description, checksum
+                                FROM flyway_schema_history
+                                WHERE version IN ('6', '7')
+                                ORDER BY installed_rank
+                                """).query().listOfRows())
+                .containsExactly(
+                        Map.of(
+                                "version",
+                                "6",
+                                "description",
+                                "add evidence linked report generation",
+                                "checksum",
+                                -54318256),
+                        Map.of(
+                                "version",
+                                "7",
+                                "description",
+                                "support local ollama embeddings",
+                                "checksum",
+                                1491731562));
+    }
+
+    @Test
+    void storesNomicEmbeddingAndPreservesHistoricalTitanContract() {
         insertDocument();
-        insertChunk(TENANT_ID, vector(1024));
+        insertChunk(TENANT_ID, CHUNK_ID, 0, "nomic-embed-text", 768, vector(768));
+        insertChunk(TENANT_ID, HISTORICAL_CHUNK_ID, 1, "amazon.titan-embed-text-v2:0", 1024, vector(1024));
 
         Map<String, Object> stored =
                 jdbcClient.sql("""
@@ -71,13 +98,33 @@ class KnowledgeSchemaPostgresIntegrationTest {
                 Applies to: Card authorization
 
                 Exact source paragraph.""");
-        assertThat(stored.get("embedding_model_id")).isEqualTo("amazon.titan-embed-text-v2:0");
-        assertThat(stored.get("embedding_dimensions")).isEqualTo(1024);
+        assertThat(stored.get("embedding_model_id")).isEqualTo("nomic-embed-text");
+        assertThat(stored.get("embedding_dimensions")).isEqualTo(768);
         assertThat(stored.get("embedding_normalized")).isEqualTo(true);
-        assertThat(stored.get("dimensions")).isEqualTo(1024);
+        assertThat(stored.get("dimensions")).isEqualTo(768);
+        assertThat(jdbcClient
+                        .sql("SELECT vector_dims(embedding) FROM knowledge_chunk WHERE id = :id")
+                        .param("id", HISTORICAL_CHUNK_ID)
+                        .query(Integer.class)
+                        .single())
+                .isEqualTo(1024);
 
-        assertThatThrownBy(() -> insertChunk(OTHER_TENANT_ID, vector(1024))).isInstanceOf(RuntimeException.class);
-        assertThatThrownBy(() -> insertChunk(TENANT_ID, vector(512))).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> insertChunk(
+                        OTHER_TENANT_ID,
+                        UUID.fromString("d0f6a021-e6d3-4f05-bbad-7a2cb7652714"),
+                        2,
+                        "nomic-embed-text",
+                        768,
+                        vector(768)))
+                .isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> insertChunk(
+                        TENANT_ID,
+                        UUID.fromString("e0f6a021-e6d3-4f05-bbad-7a2cb7652714"),
+                        2,
+                        "nomic-embed-text",
+                        768,
+                        vector(512)))
+                .isInstanceOf(RuntimeException.class);
     }
 
     private void insertDocument() {
@@ -107,7 +154,8 @@ class KnowledgeSchemaPostgresIntegrationTest {
                 .update();
     }
 
-    private void insertChunk(UUID tenantId, String embedding) {
+    private void insertChunk(
+            UUID tenantId, UUID chunkId, int ordinal, String modelId, int dimensions, String embedding) {
         jdbcClient
                 .sql("""
                         INSERT INTO knowledge_chunk (
@@ -119,18 +167,21 @@ class KnowledgeSchemaPostgresIntegrationTest {
                             embedding_model_id, embedding_dimensions,
                             embedding_normalized, embedded_at, embedding
                         ) VALUES (
-                            :id, :tenantId, :documentVersionId, 0,
+                            :id, :tenantId, :documentVersionId, :ordinal,
                             'Gateway Failures > Diagnosis', 'Exact source paragraph.',
                             :embeddingInput, :rawHash, :embeddingHash,
                             'embedding-input/v1', 'markdown-sections/v1',
-                            20, 20, 5, 'amazon.titan-embed-text-v2:0',
-                            1024, TRUE, TIMESTAMPTZ '2026-08-28 10:00:00Z',
+                            20, 20, 5, :modelId,
+                            :dimensions, TRUE, TIMESTAMPTZ '2026-08-28 10:00:00Z',
                             CAST(:embedding AS vector)
                         )
                         """)
-                .param("id", CHUNK_ID)
+                .param("id", chunkId)
                 .param("tenantId", tenantId)
                 .param("documentVersionId", DOCUMENT_VERSION_ID)
+                .param("ordinal", ordinal)
+                .param("modelId", modelId)
+                .param("dimensions", dimensions)
                 .param("embeddingInput", """
                         Document: Authorization Decline Runbook
                         Section: Gateway Failures > Diagnosis

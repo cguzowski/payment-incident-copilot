@@ -16,7 +16,7 @@ synthetic alert
 -> operator starts investigation
 -> read-only MCP tools gather evidence
 -> approved runbooks and policies are retrieved
--> Amazon Bedrock proposes an evidence-linked report
+-> the configured Spring AI chat model proposes an evidence-linked report
 -> operator approves or rejects
 -> evidence, model metadata, report, and decision remain auditable
 ```
@@ -29,7 +29,8 @@ synthetic alert
 | `backend/copilot-api` | Workflow, persistence, retrieval, report generation, and audit history |
 | `backend/operations-mcp-server` | Deterministic synthetic evidence exposed through read-only MCP tools |
 | PostgreSQL/pgvector | Application state, approved knowledge, and vector retrieval |
-| Amazon Bedrock | Titan V2 knowledge embeddings and Nova 2 Lite evidence-linked report generation |
+| Ollama | Local `nomic-embed-text` embeddings and `qwen3.5:4b` report generation |
+| Amazon Bedrock | Optional production provider profile deferred until deployment work |
 
 The applications share one repository but remain independently buildable and
 deployable. See [Architecture](docs/agent/ARCHITECTURE.md) for ownership and
@@ -53,7 +54,7 @@ See [Constraints](docs/agent/CONSTRAINTS.md) for the complete contract.
 | Backend | Java 21, Spring Boot, Maven |
 | Frontend | Angular, TypeScript, SCSS |
 | Data | PostgreSQL, pgvector, Flyway |
-| AI and integration | Spring AI, Amazon Bedrock, MCP |
+| AI and integration | Spring AI, Ollama locally, MCP; optional Bedrock production profile deferred |
 | Delivery | Docker Compose, GitHub Actions, AWS |
 
 Versions belong in Maven or npm configuration, not in documentation.
@@ -79,6 +80,7 @@ Prerequisites:
 - Node.js 24.14.1 and npm 10.8.3
 - PowerShell 7 on non-Windows hosts
 - Either native PostgreSQL 18 with pgvector or Docker with Docker Compose
+- Ollama with `qwen3.5:4b` and `nomic-embed-text` for live local AI work
 
 Create ignored local configuration from the safe placeholders:
 
@@ -131,7 +133,7 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V6 when the API starts.
+Flyway applies V1 through V7 when the API starts.
 
 ### Docker PostgreSQL 17.11 on port 5433
 
@@ -194,25 +196,32 @@ servers coexist.
 
 Application HTTP calls carry the demonstration tenant in the required
 `X-Synthetic-Tenant-Id` header. Operator-attributed mutations carry
-`X-Synthetic-Operator-Id`; investigation start and explicit report generation
-are the current operator-attributed mutations.
+`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
 Resource identifiers remain in paths, queue reads use `GET /api/incidents`,
 and tenant/operator identity is not accepted in resource paths, query
 parameters, or request bodies. These caller-supplied synthetic headers are a
 local portfolio convention, not authentication or a production authorization
 claim.
 
-### Approved-knowledge ingestion and Bedrock smoke test
+### Local Ollama models and approved-knowledge ingestion
 
-Normal startup does not call Bedrock or mutate the knowledge index. In an
-authorized AWS environment, use the default AWS credential chain and enable
-Titan V2 explicitly; never add credentials to `.env` or tracked files.
+Install Ollama outside the repository, then make the two pinned local models
+available before invoking live AI behavior:
+
+```powershell
+ollama pull qwen3.5:4b
+ollama pull nomic-embed-text
+ollama serve
+```
+
+The API uses Ollama at `http://localhost:11434`. It never pulls models
+automatically. Normal startup does not invoke a model or mutate the knowledge
+index, and no AWS credential is required for local development.
 
 After loading `.env` and pointing the API at a running PostgreSQL/pgvector
 database, run the safe model-contract smoke test as a one-shot application:
 
 ```powershell
-$env:AI_MODEL_EMBEDDING = 'bedrock-titan'
 $env:APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = 'true'
 Push-Location backend/copilot-api
 ../../mvnw.cmd "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
@@ -223,28 +232,32 @@ The smoke test sends one fixed synthetic string and reports only the model ID,
 dimension count, and normalization result. To explicitly ingest the two
 repository-owned approved Markdown sources, use the same command with
 `APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED=false` and
-`APP_KNOWLEDGE_INGESTION_ENABLED=true`. Re-importing unchanged sources is
-idempotent; changed content or embedding metadata requires a new document
-version.
+`APP_KNOWLEDGE_INGESTION_ENABLED=true`.
 
-Normal startup also keeps chat calls disabled. In an authorized AWS environment,
-run the one-shot report contract smoke after loading `.env` and pointing the API
-at PostgreSQL:
+To exercise the implemented report adapter with one fixed synthetic context,
+run the same one-shot application with knowledge commands disabled and
+`APP_REPORT_SMOKE_TEST_ENABLED=true`. The command validates the returned JSON
+against `report-v1` and logs only safe model/schema/disposition metadata; it
+does not persist a report or expose the prompt or provider payload.
 
-```powershell
-$env:AI_MODEL_CHAT = 'bedrock-converse'
-$env:BEDROCK_CHAT_MODEL = 'global.amazon.nova-2-lite-v1:0'
-$env:APP_REPORT_SMOKE_TEST_ENABLED = 'true'
-Push-Location backend/copilot-api
-../../mvnw.cmd "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
-Pop-Location
-```
+`nomic-embed-text` uses the current 768-dimensional index contract. Flyway V7
+preserves historical 1,024-dimensional Titan rows, and vector scoring compares
+only matching model/dimension pairs; lexical retrieval can still return older
+approved chunks. Re-importing an unchanged document version is idempotent, so
+an existing Titan-indexed local database is not silently re-embedded. For full
+local semantic coverage, use a fresh synthetic database or publish a new
+document version and run the explicit importer. Do not delete or rewrite an
+index without reviewing its retained audit history.
 
-The report smoke sends one bounded synthetic incident/evidence snapshot, asks
-for prompt-guided `report-v1` JSON, and applies the same strict schema and
-citation validation as the HTTP workflow. It logs only the model ID, schema
-version, disposition, and validation result—not the prompt, source content,
-model payload, credentials, or provider error details.
+Flyway V6 is the immutable, provider-neutral report-persistence migration from
+the preserved production branch. Keeping its original checksum allows the same
+local database to move between that history and this Ollama branch without
+`flyway repair`; V7 contains the Ollama vector change.
+
+Automated tests set both Spring AI providers to `none` and use mocked or
+deterministic model responses, so neither Ollama nor Bedrock is contacted by
+the test suite. Bedrock remains a future optional production profile to be
+designed near the deployment milestone.
 
 Run the Angular operator console in another terminal:
 
