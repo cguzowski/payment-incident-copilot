@@ -16,7 +16,7 @@ Last reviewed: 2026-08-30
 ## Copilot API feature ownership
 
 The copilot API remains one deployable while its implementation is divided into
-five explicit feature areas:
+seven explicit feature areas:
 
 | Feature package | Owns | May depend on |
 |---|---|---|
@@ -25,6 +25,8 @@ five explicit feature areas:
 | `knowledge.catalog` | Approved source loading, parsing, chunking, hashing, embeddings, ingestion and index writes | No incident or evidence implementation |
 | `knowledge.retrieval` | Investigation-time query derivation, search, selection, attempts, history and HTTP behavior | Incident and evidence snapshot ports; catalog-owned index contracts where retrieval requires them |
 | `report` | Versioned prompts/schema, strict validation, generation attempts, report persistence and HTTP behavior | Published incident, evidence and retrieval report-snapshot ports only |
+| `decision` | Immutable final human decisions, exact-report binding, replay/conflict behavior and decision persistence | Published incident lifecycle/snapshot and report review-candidate ports only |
+| `audit` | Tenant-scoped chronological projection and safe timeline HTTP behavior | Published timeline snapshot ports from incident, evidence, retrieval, report and decision only |
 
 Architecture tests enforce the allowed package directions and keep persistence
 adapters within their owning features. There is no global common package or
@@ -48,17 +50,18 @@ and persistence port.
 
 `InvestigationWorkspaceComponent` is the route-level investigation loader and
 composition shell. Independently tested observed-evidence, approved-knowledge,
-and proposed-report panels own their API calls, models, state, templates,
-styles, loading and retry behavior. Investigation lifecycle API code shared by
-incident detail and the workspace lives under `core/api/investigations`.
-Shared presentation is limited to deliberate SCSS mixins; feature components
-do not import sibling component stylesheets.
+proposed-report, final-decision and audit-timeline panels own their API calls,
+models, state, templates, styles, loading and retry behavior. Investigation
+lifecycle API code shared by incident detail and the workspace lives under
+`core/api/investigations`. Shared presentation is limited to deliberate SCSS
+mixins; feature components do not import sibling component stylesheets.
 
 ## Synthetic HTTP request context
 
 Application HTTP requests carry tenant identity in
 `X-Synthetic-Tenant-Id`. Operator-attributed mutations also carry
-`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
+`X-Synthetic-Operator-Id`; this includes investigation start, evidence
+collection, knowledge retrieval, report generation and a final human decision.
 Resource identifiers remain in paths, while tenant and operator identity do not
 appear in resource paths, query parameters, or request bodies. A single backend
 resolver validates the headers, and a single frontend interceptor attaches
@@ -115,8 +118,11 @@ sequenceDiagram
     A->>D: Persist report, evidence, and metadata
     A-->>U: Reviewable investigation snapshot
     U->>A: Approve or reject with reason
-    A->>D: Append decision audit event
+    A->>D: Persist decision and terminal incident state atomically
     A-->>U: Updated final state
+    U->>A: Load projected audit timeline
+    A->>D: Read tenant-scoped authoritative feature records
+    A-->>U: Chronological incident history
 ```
 
 The current local AI flow is:
@@ -150,10 +156,11 @@ and investigation queues. `NEW` means unprocessed, not recently received, so an
 incident remains visible regardless of age until its state changes.
 
 The same queue retains active incidents as they move through `NEW`,
-`INVESTIGATING`, and later `AWAITING_REVIEW`. Newly received incidents appear
-first by default, and the operator may change the sort without changing queue
-membership. When terminal states are implemented, they may be hidden by default
-and exposed through a filter or history mode within the same incident surface.
+`INVESTIGATING`, and `AWAITING_REVIEW`. Newly received incidents appear first
+by default, and the operator may change the sort without changing queue
+membership. `APPROVED` and `REJECTED` incidents are hidden from the default
+Active view but remain discoverable through the Completed view in the same
+incident surface.
 
 Starting an investigation updates the existing incident row's workflow state;
 it does not transfer the incident into a separate list. Queue projections may
@@ -162,10 +169,10 @@ must not expose tenant or internal persistence metadata.
 
 ## Multi-tenant preparation
 
-The MVP exposes one tenant, but tenant identity remains explicit on
-incidents, knowledge, reports, and audit records. Every application query and
-vector retrieval must be tenant-scoped. Do not claim production-grade tenant
-isolation until it is tested and enforced at every boundary.
+The MVP exposes one tenant, but tenant identity remains explicit on incidents,
+knowledge, reports, decisions, and audit projections. Every application query
+and vector retrieval must be tenant-scoped. Do not claim production-grade
+tenant isolation until it is tested and enforced at every boundary.
 
 ## Deployment shape
 

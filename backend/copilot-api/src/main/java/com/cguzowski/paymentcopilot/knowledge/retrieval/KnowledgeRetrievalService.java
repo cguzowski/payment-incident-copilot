@@ -50,7 +50,7 @@ class KnowledgeRetrievalService {
         this.clock = clock;
     }
 
-    KnowledgeRetrievalResponse retrieve(UUID tenantId, UUID investigationId) {
+    KnowledgeRetrievalResponse retrieve(UUID tenantId, UUID investigationId, UUID requestedBy) {
         KnowledgeRetrievalContext context = requiredContext(tenantId, investigationId);
         DerivedKnowledgeQuery query = queryBuilder.build(context);
         Instant requestedAt = Instant.now(clock);
@@ -62,6 +62,7 @@ class KnowledgeRetrievalService {
         KnowledgeRetrievalAttempt started = KnowledgeRetrievalAttempt.started(
                 identifiers.next(),
                 context,
+                requestedBy,
                 requestedAt,
                 query,
                 filters,

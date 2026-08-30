@@ -33,7 +33,8 @@ class EvidenceCollectionController {
             throw new InvalidInvestigationRequestException("request", "must not include a body");
         }
         UUID parsedInvestigationId = parseRequiredUuid("investigationId", investigationId);
-        EvidenceCollectionResponse response = service.collect(requestContext.tenantId(request), parsedInvestigationId);
+        EvidenceCollectionResponse response = service.collect(
+                requestContext.tenantId(request), parsedInvestigationId, requestContext.operatorId(request));
         URI location = URI.create("/api/investigations/" + parsedInvestigationId + "/evidence-collections");
         return ResponseEntity.created(location).body(response);
     }

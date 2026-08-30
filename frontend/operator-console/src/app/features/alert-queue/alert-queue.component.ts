@@ -14,6 +14,7 @@ import { AlertQueueItem, IncidentSeverity, IncidentStatus } from './alert-queue.
 
 type QueueState = 'loading' | 'success' | 'error';
 type QueueSort = 'received-desc' | 'received-asc' | 'detected-desc' | 'severity' | 'status';
+type QueueView = 'active' | 'completed';
 
 const severityRank: Record<IncidentSeverity, number> = {
   CRITICAL: 4,
@@ -25,6 +26,8 @@ const statusRank: Record<IncidentStatus, number> = {
   NEW: 1,
   INVESTIGATING: 2,
   AWAITING_REVIEW: 3,
+  APPROVED: 4,
+  REJECTED: 5,
 };
 
 @Component({
@@ -41,6 +44,7 @@ export class AlertQueueComponent {
   protected readonly state = signal<QueueState>('loading');
   protected readonly incidents = signal<AlertQueueItem[]>([]);
   protected readonly sort = signal<QueueSort>('received-desc');
+  protected readonly view = signal<QueueView>('active');
   protected readonly sortedIncidents = computed(() => {
     const incidents = [...this.incidents()];
     const received = (left: AlertQueueItem, right: AlertQueueItem) =>
@@ -74,7 +78,7 @@ export class AlertQueueComponent {
   protected loadQueue(): void {
     this.state.set('loading');
     this.alertQueueApi
-      .getQueue()
+      .getQueue(this.view())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (incidents) => {
@@ -86,6 +90,14 @@ export class AlertQueueComponent {
           this.state.set('error');
         },
       });
+  }
+
+  protected selectView(view: QueueView): void {
+    if (this.view() === view) {
+      return;
+    }
+    this.view.set(view);
+    this.loadQueue();
   }
 
   protected onSortChange(event: Event): void {

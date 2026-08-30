@@ -32,7 +32,8 @@ class KnowledgeRetrievalController {
             throw new InvalidKnowledgeRetrievalRequestException("request", "must not include a body");
         }
         UUID parsedInvestigationId = parseRequiredUuid("investigationId", investigationId);
-        KnowledgeRetrievalResponse response = service.retrieve(requestContext.tenantId(request), parsedInvestigationId);
+        KnowledgeRetrievalResponse response = service.retrieve(
+                requestContext.tenantId(request), parsedInvestigationId, requestContext.operatorId(request));
         URI location = URI.create("/api/investigations/" + parsedInvestigationId + "/knowledge-retrievals");
         return ResponseEntity.created(location).body(response);
     }

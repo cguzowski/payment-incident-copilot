@@ -42,6 +42,7 @@ class KnowledgeRetrievalApiPostgresIntegrationTest {
     private static final UUID INCIDENT_ID = UUID.fromString("ce22cb8d-10d6-4d6d-9a56-f644ae84573d");
     private static final UUID INVESTIGATION_ID = UUID.fromString("7f50162a-8dc5-45b0-9c88-dc2f77135e0f");
     private static final UUID CORRELATION_ID = UUID.fromString("133767cf-8ec8-487d-a09d-19d5efcece07");
+    private static final UUID OPERATOR_ID = UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1");
 
     @Container
     static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("pgvector/pgvector:pg17")
@@ -114,7 +115,8 @@ class KnowledgeRetrievalApiPostgresIntegrationTest {
         });
 
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status").value("AVAILABLE"))
                 .andExpect(jsonPath("$.results.length()").value(7))
@@ -141,11 +143,13 @@ class KnowledgeRetrievalApiPostgresIntegrationTest {
     void retriesAppendHistoryAndCrossTenantRequestCreatesNothing() throws Exception {
         when(embeddingClient.embed(anyString())).thenReturn(normalizedEmbedding());
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isCreated());
         Thread.sleep(5);
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
@@ -155,7 +159,8 @@ class KnowledgeRetrievalApiPostgresIntegrationTest {
 
         reset(embeddingClient);
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.type").value("urn:problem:investigation-not-found"));
         assertThat(jdbcClient

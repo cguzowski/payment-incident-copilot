@@ -41,6 +41,7 @@ class EvidenceCollectionApiPostgresIntegrationTest {
     private static final UUID INCIDENT_ID = UUID.fromString("f4749ecb-49b0-4277-a140-cb69485b082f");
     private static final UUID INVESTIGATION_ID = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
     private static final UUID CORRELATION_ID = UUID.fromString("a5d978b5-34c7-42da-9076-22f8e5169315");
+    private static final UUID OPERATOR_ID = UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1");
 
     @Container
     static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("pgvector/pgvector:pg17")
@@ -99,7 +100,8 @@ class EvidenceCollectionApiPostgresIntegrationTest {
         });
 
         mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status").value("AVAILABLE"))
                 .andExpect(jsonPath("$.content.errors[0].errorCode").value("UPSTREAM_TIMEOUT"));
@@ -123,11 +125,13 @@ class EvidenceCollectionApiPostgresIntegrationTest {
         when(gateway.collect(any(), any())).thenAnswer(invocation -> availableResult(invocation.getArgument(1)));
 
         mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isCreated());
         Thread.sleep(5);
         mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isCreated());
 
         List<Map<String, Object>> persisted = jdbcClient.sql("""
@@ -150,7 +154,8 @@ class EvidenceCollectionApiPostgresIntegrationTest {
     @Test
     void crossTenantInvestigationCreatesNothingAndDoesNotCallMcp() throws Exception {
         mockMvc.perform(post("/api/investigations/{investigationId}/evidence-collections", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID.toString()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.type").value("urn:problem:investigation-not-found"));
 
@@ -210,7 +215,7 @@ class EvidenceCollectionApiPostgresIntegrationTest {
                 .param("id", INVESTIGATION_ID)
                 .param("tenantId", TENANT_ID)
                 .param("incidentId", INCIDENT_ID)
-                .param("startedBy", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
+                .param("startedBy", OPERATOR_ID)
                 .param("correlationId", CORRELATION_ID)
                 .update();
     }

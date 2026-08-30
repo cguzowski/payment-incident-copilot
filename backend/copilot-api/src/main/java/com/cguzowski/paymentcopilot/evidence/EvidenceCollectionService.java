@@ -31,7 +31,7 @@ class EvidenceCollectionService {
         this.clock = clock;
     }
 
-    EvidenceCollectionResponse collect(UUID tenantId, UUID investigationId) {
+    EvidenceCollectionResponse collect(UUID tenantId, UUID investigationId, UUID requestedBy) {
         EvidenceCollectionContext context = requiredContext(tenantId, investigationId);
         UUID evidenceId = identifiers.next();
         UUID toolCallId = identifiers.next();
@@ -41,6 +41,7 @@ class EvidenceCollectionService {
                 context.investigationId(),
                 toolCallId,
                 context.correlationId(),
+                requestedBy,
                 McpServiceErrorEvidenceGateway.SOURCE_SYSTEM,
                 McpServiceErrorEvidenceGateway.SOURCE_TOOL,
                 context.scenarioReference(),

@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 class KnowledgeRetrievalControllerTest {
 
     private static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
+    private static final UUID OPERATOR_ID = UUID.fromString("6904706f-d9e6-4543-a1bf-fc4b729e4c05");
     private static final UUID INVESTIGATION_ID = UUID.fromString("7f50162a-8dc5-45b0-9c88-dc2f77135e0f");
 
     private KnowledgeRetrievalService service;
@@ -44,10 +45,11 @@ class KnowledgeRetrievalControllerTest {
 
     @Test
     void createsRetrievalWithoutClientQueryParametersAndReturnsRawSourceOnly() throws Exception {
-        when(service.retrieve(TENANT_ID, INVESTIGATION_ID)).thenReturn(response());
+        when(service.retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID)).thenReturn(response());
 
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(
                                 "Location", "/api/investigations/" + INVESTIGATION_ID + "/knowledge-retrievals"))
@@ -56,7 +58,7 @@ class KnowledgeRetrievalControllerTest {
                 .andExpect(jsonPath("$.results[0].rawContent").value("Inspect GATEWAY_TIMEOUT observations."))
                 .andExpect(jsonPath("$.results[0].embeddingInput").doesNotExist());
 
-        verify(service).retrieve(TENANT_ID, INVESTIGATION_ID);
+        verify(service).retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
     }
 
     @Test
@@ -73,29 +75,42 @@ class KnowledgeRetrievalControllerTest {
     @Test
     void rejectsMalformedIdentifiersAndUnexpectedBodyWithoutCallingService() throws Exception {
         mockMvc.perform(post("/api/investigations/not-an-id/knowledge-retrievals")
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-investigation-request"));
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", "bad-tenant"))
+                        .header("X-Synthetic-Tenant-Id", "bad-tenant")
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.type").value("urn:problem:invalid-synthetic-request-context"));
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0].field").value("operatorId"));
+        mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
                         .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest());
 
-        verify(service, never()).retrieve(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());
+        verify(service, never())
+                .retrieve(
+                        org.mockito.ArgumentMatchers.any(),
+                        org.mockito.ArgumentMatchers.any(),
+                        org.mockito.ArgumentMatchers.any());
     }
 
     @Test
     void returnsIndistinguishableNotFoundForMissingOrCrossTenantInvestigation() throws Exception {
-        when(service.retrieve(TENANT_ID, INVESTIGATION_ID)).thenThrow(new KnowledgeInvestigationNotFoundException());
+        when(service.retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID))
+                .thenThrow(new KnowledgeInvestigationNotFoundException());
 
         mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
-                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString())
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.type").value("urn:problem:investigation-not-found"))

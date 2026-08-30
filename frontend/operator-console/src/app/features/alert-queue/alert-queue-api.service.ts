@@ -7,7 +7,7 @@ import { AlertQueueItem } from './alert-queue.models';
 export class AlertQueueApiService {
   private readonly http = inject(HttpClient);
 
-  getQueue(): Observable<AlertQueueItem[]> {
-    return this.http.get<AlertQueueItem[]>('/api/incidents');
+  getQueue(view: 'active' | 'completed' = 'active'): Observable<AlertQueueItem[]> {
+    return this.http.get<AlertQueueItem[]>(`/api/incidents?view=${view}`);
   }
 }

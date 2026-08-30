@@ -100,20 +100,24 @@ Milestone 1 — Establish the operator investigation workflow.
   deadline, disabled hidden Spring AI retries inside one auditable attempt, and
   verified that the report panel recovers from every terminal response and HTTP
   error while preserving attempt history.
+- Completed P3 human decisions, terminal lifecycle, projected audit timeline,
+  operator attribution, and Active/Completed queue behavior. The authoritative
+  gate passes every backend, PostgreSQL, HTTP, concurrency, architecture,
+  frontend, formatting, build, Compose, and diff check with zero skipped tests.
 
 ## In progress
 
-- No implementation slice is active. Live Ollama smoke verification remains
-  pending outside the deterministic automated suite.
+- Live Ollama smoke verification remains pending outside the deterministic
+  automated suite.
 
 ## Next
 
-1. Install Ollama outside the repository, pull `qwen3.5:4b` and
+1. Perform a final hands-on keyboard-only decision-form check; semantic form,
+   focus, and validation behavior are automated, but the browser-control surface
+   could not drive Tab/Space during the live smoke.
+2. Install Ollama outside the repository, pull `qwen3.5:4b` and
    `nomic-embed-text`, and run the documented embedding and report smokes.
-2. Prepare P3 human decision and audit-trail scope for owner review; do not
-   begin implementation without activation.
-3. Add further evidence tools only after report-quality evaluation demonstrates
-   a concrete gap.
+3. Activate P4 when its behavioral contract is selected and approved.
 
 ## Blockers
 
@@ -132,7 +136,6 @@ Milestone 1 — Establish the operator investigation workflow.
 - Knowledge ingestion is intentionally explicit and disabled during normal
   startup; there is no continuous content-management pipeline yet.
 - No AWS infrastructure selected yet.
-- Human approval/rejection and the complete audit timeline remain P3.
 - The investigation workspace intentionally does not repeat incident context;
   that design and any API evolution are deferred to a future task.
 
@@ -225,6 +228,34 @@ Milestone 1 — Establish the operator investigation workflow.
   errors, or skips. Spotless, Prettier, the 324.41 kB production build,
   zero-vulnerability npm audit, Compose validation, and `git diff --check` all
   passed; the same fix was verified on all three active local branches.
+- 2026-08-30: P3 focused backend decision, timeline, request-context, queue, and
+  architecture tests passed. The backend build executed 136/182 copilot tests
+  plus 9/9 MCP tests without failures, and Spotless passed, but the backend gate
+  correctly failed because Docker unavailability skipped 46 PostgreSQL tests,
+  including all 7 new decision/timeline persistence and concurrency scenarios.
+- 2026-08-30: `./verify.ps1 -Scope Frontend` passed 75/75 Angular tests with
+  zero skips, locked installation with zero vulnerabilities, Prettier, and the
+  386.21 kB production build. `./verify.ps1 -Scope Repository` also passed
+  verification-contract tests, Compose validation, and `git diff --check`.
+- 2026-08-30: The production API applied Flyway V8 to native PostgreSQL 18.3 and
+  started successfully. Native smokes passed approval, rejection, exact replay,
+  conflicting and truly concurrent decisions, transactional rollback after a
+  forced lifecycle race, exact report binding, preserved report content, actor
+  persistence, tenant isolation, Active/Completed discovery, and direct refresh.
+- 2026-08-30: A historical native timeline returned all 30 expected unique
+  events oldest-first, including 12 evidence, 8 retrieval, and 8 report attempts,
+  28 failure/unavailable states, and 20 honest `UNATTRIBUTED` actors. Live
+  1280x720 and 390x844 approval/completed/direct-refresh checks had no horizontal
+  overflow, off-viewport decision controls, browser warnings, or browser errors.
+  The approval and rejection records remain as synthetic review fixtures; the
+  internal concurrency and rollback fixtures were removed after verification.
+- 2026-08-30: Reproduced the pushed backend CI failure locally with Docker and
+  corrected five stale operator-attributed HTTP fixtures plus one duplicate
+  investigation-correlation fixture. The focused 22-test PostgreSQL/API run,
+  `./verify.ps1 -Scope Backend`, and authoritative `./verify.ps1` gate pass:
+  182/182 copilot API, 9/9 MCP server, and 75/75 Angular tests with zero failures,
+  errors, or skips, plus formatting, builds, npm audit, Compose, verification
+  contracts, and diff checks.
 
 ## Update rule
 

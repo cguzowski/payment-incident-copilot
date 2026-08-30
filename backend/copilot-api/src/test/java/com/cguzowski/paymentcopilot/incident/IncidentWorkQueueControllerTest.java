@@ -39,7 +39,8 @@ class IncidentWorkQueueControllerTest {
 
     @Test
     void returnsAllActiveIncidentsForTenantWithoutAgeCutoff() throws Exception {
-        when(incidentWorkQueueService.getQueue(TENANT_ID)).thenReturn(List.of(queueItem()));
+        when(incidentWorkQueueService.getQueue(TENANT_ID, IncidentQueueView.ACTIVE))
+                .thenReturn(List.of(queueItem()));
 
         mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
@@ -50,6 +51,37 @@ class IncidentWorkQueueControllerTest {
                 .andExpect(jsonPath("$[0].tenantId").doesNotExist())
                 .andExpect(jsonPath("$[0].description").doesNotExist())
                 .andExpect(jsonPath("$[0].*", hasSize(9)));
+    }
+
+    @Test
+    void listsCompletedIncidentsThroughTheValidatedView() throws Exception {
+        IncidentWorkQueueItem completed = new IncidentWorkQueueItem(
+                INCIDENT_ID,
+                "alert-auth-decline-001",
+                IncidentType.AUTHORIZATION_DECLINE_RATE_SPIKE,
+                IncidentSeverity.HIGH,
+                IncidentStatus.APPROVED,
+                "Authorization decline rate above threshold",
+                Instant.parse("2026-08-20T07:14:00Z"),
+                Instant.parse("2026-08-20T07:15:00Z"),
+                INVESTIGATION_ID);
+        when(incidentWorkQueueService.getQueue(TENANT_ID, IncidentQueueView.COMPLETED))
+                .thenReturn(List.of(completed));
+
+        mockMvc.perform(get("/api/incidents")
+                        .queryParam("view", "completed")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("APPROVED"))
+                .andExpect(jsonPath("$[0].activeInvestigationId").value(INVESTIGATION_ID.toString()));
+    }
+
+    @Test
+    void rejectsUnsupportedQueueView() throws Exception {
+        mockMvc.perform(get("/api/incidents").queryParam("view", "all").header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.type").value("urn:problem:invalid-incident-request"))
+                .andExpect(jsonPath("$.errors[0].field").value("view"));
     }
 
     @Test

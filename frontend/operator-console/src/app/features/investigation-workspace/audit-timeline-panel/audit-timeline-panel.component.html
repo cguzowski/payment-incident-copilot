@@ -1,0 +1,129 @@
+<section class="timeline-panel" aria-labelledby="timeline-title">
+  <div class="timeline-panel__heading">
+    <div>
+      <p class="eyebrow">Immutable-style history</p>
+      <h2 id="timeline-title">Audit timeline</h2>
+    </div>
+    <button class="button button--secondary" type="button" (click)="load()">Refresh</button>
+  </div>
+
+  @if (state() === 'loading') {
+    <p class="state-card" role="status">Loading audit timeline…</p>
+  } @else if (state() === 'not-found') {
+    <p class="state-card">Investigation not found.</p>
+  } @else if (state() === 'error') {
+    <div class="state-card" role="alert">
+      <strong>We couldn’t load the audit timeline.</strong>
+      <button
+        class="button button--primary"
+        type="button"
+        data-testid="retry-timeline"
+        (click)="load()"
+      >
+        Try again
+      </button>
+    </div>
+  } @else if (events().length === 0) {
+    <p class="state-card">No timeline events are available.</p>
+  } @else {
+    <ol class="timeline">
+      @for (event of events(); track event.eventType + ':' + event.sourceId) {
+        <li class="timeline-event">
+          <div class="timeline-event__heading">
+            <h3>{{ eventLabel(event.eventType) }}</h3>
+            <span class="status status--compact">{{ event.status }}</span>
+          </div>
+          <p>{{ event.description }}</p>
+          @if (event.reason) {
+            <blockquote>{{ event.reason }}</blockquote>
+          }
+          <dl>
+            <div>
+              <dt>Started</dt>
+              <dd>{{ event.occurredAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+            </div>
+            @if (event.completedAt) {
+              <div>
+                <dt>Completed</dt>
+                <dd>{{ event.completedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+              </div>
+            }
+            <div>
+              <dt>Actor</dt>
+              <dd>
+                <strong>{{ event.actorKind }}</strong>
+                @if (event.actorId) {
+                  <code>{{ event.actorId }}</code>
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>Source ID</dt>
+              <dd>
+                <code>{{ event.sourceId }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Correlation ID</dt>
+              <dd>
+                <code>{{ event.investigationCorrelationId }}</code>
+              </dd>
+            </div>
+            @if (event.toolCallId) {
+              <div>
+                <dt>Tool call ID</dt>
+                <dd>
+                  <code>{{ event.toolCallId }}</code>
+                </dd>
+              </div>
+            }
+            @if (event.relatedSourceId) {
+              <div>
+                <dt>Related source ID</dt>
+                <dd>
+                  <code>{{ event.relatedSourceId }}</code>
+                </dd>
+              </div>
+            }
+            @if (event.modelId) {
+              <div>
+                <dt>Model</dt>
+                <dd>
+                  <code>{{ event.modelId }}</code>
+                </dd>
+              </div>
+            }
+            @if (event.promptVersion) {
+              <div>
+                <dt>Prompt version</dt>
+                <dd>
+                  <code>{{ event.promptVersion }}</code>
+                </dd>
+              </div>
+            }
+            @if (event.schemaVersion) {
+              <div>
+                <dt>Schema version</dt>
+                <dd>
+                  <code>{{ event.schemaVersion }}</code>
+                </dd>
+              </div>
+            }
+            @if (event.disposition) {
+              <div>
+                <dt>Disposition</dt>
+                <dd>{{ event.disposition }}</dd>
+              </div>
+            }
+            @if (event.resultingIncidentStatus) {
+              <div>
+                <dt>Resulting incident status</dt>
+                <dd>{{ event.resultingIncidentStatus }}</dd>
+              </div>
+            }
+          </dl>
+        </li>
+      }
+    </ol>
+  }
+</section>

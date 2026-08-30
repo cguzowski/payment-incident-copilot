@@ -192,6 +192,30 @@ class AlertApiPostgresIntegrationTest {
     }
 
     @Test
+    void listsOnlyTerminalIncidentsInCompletedView() throws Exception {
+        UUID approvedId = UUID.fromString("057ced7b-1a45-4695-ae0e-f2ad9fc1bd73");
+        UUID rejectedId = UUID.fromString("724547d4-76d7-45d3-a6a5-afdf2096229b");
+        UUID activeId = UUID.fromString("824547d4-76d7-45d3-a6a5-afdf2096229b");
+        UUID approvedInvestigation = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
+        UUID rejectedInvestigation = UUID.fromString("b012c9cb-85a6-4d77-9703-3b53377b56c3");
+        insertIncident(approvedId, TENANT_ID, "alert-approved", "APPROVED", "2026-08-20T07:15:00Z");
+        insertIncident(rejectedId, TENANT_ID, "alert-rejected", "REJECTED", "2026-08-21T07:15:00Z");
+        insertIncident(activeId, TENANT_ID, "alert-active", "INVESTIGATING", "2026-08-22T07:15:00Z");
+        insertInvestigation(approvedInvestigation, TENANT_ID, approvedId);
+        insertInvestigation(rejectedInvestigation, TENANT_ID, rejectedId);
+
+        mockMvc.perform(get("/api/incidents")
+                        .queryParam("view", "completed")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].incidentId").value(rejectedId.toString()))
+                .andExpect(jsonPath("$[0].activeInvestigationId").value(rejectedInvestigation.toString()))
+                .andExpect(jsonPath("$[1].incidentId").value(approvedId.toString()))
+                .andExpect(jsonPath("$[1].activeInvestigationId").value(approvedInvestigation.toString()));
+    }
+
+    @Test
     void retiredAlertQueueEndpointIsNotAvailable() throws Exception {
         mockMvc.perform(get("/api/tenants/{tenantId}/alert-queue", TENANT_ID)).andExpect(status().isNotFound());
     }
@@ -476,7 +500,7 @@ class AlertApiPostgresIntegrationTest {
                 .param("tenantId", tenantId)
                 .param("incidentId", incidentId)
                 .param("startedBy", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
-                .param("correlationId", UUID.fromString("a5d978b5-34c7-42da-9076-22f8e5169315"))
+                .param("correlationId", investigationId)
                 .update();
     }
 

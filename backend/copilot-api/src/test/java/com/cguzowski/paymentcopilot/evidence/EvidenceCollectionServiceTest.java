@@ -24,6 +24,7 @@ class EvidenceCollectionServiceTest {
 
     private static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
     private static final UUID OTHER_TENANT_ID = UUID.fromString("076a18a3-d54f-486a-b3ec-189e1048fd28");
+    private static final UUID OPERATOR_ID = UUID.fromString("6904706f-d9e6-4543-a1bf-fc4b729e4c05");
     private static final UUID INVESTIGATION_ID = UUID.fromString("a012c9cb-85a6-4d77-9703-3b53377b56c3");
     private static final UUID CORRELATION_ID = UUID.fromString("a5d978b5-34c7-42da-9076-22f8e5169315");
     private static final UUID EVIDENCE_ID = UUID.fromString("a8bab9d4-dccc-4e70-acfe-174ac63a3b12");
@@ -46,7 +47,7 @@ class EvidenceCollectionServiceTest {
         when(persistence.complete(org.mockito.ArgumentMatchers.any())).thenReturn(true);
         EvidenceCollectionService service = service(contexts, persistence, gateway, identifiers);
 
-        EvidenceCollectionResponse response = service.collect(TENANT_ID, INVESTIGATION_ID);
+        EvidenceCollectionResponse response = service.collect(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
 
         EvidenceCollectionAttempt started = EvidenceCollectionAttempt.started(
                 EVIDENCE_ID,
@@ -54,6 +55,7 @@ class EvidenceCollectionServiceTest {
                 INVESTIGATION_ID,
                 TOOL_CALL_ID,
                 CORRELATION_ID,
+                OPERATOR_ID,
                 "synthetic-observability",
                 "getRecentServiceErrors",
                 "alert-auth-decline-001",
@@ -82,8 +84,8 @@ class EvidenceCollectionServiceTest {
         when(contexts.findEvidenceCollectionContext(OTHER_TENANT_ID, INVESTIGATION_ID))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() ->
-                        service(contexts, persistence, gateway, identifiers).collect(OTHER_TENANT_ID, INVESTIGATION_ID))
+        assertThatThrownBy(() -> service(contexts, persistence, gateway, identifiers)
+                        .collect(OTHER_TENANT_ID, INVESTIGATION_ID, OPERATOR_ID))
                 .isInstanceOf(InvestigationNotFoundException.class);
         verify(persistence, never()).insertStarted(org.mockito.ArgumentMatchers.any());
         verify(gateway, never()).collect(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());
@@ -100,8 +102,8 @@ class EvidenceCollectionServiceTest {
         when(identifiers.next()).thenReturn(EVIDENCE_ID, TOOL_CALL_ID);
         when(gateway.collect(CONTEXT, TOOL_CALL_ID)).thenThrow(new IllegalStateException("interrupted"));
 
-        assertThatThrownBy(() ->
-                        service(contexts, persistence, gateway, identifiers).collect(TENANT_ID, INVESTIGATION_ID))
+        assertThatThrownBy(() -> service(contexts, persistence, gateway, identifiers)
+                        .collect(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID))
                 .isInstanceOf(IllegalStateException.class);
         verify(persistence).insertStarted(org.mockito.ArgumentMatchers.any());
         verify(persistence, never()).complete(org.mockito.ArgumentMatchers.any());
@@ -119,6 +121,7 @@ class EvidenceCollectionServiceTest {
                 INVESTIGATION_ID,
                 UUID.randomUUID(),
                 CORRELATION_ID,
+                OPERATOR_ID,
                 "synthetic-observability",
                 "getRecentServiceErrors",
                 "alert-auth-decline-001",
@@ -130,6 +133,7 @@ class EvidenceCollectionServiceTest {
                 INVESTIGATION_ID,
                 UUID.randomUUID(),
                 CORRELATION_ID,
+                OPERATOR_ID,
                 "synthetic-observability",
                 "getRecentServiceErrors",
                 "alert-auth-decline-001",

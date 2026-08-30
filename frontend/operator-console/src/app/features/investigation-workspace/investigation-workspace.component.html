@@ -19,6 +19,10 @@
       <h1 id="detail-title">Investigation</h1>
       @if (item.incidentStatus === 'AWAITING_REVIEW') {
         <p class="description">A proposed report is ready for human review.</p>
+      } @else if (item.incidentStatus === 'APPROVED' || item.incidentStatus === 'REJECTED') {
+        <p class="description">
+          A final human decision is recorded. The complete audit history remains below.
+        </p>
       } @else if (hasEvidence()) {
         <p class="description">Service-error evidence collection is tracked below.</p>
       } @else {
@@ -68,6 +72,22 @@
       [investigationId]="investigationId"
       [incidentStatus]="item.incidentStatus"
       (reportAvailable)="markAwaitingReview()"
+    />
+    @if (
+      item.incidentStatus === 'AWAITING_REVIEW' ||
+      item.incidentStatus === 'APPROVED' ||
+      item.incidentStatus === 'REJECTED'
+    ) {
+      <app-decision-panel
+        [investigationId]="investigationId"
+        [incidentStatus]="item.incidentStatus"
+        (decisionRecorded)="handleDecision($event)"
+        (refreshRequested)="refreshAfterDecisionConflict()"
+      />
+    }
+    <app-audit-timeline-panel
+      [investigationId]="investigationId"
+      [refreshKey]="timelineRefresh()"
     />
   }
 </section>

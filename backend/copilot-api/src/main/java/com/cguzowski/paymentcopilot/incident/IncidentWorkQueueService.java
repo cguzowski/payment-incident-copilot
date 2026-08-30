@@ -15,9 +15,12 @@ class IncidentWorkQueueService {
     }
 
     @Transactional(readOnly = true)
-    List<IncidentWorkQueueItem> getQueue(UUID tenantId) {
-        return incidentRepository.findActiveByTenantId(tenantId).stream()
-                .map(IncidentWorkQueueItem::from)
-                .toList();
+    List<IncidentWorkQueueItem> getQueue(UUID tenantId, IncidentQueueView view) {
+        List<IncidentWorkQueueEntry> entries =
+                switch (view) {
+                    case ACTIVE -> incidentRepository.findActiveByTenantId(tenantId);
+                    case COMPLETED -> incidentRepository.findCompletedByTenantId(tenantId);
+                };
+        return entries.stream().map(IncidentWorkQueueItem::from).toList();
     }
 }
