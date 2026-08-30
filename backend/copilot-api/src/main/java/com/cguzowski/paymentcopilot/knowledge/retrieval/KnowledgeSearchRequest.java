@@ -8,6 +8,8 @@ record KnowledgeSearchRequest(
         String incidentFamily,
         Instant effectiveAt,
         String queryText,
+        String embeddingModelId,
+        int embeddingDimensions,
         float[] queryEmbedding,
         int candidateDepth,
         int rrfK,

@@ -436,4 +436,3 @@ completion; it does not weaken deterministic CI coverage.
   PostgreSQL smoke database. The one-shot smoke command is documented and its
   safe-log/safe-failure behavior is covered by deterministic tests. Human
   approval/rejection and the audit timeline remain P3.
-

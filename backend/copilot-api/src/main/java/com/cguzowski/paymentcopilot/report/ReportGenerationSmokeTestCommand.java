@@ -42,16 +42,16 @@ class ReportGenerationSmokeTestCommand implements ApplicationRunner {
             ReportModelResponse response = model.generate(prompts.build(context).text());
             ReportDocument report = parser.parse(response.output(), context);
             LOGGER.info(
-                    "Bedrock report smoke test passed: modelId={}, schemaVersion={}, disposition={}, validated=true",
+                    "Report generation smoke test passed: modelId={}, schemaVersion={}, disposition={}, validated=true",
                     model.modelId(),
                     ReportPromptFactory.SCHEMA_VERSION,
                     report.disposition());
         } catch (RuntimeException exception) {
             LOGGER.error(
-                    "Bedrock report smoke test failed safely: modelId={}, schemaVersion={}, validated=false",
+                    "Report generation smoke test failed safely: modelId={}, schemaVersion={}, validated=false",
                     model.modelId(),
                     ReportPromptFactory.SCHEMA_VERSION);
-            throw new IllegalStateException("Bedrock report smoke test failed safely.");
+            throw new IllegalStateException("Report generation smoke test failed safely.");
         }
     }
 

@@ -1,6 +1,6 @@
 # Constraints and guardrails
 
-Last reviewed: 2026-08-20
+Last reviewed: 2026-08-30
 
 ## Product constraints
 
@@ -14,7 +14,12 @@ Last reviewed: 2026-08-20
 
 - Java 21, Spring Boot, Spring AI, Maven, and Angular.
 - PostgreSQL stores application state; pgvector stores knowledge embeddings.
-- Amazon Bedrock provides the initial chat and embedding models.
+- Ollama provides local chat and embedding models through Spring AI;
+  PostgreSQL/pgvector remains the vector store.
+- Automated tests use mocked or deterministic model responses and must not
+  require a live model provider.
+- Amazon Bedrock may be added as an optional production profile near the
+  deployment milestone, after the local closed loop is complete.
 - MCP integration begins with one deterministic synthetic server.
 - Services remain independently deployable despite sharing one repository.
 - Use Flyway for database changes.

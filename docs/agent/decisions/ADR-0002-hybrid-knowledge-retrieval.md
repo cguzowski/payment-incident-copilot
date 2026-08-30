@@ -1,8 +1,12 @@
 # ADR-0002: Hybrid tenant-scoped operational-knowledge retrieval
 
-Status: Accepted  
-Date: 2026-08-28  
+Status: Accepted; provider-specific portions superseded by ADR-0007
+Date: 2026-08-28
 Decision owner: Christopher Guzowski
+
+ADR-0007 changes the active local embedding provider, model, dimensions, and
+test-provider boundary. This record remains authoritative for hybrid search,
+chunking, RRF, provenance, and the historical Titan index contract.
 
 ## Context
 

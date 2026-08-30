@@ -48,7 +48,8 @@ class KnowledgeRetrievalServiceTest {
         Fixture fixture = fixture();
         float[] vector = unitVector();
         when(fixture.embeddingClient.embed(any()))
-                .thenReturn(new KnowledgeEmbedding(KnowledgeEmbeddingClient.MODEL_ID, 1024, true, vector));
+                .thenReturn(new KnowledgeEmbedding(
+                        KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, vector));
         when(fixture.searchRepository.search(any())).thenReturn(List.of(candidate()));
         when(fixture.persistence.complete(any())).thenReturn(true);
 
@@ -127,7 +128,8 @@ class KnowledgeRetrievalServiceTest {
     void recordsNoMatchWhenBothModalitiesReturnNoEligibleCandidate() {
         Fixture fixture = fixture();
         when(fixture.embeddingClient.embed(any()))
-                .thenReturn(new KnowledgeEmbedding(KnowledgeEmbeddingClient.MODEL_ID, 1024, true, unitVector()));
+                .thenReturn(new KnowledgeEmbedding(
+                        KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, unitVector()));
         when(fixture.searchRepository.search(any())).thenReturn(List.of());
         when(fixture.persistence.complete(any())).thenReturn(true);
 
@@ -151,7 +153,8 @@ class KnowledgeRetrievalServiceTest {
     void leavesStartedAttemptVisibleWhenUnexpectedSearchFailureInterruptsRetrieval() {
         Fixture fixture = fixture();
         when(fixture.embeddingClient.embed(any()))
-                .thenReturn(new KnowledgeEmbedding(KnowledgeEmbeddingClient.MODEL_ID, 1024, true, unitVector()));
+                .thenReturn(new KnowledgeEmbedding(
+                        KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, unitVector()));
         when(fixture.searchRepository.search(any())).thenThrow(new IllegalStateException("database interrupted"));
 
         assertThatThrownBy(() -> fixture.service.retrieve(TENANT_ID, INVESTIGATION_ID))
@@ -211,7 +214,7 @@ class KnowledgeRetrievalServiceTest {
     }
 
     private static float[] unitVector() {
-        float[] vector = new float[1024];
+        float[] vector = new float[KnowledgeEmbeddingClient.DIMENSIONS];
         vector[0] = 1.0f;
         return vector;
     }

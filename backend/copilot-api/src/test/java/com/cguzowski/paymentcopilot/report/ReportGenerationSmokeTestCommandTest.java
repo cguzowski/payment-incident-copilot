@@ -15,9 +15,9 @@ class ReportGenerationSmokeTestCommandTest {
     private static final UUID EVIDENCE_ID = ReportGenerationSmokeTestCommand.EVIDENCE_ID;
 
     @Test
-    void validatesOnePromptGuidedNovaReportWithoutPersistence() {
+    void validatesOnePromptGuidedOllamaReportWithoutPersistence() {
         ReportModel model = mock(ReportModel.class);
-        when(model.modelId()).thenReturn("global.amazon.nova-2-lite-v1:0");
+        when(model.modelId()).thenReturn("qwen3.5:4b");
         when(model.generate(contains("report-v1")))
                 .thenReturn(new ReportModelResponse(validInsufficientReportJson(), "safe-request-id"));
         JsonMapper mapper = JsonMapper.builder().build();
@@ -40,7 +40,7 @@ class ReportGenerationSmokeTestCommandTest {
                                 model, prompts, new ReportOutputParser(mapper, prompts))
                         .run(null))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Bedrock report smoke test failed safely.");
+                .hasMessage("Report generation smoke test failed safely.");
     }
 
     private static String validInsufficientReportJson() {

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-final class SpringAiTitanKnowledgeEmbeddingClient implements KnowledgeEmbeddingClient {
+final class SpringAiOllamaKnowledgeEmbeddingClient implements KnowledgeEmbeddingClient {
 
     private static final int MAXIMUM_INPUT_CHARACTERS = 50_000;
     private static final double NORMALIZATION_TOLERANCE = 0.01d;
@@ -17,11 +17,11 @@ final class SpringAiTitanKnowledgeEmbeddingClient implements KnowledgeEmbeddingC
     private final EmbeddingModel model;
 
     @Autowired
-    SpringAiTitanKnowledgeEmbeddingClient(Optional<EmbeddingModel> model) {
+    SpringAiOllamaKnowledgeEmbeddingClient(Optional<EmbeddingModel> model) {
         this.model = model.orElse(null);
     }
 
-    SpringAiTitanKnowledgeEmbeddingClient(EmbeddingModel model) {
+    SpringAiOllamaKnowledgeEmbeddingClient(EmbeddingModel model) {
         this.model = model;
     }
 

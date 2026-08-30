@@ -20,7 +20,7 @@ class KnowledgeApplicationCommandsTest {
     }
 
     @Test
-    void embeddingSmokeCommandValidatesTheTitanContract() throws Exception {
+    void embeddingSmokeCommandValidatesTheConfiguredModelContract() throws Exception {
         KnowledgeEmbeddingClient client = mock(KnowledgeEmbeddingClient.class);
         when(client.embed(KnowledgeEmbeddingSmokeTestCommand.SMOKE_INPUT)).thenReturn(normalizedEmbedding());
 
@@ -37,16 +37,13 @@ class KnowledgeApplicationCommandsTest {
 
         assertThatThrownBy(() -> new KnowledgeEmbeddingSmokeTestCommand(client).run(null))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Bedrock embedding smoke test failed its model contract.");
+                .hasMessage("Embedding smoke test failed its model contract.");
     }
 
     private static KnowledgeEmbedding normalizedEmbedding() {
-        float[] vector = new float[1024];
+        float[] vector = new float[KnowledgeEmbeddingClient.DIMENSIONS];
         vector[0] = 1.0f;
         return new KnowledgeEmbedding(
-                SpringAiTitanKnowledgeEmbeddingClient.MODEL_ID,
-                SpringAiTitanKnowledgeEmbeddingClient.DIMENSIONS,
-                true,
-                vector);
+                KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, vector);
     }
 }

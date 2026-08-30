@@ -22,19 +22,17 @@ spring:
     retry:
       max-attempts: 1
     model:
-      chat: ${AI_MODEL_CHAT:none}
-      embedding: ${AI_MODEL_EMBEDDING:none}
-    bedrock:
-      aws:
-        region: ${AWS_REGION:eu-central-1}
-      titan:
-        embedding:
-          model: amazon.titan-embed-text-v2:0
-      converse:
-        chat:
-          model: ${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}
-          temperature: 0
-          max-tokens: 4096
+      chat: ollama
+      embedding: ollama
+    ollama:
+      base-url: http://localhost:11434
+      init:
+        pull-model-strategy: never
+      chat:
+        model: qwen3.5:4b
+        temperature: 0
+      embedding:
+        model: nomic-embed-text
     mcp:
       client:
         initialized: false

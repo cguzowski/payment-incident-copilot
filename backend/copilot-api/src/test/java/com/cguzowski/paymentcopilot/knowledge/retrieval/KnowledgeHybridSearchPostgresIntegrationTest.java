@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -111,15 +112,29 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                 "Superseded policy",
                 "GATEWAY_TIMEOUT superseded text must not be retrieved.",
                 unitVector(0));
+        insertDocumentAndChunk(
+                TENANT_ID,
+                "17777777-7777-4777-8777-777777777777",
+                "27777777-7777-4777-8777-777777777777",
+                KnowledgeDocumentType.RUNBOOK,
+                KnowledgeApprovalStatus.APPROVED,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                "Historical provider",
+                "Historical guidance with no matching query terms.",
+                vectorLiteral(unitVectorArray(1024, 0)),
+                "amazon.titan-embed-text-v2:0",
+                1024);
     }
 
     @Test
-    void filtersBeforeIndependentRankingAndReturnsDeterministicRrfCandidates() {
+    void scoresOnlyVectorsFromTheQueryModelAndDimensionWhileKeepingLexicalFallback() {
         KnowledgeSearchRequest request = new KnowledgeSearchRequest(
                 TENANT_ID,
                 "AUTHORIZATION_DECLINE_RATE_SPIKE",
                 Instant.parse("2026-08-28T10:00:00Z"),
                 "gateway timeout authorization",
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
                 unitVectorArray(0),
                 20,
                 60,
@@ -128,16 +143,21 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
 
         List<KnowledgeSearchCandidate> candidates = repository.search(request);
 
-        assertThat(candidates).hasSize(2);
-        assertThat(candidates)
-                .extracting(KnowledgeSearchCandidate::documentType)
-                .containsExactly(KnowledgeDocumentType.RUNBOOK, KnowledgeDocumentType.POLICY);
+        assertThat(candidates).hasSize(3);
         assertThat(candidates.getFirst().rawContent()).contains("GATEWAY_TIMEOUT");
         assertThat(candidates.getFirst().lexicalPosition()).isEqualTo(1);
         assertThat(candidates.getFirst().vectorPosition()).isEqualTo(1);
         assertThat(candidates.getFirst().vectorSimilarity()).isEqualTo(1.0f);
         assertThat(candidates.getFirst().fusedScore())
                 .isGreaterThan(candidates.getLast().fusedScore());
+        KnowledgeSearchCandidate historical = candidates.stream()
+                .filter(candidate ->
+                        candidate.chunkId().equals(UUID.fromString("27777777-7777-4777-8777-777777777777")))
+                .findFirst()
+                .orElseThrow();
+        assertThat(historical.lexicalPosition()).isNotNull();
+        assertThat(historical.vectorPosition()).isNull();
+        assertThat(historical.vectorSimilarity()).isNull();
         assertThat(candidates).allSatisfy(candidate -> {
             assertThat(candidate.tenantId()).isEqualTo(TENANT_ID);
             assertThat(candidate.approvalStatus()).isEqualTo(KnowledgeApprovalStatus.APPROVED);
@@ -155,6 +175,32 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
             String sectionPath,
             String rawContent,
             String vector) {
+        insertDocumentAndChunk(
+                tenantId,
+                documentVersionId,
+                chunkId,
+                type,
+                status,
+                incidentFamily,
+                sectionPath,
+                rawContent,
+                vector,
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS);
+    }
+
+    private void insertDocumentAndChunk(
+            UUID tenantId,
+            String documentVersionId,
+            String chunkId,
+            KnowledgeDocumentType type,
+            KnowledgeApprovalStatus status,
+            String incidentFamily,
+            String sectionPath,
+            String rawContent,
+            String vector,
+            String modelId,
+            int dimensions) {
         UUID versionId = UUID.fromString(documentVersionId);
         jdbcClient
                 .sql("""
@@ -202,7 +248,7 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                             :sectionPath, :rawContent, :embeddingInput,
                             :rawHash, :embeddingHash, 'embedding-input/v1',
                             'markdown-sections/v1', 20, 20, 10,
-                            'amazon.titan-embed-text-v2:0', 1024, TRUE,
+                            :modelId, :dimensions, TRUE,
                             TIMESTAMPTZ '2026-08-28 09:00:00Z', CAST(:embedding AS vector)
                         )
                         """)
@@ -217,6 +263,8 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                                 + "\nApplies to: Card authorization\n\n" + rawContent)
                 .param("rawHash", "b".repeat(64))
                 .param("embeddingHash", "c".repeat(64))
+                .param("modelId", modelId)
+                .param("dimensions", dimensions)
                 .param("embedding", vector)
                 .update();
     }
@@ -226,13 +274,17 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
     }
 
     private static float[] unitVectorArray(int index) {
-        float[] vector = new float[1024];
+        return unitVectorArray(KnowledgeEmbeddingClient.DIMENSIONS, index);
+    }
+
+    private static float[] unitVectorArray(int dimensions, int index) {
+        float[] vector = new float[dimensions];
         vector[index] = 1.0f;
         return vector;
     }
 
     private static String normalizedVector(float first, float second) {
-        float[] vector = new float[1024];
+        float[] vector = new float[KnowledgeEmbeddingClient.DIMENSIONS];
         vector[0] = first;
         vector[1] = second;
         return vectorLiteral(vector);

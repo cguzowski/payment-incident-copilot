@@ -16,7 +16,7 @@ synthetic alert
 -> operator starts investigation
 -> read-only MCP tools gather evidence
 -> approved runbooks and policies are retrieved
--> Amazon Bedrock proposes an evidence-linked report
+-> the configured Spring AI chat model proposes an evidence-linked report
 -> operator approves or rejects
 -> evidence, model metadata, report, and decision remain auditable
 ```
@@ -29,7 +29,8 @@ synthetic alert
 | `backend/copilot-api` | Workflow, persistence, retrieval, report generation, and audit history |
 | `backend/operations-mcp-server` | Deterministic synthetic evidence exposed through read-only MCP tools |
 | PostgreSQL/pgvector | Application state, approved knowledge, and vector retrieval |
-| Amazon Bedrock | Titan V2 knowledge embeddings and Nova 2 Lite evidence-linked report generation |
+| Ollama | Local `nomic-embed-text` embeddings and `qwen3.5:4b` report generation |
+| Amazon Bedrock | Optional production provider profile deferred until deployment work |
 
 The applications share one repository but remain independently buildable and
 deployable. See [Architecture](docs/agent/ARCHITECTURE.md) for ownership and
@@ -53,7 +54,7 @@ See [Constraints](docs/agent/CONSTRAINTS.md) for the complete contract.
 | Backend | Java 21, Spring Boot, Maven |
 | Frontend | Angular, TypeScript, SCSS |
 | Data | PostgreSQL, pgvector, Flyway |
-| AI and integration | Spring AI, Amazon Bedrock, MCP |
+| AI and integration | Spring AI, Ollama locally, MCP; optional Bedrock production profile deferred |
 | Delivery | Docker Compose, GitHub Actions, AWS |
 
 Versions belong in Maven or npm configuration, not in documentation.
@@ -79,6 +80,7 @@ Prerequisites:
 - Node.js 24.14.1 and npm 10.8.3
 - PowerShell 7 on non-Windows hosts
 - Either native PostgreSQL 18 with pgvector or Docker with Docker Compose
+- Ollama with `qwen3.5:4b` and `nomic-embed-text` for live local AI work
 
 Create ignored local configuration from the safe placeholders:
 
@@ -167,7 +169,7 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V6 when the API starts.
+Flyway applies V1 through V7 when the API starts.
 
 ### Docker PostgreSQL 17.11 on port 5433
 
@@ -242,19 +244,33 @@ parameters, or request bodies. These caller-supplied synthetic headers are a
 local portfolio convention, not authentication or a production authorization
 claim.
 
-### Approved-knowledge ingestion and Bedrock smoke test
+### Local Ollama models and approved-knowledge ingestion
 
-Normal startup does not call Bedrock or mutate the knowledge index. In an
-authorized AWS environment, the AWS SDK for Java can use the externally stored
-Bedrock bearer token or its default AWS credential chain. Enable Titan V2
-explicitly; never add credentials to `.env` or tracked files.
+Install Ollama outside the repository, then make the two pinned local models
+available before invoking live AI behavior:
+
+```powershell
+ollama pull qwen3.5:4b
+ollama pull nomic-embed-text
+ollama serve
+```
+
+The API uses Ollama at `http://localhost:11434`. It never pulls models
+automatically. Normal startup does not invoke a model or mutate the knowledge
+index, and no AWS credential is required for local development.
+
+Each Generate action makes one auditable provider call. Report generation has
+a two-minute total deadline so provider retries or a stalled model cannot leave
+the operator console busy indefinitely. A refused provider is recorded as
+`UNAVAILABLE`; exceeding the deadline is recorded as `TIMED_OUT`, and either
+outcome can be retried explicitly. Slower local hardware can set the positive
+Spring duration `REPORT_GENERATION_TIMEOUT` (for example `3m`) in `.env`.
 
 From a fresh terminal that can see the external Bedrock environment variable,
 load `.env`, point the API at a running PostgreSQL/pgvector database, and run
 the safe model-contract smoke test as a one-shot application:
 
 ```powershell
-$env:AI_MODEL_EMBEDDING = 'bedrock-titan'
 $env:APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = 'true'
 Push-Location backend/copilot-api
 ../../mvnw.cmd "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
@@ -265,9 +281,32 @@ The smoke test sends one fixed synthetic string and reports only the model ID,
 dimension count, and normalization result. To explicitly ingest the two
 repository-owned approved Markdown sources, use the same command with
 `APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED=false` and
-`APP_KNOWLEDGE_INGESTION_ENABLED=true`. Re-importing unchanged sources is
-idempotent; changed content or embedding metadata requires a new document
-version.
+`APP_KNOWLEDGE_INGESTION_ENABLED=true`.
+
+To exercise the implemented report adapter with one fixed synthetic context,
+run the same one-shot application with knowledge commands disabled and
+`APP_REPORT_SMOKE_TEST_ENABLED=true`. The command validates the returned JSON
+against `report-v1` and logs only safe model/schema/disposition metadata; it
+does not persist a report or expose the prompt or provider payload.
+
+`nomic-embed-text` uses the current 768-dimensional index contract. Flyway V7
+preserves historical 1,024-dimensional Titan rows, and vector scoring compares
+only matching model/dimension pairs; lexical retrieval can still return older
+approved chunks. Re-importing an unchanged document version is idempotent, so
+an existing Titan-indexed local database is not silently re-embedded. For full
+local semantic coverage, use a fresh synthetic database or publish a new
+document version and run the explicit importer. Do not delete or rewrite an
+index without reviewing its retained audit history.
+
+Flyway V6 is the immutable, provider-neutral report-persistence migration from
+the preserved production branch. Keeping its original checksum allows the same
+local database to move between that history and this Ollama branch without
+`flyway repair`; V7 contains the Ollama vector change.
+
+Automated tests set both Spring AI providers to `none` and use mocked or
+deterministic model responses, so neither Ollama nor Bedrock is contacted by
+the test suite. Bedrock remains a future optional production profile to be
+designed near the deployment milestone.
 
 Normal startup also keeps chat calls disabled. In an authorized AWS environment,
 run the one-shot report contract smoke from the same fresh terminal after
