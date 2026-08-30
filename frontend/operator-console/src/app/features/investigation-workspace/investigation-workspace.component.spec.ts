@@ -6,6 +6,7 @@ import { Investigation } from '../../core/api/investigations/investigation.model
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
 import { ApprovedKnowledgeApiService } from './approved-knowledge-panel/approved-knowledge-api.service';
 import { ObservedEvidenceApiService } from './observed-evidence-panel/observed-evidence-api.service';
+import { ReportApiService } from './report-panel/report-api.service';
 import { InvestigationWorkspaceComponent } from './investigation-workspace.component';
 
 describe('InvestigationWorkspaceComponent', () => {
@@ -19,6 +20,10 @@ describe('InvestigationWorkspaceComponent', () => {
         { provide: InvestigationApiService, useValue: { get: vi.fn(() => response) } },
         { provide: ObservedEvidenceApiService, useValue: { getHistory: vi.fn(() => of([])) } },
         { provide: ApprovedKnowledgeApiService, useValue: { getHistory: vi.fn(() => of([])) } },
+        {
+          provide: ReportApiService,
+          useValue: { getHistory: vi.fn(() => of([])), generate: vi.fn() },
+        },
         provideRouter([]),
         {
           provide: ActivatedRoute,
@@ -51,7 +56,11 @@ describe('InvestigationWorkspaceComponent', () => {
     ).toBe('/incidents/f4749ecb-49b0-4277-a140-cb69485b082f');
     const evidence = fixture.nativeElement.querySelector('app-observed-evidence-panel');
     const knowledge = fixture.nativeElement.querySelector('app-approved-knowledge-panel');
+    const report = fixture.nativeElement.querySelector('app-report-panel');
     expect(evidence.compareDocumentPosition(knowledge) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(
+      0,
+    );
+    expect(knowledge.compareDocumentPosition(report) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(
       0,
     );
   });

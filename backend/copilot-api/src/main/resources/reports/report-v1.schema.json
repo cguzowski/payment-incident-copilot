@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://payment-incident-copilot.local/schemas/report-v1",
+  "title": "Evidence-linked incident report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "disposition", "summary", "observations", "inferences", "probableCause",
+    "confidence", "recommendation", "contradictions", "evidenceGaps"
+  ],
+  "properties": {
+    "disposition": { "enum": ["PROPOSED", "INSUFFICIENT_EVIDENCE"] },
+    "summary": { "$ref": "#/$defs/claim" },
+    "observations": { "type": "array", "maxItems": 20, "items": { "$ref": "#/$defs/claim" } },
+    "inferences": { "type": "array", "maxItems": 20, "items": { "$ref": "#/$defs/claim" } },
+    "probableCause": { "oneOf": [{ "$ref": "#/$defs/claim" }, { "type": "null" }] },
+    "confidence": { "$ref": "#/$defs/confidence" },
+    "recommendation": { "oneOf": [{ "$ref": "#/$defs/claim" }, { "type": "null" }] },
+    "contradictions": { "type": "array", "maxItems": 20, "items": { "$ref": "#/$defs/claim" } },
+    "evidenceGaps": { "type": "array", "maxItems": 20, "items": { "$ref": "#/$defs/gap" } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "disposition": { "const": "PROPOSED" } } },
+      "then": {
+        "properties": {
+          "probableCause": { "$ref": "#/$defs/claim" },
+          "recommendation": { "$ref": "#/$defs/claim" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "disposition": { "const": "INSUFFICIENT_EVIDENCE" } } },
+      "then": {
+        "properties": {
+          "probableCause": { "type": "null" },
+          "recommendation": { "type": "null" },
+          "confidence": {
+            "allOf": [
+              { "$ref": "#/$defs/confidence" },
+              { "properties": { "level": { "const": "LOW" } } }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "evidenceIds", "knowledgeChunkIds"],
+      "properties": {
+        "statement": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "evidenceIds": {
+          "type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true,
+          "items": { "$ref": "#/$defs/uuid" }
+        },
+        "knowledgeChunkIds": {
+          "type": "array", "maxItems": 10, "uniqueItems": true,
+          "items": { "$ref": "#/$defs/uuid" }
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "rationale", "evidenceIds"],
+      "properties": {
+        "level": { "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "rationale": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "evidenceIds": {
+          "type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true,
+          "items": { "$ref": "#/$defs/uuid" }
+        }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      }
+    }
+  }
+}

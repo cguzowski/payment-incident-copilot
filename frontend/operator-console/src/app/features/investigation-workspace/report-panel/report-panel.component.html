@@ -1,0 +1,293 @@
+<section class="report-panel" aria-labelledby="report-title" data-testid="report-panel">
+  <div class="report-panel__heading">
+    <div>
+      <p class="eyebrow">Copilot report</p>
+      <h2 id="report-title">Proposed incident report</h2>
+    </div>
+    <button
+      class="button button--primary"
+      type="button"
+      data-testid="generate-report"
+      [disabled]="!canGenerate()"
+      (click)="generate()"
+    >
+      {{ generating() ? 'Generating…' : 'Generate proposed report' }}
+    </button>
+  </div>
+
+  <p class="report-panel__boundary">
+    AI-generated, advisory, and not yet reviewed. Verify every conclusion at its cited persisted
+    source. No recommendation is executed automatically.
+  </p>
+
+  @if (generating()) {
+    <p class="report-message" role="status">
+      Generating proposed report… Previous attempts remain visible.
+    </p>
+  }
+  @if (generationError() === 'conflict') {
+    <p class="report-message report-message--error" role="alert">
+      Report generation is not ready or another generation is active. Refresh the prerequisite
+      evidence and knowledge state before retrying.
+    </p>
+  } @else if (generationError() === 'not-found') {
+    <p class="report-message report-message--error" role="alert">Investigation not found.</p>
+  } @else if (generationError() === 'error') {
+    <p class="report-message report-message--error" role="alert">
+      Report generation could not be requested. Previous attempts remain available.
+    </p>
+  }
+
+  @if (state() === 'loading') {
+    <p class="report-message" role="status">Loading report history…</p>
+  } @else if (state() === 'not-found') {
+    <p class="report-message report-message--error" role="alert">Investigation not found.</p>
+  } @else if (state() === 'error') {
+    <div class="report-message report-message--error" role="alert">
+      <strong>We couldn’t load report history.</strong>
+      <button
+        class="button button--secondary"
+        type="button"
+        data-testid="retry-report-history"
+        (click)="load()"
+      >
+        Try again
+      </button>
+    </div>
+  } @else if (attempts().length === 0) {
+    <p class="report-message">A proposed report has not been generated.</p>
+  } @else {
+    <div class="report-history" aria-label="Report generation history">
+      @for (attempt of attempts(); track attempt.attemptId) {
+        <article class="report-attempt" data-testid="report-attempt">
+          <div class="report-attempt__heading">
+            <div>
+              <p class="report-attempt__label">Generation attempt</p>
+              <code>{{ attempt.attemptId }}</code>
+            </div>
+            <span class="status status--compact">{{ attempt.status }}</span>
+          </div>
+
+          @if (attempt.statusDetail) {
+            <p class="report-attempt__detail">{{ attempt.statusDetail }}</p>
+          } @else if (attempt.status === 'STARTED') {
+            <p class="report-attempt__detail">
+              Generation did not reach a terminal status and may have been interrupted.
+            </p>
+          }
+
+          <dl class="report-provenance">
+            <div>
+              <dt>Requested</dt>
+              <dd>{{ attempt.requestedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+            </div>
+            <div>
+              <dt>Completed</dt>
+              <dd>
+                @if (attempt.completedAt) {
+                  {{ attempt.completedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC
+                } @else {
+                  Not completed
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>Model</dt>
+              <dd>
+                <code>{{ attempt.modelId }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Prompt / schema</dt>
+              <dd>
+                <code>{{ attempt.promptVersion }}</code> · <code>{{ attempt.schemaVersion }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Latest evidence</dt>
+              <dd>
+                <code>{{ attempt.latestEvidenceId }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Applicable evidence</dt>
+              <dd>
+                <code>{{ attempt.applicableEvidenceId ?? 'Unavailable' }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Knowledge retrieval</dt>
+              <dd>
+                <code>{{ attempt.retrievalId }}</code>
+              </dd>
+            </div>
+          </dl>
+
+          @if (attempt.report; as report) {
+            <div class="report-document">
+              <div class="report-document__heading">
+                <h3>Review candidate</h3>
+                <span class="disposition">{{ report.disposition }}</span>
+              </div>
+
+              <section class="claim-group" aria-labelledby="summary-title">
+                <h4 id="summary-title">Summary</h4>
+                <article class="claim">
+                  <p>{{ report.summary.statement }}</p>
+                  <div class="claim__sources" aria-label="Summary sources">
+                    <strong>Evidence</strong>
+                    @for (source of report.summary.evidenceIds; track source) {
+                      <code>{{ source }}</code>
+                    }
+                  </div>
+                </article>
+              </section>
+
+              <section class="claim-group">
+                <h4>Observed facts</h4>
+                @for (claim of report.observations; track $index) {
+                  <article class="claim">
+                    <p>{{ claim.statement }}</p>
+                    <div class="claim__sources">
+                      <strong>Evidence</strong>
+                      @for (source of claim.evidenceIds; track source) {
+                        <code>{{ source }}</code>
+                      }
+                    </div>
+                  </article>
+                }
+              </section>
+
+              @if (report.inferences.length > 0) {
+                <section class="claim-group">
+                  <h4>Inference</h4>
+                  @for (claim of report.inferences; track $index) {
+                    <article class="claim">
+                      <p>{{ claim.statement }}</p>
+                      <div class="claim__sources">
+                        <strong>Evidence</strong>
+                        @for (source of claim.evidenceIds; track source) {
+                          <code>{{ source }}</code>
+                        }
+                      </div>
+                      @if (claim.knowledgeChunkIds.length > 0) {
+                        <div class="claim__sources">
+                          <strong>Approved knowledge</strong>
+                          @for (source of claim.knowledgeChunkIds; track source) {
+                            <code>{{ source }}</code>
+                          }
+                        </div>
+                      }
+                    </article>
+                  }
+                </section>
+              }
+
+              @if (report.probableCause; as claim) {
+                <section class="claim-group">
+                  <h4>Probable cause</h4>
+                  <article class="claim">
+                    <p>{{ claim.statement }}</p>
+                    <div class="claim__sources">
+                      <strong>Evidence</strong>
+                      @for (source of claim.evidenceIds; track source) {
+                        <code>{{ source }}</code>
+                      }
+                    </div>
+                    @if (claim.knowledgeChunkIds.length > 0) {
+                      <div class="claim__sources">
+                        <strong>Approved knowledge</strong>
+                        @for (source of claim.knowledgeChunkIds; track source) {
+                          <code>{{ source }}</code>
+                        }
+                      </div>
+                    }
+                  </article>
+                </section>
+              }
+
+              <section class="claim-group">
+                <h4>Confidence</h4>
+                <article class="claim">
+                  <p>
+                    <strong>{{
+                      report.confidence.level === 'LOW'
+                        ? 'Low'
+                        : report.confidence.level === 'MEDIUM'
+                          ? 'Medium'
+                          : 'High'
+                    }}</strong>
+                    · {{ report.confidence.rationale }}
+                  </p>
+                  <div class="claim__sources">
+                    <strong>Evidence</strong>
+                    @for (source of report.confidence.evidenceIds; track source) {
+                      <code>{{ source }}</code>
+                    }
+                  </div>
+                </article>
+              </section>
+
+              @if (report.recommendation; as claim) {
+                <section class="claim-group">
+                  <h4>Recommendation</h4>
+                  <article class="claim">
+                    <p>{{ claim.statement }}</p>
+                    <div class="claim__sources">
+                      <strong>Evidence</strong>
+                      @for (source of claim.evidenceIds; track source) {
+                        <code>{{ source }}</code>
+                      }
+                    </div>
+                    <div class="claim__sources">
+                      <strong>Approved knowledge</strong>
+                      @for (source of claim.knowledgeChunkIds; track source) {
+                        <code>{{ source }}</code>
+                      }
+                    </div>
+                  </article>
+                </section>
+              }
+
+              @if (report.contradictions.length > 0) {
+                <section class="claim-group">
+                  <h4>Contradictions</h4>
+                  @for (claim of report.contradictions; track $index) {
+                    <article class="claim">
+                      <p>{{ claim.statement }}</p>
+                      <div class="claim__sources">
+                        <strong>Evidence</strong>
+                        @for (source of claim.evidenceIds; track source) {
+                          <code>{{ source }}</code>
+                        }
+                      </div>
+                      @if (claim.knowledgeChunkIds.length > 0) {
+                        <div class="claim__sources">
+                          <strong>Approved knowledge</strong>
+                          @for (source of claim.knowledgeChunkIds; track source) {
+                            <code>{{ source }}</code>
+                          }
+                        </div>
+                      }
+                    </article>
+                  }
+                </section>
+              }
+
+              @if (report.evidenceGaps.length > 0) {
+                <section class="claim-group">
+                  <h4>Evidence gaps</h4>
+                  <ul>
+                    @for (gap of report.evidenceGaps; track $index) {
+                      <li>{{ gap.description }}</li>
+                    }
+                  </ul>
+                </section>
+              }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>

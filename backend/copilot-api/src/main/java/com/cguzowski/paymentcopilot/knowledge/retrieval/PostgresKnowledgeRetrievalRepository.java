@@ -18,7 +18,7 @@ import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
 @Repository
-class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalRepository {
+class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalRepository, ReportKnowledgeSnapshotProvider {
 
     private final JdbcClient jdbcClient;
     private final JsonMapper jsonMapper;
@@ -125,6 +125,27 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
                 .toList();
     }
 
+    @Override
+    public java.util.Optional<ReportKnowledgeSnapshot> findForReport(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT id, status
+                        FROM knowledge_retrieval_attempt
+                        WHERE tenant_id = :tenantId
+                          AND investigation_id = :investigationId
+                          AND status <> 'STARTED'
+                        ORDER BY requested_at DESC, id DESC
+                        LIMIT 1
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new ReportKnowledgeSnapshot(
+                        resultSet.getObject("id", UUID.class), resultSet.getString("status"), List.of()))
+                .optional()
+                .map(snapshot -> new ReportKnowledgeSnapshot(
+                        snapshot.retrievalId(), snapshot.status(), findReportChunks(tenantId, snapshot.retrievalId())));
+    }
+
     private KnowledgeRetrievalAttempt mapAttemptWithoutResults(ResultSet resultSet, int rowNumber) throws SQLException {
         java.sql.Array evidenceArray = resultSet.getArray("contributing_evidence_ids");
         List<UUID> evidenceIds = evidenceArray == null ? List.of() : Arrays.asList((UUID[]) evidenceArray.getArray());
@@ -170,6 +191,29 @@ class PostgresKnowledgeRetrievalRepository implements KnowledgeRetrievalReposito
                 .param("tenantId", tenantId)
                 .param("retrievalId", retrievalId)
                 .query(this::mapResult)
+                .list();
+    }
+
+    private List<ReportKnowledgeChunk> findReportChunks(UUID tenantId, UUID retrievalId) {
+        return jdbcClient
+                .sql("""
+                        SELECT chunk_id, document_id, document_type,
+                               document_title, document_version, section_path, raw_content
+                        FROM knowledge_retrieval_result
+                        WHERE tenant_id = :tenantId
+                          AND retrieval_id = :retrievalId
+                        ORDER BY selected_position
+                        """)
+                .param("tenantId", tenantId)
+                .param("retrievalId", retrievalId)
+                .query((resultSet, rowNumber) -> new ReportKnowledgeChunk(
+                        resultSet.getObject("chunk_id", UUID.class),
+                        resultSet.getObject("document_id", UUID.class),
+                        resultSet.getString("document_type"),
+                        resultSet.getString("document_title"),
+                        resultSet.getString("document_version"),
+                        resultSet.getString("section_path"),
+                        resultSet.getString("raw_content")))
                 .list();
     }
 

@@ -111,7 +111,7 @@ class PostgresIncidentRepository implements IncidentRepository {
                           ON investigation.tenant_id = incident.tenant_id
                          AND investigation.incident_id = incident.id
                         WHERE incident.tenant_id = :tenantId
-                          AND incident.status IN ('NEW', 'INVESTIGATING')
+                          AND incident.status IN ('NEW', 'INVESTIGATING', 'AWAITING_REVIEW')
                         ORDER BY incident.received_at DESC
                         """.formatted(INCIDENT_COLUMNS))
                 .param("tenantId", tenantId)

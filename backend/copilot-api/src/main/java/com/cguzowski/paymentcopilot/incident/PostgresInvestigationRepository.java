@@ -9,7 +9,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 class PostgresInvestigationRepository
-        implements InvestigationRepository, InvestigationSnapshotProvider, EvidenceCollectionContextProvider {
+        implements InvestigationRepository,
+                InvestigationSnapshotProvider,
+                EvidenceCollectionContextProvider,
+                ReportInvestigationSnapshotProvider,
+                ReportLifecyclePort {
 
     private final JdbcClient jdbcClient;
 
@@ -128,6 +132,55 @@ class PostgresInvestigationRepository
                         resultSet.getObject("correlation_id", UUID.class),
                         resultSet.getString("external_alert_id")))
                 .optional();
+    }
+
+    @Override
+    public Optional<ReportInvestigationSnapshot> findForReport(UUID tenantId, UUID investigationId) {
+        return jdbcClient
+                .sql("""
+                        SELECT investigation.tenant_id,
+                               investigation.id AS investigation_id,
+                               investigation.incident_id,
+                               investigation.correlation_id,
+                               incident.status,
+                               incident.incident_type,
+                               incident.summary,
+                               incident.description
+                        FROM investigation
+                        JOIN incident
+                          ON incident.tenant_id = investigation.tenant_id
+                         AND incident.id = investigation.incident_id
+                        WHERE investigation.tenant_id = :tenantId
+                          AND investigation.id = :investigationId
+                        """)
+                .param("tenantId", tenantId)
+                .param("investigationId", investigationId)
+                .query((resultSet, rowNumber) -> new ReportInvestigationSnapshot(
+                        resultSet.getObject("tenant_id", UUID.class),
+                        resultSet.getObject("investigation_id", UUID.class),
+                        resultSet.getObject("incident_id", UUID.class),
+                        resultSet.getObject("correlation_id", UUID.class),
+                        resultSet.getString("status"),
+                        resultSet.getString("incident_type"),
+                        resultSet.getString("summary"),
+                        resultSet.getString("description")))
+                .optional();
+    }
+
+    @Override
+    public boolean transitionToAwaitingReview(UUID tenantId, UUID incidentId) {
+        return jdbcClient
+                        .sql("""
+                        UPDATE incident
+                        SET status = 'AWAITING_REVIEW'
+                        WHERE tenant_id = :tenantId
+                          AND id = :incidentId
+                          AND status = 'INVESTIGATING'
+                        """)
+                        .param("tenantId", tenantId)
+                        .param("incidentId", incidentId)
+                        .update()
+                == 1;
     }
 
     private Optional<InvestigationView> find(String predicate, UUID tenantId, UUID lookupId) {

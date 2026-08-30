@@ -34,12 +34,18 @@ describe('syntheticRequestContextInterceptor', () => {
     request.flush([]);
   });
 
-  it('attachesOperatorContextOnlyToInvestigationStart', () => {
+  it('attachesOperatorContextToOperatorAttributedMutations', () => {
     client.post('/api/incidents/incident-1/investigations', null).subscribe();
-    const request = http.expectOne('/api/incidents/incident-1/investigations');
-    expect(request.request.headers.get(SYNTHETIC_TENANT_HEADER)).toBe(SYNTHETIC_TENANT_ID);
-    expect(request.request.headers.get(SYNTHETIC_OPERATOR_HEADER)).toBe(SYNTHETIC_OPERATOR_ID);
-    request.flush({});
+    client.post('/api/investigations/investigation-1/reports', null).subscribe();
+    for (const url of [
+      '/api/incidents/incident-1/investigations',
+      '/api/investigations/investigation-1/reports',
+    ]) {
+      const request = http.expectOne(url);
+      expect(request.request.headers.get(SYNTHETIC_TENANT_HEADER)).toBe(SYNTHETIC_TENANT_ID);
+      expect(request.request.headers.get(SYNTHETIC_OPERATOR_HEADER)).toBe(SYNTHETIC_OPERATOR_ID);
+      request.flush({});
+    }
   });
 
   it('doesNotAttachSyntheticContextOutsideTheApplicationApi', () => {

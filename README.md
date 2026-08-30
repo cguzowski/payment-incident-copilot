@@ -29,7 +29,7 @@ synthetic alert
 | `backend/copilot-api` | Workflow, persistence, retrieval, report generation, and audit history |
 | `backend/operations-mcp-server` | Deterministic synthetic evidence exposed through read-only MCP tools |
 | PostgreSQL/pgvector | Application state, approved knowledge, and vector retrieval |
-| Amazon Bedrock | Titan V2 knowledge embeddings; structured report generation remains planned |
+| Amazon Bedrock | Titan V2 knowledge embeddings and Nova 2 Lite evidence-linked report generation |
 
 The applications share one repository but remain independently buildable and
 deployable. See [Architecture](docs/agent/ARCHITECTURE.md) for ownership and
@@ -131,7 +131,7 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V5 when the API starts.
+Flyway applies V1 through V6 when the API starts.
 
 ### Docker PostgreSQL 17.11 on port 5433
 
@@ -194,7 +194,8 @@ servers coexist.
 
 Application HTTP calls carry the demonstration tenant in the required
 `X-Synthetic-Tenant-Id` header. Operator-attributed mutations carry
-`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
+`X-Synthetic-Operator-Id`; investigation start and explicit report generation
+are the current operator-attributed mutations.
 Resource identifiers remain in paths, queue reads use `GET /api/incidents`,
 and tenant/operator identity is not accepted in resource paths, query
 parameters, or request bodies. These caller-supplied synthetic headers are a
@@ -225,6 +226,25 @@ repository-owned approved Markdown sources, use the same command with
 `APP_KNOWLEDGE_INGESTION_ENABLED=true`. Re-importing unchanged sources is
 idempotent; changed content or embedding metadata requires a new document
 version.
+
+Normal startup also keeps chat calls disabled. In an authorized AWS environment,
+run the one-shot report contract smoke after loading `.env` and pointing the API
+at PostgreSQL:
+
+```powershell
+$env:AI_MODEL_CHAT = 'bedrock-converse'
+$env:BEDROCK_CHAT_MODEL = 'global.amazon.nova-2-lite-v1:0'
+$env:APP_REPORT_SMOKE_TEST_ENABLED = 'true'
+Push-Location backend/copilot-api
+../../mvnw.cmd "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
+Pop-Location
+```
+
+The report smoke sends one bounded synthetic incident/evidence snapshot, asks
+for prompt-guided `report-v1` JSON, and applies the same strict schema and
+citation validation as the HTTP workflow. It logs only the model ID, schema
+version, disposition, and validation result—not the prompt, source content,
+model payload, credentials, or provider error details.
 
 Run the Angular operator console in another terminal:
 

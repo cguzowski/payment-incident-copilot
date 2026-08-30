@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-08-29
+Last updated: 2026-08-30
 
 ## Current milestone
 
@@ -81,24 +81,37 @@ Milestone 1 — Establish the operator investigation workflow.
   aggregate gate passed every backend, frontend, formatting, build, Compose,
   and diff check with zero skipped tests, followed by live desktop and
   390-CSS-pixel workspace verification.
+- Accepted ADR-0006 with
+  `${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}` as the report model
+  default and `INSUFFICIENT_EVIDENCE` as a reviewable outcome that moves the
+  incident to `AWAITING_REVIEW`.
+- Implemented P2 evidence-linked report generation with exact tenant-scoped
+  evidence/knowledge snapshots, strict `report-v1` validation, append-only
+  Flyway V6 persistence, explicit create/history APIs, atomic
+  `AWAITING_REVIEW`, and an independently loading Angular report panel.
+- Verified P2 through focused and unscoped backend, PostgreSQL, HTTP,
+  architecture, Angular, formatting, build, Compose, diff, desktop, and
+  390-CSS-pixel checks with zero skipped tests.
 
 ## In progress
 
-- Authorized live Bedrock smoke verification remains pending as the preserved
-  external limitation from the completed approved-knowledge task.
+- Authorized live Bedrock smoke verification remains pending for the completed
+  P1 embedding and P2 report slices.
 
 ## Next
 
-1. Run the documented one-shot embedding smoke and explicit importer in an
-   environment authorized for `amazon.titan-embed-text-v2:0`.
-2. Prepare report generation as a separate proposed task after owner review.
-3. Keep human decisions and additional evidence tools out of that proposal
-   unless separately approved.
+1. Prepare P3 human decision and audit-trail scope for owner review; do not
+   begin implementation without activation.
+2. Run the documented one-shot embedding and report smokes in an explicitly
+   authorized AWS environment with an isolated PostgreSQL smoke database.
+3. Add further evidence tools only after report-quality evaluation demonstrates
+   a concrete gap.
 
 ## Blockers
 
-- No authorized AWS credential/profile was available in this task environment,
-  so live Titan V2 smoke verification remains external.
+- No explicitly authorized AWS credential/profile and isolated PostgreSQL smoke
+  database were available in this task environment, so live Titan V2 embedding
+  and Nova 2 Lite report verification remain external.
 
 ## Known deliberate gaps
 
@@ -108,9 +121,14 @@ Milestone 1 — Establish the operator investigation workflow.
 - Live Amazon Titan Text Embeddings V2 authorization, region availability, and
   returned-vector behavior have not yet been verified in an authorized AWS
   environment; local and CI verification use the deterministic embedding double.
+- Live `global.amazon.nova-2-lite-v1:0` report authorization, prompt-guided JSON,
+  and provider response behavior have not yet been verified in an authorized
+  AWS environment; local and CI verification use the deterministic report-model
+  double and strict application validation.
 - Knowledge ingestion is intentionally explicit and disabled during normal
   startup; there is no continuous content-management pipeline yet.
 - No AWS infrastructure selected yet.
+- Human approval/rejection and the complete audit timeline remain P3.
 - The investigation workspace intentionally does not repeat incident context;
   that design and any API evolution are deferred to a future task.
 
@@ -180,6 +198,15 @@ Milestone 1 — Establish the operator investigation workflow.
   The strengthened nonexistent-drive regression passed in PowerShell Core and
   Windows PowerShell 5.1; repository verification passed, followed by 116/116
   copilot and 9/9 MCP-server backend tests with zero skips.
+- 2026-08-29: The authoritative `./verify.ps1` gate passed 147/147 copilot API,
+  9/9 operations MCP server, and 53/53 Angular tests with zero failures, errors,
+  or skips. Flyway V1-V6, PostgreSQL 17.11 Testcontainers, ten architecture
+  rules, Spotless, Prettier, the 324.41 kB production build, zero-vulnerability
+  npm audit, Compose validation, and `git diff --check` all passed.
+- 2026-08-29: A bounded synthetic P2 workspace rendered the report after
+  evidence and approved knowledge at 1280x720 and 390x844 with adjacent source
+  references, visible keyboard focus, no horizontal overflow or off-viewport
+  controls, and no browser warnings or errors.
 
 ## Update rule
 

@@ -84,4 +84,23 @@ class FeatureArchitectureTest {
             .dependOnClassesThat()
             .resideInAnyPackage("..incident..", "..evidence..")
             .because("a persistence adapter must own one feature's tables and domain types");
+
+    @ArchTest
+    static final ArchRule upstreamFeaturesDoNotDependOnReports = noClasses()
+            .that()
+            .resideInAnyPackage("..incident..", "..evidence..", "..knowledge.catalog..", "..knowledge.retrieval..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage("..report..");
+
+    @ArchTest
+    static final ArchRule reportPersistenceDoesNotDependOnUpstreamFeatureTypes = noClasses()
+            .that()
+            .haveSimpleNameStartingWith("Postgres")
+            .and()
+            .resideInAPackage("..report..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAnyPackage("..incident..", "..evidence..", "..knowledge.catalog..", "..knowledge.retrieval..")
+            .because("the report persistence adapter must own and query only report storage");
 }

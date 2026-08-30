@@ -11,12 +11,12 @@ Last reviewed: 2026-08-29
 | Operations MCP server | Deterministic synthetic operational tools and fixtures | LLM calls or investigation decisions |
 | PostgreSQL | Transactional application state and audit records | Unstructured object storage |
 | pgvector | Tenant-filtered knowledge chunks and embeddings | Final report truth |
-| Amazon Bedrock | Embeddings and structured report generation | Autonomous operational authority |
+| Amazon Bedrock | Embeddings and prompt-guided report generation | Autonomous operational authority |
 
 ## Copilot API feature ownership
 
 The copilot API remains one deployable while its implementation is divided into
-four explicit feature areas:
+five explicit feature areas:
 
 | Feature package | Owns | May depend on |
 |---|---|---|
@@ -24,6 +24,7 @@ four explicit feature areas:
 | `evidence` | Evidence collection, normalized evidence snapshots, MCP client adapter, evidence persistence and HTTP behavior | Incident read ports only |
 | `knowledge.catalog` | Approved source loading, parsing, chunking, hashing, embeddings, ingestion and index writes | No incident or evidence implementation |
 | `knowledge.retrieval` | Investigation-time query derivation, search, selection, attempts, history and HTTP behavior | Incident and evidence snapshot ports; catalog-owned index contracts where retrieval requires them |
+| `report` | Exact report-input composition, prompt/schema validation, model invocation, append-only attempts, cited report persistence and HTTP behavior | Published incident, evidence and knowledge-retrieval report snapshot ports only |
 
 Architecture tests enforce the allowed package directions and keep persistence
 adapters within their owning features. There is no global common package or
@@ -43,21 +44,34 @@ through an incident-owned read port. Its persistence adapter owns only evidence
 tables. Tenant identity remains an explicit argument through every application
 and persistence port.
 
+Report generation composes three narrow tenant-scoped snapshots before it
+records `STARTED`: the incident and investigation lifecycle snapshot, the newest
+terminal evidence attempt plus newest applicable observations, and the newest
+terminal retrieval with its persisted selected chunks. Its persistence adapter
+owns only report tables. A validated report update and the incident transition
+to `AWAITING_REVIEW` share one transaction; the Bedrock call occurs outside that
+transaction. Nova 2 Lite receives a versioned prompt containing the immutable
+`report-v1` JSON Schema, and the application independently validates structure,
+semantics and source membership before making a report reviewable.
+
 ## Operator workspace composition
 
 `InvestigationWorkspaceComponent` is the route-level investigation loader and
-composition shell. Independently tested observed-evidence and approved-knowledge
-panels own their API calls, models, state, templates, styles, loading and retry
-behavior. Investigation lifecycle API code shared by incident detail and the
-workspace lives under `core/api/investigations`. Shared presentation is limited
-to deliberate SCSS mixins; feature components do not import sibling component
-stylesheets.
+composition shell. Independently tested observed-evidence, approved-knowledge,
+and report panels own their API calls, models, state, templates, styles, loading
+and retry behavior. The report panel follows approved knowledge, labels the
+content advisory and unreviewed, and keeps citations beside each claim without
+offering decision controls. Investigation lifecycle API code shared by incident
+detail and the workspace lives under `core/api/investigations`. Shared
+presentation is limited to deliberate SCSS mixins; feature components do not
+import sibling component stylesheets.
 
 ## Synthetic HTTP request context
 
 Application HTTP requests carry tenant identity in
 `X-Synthetic-Tenant-Id`. Operator-attributed mutations also carry
-`X-Synthetic-Operator-Id`; investigation start is the first such mutation.
+`X-Synthetic-Operator-Id`; investigation start and report generation are the
+current operator-attributed mutations.
 Resource identifiers remain in paths, while tenant and operator identity do not
 appear in resource paths, query parameters, or request bodies. A single backend
 resolver validates the headers, and a single frontend interceptor attaches
@@ -108,10 +122,10 @@ sequenceDiagram
     A->>D: Persist immutable retrieval snapshot
     A-->>U: Approved source excerpts and provenance
     A->>A: Normalize and classify evidence
-    A->>B: Evidence plus versioned report schema
-    B-->>A: Structured proposed report
+    A->>B: Evidence plus versioned prompt-guided report schema
+    B-->>A: Proposed report JSON
     A->>A: Validate schema and citations
-    A->>D: Persist report, evidence, and metadata
+    A->>D: Persist report, normalized citations, and metadata
     A-->>U: Reviewable investigation snapshot
     U->>A: Approve or reject with reason
     A->>D: Append decision audit event

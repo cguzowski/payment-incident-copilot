@@ -7,10 +7,17 @@ import { Investigation } from '../../core/api/investigations/investigation.model
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
 import { ApprovedKnowledgePanelComponent } from './approved-knowledge-panel/approved-knowledge-panel.component';
 import { ObservedEvidencePanelComponent } from './observed-evidence-panel/observed-evidence-panel.component';
+import { ReportPanelComponent } from './report-panel/report-panel.component';
 
 @Component({
   selector: 'app-investigation-workspace',
-  imports: [ApprovedKnowledgePanelComponent, DatePipe, ObservedEvidencePanelComponent, RouterLink],
+  imports: [
+    ApprovedKnowledgePanelComponent,
+    DatePipe,
+    ObservedEvidencePanelComponent,
+    ReportPanelComponent,
+    RouterLink,
+  ],
   styleUrl: './investigation-workspace.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './investigation-workspace.component.html',
@@ -43,5 +50,11 @@ export class InvestigationWorkspaceComponent {
             error instanceof ApiRequestError && error.status === 404 ? 'not-found' : 'error',
           ),
       });
+  }
+
+  protected markAwaitingReview(): void {
+    this.investigation.update((item) =>
+      item ? { ...item, incidentStatus: 'AWAITING_REVIEW' } : item,
+    );
   }
 }

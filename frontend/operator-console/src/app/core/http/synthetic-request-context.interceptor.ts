@@ -10,12 +10,16 @@ export const syntheticRequestContextInterceptor: HttpInterceptorFn = (request, n
   }
 
   let headers = request.headers.set(SYNTHETIC_TENANT_HEADER, SYNTHETIC_TENANT_ID);
-  if (isInvestigationStart(request.method, request.url)) {
+  if (isOperatorMutation(request.method, request.url)) {
     headers = headers.set(SYNTHETIC_OPERATOR_HEADER, SYNTHETIC_OPERATOR_ID);
   }
   return next(request.clone({ headers }));
 };
 
-function isInvestigationStart(method: string, url: string): boolean {
-  return method === 'POST' && /^\/api\/incidents\/[^/]+\/investigations$/.test(url);
+function isOperatorMutation(method: string, url: string): boolean {
+  return (
+    method === 'POST' &&
+    (/^\/api\/incidents\/[^/]+\/investigations$/.test(url) ||
+      /^\/api\/investigations\/[^/]+\/reports$/.test(url))
+  );
 }

@@ -1,4 +1,4 @@
-# Task: Establish explicit codebase boundaries B01-B06
+# Task: Generate a reviewable evidence-linked incident report
 
 Status: Complete
 Created: 2026-08-29
@@ -6,340 +6,433 @@ Owner: Christopher Guzowski
 
 ## Goal
 
-Make the existing three-application codebase safer to extend with report
-generation by establishing complete repository verification, explicit internal
-feature ownership, stable tenant-scoped snapshot ports, a composed
-investigation workspace, one synthetic request-identity convention, and a
-versioned MCP wire contract.
+Give a payment operations analyst one explicit, auditable action that turns the
+persisted incident, observed evidence, and approved-knowledge retrieval snapshot
+into a schema-valid proposed incident report whose claims can be reviewed at
+their sources before any human decision is recorded.
+
+The owner authorized implementation on 2026-08-29. This is now the active,
+locked behavioral contract.
 
 ## User story
 
-As the repository maintainer, I want the current MVP behavior protected by
-automated boundaries so that report generation can consume stable incident,
-evidence, and knowledge contracts without reaching through feature storage,
-UI state machines, or duplicated integration schemas.
+As a payment operations analyst, I want to generate and inspect a proposed
+incident report with evidence references beside every conclusion so that I can
+evaluate the copilot's reasoning without mistaking AI inference for observed
+fact or approved guidance.
 
 ## Context
 
-The approved-knowledge slice is implementation-complete. Live authorized
-Bedrock smoke verification remains an explicitly documented external
-limitation and is not weakened or reclassified by this task.
+The product now persists a tenant-scoped incident and investigation, append-only
+service-error evidence attempts, and immutable approved-knowledge retrieval
+snapshots. B01-B06 established the internal ports and UI composition boundaries
+needed for a report feature to consume those inputs without querying another
+feature's tables.
 
-`docs/agent/CODEBASE_BOUNDARY_FINDINGS.md` identified B01-B06 as the changes
-that should precede report generation. The owner reviewed the phased plan and
-authorized implementation on 2026-08-29.
+This is roadmap slice P2. It should prove whether the current evidence and
+knowledge are sufficient for the selected decline-rate incident family before
+the project adds more MCP tools. Human approval/rejection and the complete audit
+timeline remain P3.
+
+The accepted architectural contract and model choice are in
+`docs/agent/decisions/ADR-0006-evidence-linked-report-generation.md`.
 
 ## Chosen contract
 
-### Delivery order
+### Explicit trigger and HTTP behavior
 
-Implement behavior-preserving slices in this order:
+- The workspace exposes an explicit `Generate proposed report` action. Loading
+  or refreshing a route never invokes a model.
+- `POST /api/investigations/{investigationId}/reports` has no body and requires
+  the existing synthetic tenant and operator request-context headers.
+- `GET /api/investigations/{investigationId}/reports` returns every recorded
+  attempt newest first. Cross-tenant and nonexistent investigations remain
+  indistinguishable `404` responses.
+- A recorded terminal outcome returns `201 Created`, including a safe
+  unavailable, timed-out, or malformed outcome. Invalid identifiers return
+  `400`; unmet workflow prerequisites or concurrent generation return `409`
+  without a model call or persisted attempt.
+- Only one generation may be in progress for an investigation. A terminal
+  failure may be retried while the incident remains `INVESTIGATING`; a
+  successful report becomes the single review candidate and cannot be silently
+  replaced before a later human decision.
 
-1. B05 authoritative local/CI verification.
-2. B02 tenant-scoped investigation and normalized evidence snapshot ports.
-3. B01 feature package ownership and dependency enforcement.
-4. B03 Angular workspace composition.
-5. B04 one synthetic request-identity convention.
-6. B06 one versioned MCP wire contract.
+### Prerequisites and exact input snapshot
 
-Every slice must pass focused tests and the authoritative broader verification
-available at that point before the next slice begins.
+- Generation requires an `INVESTIGATING` incident, at least one terminal
+  evidence attempt, and at least one terminal knowledge-retrieval attempt. A
+  route that has never attempted either prerequisite is not ready.
+- Evidence publishes a report snapshot containing the newest terminal attempt,
+  the newest applicable `AVAILABLE` or `PARTIAL` attempt, its exact normalized
+  observations and provenance, and explicit missing/degraded status. A failed
+  retry never erases an earlier applicable observation.
+- Knowledge retrieval publishes the newest terminal retrieval snapshot only,
+  including its exact status and selected persisted chunks. Report generation
+  never reruns retrieval and never silently substitutes an older retrieval.
+- A terminal unavailable, no-match, partial, or malformed prerequisite remains
+  part of the prompt as an explicit limitation. It does not cause the
+  application to fabricate context or add an ineligible chunk.
+- The report feature composes tenant-scoped incident, evidence, and retrieval
+  ports before persisting `STARTED`. Its persistence adapter owns only report
+  tables and does not query incident, evidence, or knowledge tables.
 
-### B05 verification boundary
+### Application-owned report schema
 
-- Add one repository-root PowerShell verification entry point that runs on
-  Windows PowerShell/PowerShell Core and Ubuntu PowerShell Core.
-- Pin Node.js `24.14.1`, which is supported by Angular 21, while preserving the
-  repository's npm `10.8.3` package-manager pin.
-- Add and use the pinned Maven Wrapper.
-- Add Spotless Maven plugin `3.9.0` with Palantir Java Format `2.96.0` and bind
-  formatting verification to `verify`.
-- The root entry point runs prerequisite checks, Maven clean verification,
-  backend no-skips enforcement, locked frontend installation, non-watch
-  frontend tests with no-skips enforcement, Prettier, the production build,
-  Docker Compose validation, and `git diff --check`.
-- CI uses the same script implementation. Backend and frontend jobs may use
-  explicit script scopes for useful isolation, followed by one aggregate
-  required result; CI must not duplicate the command list.
+- The top-level disposition is `PROPOSED` or `INSUFFICIENT_EVIDENCE`.
+- The report separates a cited summary, observations, inferences, probable
+  cause, confidence assessment, recommendation, contradictions, and evidence
+  gaps. Probable cause and recommendation are absent when the available inputs
+  do not support them.
+- Every summary, observation, inference, probable-cause, confidence, and
+  recommendation claim contains at least one evidence identifier from the
+  exact input snapshot. Recommendation claims additionally reference at least
+  one selected approved-knowledge chunk.
+- Observations may cite evidence only. Inferences may cite evidence and selected
+  knowledge. Knowledge is guidance for interpretation or action, not proof that
+  an incident fact occurred.
+- The application rejects unknown, cross-snapshot, cross-tenant, duplicate, or
+  structurally invalid references. It resolves displayed provenance from
+  persisted sources; model-supplied excerpts or source metadata are never
+  trusted as citations.
+- `INSUFFICIENT_EVIDENCE` requires low confidence and no probable cause or
+  recommendation. Missing, unavailable, degraded, and contradictory inputs
+  remain visible in the stored report and UI.
+- The report is always labeled AI-generated, advisory, and not yet reviewed.
+  No recommendation is executed automatically.
 
-### B02 snapshot ports
+### Model, prompt, and generation lifecycle
 
-- The incident feature publishes a tenant-scoped investigation snapshot for
-  knowledge retrieval containing only investigation/correlation identifiers,
-  incident family, title, and description.
-- The evidence feature publishes a tenant-scoped latest-applicable evidence
-  snapshot containing identifiers, a stable status value, service name, and
-  normalized error-code counts. It does not publish persistence records, the
-  MCP payload type, or the evidence status enum.
-- Knowledge retrieval composes those ports before starting an attempt.
-- The knowledge retrieval persistence adapter owns only knowledge retrieval
-  attempt/result tables and no longer queries or decodes incident/evidence
-  storage.
-- Preserve the current distinction between the newest evidence attempt and the
-  newest earlier AVAILABLE/PARTIAL attempt that can contribute observations.
+- Use Amazon Bedrock Converse with the configurable default
+  `${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}`.
+- Use one immutable `report-v1` JSON Schema and one versioned prompt template.
+  Nova 2 Lite does not support Bedrock native structured outputs, so the prompt
+  includes the schema and requires one JSON object with no preamble. The
+  application strictly parses the result and validates the JSON Schema,
+  conditional rules, tenant/source membership, and citation semantics before
+  persistence.
+- Use deterministic, bounded inference settings: temperature `0`, no tool
+  calls, no hidden model repair call, no model reasoning trace persisted, and
+  an output budget sized to the bounded schema. Citations are application-owned
+  source identifiers in the schema.
+- Persist `STARTED` before the Bedrock call, perform network I/O outside a
+  database transaction, and terminally update only that attempt.
+- Terminal statuses are exactly `STARTED`, `AVAILABLE`, `UNAVAILABLE`,
+  `TIMED_OUT`, and `MALFORMED`. Schema-valid output with invalid source
+  references is `MALFORMED` and is never exposed as a proposed report.
+- Automated tests use a deterministic report-model double. An explicitly
+  invoked authorized smoke path verifies the real selected global model,
+  prompt-guided JSON contract, strict application validation, and safe failure
+  mapping without printing a prompt, model payload, credentials, or source
+  content.
 
-### B01 feature ownership
+### Persistence, lifecycle, and operator experience
 
-- Keep the existing three deployables and Maven/npm project boundaries.
-- Inside the copilot API, establish `incident`, `evidence`,
-  `knowledge.catalog`, and `knowledge.retrieval` feature ownership.
-- Evidence collection obtains investigation/scenario context through a narrow
-  incident read port; its persistence adapter owns only evidence tables.
-- Catalog owns approved source loading, parsing, chunking, hashing, embedding,
-  ingestion, and index writes. Retrieval owns investigation-time query
-  derivation, search, selection, attempts, history, and HTTP behavior.
-- Add package dependency tests after the target map exists. Enforce allowed
-  feature directions rather than naming conventions alone.
-- Do not add Maven modules, deployables, a global `common` package, or a shared
-  compiled DTO jar.
-
-### B03 Angular composition
-
-- Keep `InvestigationWorkspaceComponent` as the route-level investigation
-  loader and composition shell.
-- Extract independently loading/retrying observed-evidence and
-  approved-knowledge panels. Each owns its models, API calls, state, template,
-  styles, and focused tests.
-- Move investigation lifecycle API calls and models used by incident detail and
-  the workspace under `core/api/investigations`.
-- Remove the workspace's import of the incident-detail component stylesheet.
-  Reuse only genuinely shared presentation mixins.
-- Preserve copy, provenance, history ordering, retry behavior, accessibility,
-  and responsive behavior.
-
-### B04 synthetic request identity
-
-- Use `X-Synthetic-Tenant-Id` as the required tenant context for application
-  HTTP requests.
-- Use `X-Synthetic-Operator-Id` for operator-attributed mutations, initially
-  investigation start.
-- Add one validated backend request-context resolver and one frontend context
-  interceptor.
-- Resource identifiers remain in paths. Tenant/operator identity is removed
-  from resource paths, query parameters, and request bodies.
-- Queue reads use `GET /api/incidents`; alert intake receives tenant identity
-  from the request context; investigation start has no operator body.
-- Persistence and application ports continue to receive tenant identity
-  explicitly and enforce tenant-scoped lookups.
-- These caller-supplied headers are synthetic demonstration context, not
-  authentication or a production authorization claim.
-- Migrate atomically; do not maintain two active identity conventions.
-
-### B06 MCP contract
-
-- Add one repository-owned immutable `v1` contract artifact for
-  `getRecentServiceErrors`, including metadata, input/output JSON schemas, and
-  synthetic canonical fixtures.
-- Both Java service test suites consume the same artifact as test resources.
-- Provider tests compare live MCP discovery and responses semantically with the
-  contract. Consumer tests decode canonical fixtures and reject incompatible
-  results.
-- Keep provider and consumer implementation records separate.
-- Keep transport concerns separate from a typed evidence-owned payload decoder.
-- A backward-incompatible future contract creates `v2`; it does not rewrite
-  `v1`.
+- Add a Flyway V6 migration for append-only report attempts, the validated
+  report document, and tenant-safe normalized claim/source references.
+- Persist report, attempt, tenant, investigation, correlation, and requesting
+  operator identifiers; timestamps; exact evidence and retrieval snapshot
+  identifiers; model/inference-profile identifier; inference settings; prompt
+  and schema versions and hashes; validated report content; safe provider
+  metadata when available; and safe terminal status detail.
+- Do not persist credentials, arbitrary provider payloads, malformed raw model
+  output, chain-of-thought, stack traces, or an unbounded rendered prompt.
+- A successful validated report and the incident transition from
+  `INVESTIGATING` to `AWAITING_REVIEW` commit atomically. The explicit operator
+  generation command authorizes this workflow transition; model content never
+  selects or directly mutates incident state.
+- `AWAITING_REVIEW` remains in the tenant work queue and opens the existing
+  investigation route with a `Review proposed report` action label.
+- Add an independently loading report panel after approved knowledge. It shows
+  generation history, every terminal state, claim type, confidence,
+  disposition, limitations, and source references adjacent to each claim.
+- The panel contains no approve/reject controls. It preserves keyboard access,
+  visible focus, semantic status/error messaging, and usability at 390 CSS
+  pixels without horizontal page overflow.
 
 ## In scope
 
-- B01-B06 exactly as described above.
-- Test-only architecture and contract-verification dependencies where required.
-- Mechanical package and formatter moves required by the chosen boundaries.
-- Public HTTP contract documentation for the synthetic identity migration.
-- ADRs for internal module/snapshot boundaries, synthetic request identity, and
-  the MCP contract artifact.
-- Factual updates to architecture, quality, status, README, and this task.
+- One report-generation feature inside the copilot API and its enforced package
+  dependencies.
+- Narrow tenant-scoped report input ports from incident, evidence, and
+  knowledge retrieval.
+- Versioned prompt and JSON Schema, prompt-guided JSON generation, strict
+  application validation, and deterministic model double.
+- Append-only report-generation persistence and exact source-reference
+  provenance through Flyway V6.
+- Explicit report create/history APIs using synthetic tenant/operator context.
+- `AWAITING_REVIEW` lifecycle, queue/detail action behavior, and an independent
+  report workspace panel.
+- Focused, PostgreSQL, HTTP, Angular, architecture, provider-adapter, responsive,
+  and authorized Bedrock smoke verification.
+- Factual documentation updates after implementation and verification.
 
 ## Out of scope
 
-- B07-B12 except where a minimal supporting move is unavoidable for B01-B06.
-- Report generation, report review, human decisions, audit timeline, or
-  incident lifecycle expansion.
-- Authentication, authorization, AWS infrastructure, or deployment choices.
-- New MCP tools or incident families.
-- Flyway schema changes or edits to V1-V5.
-- JPA/forms/validation dependency cleanup, Testcontainers consolidation,
-  retrieval-history batching, generic web-error consolidation, or correlation
-  logging.
-- Live Bedrock smoke verification; its existing external limitation remains.
+- Operator approval, rejection, reason capture, decision state, or final report
+  status.
+- A general audit-event table or audit-timeline UI.
+- Automatic remediation, tool execution from the model, or any operational
+  side effect from a recommendation.
+- Additional MCP tools, evidence types, incident families, or retrieval reruns.
+- Authentication, authorization, AWS infrastructure, or deployment selection.
+- Prompt-management services, Bedrock Agents, Knowledge Bases, Guardrails, or a
+  model-evaluation platform.
+- Streaming generation, background jobs, WebSockets, or speculative scaling
+  infrastructure.
+- Editing V1-V5 or weakening the existing external Titan V2 smoke limitation.
 
 ## Constraints
 
 - Follow red-green-refactor for every production behavior change.
-- Preserve every current successful and failure outcome except the explicitly
-  chosen B04 HTTP identity transport change.
-- Carry tenant identity explicitly through every application and persistence
-  port even after HTTP extraction is centralized.
-- Preserve STARTED-before-network transaction boundaries for MCP and Bedrock.
-- Preserve exact evidence and retrieval history, audit metadata, raw knowledge
-  excerpts, and missing/degraded outcomes.
-- Use synthetic data only and never log or commit credentials or real payment
-  data.
-- Keep every deployable independently buildable.
-- Keep the untracked boundary-findings source user-owned unless the owner
-  separately chooses to add it.
+- Carry `tenant_id` explicitly through every input, persistence, citation, and
+  lookup boundary.
+- Treat all model output as untrusted until schema, semantic, source-reference,
+  tenant, length, and enum validation passes.
+- Preserve facts, inference, approved guidance, and human decision as separate
+  concepts in code, persistence, APIs, and UI.
+- Every report conclusion must reference supporting persisted evidence; no
+  source may be invented, paraphrased as a citation, or silently refreshed.
+- Preserve every previous attempt and exact source snapshot needed to explain a
+  successful or failed generation.
+- Keep model I/O outside database transactions and never let model content
+  choose workflow state.
+- Use synthetic data only. Never log or commit credentials, prompts, provider
+  payloads, or real payment/customer data.
+- Keep all three deployables independently buildable and preserve the B01-B06
+  architecture and verification boundaries.
 
 ## Acceptance criteria
 
-- [x] One authoritative root command and CI implementation verify all three
-      deployables, formatting, builds, Compose, diff integrity, and zero skipped
-      tests.
-- [x] Knowledge retrieval composes tenant-scoped incident and normalized
-      evidence snapshots and does not query or decode incident/evidence
-      persistence.
-- [x] Evidence collection uses an incident-owned context port and its
-      persistence adapter owns only evidence tables.
-- [x] Copilot API code is organized into enforced incident, evidence,
-      knowledge-catalog, and knowledge-retrieval feature boundaries.
-- [x] No new deployable, Maven feature module, global common package, or shared
-      Java DTO artifact is introduced.
-- [x] The Angular investigation route composes independently tested evidence
-      and knowledge panels and imports no sibling feature stylesheet.
-- [x] Shared investigation lifecycle API code has a deliberate core location.
-- [x] Every application HTTP path uses the documented synthetic request context
-      and no longer transports tenant/operator identity inconsistently.
-- [x] Tenant isolation, indistinguishable cross-tenant not-found behavior, and
-      explicit tenant persistence parameters remain tested.
-- [x] Both Java services verify the same immutable versioned MCP contract
-      artifact while retaining separate implementation types.
-- [x] Existing queue, detail, investigation, evidence, knowledge, transaction,
-      provenance, retry, responsive, and failure behavior passes unchanged.
-- [x] V1-V5 remain unchanged and no unrelated B07-B12 or report-generation work
-      appears in the final diff.
+- [x] An owned `INVESTIGATING` investigation with terminal evidence and
+      knowledge attempts can explicitly create one report-generation attempt
+      without client-supplied prompt, model, schema, or source parameters.
+- [x] Generation composes exact tenant-scoped incident, newest/applicable
+      evidence, and newest terminal retrieval snapshots without querying
+      another feature's storage or rerunning MCP/retrieval.
+- [x] Never-attempted prerequisites, invalid state, concurrent generation, and
+      a prior successful report return structured `409` responses without a
+      model call or persisted attempt.
+- [x] Cross-tenant and nonexistent investigations return indistinguishable
+      `404` responses without a model call or persisted attempt.
+- [x] The API records `STARTED` before Bedrock and holds no database transaction
+      across the model call.
+- [x] The versioned application schema separates cited observations from cited
+      inference, probable cause, confidence, recommendation, contradictions,
+      and gaps.
+- [x] The exact `report-v1` schema is included in the versioned prompt; the
+      application strictly parses one JSON object and independently validates
+      schema, semantic invariants, tenant/source membership, and references.
+- [x] Unknown, duplicate, unavailable, cross-snapshot, and cross-tenant source
+      references cannot produce or expose an `AVAILABLE` report.
+- [x] Missing or degraded inputs can produce an explicit low-confidence
+      `INSUFFICIENT_EVIDENCE` report but cannot fabricate probable cause or a
+      recommendation.
+- [x] Unavailable, timeout, malformed, and interrupted attempts remain visible,
+      and retry appends history without hiding or overwriting an earlier attempt.
+- [x] A validated report and the `AWAITING_REVIEW` transition commit atomically;
+      a failed generation leaves the incident `INVESTIGATING`.
+- [x] `AWAITING_REVIEW` incidents remain in the work queue and route to the
+      report workspace with review-oriented copy.
+- [x] The workspace displays the proposed report after evidence and approved
+      knowledge, labels AI output as advisory/unreviewed, and shows provenance
+      adjacent to every claim.
+- [x] The workspace renders loading, not-generated, generating, available,
+      insufficient-evidence, unavailable, timed-out, malformed, interrupted,
+      conflict, not-found, and API-error states without decision controls.
+- [x] Every attempt preserves model, prompt/schema, source-snapshot, operator,
+      timing, status, and safe provider metadata required for later audit.
+- [x] Existing alert, queue, detail, investigation, evidence, knowledge,
+      transaction, tenant-isolation, contract, and responsive behavior remains
+      unchanged except for the explicit `AWAITING_REVIEW` additions.
+- [x] Focused and full verification pass with zero skipped tests; the authorized
+      Bedrock smoke either passes or is recorded as an exact external limitation.
+- [x] The final diff contains no secrets, real payment data, provider payloads,
+      generated output, unrelated refactoring, or edits to V1-V5.
 
 ## Test plan
 
-### Verification system
+### Schema, validation, and prompt
 
-- Focused PowerShell tests for version rejection, command ordering, child
-  failure propagation, backend/frontend skipped-result rejection, and scoped
-  execution.
-- A CI contract check that prevents a second duplicated verification list.
+- `buildsVersionedBoundedReportInputFromExactSnapshots`
+- `usesVersionedReportSchemaPromptWithDeterministicSettings`
+- `acceptsCitedProposedReportMatchingReportV1`
+- `acceptsExplicitInsufficientEvidenceWithoutCauseOrRecommendation`
+- `rejectsObservationThatReferencesKnowledgeAsObservedFact`
+- `rejectsConclusionWithoutEvidenceReference`
+- `rejectsRecommendationWithoutApprovedKnowledgeReference`
+- `rejectsUnknownDuplicateOrCrossSnapshotReference`
+- `rejectsUnsupportedEnumOversizedTextAndConditionalSchemaViolation`
+- `doesNotPersistOrLogMalformedRawModelOutput`
 
-### Backend snapshots and packages
+### Workflow and persistence
 
-- PostgreSQL tests for tenant-owned incident snapshots and latest/applicable
-  evidence semantics.
-- Workflow tests proving snapshot composition occurs before STARTED persistence
-  and cross-tenant requests perform no evidence, embedding, or persistence work.
-- Existing PostgreSQL and HTTP retrieval tests with unchanged response and
-  transaction assertions.
-- Architecture tests for allowed package directions and adapter isolation.
+- `composesReportSnapshotsBeforeRecordingStarted`
+- `recordsStartedBeforeCallingBedrockWithoutOpenTransaction`
+- `persistsValidatedReportClaimsAndTenantSafeReferences`
+- `preservesEveryFailedAndInterruptedAttemptNewestFirst`
+- `rejectsConcurrentGenerationBeforeSecondModelCall`
+- `allowsRetryAfterTerminalFailure`
+- `preventsReplacementAfterAvailableReport`
+- `atomicallyPersistsReportAndMovesIncidentToAwaitingReview`
+- `leavesIncidentInvestigatingWhenGenerationFails`
+- `doesNotQueryIncidentEvidenceOrKnowledgeTablesFromReportPersistence`
+
+Use PostgreSQL/Testcontainers for Flyway V6, constraints, snapshot references,
+concurrency, atomic lifecycle changes, ordering, and tenant isolation. Mock-only
+tests are not sufficient for those criteria.
+
+### HTTP and architecture
+
+- `createsReportForTenantOwnedReadyInvestigation`
+- `returnsReportAttemptsNewestFirst`
+- `requiresSyntheticOperatorForReportMutation`
+- `rejectsMalformedReportIdentifiers`
+- `returnsConflictWhenEvidenceOrKnowledgeWasNeverAttempted`
+- `doesNotCallModelOrPersistForCrossTenantInvestigation`
+- Architecture rules allow `report` to depend only on published incident,
+  evidence, and retrieval ports and keep its persistence adapter report-owned.
 
 ### Angular
 
-- Focused shell, evidence-panel, knowledge-panel, lifecycle API, and request
-  context interceptor tests.
-- Preserve the existing named loading, empty, partial, unavailable, retry,
-  provenance, ordering, direct-route, and failure scenarios.
-- Desktop and 390-CSS-pixel browser verification with no overflow or warnings.
+- `loadsReportHistoryIndependently`
+- `generatesReportWithoutClientPromptOrSourceParameters`
+- `rendersObservationsInferenceRecommendationAndGapsSeparately`
+- `rendersEvidenceAndKnowledgeProvenanceBesideEveryClaim`
+- `distinguishesInsufficientUnavailableTimedOutMalformedAndInterruptedStates`
+- `disablesGenerationWhilePendingAndHandlesConflictSafely`
+- `keepsAwaitingReviewIncidentInQueueWithReviewRoute`
+- `containsNoHumanDecisionControls`
 
-### HTTP identity
+### External and manual verification
 
-- Missing, blank, malformed, conflicting/legacy, tenant-scoped not-found, and
-  operator-required request-context tests across each endpoint family.
-- Frontend tests proving identity is attached once and resource services no
-  longer build tenant/operator parameters themselves.
-
-### MCP contract
-
-- Provider discovery/schema/annotation and canonical-response tests.
-- Consumer canonical-fixture decoding plus unknown-field, identifier,
-  status/content, bounds, timeout, and unavailable tests.
-- Full live local MCP/API workflow regression.
+- Run the explicit authorized Bedrock report smoke against
+  `global.amazon.nova-2-lite-v1:0` and verify prompt-guided JSON, strict
+  application validation, and safe failures.
+- Exercise available, insufficient-evidence, unavailable, timed-out, malformed,
+  interrupted, retry, concurrency, prior-success, and cross-tenant scenarios.
+- Inspect the queue and workspace at desktop and 390 CSS pixels for claim/source
+  association, keyboard access, overflow, off-viewport actions, warnings, and
+  errors.
 
 ## Expected approach
 
-1. Add red verification-system tests, then implement B05 and make it the gate.
-2. Add red snapshot contract and PostgreSQL tests, then remove knowledge
-   persistence reach-through.
-3. Move feature types mechanically, introduce the incident context port for
-   evidence, then add architecture rules.
-4. Move Angular evidence and knowledge behavior into focused panels one at a
-   time with their existing tests.
-5. Add request-context tests, then migrate backend and frontend identity in one
-   coherent slice.
-6. Add failing cross-service contract tests, then the canonical artifact and
-   typed decoder.
-7. Run focused tests after every behavior and the authoritative full gate after
-   every phase.
-8. Review the final diff for scope, secrets, generated output, weakened tests,
-   architecture leakage, and contract drift.
+1. Promote this ready proposal only after explicit owner activation.
+2. Add red schema/semantic/citation tests and lock the immutable `report-v1`
+   contract.
+3. Add red feature-port and architecture tests before report context assembly.
+4. Add red PostgreSQL tests before Flyway V6 and report-owned persistence.
+5. Add the deterministic model port and red lifecycle/transaction tests before
+   the Bedrock Converse adapter.
+6. Add HTTP contract tests before the controller and synthetic operator context
+   behavior.
+7. Add `AWAITING_REVIEW` state/queue tests before the lifecycle change.
+8. Add Angular report-panel and queue tests before presentation behavior.
+9. Run focused scopes, `./verify.ps1`, the authorized provider smoke when
+   credentials are available, and live responsive verification.
+10. Review the final diff for fabricated or dangling citations, tenant leakage,
+    prompt/model payload exposure, non-atomic state, secrets, generated output,
+    weakened tests, and scope drift.
+
+## Likely files or components
+
+- `backend/copilot-api/pom.xml`
+- `backend/copilot-api/src/main/resources/application.yml`
+- `backend/copilot-api/src/main/resources/db/migration/V6__*.sql`
+- `backend/copilot-api/src/main/resources/reports/report-v1.schema.json`
+- `backend/copilot-api/src/main/resources/prompts/report-v1.*`
+- `backend/copilot-api/src/main/java/.../report/`
+- Published snapshot ports under `incident`, `evidence`, and
+  `knowledge.retrieval`
+- `backend/copilot-api/src/test/java/.../report/`
+- `backend/copilot-api/src/test/java/.../FeatureArchitectureTest.java`
+- `frontend/operator-console/src/app/features/investigation-workspace/report-panel/`
+- Queue, detail, investigation lifecycle, and shared incident-status models
+- `.env.example`
+- `README.md`
+- `docs/agent/ARCHITECTURE.md`
+- `docs/agent/DOMAIN.md`
+- `docs/agent/STATUS.md`
+- `docs/agent/tasks/current.md`
+
+Do not modify the operations MCP server, immutable MCP v1 contract, existing
+Flyway migrations, approved synthetic knowledge content, AWS infrastructure, or
+unrelated incident features without an approved task-contract change.
+
+## Validation commands
+
+```powershell
+./verify.ps1 -Scope Backend
+./verify.ps1 -Scope Frontend
+./verify.ps1 -Scope Repository
+./verify.ps1
+```
+
+The unscoped command is the authoritative completion gate. The authorized
+Bedrock smoke command must be documented during implementation and is additive,
+not a replacement for deterministic local and CI coverage.
 
 ## Decisions needed
 
-None. The owner approved the phased plan and its recommended identity,
-toolchain, formatter, snapshot-port, UI-composition, and MCP-contract choices
-on 2026-08-29.
+None. The owner selected the configurable Nova 2 Lite global default and
+accepted `INSUFFICIENT_EVIDENCE` as a reviewable report that transitions to
+`AWAITING_REVIEW`. Model access is verified before claiming provider
+completion; it does not weaken deterministic CI coverage.
 
 ## Progress notes
 
-- 2026-08-29: Reviewed B01-B06 against the current implementation and tests.
-- 2026-08-29: Owner authorized implementation of the phased plan.
-- 2026-08-29: Archived the implementation-complete approved-knowledge task with
-  its external Bedrock verification limitation preserved.
-- 2026-08-29: Implemented B05 with one scoped root PowerShell gate, exact Node
-  and npm pins, Maven Wrapper, Spotless/Palantir formatting, skipped-test
-  enforcement, CI delegation, and a portable Ubuntu wrapper invocation.
-- 2026-08-29: Implemented B02 and B01 with incident/evidence snapshots, an
-  evidence collection context port, feature-owned persistence, four feature
-  packages, and eight passing architecture rules.
-- 2026-08-29: Implemented B03 and B04 with independently loading evidence and
-  knowledge panels, a core investigation lifecycle client, shared SCSS mixins,
-  one frontend context interceptor, and one validated backend header resolver.
-- 2026-08-29: Implemented B06 with an immutable repository-owned MCP v1
-  artifact, shared provider/consumer test resources, live provider contract
-  checks, and an evidence-owned typed payload decoder.
-- 2026-08-29: Repository and frontend verification scopes passed. The aggregate
-  gate compiled both Java services and passed every runnable Java test, then
-  correctly failed its no-skips check because Docker unavailability skipped 31
-  PostgreSQL tests. Responsive browser regression remains pending with the
-  Docker-backed local stack.
-- 2026-08-29: A real Windows PowerShell 5.1 repository-scope regression first
-  failed on the PowerShell-Core-only `$IsWindows` variable. Platform detection
-  was made runtime-neutral, and the same scope then passed under both Windows
-  PowerShell 5.1 and PowerShell Core.
-- 2026-08-29: After the owner restarted Windows, Docker Desktop and
-  Testcontainers recovered. The unscoped root gate passed with zero skipped
-  tests, and live desktop/390-CSS-pixel workspace verification completed the
-  remaining acceptance criteria.
-- 2026-08-29: Reopened B05 after GitHub's Ubuntu repository job exposed that
-  the portability regression test constructed its synthetic Windows wrapper
-  path through the host PowerShell provider. The aggregate `ci` failure is a
-  downstream result of that repository-scope failure.
-- 2026-08-29: Replaced provider-dependent Windows wrapper path joining with
-  deterministic path composition and strengthened the regression with a
-  nonexistent synthetic drive. PowerShell Core, Windows PowerShell 5.1, the
-  repository scope, and the Docker-backed backend scope all passed.
+- 2026-08-29: Repository review selected P2 report generation as the next
+  vertical slice after evidence, retrieval, and B01-B06 boundaries.
+- 2026-08-29: Prepared this proposal and ADR-0006 for owner review. No executable
+  implementation has begun.
+- 2026-08-29: Owner selected
+  `${BEDROCK_CHAT_MODEL:global.amazon.nova-2-lite-v1:0}`, accepted global
+  inference for the synthetic-only slice, and confirmed that a valid
+  `INSUFFICIENT_EVIDENCE` report moves to `AWAITING_REVIEW`. ADR-0006 is accepted
+  and this proposal became ready for explicit activation.
+- 2026-08-29: Owner authorized implementation. Archived the completed B01-B06
+  task and promoted this locked contract to `tasks/current.md` before executable
+  work began.
+- 2026-08-29: Implemented the report domain, exact input-snapshot ports,
+  strict `report-v1` parsing and validation, one-call Nova adapter, append-only
+  Flyway V6 persistence, create/history APIs, and atomic `AWAITING_REVIEW`
+  lifecycle transition through red-green-refactor.
+- 2026-08-29: Added the independent Angular report panel, report history and
+  failure states, adjacent evidence/knowledge references, advisory boundary
+  copy, and review-oriented queue/workspace behavior.
+- 2026-08-29: Completed focused, PostgreSQL, HTTP, architecture, Angular,
+  unscoped repository, desktop, and 390-CSS-pixel verification. No production
+  Bedrock call was made during deterministic or browser verification.
 
 ## Completion evidence
 
-- Red-phase evidence: verification ordering/version/no-skip tests, snapshot
-  composition and ownership tests, architecture rules, Angular panel and
-  interceptor tests, request-context controller tests, and shared MCP contract
-  tests failed for their intended missing behavior before their production
-  slices. The final Maven-wrapper portability test first failed because
-  `Get-MavenWrapperInvocation` did not exist.
-- Green-phase evidence: focused snapshot/PostgreSQL tests passed during B02;
-  eight ArchUnit rules passed; 27 request-context/controller tests passed; ten
-  consumer MCP tests and nine provider tests passed; and the final frontend gate
-  passed 45/45 tests with zero skips.
-- Full verification: `./verify.ps1` passed end to end after the Windows restart:
-  116/116 copilot API tests and 9/9 operations MCP tests passed with zero skips
-  against Docker/Testcontainers PostgreSQL 17.11 and Flyway V1-V5. The same gate
-  passed 45/45 Angular tests with zero skips, npm audit with zero vulnerabilities,
-  Spotless, Prettier, the 306.66 kB production build, Compose validation, and
-  `git diff --check`.
-- Manual verification: the live investigation route composed the investigation
-  shell, observed-evidence panel, and approved-knowledge panel at 1280x720 and
-  390x844. Both states had no document overflow, off-viewport interactive
-  controls, browser warnings, or browser errors; direct-route history,
-  provenance, degraded states, and actions remained visible.
-- Post-completion CI regression: the strengthened Maven-wrapper portability
-  test failed locally on a nonexistent `Z:` drive before the fix, then passed
-  under PowerShell Core and Windows PowerShell 5.1. `./verify.ps1 -Scope
-  Repository` passed the exact failed GitHub scope, and `./verify.ps1 -Scope
-  Backend` passed 116/116 copilot tests and 9/9 MCP-server tests with zero skips.
-- Documentation updated: root and operator-console READMEs, architecture,
-  quality contract, ADR-0003 through ADR-0005, project status, and this task.
-- Remaining limitations: none within B01-B06. The previously documented
-  authorized live Titan V2 smoke check remains external and out of scope.
+- Red-phase evidence: report contract, validation, context, lifecycle,
+  persistence, HTTP, provider-adapter, queue, and Angular component tests were
+  introduced before their corresponding production behavior; the interruption
+  retry scenario also failed before stale `STARTED` terminalization was added.
+- Green-phase evidence: the focused report suite passed 27 tests with zero
+  skips; PostgreSQL/Testcontainers applied Flyway V6 and verified append-only
+  attempts, tenant-safe references, exact snapshots, retry history, atomic
+  lifecycle changes, and tenant isolation.
+- Acceptance-criteria coverage: backend report unit/HTTP/PostgreSQL tests,
+  ten ArchUnit rules, and report/queue/workspace Angular tests cover the locked
+  contract, including safe terminal failures and no client-supplied prompt or
+  source parameters.
+- Full verification: `./verify.ps1` passed on 2026-08-29 with 147/147 copilot
+  API tests, 9/9 operations MCP server tests, and 53/53 Angular tests; all suites
+  reported zero failures, errors, and skips. Spotless, Prettier, the 324.41 kB
+  production build, zero-vulnerability npm audit, Compose validation, and
+  `git diff --check` also passed.
+- Manual verification: a bounded synthetic workspace rendered one evidence
+  panel, one approved-knowledge panel, and one report panel at 1280x720 and
+  390x844. At both sizes document width equaled scroll width, no interactive
+  control was off viewport, keyboard focus had a visible 2.4 px outline, claim
+  sources remained adjacent, and the browser reported no warnings or errors.
+- Documentation updated: README, environment example, architecture, domain,
+  project, roadmap, status, ADR-0006, and this task now describe the implemented
+  model, schema, API, persistence, lifecycle, UI, and smoke path.
+- Remaining limitations: the explicit real Bedrock report smoke against
+  `global.amazon.nova-2-lite-v1:0` was not invoked because this task environment
+  did not provide an explicitly authorized AWS credential/profile and isolated
+  PostgreSQL smoke database. The one-shot smoke command is documented and its
+  safe-log/safe-failure behavior is covered by deterministic tests. Human
+  approval/rejection and the audit timeline remain P3.
