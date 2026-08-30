@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Standalone deterministic synthetic incident generator" />
+    <title>Synthetic Incident Generator</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="separation-banner">
+      <span>STANDALONE TEST SYSTEM</span>
+      <strong>Not part of the operator console</strong>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Synthetic data only · no payment action</p>
+        <h1 id="page-title">Incident Generator</h1>
+        <p class="intro">
+          Create one deterministic payment incident, insert its sparse alert through the copilot intake API,
+          and make its evidence available to the investigation workflow.
+        </p>
+        <button id="generate-incident" class="generate-button" type="button">
+          Generate synthetic incident
+        </button>
+        <p class="button-note">One click creates one new queue item. Nothing is remediated or approved.</p>
+        <p id="generation-status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="generation-result" class="result-card" aria-labelledby="result-title" hidden>
+        <div class="result-heading">
+          <div>
+            <p class="eyebrow">Accepted by copilot intake</p>
+            <h2 id="result-title">Incident added to the Active queue</h2>
+          </div>
+          <span id="queue-status" class="status-chip"></span>
+        </div>
+
+        <dl class="facts">
+          <div><dt>Incident ID</dt><dd id="incident-id"></dd></div>
+          <div><dt>Opaque alert ID</dt><dd id="alert-id"></dd></div>
+          <div><dt>Severity</dt><dd id="severity"></dd></div>
+          <div><dt>Detected</dt><dd id="detected-at"></dd></div>
+          <div><dt>Selected tier</dt><dd id="rarity"></dd></div>
+          <div><dt>Scenario code</dt><dd id="scenario-code"></dd></div>
+        </dl>
+
+        <div class="alert-copy">
+          <h3 id="alert-title"></h3>
+          <p id="alert-description"></p>
+        </div>
+
+        <details id="answer-key" class="answer-key">
+          <summary>Reveal deterministic answer key after review</summary>
+          <p class="warning">Compare this oracle with the exact proposed report before recording a final decision.</p>
+          <dl class="oracle-facts">
+            <div><dt>Expected root cause</dt><dd id="root-cause"></dd></div>
+            <div><dt>Expected disposition</dt><dd id="expected-disposition"></dd></div>
+            <div><dt>Expected confidence</dt><dd id="expected-confidence"></dd></div>
+            <div><dt>Safe recommendation</dt><dd id="recommendation"></dd></div>
+            <div><dt>Decision rule</dt><dd id="decision-rule"></dd></div>
+          </dl>
+          <h3>Required evidence signature</h3>
+          <ul id="required-evidence"></ul>
+        </details>
+      </section>
+    </main>
+  </body>
+</html>

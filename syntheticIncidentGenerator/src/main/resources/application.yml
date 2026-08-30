@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: synthetic-incident-generator
+  ai:
+    mcp:
+      server:
+        name: synthetic-incident-generator
+        version: 0.1.0
+        type: SYNC
+        protocol: STREAMABLE
+        annotation-scanner:
+          enabled: false
+        capabilities:
+          completion: false
+          prompt: false
+          resource: false
+
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+generator:
+  copilot-api-base-url: ${COPILOT_API_BASE_URL:http://localhost:8080}
+  tenant-id: ${SYNTHETIC_TENANT_ID:8b860d80-d17f-4e6b-8c48-af35f26a4d61}
+  request-timeout: ${COPILOT_API_REQUEST_TIMEOUT:5s}

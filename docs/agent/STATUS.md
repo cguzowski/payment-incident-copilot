@@ -107,6 +107,8 @@ Milestone 1 — Establish the operator investigation workflow.
 - Added lifecycle-bound five-second polling to the incident work queue so new
   alerts appear without a manual refresh while visible queue results remain
   stable during background requests and transient failures.
+- Consolidated Windows startup so the root launcher starts and opens the
+  synthetic incident generator last, with no separate generator launcher.
 
 ## In progress
 
@@ -264,6 +266,9 @@ Milestone 1 — Establish the operator investigation workflow.
   build; the authoritative `./verify.ps1` gate passed 182/182 copilot API, 9/9
   MCP server, and 77/77 Angular tests with zero skips, plus all repository
   checks.
+- 2026-08-31: The synthetic generator's launcher regression failed before the
+  consolidation, then its full standalone gate passed 16/16 tests with
+  Spotless. The root launcher's `--CheckOnly` preflight also passed.
 
 ## Update rule
 

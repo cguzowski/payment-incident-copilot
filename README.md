@@ -96,9 +96,10 @@ On Windows, after configuring `.env` and the database, double-click
 `start-local.bat` in the repository root. The launcher checks the local tools
 and database, installs locked frontend dependencies when needed, starts the
 operations MCP server, copilot API, and operator console in separate terminals,
-waits for all three to be ready in dependency order, and opens
-`http://localhost:4200`. Press `Ctrl+C` in each service terminal, or close the
-terminals, to stop the application.
+waits for all three to be ready in dependency order, then starts the synthetic
+incident generator. It opens the operator console at `http://localhost:4200`
+and the generator at `http://localhost:8082`. Press `Ctrl+C` in each service
+terminal, or close the terminals, to stop the application.
 
 Run `start-local.bat --CheckOnly` from a terminal to perform the startup
 preflight without starting any service.

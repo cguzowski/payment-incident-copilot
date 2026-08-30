@@ -1,0 +1,352 @@
+{
+  "scenarios": [
+    {
+      "code": "S001", "rarity": "COMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic card authorization declines reached 31% for five minutes across two gateway routes.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "GATEWAY_TIMEOUT", "count": 47, "secondsBeforeDetection": 110 },
+        { "errorCode": "UPSTREAM_CONNECTION_RESET", "count": 19, "secondsBeforeDetection": 72 }
+      ]},
+      "truth": { "rootCause": "The primary payment gateway became intermittently unreachable, producing a concentrated timeout and connection-reset burst during the alert window.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["GATEWAY_TIMEOUT and UPSTREAM_CONNECTION_RESET both cluster inside the five-minute alert window."], "recommendation": "Escalate the bounded gateway-connectivity evidence for human review; do not retry, reroute, or change gateway configuration automatically." }
+    },
+    {
+      "code": "S002", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic card authorization declines reached 24% for four minutes on the primary route.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "UPSTREAM_CONNECTION_RESET", "count": 58, "secondsBeforeDetection": 91 }
+      ]},
+      "truth": { "rootCause": "The upstream gateway repeatedly reset established authorization connections.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["A sustained UPSTREAM_CONNECTION_RESET cluster overlaps the alert window."], "recommendation": "Escalate the route and observation window to the gateway owner for confirmation; take no automated operational action." }
+    },
+    {
+      "code": "S003", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization declines exceeded the regional baseline by 18 percentage points.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "UPSTREAM_RATE_LIMITED", "count": 83, "secondsBeforeDetection": 65 }
+      ]},
+      "truth": { "rootCause": "The upstream gateway rate-limited the authorization traffic burst.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["UPSTREAM_RATE_LIMITED dominates the same bounded window as the decline spike."], "recommendation": "Ask the gateway-capacity owner to verify the synthetic route limit and traffic shape; do not alter limits automatically." }
+    },
+    {
+      "code": "S004", "rarity": "COMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization declines reached 35% while request volume remained within its normal band.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "DATABASE_CONNECTION_POOL_EXHAUSTED", "count": 42, "secondsBeforeDetection": 54 },
+        { "errorCode": "AUTHORIZATION_STATE_LOOKUP_TIMEOUT", "count": 37, "secondsBeforeDetection": 43 }
+      ]},
+      "truth": { "rootCause": "The authorization service exhausted its database connection pool, causing state lookups to time out.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["Pool-exhaustion and state-lookup timeout observations co-occur inside the alert window."], "recommendation": "Escalate the pool and lookup evidence to the service owner for capacity and leak checks; make no live pool change from the copilot." }
+    },
+    {
+      "code": "S005", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic card declines rose across several issuers without a matching request-volume increase.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "ISSUER_DO_NOT_HONOR_SURGE", "count": 126, "secondsBeforeDetection": 78 }
+      ]},
+      "truth": { "rootCause": "Issuer-originated do-not-honor responses increased across the observed issuer group.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["ISSUER_DO_NOT_HONOR_SURGE is present, while no local transport error is observed."], "recommendation": "Request issuer-response and route breakdown evidence before attributing the increase to one issuer; do not retry payments automatically." }
+    },
+    {
+      "code": "S006", "rarity": "COMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic decline and latency alerts triggered together during a short traffic burst.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "RETRY_BUDGET_EXHAUSTED", "count": 69, "secondsBeforeDetection": 62 },
+        { "errorCode": "GATEWAY_TIMEOUT", "count": 23, "secondsBeforeDetection": 96 }
+      ]},
+      "truth": { "rootCause": "A gateway timeout burst triggered excessive retries that exhausted the authorization retry budget and amplified load.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["GATEWAY_TIMEOUT precedes RETRY_BUDGET_EXHAUSTED within the same observation window."], "recommendation": "Escalate the ordered timeout and retry evidence for human analysis; do not change retry policy automatically." }
+    },
+    {
+      "code": "S007", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines reached 22% as authorization response time crossed its service objective.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "AUTHORIZATION_CPU_SATURATION", "count": 51, "secondsBeforeDetection": 57 },
+        { "errorCode": "REQUEST_DEADLINE_EXCEEDED", "count": 44, "secondsBeforeDetection": 31 }
+      ]},
+      "truth": { "rootCause": "CPU saturation in the authorization service caused request deadlines to expire.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["AUTHORIZATION_CPU_SATURATION and REQUEST_DEADLINE_EXCEEDED overlap the alert window."], "recommendation": "Escalate the synthetic saturation window to the service owner for workload and capacity review; do not scale or restart automatically." }
+    },
+    {
+      "code": "S008", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines increased for one merchant segment while other segments remained near baseline.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "ROUTE_CONFIGURATION_NOT_FOUND", "count": 74, "secondsBeforeDetection": 88 }
+      ]},
+      "truth": { "rootCause": "The affected merchant segment had no matching authorization route configuration.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["ROUTE_CONFIGURATION_NOT_FOUND is isolated to the bounded decline window."], "recommendation": "Request a human comparison with the approved route configuration and recent changes; do not create or modify a route automatically." }
+    },
+    {
+      "code": "S009", "rarity": "COMMON", "severity": "MEDIUM",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines rose on a single gateway route for a six-minute interval.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "GATEWAY_MAINTENANCE_REJECTION", "count": 61, "secondsBeforeDetection": 121 }
+      ]},
+      "truth": { "rootCause": "The selected synthetic gateway route was rejecting authorizations during a maintenance window.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["GATEWAY_MAINTENANCE_REJECTION accounts for the observed route-specific errors."], "recommendation": "Ask the gateway owner to confirm the maintenance interval and expected recovery; do not reroute traffic automatically." }
+    },
+    {
+      "code": "S010", "rarity": "COMMON", "severity": "MEDIUM",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines increased only for one merchant profile after routine onboarding activity.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "MERCHANT_PROFILE_INVALID", "count": 39, "secondsBeforeDetection": 73 }
+      ]},
+      "truth": { "rootCause": "The synthetic merchant profile failed authorization configuration validation.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["MERCHANT_PROFILE_INVALID is the sole service error in the alert window."], "recommendation": "Escalate the opaque merchant-profile reference for human configuration review; do not edit the profile automatically." }
+    },
+    {
+      "code": "S011", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines increased sharply in one low-risk test cohort.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "FRAUD_RULE_REJECTION_SURGE", "count": 92, "secondsBeforeDetection": 69 }
+      ]},
+      "truth": { "rootCause": "A synthetic fraud-rule evaluation surge rejected the affected test cohort.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["FRAUD_RULE_REJECTION_SURGE coincides with the cohort decline alert."], "recommendation": "Request rule-version and decision evidence from the authorized fraud owner; do not disable or modify a rule automatically." }
+    },
+    {
+      "code": "S012", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines and latency rose intermittently on one regional route.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "NETWORK_PACKET_LOSS", "count": 48, "secondsBeforeDetection": 104 },
+        { "errorCode": "UPSTREAM_CONNECTION_RESET", "count": 21, "secondsBeforeDetection": 58 }
+      ]},
+      "truth": { "rootCause": "Packet loss on the regional gateway path caused upstream connections to reset.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["NETWORK_PACKET_LOSS precedes UPSTREAM_CONNECTION_RESET in the same regional window."], "recommendation": "Escalate the regional path and bounded timestamps to network operations; do not change routing automatically." }
+    },
+    {
+      "code": "S013", "rarity": "COMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorizations failed broadly on one configured gateway connection.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "GATEWAY_CREDENTIAL_REJECTED", "count": 117, "secondsBeforeDetection": 83 }
+      ]},
+      "truth": { "rootCause": "The gateway rejected the synthetic service credential used by the affected connection.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["GATEWAY_CREDENTIAL_REJECTED dominates the affected connection's alert window."], "recommendation": "Escalate only the opaque connection identifier to the credential owner; never expose, rotate, or replace credentials from this workflow." }
+    },
+    {
+      "code": "S014", "rarity": "COMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization latency and declines spiked immediately after a cache refresh interval.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "CACHE_STAMPEDE", "count": 55, "secondsBeforeDetection": 97 },
+        { "errorCode": "AUTHORIZATION_STATE_LOOKUP_TIMEOUT", "count": 32, "secondsBeforeDetection": 46 }
+      ]},
+      "truth": { "rootCause": "Concurrent cache misses created a cache stampede and overloaded authorization state lookups.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["CACHE_STAMPEDE precedes AUTHORIZATION_STATE_LOOKUP_TIMEOUT inside the alert window."], "recommendation": "Escalate the ordered cache and lookup evidence for human review; do not flush or reconfigure caches automatically." }
+    },
+
+    {
+      "code": "S101", "rarity": "UNCOMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorizations failed on one encrypted gateway channel while volume remained normal.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "TLS_CERTIFICATE_EXPIRED", "count": 96, "secondsBeforeDetection": 82 },
+        { "errorCode": "TLS_HANDSHAKE_FAILED", "count": 96, "secondsBeforeDetection": 79 }
+      ]},
+      "truth": { "rootCause": "The synthetic gateway channel presented an expired TLS certificate, causing every handshake to fail.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["TLS_CERTIFICATE_EXPIRED and TLS_HANDSHAKE_FAILED have matching counts in the alert window."], "recommendation": "Escalate the opaque connection and certificate-state evidence to the certificate owner; do not install or rotate certificates automatically." }
+    },
+    {
+      "code": "S102", "rarity": "UNCOMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization failures affected all routes using one upstream hostname.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "DNS_RESOLUTION_FAILED", "count": 103, "secondsBeforeDetection": 74 }
+      ]},
+      "truth": { "rootCause": "The authorization service could not resolve the synthetic upstream gateway hostname.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["DNS_RESOLUTION_FAILED spans the same routes and time window as the alert."], "recommendation": "Escalate the bounded resolver evidence to network operations; do not edit DNS or hosts configuration automatically." }
+    },
+    {
+      "code": "S103", "rarity": "UNCOMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization failures appeared across signed requests from one service instance group.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "CLOCK_SKEW_REJECTED", "count": 67, "secondsBeforeDetection": 63 },
+        { "errorCode": "REQUEST_SIGNATURE_INVALID", "count": 67, "secondsBeforeDetection": 59 }
+      ]},
+      "truth": { "rootCause": "Clock skew in one synthetic authorization instance group invalidated timestamp-bound gateway signatures.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["CLOCK_SKEW_REJECTED and REQUEST_SIGNATURE_INVALID match exactly in the alert window."], "recommendation": "Escalate the instance group and bounded timestamps for time-synchronization review; do not change clocks automatically." }
+    },
+    {
+      "code": "S104", "rarity": "UNCOMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization latency crossed its objective before declines rose across tokenized requests.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "HSM_SIGNING_TIMEOUT", "count": 52, "secondsBeforeDetection": 118 },
+        { "errorCode": "REQUEST_DEADLINE_EXCEEDED", "count": 45, "secondsBeforeDetection": 52 }
+      ]},
+      "truth": { "rootCause": "Synthetic HSM signing latency caused authorization request deadlines to expire.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["HSM_SIGNING_TIMEOUT precedes REQUEST_DEADLINE_EXCEEDED in the same window."], "recommendation": "Escalate the HSM partition and timing evidence to the cryptographic-service owner; do not fail over or restart HSMs automatically." }
+    },
+    {
+      "code": "S105", "rarity": "UNCOMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines increased only in a recently enabled test cohort.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "FEATURE_FLAG_ROUTE_MISMATCH", "count": 71, "secondsBeforeDetection": 87 }
+      ]},
+      "truth": { "rootCause": "A synthetic feature-flag assignment selected a route configuration incompatible with the test cohort.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["FEATURE_FLAG_ROUTE_MISMATCH is isolated to the newly enabled cohort."], "recommendation": "Request approved flag and route history from their owners; do not toggle the feature flag automatically." }
+    },
+    {
+      "code": "S106", "rarity": "UNCOMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines rose after one gateway route began returning a new response shape.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "GATEWAY_RESPONSE_SCHEMA_MISMATCH", "count": 88, "secondsBeforeDetection": 76 },
+        { "errorCode": "RESPONSE_MAPPING_FAILED", "count": 88, "secondsBeforeDetection": 70 }
+      ]},
+      "truth": { "rootCause": "The gateway response schema changed incompatibly and the authorization mapper rejected the new payload shape.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["GATEWAY_RESPONSE_SCHEMA_MISMATCH and RESPONSE_MAPPING_FAILED have identical counts."], "recommendation": "Escalate schema-version metadata and the bounded failure counts for compatibility review; do not deploy or remap responses automatically." }
+    },
+    {
+      "code": "S107", "rarity": "UNCOMMON", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines oscillated between two regions during a gateway impairment.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "REGIONAL_FAILOVER_LOOP", "count": 34, "secondsBeforeDetection": 127 },
+        { "errorCode": "GATEWAY_TIMEOUT", "count": 29, "secondsBeforeDetection": 68 }
+      ]},
+      "truth": { "rootCause": "Competing regional health decisions created a failover loop while the gateway was timing out.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["REGIONAL_FAILOVER_LOOP begins before the concentrated GATEWAY_TIMEOUT observations."], "recommendation": "Escalate both regions' bounded health evidence for human routing review; do not force failover automatically." }
+    },
+    {
+      "code": "S108", "rarity": "UNCOMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines rose during a concentrated burst of concurrent authorization updates.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "DATABASE_LOCK_TIMEOUT", "count": 46, "secondsBeforeDetection": 61 },
+        { "errorCode": "AUTHORIZATION_STATE_UPDATE_FAILED", "count": 41, "secondsBeforeDetection": 48 }
+      ]},
+      "truth": { "rootCause": "Database lock contention caused authorization state updates to time out.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["DATABASE_LOCK_TIMEOUT and AUTHORIZATION_STATE_UPDATE_FAILED overlap the alert window."], "recommendation": "Escalate the synthetic lock and update counts for query and transaction review; do not terminate sessions automatically." }
+    },
+    {
+      "code": "S109", "rarity": "UNCOMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines increased for one issuer range after a scheduled reference-data refresh.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "BIN_ROUTE_TABLE_STALE", "count": 63, "secondsBeforeDetection": 95 },
+        { "errorCode": "ISSUER_ROUTE_NOT_FOUND", "count": 63, "secondsBeforeDetection": 89 }
+      ]},
+      "truth": { "rootCause": "A stale synthetic BIN routing table left the affected issuer range without a route.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["BIN_ROUTE_TABLE_STALE and ISSUER_ROUTE_NOT_FOUND have matching counts for the affected range."], "recommendation": "Request approved reference-data version and refresh evidence; do not reload or edit routing data automatically." }
+    },
+    {
+      "code": "S110", "rarity": "UNCOMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic declines increased on one issuer connection while transport health remained normal.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "MALFORMED_ISSUER_RESPONSE", "count": 57, "secondsBeforeDetection": 66 },
+        { "errorCode": "RESPONSE_MAPPING_FAILED", "count": 57, "secondsBeforeDetection": 62 }
+      ]},
+      "truth": { "rootCause": "The issuer connection returned malformed synthetic responses that could not be mapped.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["MALFORMED_ISSUER_RESPONSE and RESPONSE_MAPPING_FAILED match within the window."], "recommendation": "Escalate bounded response-category metadata to the issuer-integration owner; do not expose raw payloads or modify mappings automatically." }
+    },
+    {
+      "code": "S111", "rarity": "UNCOMMON", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic tokenized authorization declines rose, but one observability partition did not respond.",
+      "evidence": { "availability": "PARTIAL", "statusDetail": "One of two synthetic observability partitions did not respond.", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "TOKEN_VAULT_TIMEOUT", "count": 28, "secondsBeforeDetection": 84 }
+      ]},
+      "truth": { "rootCause": "The available partition indicates token-vault latency, but the missing partition prevents a complete root-cause conclusion.", "expectedDisposition": "INSUFFICIENT_EVIDENCE", "expectedConfidence": "LOW", "requiredEvidence": ["TOKEN_VAULT_TIMEOUT is observed only in partial evidence; one partition is explicitly missing."], "recommendation": "Preserve the partial status and collect the missing partition or independent token-vault evidence before proposing a cause." }
+    },
+
+    {
+      "code": "S201", "rarity": "RARE", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization behavior diverged between otherwise equivalent service instances.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "CONFIG_VERSION_SPLIT_BRAIN", "count": 49, "secondsBeforeDetection": 105 },
+        { "errorCode": "ROUTE_DECISION_DIVERGENCE", "count": 44, "secondsBeforeDetection": 53 }
+      ]},
+      "truth": { "rootCause": "Two authorization instance groups simultaneously used incompatible synthetic routing configuration versions.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["CONFIG_VERSION_SPLIT_BRAIN precedes ROUTE_DECISION_DIVERGENCE in the same window."], "recommendation": "Escalate the opaque instance groups and configuration versions for human reconciliation; do not force configuration convergence automatically." }
+    },
+    {
+      "code": "S202", "rarity": "RARE", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization failures affected one external network path across otherwise healthy services.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "BGP_ROUTE_UNREACHABLE", "count": 81, "secondsBeforeDetection": 92 },
+        { "errorCode": "GATEWAY_TIMEOUT", "count": 75, "secondsBeforeDetection": 47 }
+      ]},
+      "truth": { "rootCause": "An external route withdrawal made the synthetic gateway network path unreachable.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["BGP_ROUTE_UNREACHABLE precedes the GATEWAY_TIMEOUT cluster."], "recommendation": "Escalate path and timestamp evidence to network operations for independent route confirmation; do not alter routing automatically." }
+    },
+    {
+      "code": "S203", "rarity": "RARE", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorizations failed on a certificate-validating gateway channel.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "OCSP_RESPONDER_UNAVAILABLE", "count": 64, "secondsBeforeDetection": 101 },
+        { "errorCode": "CERTIFICATE_STATUS_CHECK_FAILED", "count": 64, "secondsBeforeDetection": 95 }
+      ]},
+      "truth": { "rootCause": "The certificate status responder was unavailable, so the synthetic channel failed closed during certificate validation.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["OCSP_RESPONDER_UNAVAILABLE and CERTIFICATE_STATUS_CHECK_FAILED have identical counts."], "recommendation": "Escalate validation-path evidence to the certificate owner; do not bypass status checking automatically." }
+    },
+    {
+      "code": "S204", "rarity": "RARE", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic signed authorizations failed across several service instances at once.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "HSM_QUORUM_LOST", "count": 38, "secondsBeforeDetection": 113 },
+        { "errorCode": "HSM_SIGNING_TIMEOUT", "count": 35, "secondsBeforeDetection": 55 }
+      ]},
+      "truth": { "rootCause": "The synthetic HSM cluster lost partition quorum and could not complete authorization signing operations.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["HSM_QUORUM_LOST precedes HSM_SIGNING_TIMEOUT during the alert window."], "recommendation": "Escalate partition identifiers and bounded counts to the HSM owner; do not fail over, restart, or alter quorum automatically." }
+    },
+    {
+      "code": "S205", "rarity": "RARE", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic recurring-payment authorizations failed for one date-sensitive test cohort.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "CALENDAR_RULE_EVALUATION_FAILED", "count": 43, "secondsBeforeDetection": 77 },
+        { "errorCode": "RECURRING_AUTHORIZATION_REJECTED", "count": 43, "secondsBeforeDetection": 69 }
+      ]},
+      "truth": { "rootCause": "A date-boundary defect in the synthetic recurring-authorization rule rejected the affected cohort.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["CALENDAR_RULE_EVALUATION_FAILED and RECURRING_AUTHORIZATION_REJECTED match for the cohort."], "recommendation": "Escalate the opaque cohort and bounded rule failure for human defect review; do not change rules or replay payments automatically." }
+    },
+    {
+      "code": "S206", "rarity": "RARE", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic signed authorization requests stalled across one isolated runtime group.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "SECURE_RANDOM_SOURCE_BLOCKED", "count": 31, "secondsBeforeDetection": 119 },
+        { "errorCode": "REQUEST_SIGNATURE_TIMEOUT", "count": 29, "secondsBeforeDetection": 51 }
+      ]},
+      "truth": { "rootCause": "The isolated runtime group's secure random source blocked, delaying request signatures beyond their deadlines.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["SECURE_RANDOM_SOURCE_BLOCKED precedes REQUEST_SIGNATURE_TIMEOUT."], "recommendation": "Escalate runtime-group and timing evidence to platform security; do not weaken randomness or restart instances automatically." }
+    },
+    {
+      "code": "S207", "rarity": "RARE", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization failures affected one merchant test cohort with otherwise valid profiles.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "UNICODE_NORMALIZATION_FAILURE", "count": 36, "secondsBeforeDetection": 81 },
+        { "errorCode": "MERCHANT_PROFILE_PARSE_FAILED", "count": 36, "secondsBeforeDetection": 75 }
+      ]},
+      "truth": { "rootCause": "A Unicode normalization defect prevented the affected synthetic merchant profiles from being parsed consistently.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["UNICODE_NORMALIZATION_FAILURE and MERCHANT_PROFILE_PARSE_FAILED have matching counts."], "recommendation": "Escalate the opaque cohort and parser categories for defect review; do not expose profile data or alter normalization automatically." }
+    },
+    {
+      "code": "S208", "rarity": "RARE", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic gateway connections failed only through one resolver policy path.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "DNS_SECURITY_POLICY_BLOCK", "count": 72, "secondsBeforeDetection": 86 },
+        { "errorCode": "DNS_RESOLUTION_FAILED", "count": 72, "secondsBeforeDetection": 80 }
+      ]},
+      "truth": { "rootCause": "The synthetic resolver's security policy blocked the gateway answer and returned resolution failures.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["DNS_SECURITY_POLICY_BLOCK and DNS_RESOLUTION_FAILED match exactly on the affected path."], "recommendation": "Escalate policy and resolver metadata for security review; do not bypass validation or edit resolver policy automatically." }
+    },
+    {
+      "code": "S209", "rarity": "RARE", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic signed authorizations failed after a cryptographic partition failover event.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "HSM_FIRMWARE_PROTOCOL_MISMATCH", "count": 41, "secondsBeforeDetection": 108 },
+        { "errorCode": "HSM_SIGNING_FAILED", "count": 39, "secondsBeforeDetection": 49 }
+      ]},
+      "truth": { "rootCause": "The failover HSM partition used an incompatible synthetic firmware protocol and rejected signing requests.", "expectedDisposition": "PROPOSED", "expectedConfidence": "HIGH", "requiredEvidence": ["HSM_FIRMWARE_PROTOCOL_MISMATCH precedes HSM_SIGNING_FAILED after failover."], "recommendation": "Escalate partition and protocol-version evidence to the HSM owner; do not change firmware or failback automatically." }
+    },
+    {
+      "code": "S210", "rarity": "RARE", "severity": "CRITICAL",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization availability oscillated across instances despite partial upstream recovery.",
+      "evidence": { "availability": "AVAILABLE", "serviceName": "payment-authorization", "errors": [
+        { "errorCode": "CIRCUIT_BREAKER_SYNC_STORM", "count": 53, "secondsBeforeDetection": 102 },
+        { "errorCode": "UPSTREAM_CALL_REJECTED", "count": 49, "secondsBeforeDetection": 44 }
+      ]},
+      "truth": { "rootCause": "Synchronized circuit-breaker transitions caused authorization instances to reject upstream calls in lockstep.", "expectedDisposition": "PROPOSED", "expectedConfidence": "MEDIUM", "requiredEvidence": ["CIRCUIT_BREAKER_SYNC_STORM precedes UPSTREAM_CALL_REJECTED during oscillation."], "recommendation": "Escalate breaker-state and timing evidence for resilience review; do not reset or retune breakers automatically." }
+    },
+    {
+      "code": "S211", "rarity": "RARE", "severity": "HIGH",
+      "title": "Authorization decline rate above threshold",
+      "description": "Synthetic authorization declines rose, but the observability source could not be reached.",
+      "evidence": { "availability": "UNAVAILABLE", "statusDetail": "Synthetic observability is unavailable for this scenario.", "serviceName": null, "errors": [] },
+      "truth": { "rootCause": "The incident root cause is intentionally not determinable because the only configured evidence source is unavailable.", "expectedDisposition": "INSUFFICIENT_EVIDENCE", "expectedConfidence": "LOW", "requiredEvidence": ["The evidence result is explicitly UNAVAILABLE and contains no observations."], "recommendation": "Preserve the unavailable evidence state and retry or obtain an independent approved source before proposing a cause." }
+    }
+  ]
+}
