@@ -19,6 +19,8 @@ spring:
     deserialization:
       fail-on-unknown-properties: true
   ai:
+    retry:
+      max-attempts: 1
     model:
       chat: ${AI_MODEL_CHAT:none}
       embedding: ${AI_MODEL_EMBEDDING:none}
@@ -62,6 +64,7 @@ management:
 
 app:
   report:
+    generation-timeout: ${REPORT_GENERATION_TIMEOUT:2m}
     smoke-test:
       enabled: false
   knowledge:

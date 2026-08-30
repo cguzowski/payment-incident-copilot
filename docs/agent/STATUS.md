@@ -100,16 +100,21 @@ Milestone 1 — Establish the operator investigation workflow.
 
 ## In progress
 
+- A bounded report-generation defect fix is active after provider retries and a
+  missing total deadline exposed an indefinitely busy Generate action. The
+  provider-neutral implementation is applied; Bedrock branch verification
+  remains pending.
 - Authorized live Bedrock smoke verification remains pending for the completed
   P1 embedding and P2 report slices.
 
 ## Next
 
-1. Prepare P3 human decision and audit-trail scope for owner review; do not
-   begin implementation without activation.
+1. Complete and propagate the bounded report-generation defect fix.
 2. Run the documented one-shot embedding and report smokes in an explicitly
    authorized AWS environment with an isolated PostgreSQL smoke database.
-3. Add further evidence tools only after report-quality evaluation demonstrates
+3. Prepare P3 human decision and audit-trail scope for owner review; do not
+   begin implementation without activation.
+4. Add further evidence tools only after report-quality evaluation demonstrates
    a concrete gap.
 
 ## Blockers

@@ -1,125 +1,143 @@
-# Task: Safeguard local Bedrock API-key access
+# Task: Bound report generation and recover every terminal UI state
 
-Status: Complete
+Status: In progress
 Created: 2026-08-30
 Owner: Christopher Guzowski
 
 ## Goal
 
-Allow the local copilot API to use the operator's externally stored Amazon
-Bedrock API key without copying, rendering, logging, persisting, or otherwise
-placing the credential value anywhere in the repository.
+Prevent a report-generation request from remaining active indefinitely when an
+AI provider is unavailable, retrying, or stalled, while preserving an auditable
+terminal attempt and a retryable operator experience.
 
-The owner authorized implementation on 2026-08-30. This is the active, locked
-behavioral contract.
+The owner authorized this defect fix on 2026-08-30 and requested that it be
+applied to every active local branch. This is the active, locked behavioral
+contract.
+
+## User story
+
+As a payment operations analyst, I want every report-generation request to
+finish in a visible terminal state within a bounded time, so the Generate
+button never remains busy indefinitely and I can understand and retry failures.
 
 ## Chosen contract
 
-- The credential value remains in the Windows environment under
-  `AWS_BEARER_TOKEN_BEDROCK`; it is never stored in `.env`, YAML, Java source,
-  scripts, documentation, command arguments, test fixtures, or generated files.
-- Local startup may resolve the variable from Process, User, or Machine scope,
-  but it must never print or return the value. Only the copilot API child process
-  receives it; the MCP server and Angular process do not.
-- The AWS SDK for Java owns bearer authentication. Application code does not
-  construct an `Authorization` header or bind the key as a Spring property.
-- Local startup rejects any `AWS_BEARER_TOKEN_BEDROCK` assignment in the ignored
-  repository `.env` before loading that file.
-- Repository verification scans tracked and non-ignored untracked files, plus
-  the local `.env` guard, for likely Bedrock bearer tokens. Failures identify a
-  file but never print the matched credential or line content.
-- Deterministic tests use synthetic token-shaped strings only. No test or normal
-  verification command calls Bedrock.
+- A report model invocation has one configurable total wall-clock deadline,
+  defaulting to two minutes through `REPORT_GENERATION_TIMEOUT`.
+- When the deadline expires, the provider task is cancelled and the existing
+  report attempt is completed as `TIMED_OUT`; no late model result is parsed or
+  persisted.
+- Spring AI does not perform hidden retries inside one auditable operator
+  attempt. A refused or unavailable provider completes that attempt as
+  `UNAVAILABLE`; a new provider attempt requires an explicit operator retry.
+- The frontend clears its busy state for every returned terminal status and
+  every HTTP error while preserving prior attempts and the existing error
+  distinctions.
+- The report HTTP schema, persistence schema, evidence citations, model
+  metadata, and incident lifecycle contract do not change.
+- The verified code fix is applied to `feature/local-ollama`, `main`, and
+  `future-prod-env-AWS-Bedrock`, with provider-specific code otherwise
+  unchanged.
 
 ## In scope
 
-- Local Windows launcher environment handling.
-- Repository credential-safety verification and PowerShell regression tests.
-- Safe local setup documentation and factual project status.
+- A provider-neutral total deadline around report model invocation.
+- Explicit Spring AI retry configuration consistent with one auditable model
+  request per operator attempt.
+- Backend tests for success, provider exceptions, interruption, and a stalled
+  invocation that exceeds the deadline.
+- Frontend tests for all terminal report responses and generation HTTP errors.
+- Local configuration and operational documentation for the deadline.
+- Sequential propagation and verification across all active local branches.
 
 ## Out of scope
 
-- Copying or relocating the owner's real key.
-- Printing, measuring, hashing, validating, or making a network request with the
-  real key during implementation.
-- AWS deployment authentication, IAM-role selection, key rotation automation,
-  or changing the P2 report contract.
-- Removing unrelated user-owned untracked files.
+- Installing Ollama, downloading models, or making a live model call in the
+  automated suite.
+- Changing the report schema, prompt, source-validation rules, persistence
+  schema, or incident lifecycle.
+- Adding background generation, polling, job queues, or a new dependency.
+- Changing evidence collection, approved-knowledge retrieval, or MCP behavior.
+- Pushing branches or opening pull requests.
+
+## Constraints
+
+- Follow red-green-refactor for the executable behavior.
+- Keep automated tests deterministic, bounded, and network-free.
+- Preserve the difference between provider unavailability, provider timeout,
+  malformed output, and an HTTP request failure.
+- Do not persist a late result after the operator attempt has timed out.
+- Preserve all existing audit metadata and synthetic-data guardrails.
 
 ## Acceptance criteria
 
-- [x] The launcher resolves an externally stored Bedrock bearer token from
-      Process, User, or Machine scope without printing its value.
-- [x] Only the copilot API child receives the token during launcher startup.
-- [x] A token assignment in repository `.env` fails before `.env` import.
-- [x] Repository verification rejects token-shaped content without echoing it.
-- [x] Spring configuration and application code contain no credential mapping or
-      manually constructed bearer header.
-- [x] The current key value is absent from tracked, staged, and non-ignored
-      untracked project files, and no protected value is added by this task.
-- [x] Focused PowerShell tests and repository verification pass.
-- [x] Documentation explains Windows environment setup, process refresh, expiry,
-      rotation, and the prohibition on repository storage without showing a
-      literal key assignment.
+- [x] Local configuration sets `spring.ai.retry.max-attempts` to one and a
+      two-minute, environment-overridable report-generation deadline.
+- [x] A model call that does not complete before the deadline is cancelled and
+      the attempt is persisted and returned as `TIMED_OUT`.
+- [x] A provider exception before the deadline retains its existing
+      `UNAVAILABLE` or `TIMED_OUT` mapping, and successful output is unchanged.
+- [x] No response produced after the deadline is parsed, persisted, or allowed
+      to transition the incident lifecycle.
+- [x] The Generate button leaves its busy state for `AVAILABLE`, `UNAVAILABLE`,
+      `TIMED_OUT`, `MALFORMED`, conflict, not-found, and other HTTP errors.
+- [x] Previous report attempts remain visible throughout generation and after
+      every terminal outcome.
+- [x] Focused backend and frontend regressions and the authoritative repository
+      verification pass with zero skipped tests.
+- [ ] The verified fix is present on all three active local branches.
 
 ## Test plan
 
-- `selectsProcessThenUserThenMachineScopeWithoutReturningTheToken`
-- `rejectsBedrockBearerTokenAssignmentInDotEnvWithoutEchoingValue`
-- `rejectsTokenShapedRepositoryContentWithoutEchoingValue`
-- `includesCredentialSafetyInRepositoryAndFullVerificationPlans`
-- Static review confirms the token variable is absent from `.env.example` and
-  application configuration and that only the API launch inherits the variable.
+- `configuresOneAuditableModelCallAndABoundedReportDeadline`
+- `returnsSuccessfulOutputBeforeTheDeadline`
+- `preservesProviderFailureClassificationBeforeTheDeadline`
+- `cancelsAStalledModelCallAtTheTotalDeadline`
+- `doesNotParseOrPersistALateResponseAfterTimeout`
+- `clearsGeneratingForEveryTerminalGenerationResponse`
+- `clearsGeneratingForEveryGenerationHttpErrorAndPreservesHistory`
+- Existing report model, generation service, HTTP/PostgreSQL, Angular, and
+  aggregate verification suites.
 
 ## Validation commands
 
 ```powershell
-./scripts/verification/Verification.Tests.ps1
-./verify.ps1 -Scope Repository
-git diff --check
+./mvnw.cmd -pl backend/copilot-api -Dtest=AiModelConfigurationTest,ReportModelCallExecutorTest,ReportGenerationServiceTest test
+Push-Location frontend/operator-console; npm test -- --watch=false; Pop-Location
+./verify.ps1
 ```
 
 ## Decisions needed
 
-None. The owner explicitly selected a 30-day Bedrock API key stored in the
-machine environment and required repository-local secret storage to be
-prohibited.
+None. The owner requested the bounded failure fix across all active branches;
+the two-minute default remains configurable for slower local hardware.
 
 ## Progress notes
 
-- 2026-08-30: Owner authorized secure local access to the externally stored
-  `AWS_BEARER_TOKEN_BEDROCK` variable and prohibited exposing the value in the
-  project directory or GitHub.
-- 2026-08-30: Confirmed AWS SDK for Java 2.41.22 contains the Bedrock-specific
-  environment-token setting and automatically prefers HTTP bearer
-  authentication when the variable is present.
-- 2026-08-30: Added a launcher boundary that resolves Process, User, then Machine
-  scope and exposes the token only while starting the copilot API child. The MCP
-  server and Angular child start with the token cleared.
-- 2026-08-30: Added pre-import `.env` rejection and a no-echo repository
-  credential gate covering tracked, staged, non-ignored untracked files, and the
-  ignored root `.env*` variants other than `.env.example`.
+- 2026-08-30: The supplied log proves Ollama refused the connection while
+  Spring AI was on retry count two. The exact Spring AI 2.0 runtime defaults to
+  ten attempts with exponential backoff from two seconds to three minutes.
+- 2026-08-30: The frontend already clears its busy flag when the request emits
+  or errors, so the indefinite button is caused by a request that never reaches
+  a terminal event. The current backend has provider-exception mapping but no
+  total invocation deadline.
+- 2026-08-30: Added a provider-neutral virtual-thread call boundary with a
+  configurable two-minute total deadline. Deadline expiry interrupts the model
+  task and completes the already-persisted attempt as `TIMED_OUT`; Spring AI
+  hidden retries are disabled so connection refusal maps promptly to one
+  `UNAVAILABLE` attempt.
+- 2026-08-30: Added backend regressions for successful and classified failures,
+  task cancellation, and discarding a late response, plus frontend regressions
+  for all terminal responses and 409/404/other HTTP failures.
+- 2026-08-30: The authoritative `./verify.ps1` gate passed on
+  `feature/local-ollama`: 154 copilot API, 9 operations MCP server, and 60
+  Angular tests with zero failures or skips, plus Spotless, Prettier, the
+  production build, Compose validation, and `git diff --check`.
 
 ## Completion evidence
 
-- Red-phase evidence: `Verification.Tests.ps1` failed because the repository and
-  aggregate plans lacked `credential-safety`; `LocalEnvironment.Tests.ps1`
-  failed because the local environment module did not exist.
-- Green-phase evidence: `Verification.Tests.ps1` passed seven tests and
-  `LocalEnvironment.Tests.ps1` passed both token-scope/API-inheritance and
-  `.env`-rejection tests using synthetic values only. The ignored `.env.local`
-  regression failed before broader scanning and passed afterward without
-  echoing its synthetic value.
-- Verification: `./verify.ps1` passed 147 copilot API tests, 9 operations MCP
-  tests, and 53 Angular tests with zero failures, errors, or skips. Spotless,
-  Prettier, the production build, zero-vulnerability npm audit, Compose
-  validation, `credential-safety`, and `git diff --check` also passed.
-- Credential review: all edited PowerShell files parsed with zero errors;
-  `.env` remains Git-ignored; application configuration and Java source contain
-  zero bearer-variable mappings or manually constructed bearer headers; the
-  repository credential gate passed without printing candidate content.
-- Remaining limitations: the current Codex process cannot see the variable in
-  Process, User, or Machine scope, so no live Bedrock request or byte-for-byte
-  comparison was performed. A fresh process that inherits the variable is
-  required for live use. The user-owned root `package.json` and
-  `package-lock.json` were preserved unchanged and passed the credential scan.
+Pending implementation and verification.
+
+## Remaining limitations
+
+Pending implementation and verification.

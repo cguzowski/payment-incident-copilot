@@ -288,6 +288,13 @@ citation validation as the HTTP workflow. It logs only the model ID, schema
 version, disposition, and validation result—not the prompt, source content,
 model payload, credentials, or provider error details.
 
+Each Generate action makes one auditable provider call. Report generation has
+a two-minute total deadline so provider retries or a stalled model cannot leave
+the operator console busy indefinitely. An unavailable provider is recorded as
+`UNAVAILABLE`; exceeding the deadline is recorded as `TIMED_OUT`, and either
+outcome can be retried explicitly. Slower environments can set the positive
+Spring duration `REPORT_GENERATION_TIMEOUT` (for example `3m`) in `.env`.
+
 Run the Angular operator console in another terminal:
 
 ```bash
