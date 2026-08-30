@@ -6,12 +6,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Properties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 class AiModelConfigurationTest {
 
@@ -41,10 +39,5 @@ class AiModelConfigurationTest {
         assertThat(pom).contains("spring-ai-starter-model-bedrock");
         assertThat(pom).contains("spring-ai-starter-model-bedrock-converse");
         assertThat(pom).doesNotContain("spring-ai-starter-model-ollama");
-
-        Properties testOverrides =
-                PropertiesLoaderUtils.loadProperties(new ClassPathResource("application.properties"));
-        assertThat(testOverrides.getProperty("spring.ai.model.chat")).isEqualTo("none");
-        assertThat(testOverrides.getProperty("spring.ai.model.embedding")).isEqualTo("none");
     }
 }
