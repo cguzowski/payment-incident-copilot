@@ -1,6 +1,6 @@
 # Task: Bound report generation and recover every terminal UI state
 
-Status: In progress
+Status: Completed
 Created: 2026-08-30
 Owner: Christopher Guzowski
 
@@ -85,7 +85,7 @@ button never remains busy indefinitely and I can understand and retry failures.
       every terminal outcome.
 - [x] Focused backend and frontend regressions and the authoritative repository
       verification pass with zero skipped tests.
-- [ ] The verified fix is present on all three active local branches.
+- [x] The verified fix is present on all three active local branches.
 
 ## Test plan
 
@@ -133,11 +133,36 @@ the two-minute default remains configurable for slower local hardware.
   `feature/local-ollama`: 154 copilot API, 9 operations MCP server, and 60
   Angular tests with zero failures or skips, plus Spotless, Prettier, the
   production build, Compose validation, and `git diff --check`.
+- 2026-08-30: The verified implementation was committed on
+  `feature/local-ollama` (`d32abe4`), propagated to `main` (`e54e893`) with an
+  identical tree, and adapted without changing the Bedrock provider or
+  credential guardrails on `future-prod-env-AWS-Bedrock` (`453ae3a` and
+  `1970afc`).
+- 2026-08-30: A clean focused Bedrock run passed 12/12 configuration, call
+  boundary, service, and model tests. The branch's authoritative
+  `./verify.ps1` gate then passed 152 copilot API, 9 operations MCP server, and
+  60 Angular tests with zero failures or skips, including credential safety,
+  formatting, build, audit, Compose, and diff checks.
 
 ## Completion evidence
 
-Pending implementation and verification.
+- Red: the focused copilot API test run failed compilation because the new
+  `ReportModelCallExecutor` boundary did not yet exist.
+- Green: focused local tests passed 10/10, the clean Bedrock-focused tests
+  passed 12/12, and the frontend regression suite passed 60/60.
+- The full local-provider and Bedrock-provider repository gates passed with
+  zero skipped tests. `main` has the same Git tree as the fully verified local
+  provider branch.
+- The new tests prove deadline cancellation, provider-failure classification,
+  successful output, discarded late output, every terminal report status, and
+  every existing generation HTTP-error path.
 
 ## Remaining limitations
 
-Pending implementation and verification.
+- No live Ollama or Bedrock request was made; the automated checks use bounded,
+  deterministic doubles. Ollama must be running with the configured models for
+  a local request to succeed; otherwise the attempt now terminates as
+  `UNAVAILABLE`.
+- Interrupting the local provider task prevents any late response from being
+  parsed or persisted, but provider-side work already accepted before
+  cancellation may not itself be cancellable by the remote service.

@@ -97,24 +97,23 @@ Milestone 1 — Establish the operator investigation workflow.
   it only to the copilot API child, rejects repository `.env` storage, and runs
   a no-echo credential scan—including ignored root `.env*` variants—in
   repository and aggregate verification.
+- Bounded every report model invocation with a configurable two-minute total
+  deadline, disabled hidden Spring AI retries inside one auditable attempt, and
+  verified that the report panel recovers from every terminal response and HTTP
+  error while preserving attempt history.
 
 ## In progress
 
-- A bounded report-generation defect fix is active after provider retries and a
-  missing total deadline exposed an indefinitely busy Generate action. The
-  provider-neutral implementation is applied; Bedrock branch verification
-  remains pending.
 - Authorized live Bedrock smoke verification remains pending for the completed
   P1 embedding and P2 report slices.
 
 ## Next
 
-1. Complete and propagate the bounded report-generation defect fix.
-2. Run the documented one-shot embedding and report smokes in an explicitly
+1. Run the documented one-shot embedding and report smokes in an explicitly
    authorized AWS environment with an isolated PostgreSQL smoke database.
-3. Prepare P3 human decision and audit-trail scope for owner review; do not
+2. Prepare P3 human decision and audit-trail scope for owner review; do not
    begin implementation without activation.
-4. Add further evidence tools only after report-quality evaluation demonstrates
+3. Add further evidence tools only after report-quality evaluation demonstrates
    a concrete gap.
 
 ## Blockers
@@ -223,6 +222,12 @@ Milestone 1 — Establish the operator investigation workflow.
   API tests, 9/9 operations MCP tests, and 53/53 Angular tests with zero failures,
   errors, or skips. Spotless, Prettier, the 324.41 kB production build,
   zero-vulnerability npm audit, Compose validation, and `git diff --check` also
+  passed.
+- 2026-08-30: The bounded-generation clean focused suite passed 12/12 tests,
+  then the authoritative `./verify.ps1` gate passed 152/152 copilot API, 9/9
+  operations MCP server, and 60/60 Angular tests with zero failures, errors, or
+  skips. Credential safety, Spotless, Prettier, the 324.41 kB production build,
+  zero-vulnerability npm audit, Compose validation, and `git diff --check` all
   passed.
 
 ## Update rule
