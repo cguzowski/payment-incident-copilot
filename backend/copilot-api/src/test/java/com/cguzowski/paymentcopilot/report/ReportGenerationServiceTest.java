@@ -15,6 +15,7 @@ import com.cguzowski.paymentcopilot.incident.ReportInvestigationSnapshot;
 import com.cguzowski.paymentcopilot.knowledge.retrieval.ReportKnowledgeChunk;
 import com.cguzowski.paymentcopilot.knowledge.retrieval.ReportKnowledgeSnapshot;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -44,12 +45,14 @@ class ReportGenerationServiceTest {
     private final ReportOutputParser parser = mock(ReportOutputParser.class);
     private final ReportIdentifierGenerator identifiers = mock(ReportIdentifierGenerator.class);
     private final Clock clock = Clock.fixed(NOW, ZoneOffset.UTC);
+    private final ReportModelCallExecutor modelCalls = new ReportModelCallExecutor(Duration.ofSeconds(1));
 
     private ReportGenerationService service;
 
     @BeforeEach
     void setUp() {
-        service = new ReportGenerationService(contexts, persistence, model, prompts, parser, identifiers, clock);
+        service = new ReportGenerationService(
+                contexts, persistence, model, modelCalls, prompts, parser, identifiers, clock);
     }
 
     @Test
@@ -128,6 +131,45 @@ class ReportGenerationServiceTest {
         assertThat(response.report()).isNull();
         verify(persistence).completeFailure(any());
         verify(parser, never()).parse(any(), any());
+        verify(persistence, never()).completeAvailable(any());
+    }
+
+    @Test
+    void doesNotParseOrPersistALateResponseAfterTimeout() {
+        ReportGenerationContext context = context("INVESTIGATING");
+        ReportPrompt prompt =
+                new ReportPrompt("prompt", "report-prompt/v1", "a".repeat(64), "report-v1", "b".repeat(64));
+        when(contexts.find(TENANT_ID, INVESTIGATION_ID)).thenReturn(Optional.of(context));
+        when(identifiers.next()).thenReturn(ATTEMPT_ID);
+        when(prompts.build(context)).thenReturn(prompt);
+        when(persistence.start(any())).thenReturn(true);
+        when(model.modelId()).thenReturn("qwen3.5:4b");
+        when(model.generate("prompt")).thenAnswer(invocation -> {
+            try {
+                new java.util.concurrent.CountDownLatch(1).await();
+                throw new AssertionError("The stalled model should be cancelled.");
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+                return new ReportModelResponse("late output", "late-request");
+            }
+        });
+        when(persistence.completeFailure(any())).thenReturn(true);
+        service = new ReportGenerationService(
+                contexts,
+                persistence,
+                model,
+                new ReportModelCallExecutor(Duration.ofMillis(100)),
+                prompts,
+                parser,
+                identifiers,
+                clock);
+
+        ReportGenerationResponse response = service.generate(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
+
+        assertThat(response.status()).isEqualTo(ReportGenerationStatus.TIMED_OUT);
+        assertThat(response.report()).isNull();
+        verify(parser, never()).parse(any(), any());
+        verify(persistence).completeFailure(any());
         verify(persistence, never()).completeAvailable(any());
     }
 

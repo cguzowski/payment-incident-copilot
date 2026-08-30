@@ -99,16 +99,19 @@ Milestone 1 — Establish the operator investigation workflow.
 
 ## In progress
 
-- No implementation slice is active; live local Ollama smoke verification is
-  pending for the completed embedding and report paths.
+- A bounded report-generation defect fix is active after a refused Ollama
+  connection exposed Spring AI's long hidden retry schedule and an indefinitely
+  busy Generate action. Focused backend and frontend regressions pass; aggregate
+  verification and propagation to the other active branches remain pending.
 
 ## Next
 
-1. Install Ollama outside the repository, pull `qwen3.5:4b` and
+1. Complete and propagate the bounded report-generation defect fix.
+2. Install Ollama outside the repository, pull `qwen3.5:4b` and
    `nomic-embed-text`, and run the documented embedding and report smokes.
-2. Prepare P3 human decision and audit-trail scope for owner review; do not
+3. Prepare P3 human decision and audit-trail scope for owner review; do not
    begin implementation without activation.
-3. Add further evidence tools only after report-quality evaluation demonstrates
+4. Add further evidence tools only after report-quality evaluation demonstrates
    a concrete gap.
 
 ## Blockers

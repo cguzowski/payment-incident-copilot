@@ -16,6 +16,7 @@ class ReportGenerationService {
     private final ReportContextAssembler contexts;
     private final ReportGenerationPersistenceService persistence;
     private final ReportModel model;
+    private final ReportModelCallExecutor modelCalls;
     private final ReportPromptFactory prompts;
     private final ReportOutputParser parser;
     private final ReportIdentifierGenerator identifiers;
@@ -25,6 +26,7 @@ class ReportGenerationService {
             ReportContextAssembler contexts,
             ReportGenerationPersistenceService persistence,
             ReportModel model,
+            ReportModelCallExecutor modelCalls,
             ReportPromptFactory prompts,
             ReportOutputParser parser,
             ReportIdentifierGenerator identifiers,
@@ -32,6 +34,7 @@ class ReportGenerationService {
         this.contexts = contexts;
         this.persistence = persistence;
         this.model = model;
+        this.modelCalls = modelCalls;
         this.prompts = prompts;
         this.parser = parser;
         this.identifiers = identifiers;
@@ -54,7 +57,7 @@ class ReportGenerationService {
 
         ReportModelResponse modelResponse = null;
         try {
-            modelResponse = model.generate(prompt.text());
+            modelResponse = modelCalls.generate(model, prompt.text());
             ReportDocument document = parser.parse(modelResponse.output(), context);
             ReportGenerationAttempt completed = started.completeAvailable(Instant.now(clock), modelResponse, document);
             if (!persistence.completeAvailable(completed)) {
