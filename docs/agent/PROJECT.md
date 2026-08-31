@@ -102,8 +102,9 @@ family product boundary:
 
 - SynTen Inc corpus: `synten-auth-knowledge/v1`, comprising 22 runbooks and 8
   policies under `SynTen Inc/`, governed by `synten-pdf-authoring/v1`.
-- PDF extraction, source-location, and chunking contract:
-  `[choose before PDF ingestion implementation]`
+- PDF extraction, source-location, and chunking contract: PDFBox 3.0.8 with
+  `pdfbox-text-pages/v1`, 1-based PDF page/block locators, and
+  `pdf-page-sections/v1` under ADR-0009.
 - Bedrock production-profile details: `[choose during deployment milestone]`
 - AWS deployment services: `[choose during deployment milestone]`
 - Authentication approach: `[deferred to D2 after the live-model knowledge phase]`

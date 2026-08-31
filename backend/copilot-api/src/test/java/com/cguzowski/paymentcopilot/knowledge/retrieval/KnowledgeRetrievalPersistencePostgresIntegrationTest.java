@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeSourceFormat;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -102,6 +103,15 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
         assertThat(result.documentVersionId()).isEqualTo(candidate().documentVersionId());
         assertThat(result.chunkId()).isEqualTo(candidate().chunkId());
         assertThat(result.rawContent()).isEqualTo("Inspect GATEWAY_TIMEOUT observations.");
+        assertThat(result.sourceName()).isEqualTo("rb-002-gateway-connectivity.pdf");
+        assertThat(result.sourceFormat()).isEqualTo(KnowledgeSourceFormat.PDF);
+        assertThat(result.pdfSha256()).isEqualTo("d".repeat(64));
+        assertThat(result.sourceStartLine()).isNull();
+        assertThat(result.sourceEndLine()).isNull();
+        assertThat(result.sourceStartPage()).isEqualTo(3);
+        assertThat(result.sourceEndPage()).isEqualTo(3);
+        assertThat(result.sourceStartBlock()).isEqualTo(4);
+        assertThat(result.sourceEndBlock()).isEqualTo(8);
         assertThat(result.vectorDistance()).isZero();
         assertThat(result.fusedPosition()).isEqualTo(1);
         assertThat(result.selectedPosition()).isEqualTo(1);
@@ -257,12 +267,16 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                             id, tenant_id, document_id, document_type, title,
                             document_version, incident_family, applies_to,
                             approval_status, approved_by, approved_at, effective_at,
-                            source_name, source_content_hash, imported_at
+                            source_name, source_content_hash, source_format,
+                            source_artifact_hash, pdf_artifact_hash,
+                            extraction_strategy_version, imported_at
                         ) VALUES (
                             :id, :tenantId, :documentId, 'RUNBOOK', :title,
                             :documentVersion, :incidentFamily, :appliesTo,
                             'APPROVED', :approvedBy, :approvedAt, :effectiveAt,
-                            'fixture.md', :sourceHash, :importedAt
+                            'rb-002-gateway-connectivity.pdf', :sourceHash, 'PDF',
+                            :sourceArtifactHash, :pdfArtifactHash,
+                            'pdfbox-text-pages/v1', :importedAt
                         )
                         """)
                 .param("id", candidate.documentVersionId())
@@ -276,6 +290,8 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                 .param("approvedAt", utc(candidate.approvedAt()))
                 .param("effectiveAt", utc(candidate.effectiveAt()))
                 .param("sourceHash", "a".repeat(64))
+                .param("sourceArtifactHash", "b".repeat(64))
+                .param("pdfArtifactHash", "d".repeat(64))
                 .param("importedAt", utc(Instant.parse("2026-08-28T09:50:00Z")))
                 .update();
         jdbcClient
@@ -285,15 +301,17 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                             section_path, raw_content, embedding_input,
                             raw_content_hash, embedding_input_hash,
                             embedding_input_template_version, chunking_strategy_version,
-                            source_start_line, source_end_line, estimated_tokens,
+                            source_start_line, source_end_line,
+                            source_start_page, source_end_page,
+                            source_start_block, source_end_block, estimated_tokens,
                             embedding_model_id, embedding_dimensions,
                             embedding_normalized, embedded_at, embedding
                         ) VALUES (
                             :id, :tenantId, :documentVersionId, 0,
                             :sectionPath, :rawContent, :embeddingInput,
                             :rawHash, :embeddingHash,
-                            'embedding-input/v1', 'markdown-sections/v1',
-                            :sourceStartLine, :sourceEndLine, 10,
+                            'embedding-input/v1', 'pdf-page-sections/v1',
+                            NULL, NULL, 3, 3, 4, 8, 10,
                             'nomic-embed-text', 768,
                             TRUE, :embeddedAt, CAST(:embedding AS vector)
                         )
@@ -309,8 +327,6 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                                 + "Applies to: Card authorization\n\n" + candidate.rawContent())
                 .param("rawHash", "b".repeat(64))
                 .param("embeddingHash", "c".repeat(64))
-                .param("sourceStartLine", candidate.sourceStartLine())
-                .param("sourceEndLine", candidate.sourceEndLine())
                 .param("embeddedAt", utc(Instant.parse("2026-08-28T09:50:00Z")))
                 .param("embedding", vectorLiteral(unitVector()))
                 .update();
@@ -329,8 +345,15 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                 "Card authorization",
                 "Gateway Failures > Diagnosis",
                 "Inspect GATEWAY_TIMEOUT observations.",
-                20,
-                22,
+                "rb-002-gateway-connectivity.pdf",
+                KnowledgeSourceFormat.PDF,
+                "d".repeat(64),
+                null,
+                null,
+                3,
+                3,
+                4,
+                8,
                 KnowledgeApprovalStatus.APPROVED,
                 UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"),
                 Instant.parse("2026-08-20T10:00:00Z"),

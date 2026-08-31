@@ -2,6 +2,7 @@ package com.cguzowski.paymentcopilot.knowledge.retrieval;
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeSourceFormat;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -205,8 +206,11 @@ class PostgresKnowledgeRetrievalRepository
                                vector_similarity, vector_distance, vector_position,
                                fused_position, fused_score, document_type,
                                document_title, document_version, applies_to,
-                               section_path, raw_content, source_start_line,
-                               source_end_line, approval_status, approved_by,
+                               section_path, raw_content, source_name, source_format,
+                               pdf_artifact_hash, source_start_line, source_end_line,
+                               source_start_page, source_end_page,
+                               source_start_block, source_end_block,
+                               approval_status, approved_by,
                                approved_at, effective_at
                         FROM knowledge_retrieval_result
                         WHERE tenant_id = :tenantId
@@ -261,8 +265,15 @@ class PostgresKnowledgeRetrievalRepository
                 resultSet.getString("applies_to"),
                 resultSet.getString("section_path"),
                 resultSet.getString("raw_content"),
-                resultSet.getInt("source_start_line"),
-                resultSet.getInt("source_end_line"),
+                resultSet.getString("source_name"),
+                KnowledgeSourceFormat.valueOf(resultSet.getString("source_format")),
+                resultSet.getString("pdf_artifact_hash"),
+                nullableInteger(resultSet, "source_start_line"),
+                nullableInteger(resultSet, "source_end_line"),
+                nullableInteger(resultSet, "source_start_page"),
+                nullableInteger(resultSet, "source_end_page"),
+                nullableInteger(resultSet, "source_start_block"),
+                nullableInteger(resultSet, "source_end_block"),
                 KnowledgeApprovalStatus.valueOf(resultSet.getString("approval_status")),
                 resultSet.getObject("approved_by", UUID.class),
                 resultSet.getTimestamp("approved_at").toInstant(),
@@ -278,7 +289,10 @@ class PostgresKnowledgeRetrievalRepository
                             lexical_position, vector_similarity, vector_distance,
                             vector_position, fused_position, fused_score, document_type,
                             document_title, document_version, applies_to, section_path,
-                            raw_content, source_start_line, source_end_line,
+                            raw_content, source_name, source_format, pdf_artifact_hash,
+                            source_start_line, source_end_line,
+                            source_start_page, source_end_page,
+                            source_start_block, source_end_block,
                             approval_status, approved_by, approved_at, effective_at
                         ) VALUES (
                             :retrievalId, :tenantId, :chunkId, :documentVersionId,
@@ -286,7 +300,10 @@ class PostgresKnowledgeRetrievalRepository
                             :lexicalPosition, :vectorSimilarity, :vectorDistance,
                             :vectorPosition, :fusedPosition, :fusedScore, :documentType,
                             :documentTitle, :documentVersion, :appliesTo, :sectionPath,
-                            :rawContent, :sourceStartLine, :sourceEndLine,
+                            :rawContent, :sourceName, :sourceFormat, :pdfArtifactHash,
+                            :sourceStartLine, :sourceEndLine,
+                            :sourceStartPage, :sourceEndPage,
+                            :sourceStartBlock, :sourceEndBlock,
                             :approvalStatus, :approvedBy, :approvedAt, :effectiveAt
                         )
                         """)
@@ -309,8 +326,15 @@ class PostgresKnowledgeRetrievalRepository
                 .param("appliesTo", result.appliesTo())
                 .param("sectionPath", result.sectionPath())
                 .param("rawContent", result.rawContent())
-                .param("sourceStartLine", result.sourceStartLine())
-                .param("sourceEndLine", result.sourceEndLine())
+                .param("sourceName", result.sourceName())
+                .param("sourceFormat", result.sourceFormat().name())
+                .param("pdfArtifactHash", nullable(Types.CHAR, result.pdfSha256()))
+                .param("sourceStartLine", nullable(Types.INTEGER, result.sourceStartLine()))
+                .param("sourceEndLine", nullable(Types.INTEGER, result.sourceEndLine()))
+                .param("sourceStartPage", nullable(Types.INTEGER, result.sourceStartPage()))
+                .param("sourceEndPage", nullable(Types.INTEGER, result.sourceEndPage()))
+                .param("sourceStartBlock", nullable(Types.INTEGER, result.sourceStartBlock()))
+                .param("sourceEndBlock", nullable(Types.INTEGER, result.sourceEndBlock()))
                 .param("approvalStatus", result.approvalStatus().name())
                 .param("approvedBy", result.approvedBy())
                 .param("approvedAt", utc(result.approvedAt()))

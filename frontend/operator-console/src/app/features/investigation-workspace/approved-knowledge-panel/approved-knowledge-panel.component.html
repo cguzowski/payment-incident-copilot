@@ -130,9 +130,31 @@
                       </dd>
                     </div>
                     <div>
-                      <dt>Source lines</dt>
-                      <dd>{{ result.sourceStartLine }}–{{ result.sourceEndLine }}</dd>
+                      <dt>Source file</dt>
+                      <dd>
+                        <code>{{ result.sourceName }}</code>
+                      </dd>
                     </div>
+                    @if (result.sourceFormat === 'PDF') {
+                      <div>
+                        <dt>PDF location</dt>
+                        <dd>
+                          PDF page {{ result.sourceStartPage }}, blocks
+                          {{ result.sourceStartBlock }}–{{ result.sourceEndBlock }}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>PDF SHA-256</dt>
+                        <dd>
+                          <code>{{ result.pdfSha256 }}</code>
+                        </dd>
+                      </div>
+                    } @else {
+                      <div>
+                        <dt>Source lines</dt>
+                        <dd>{{ result.sourceStartLine }}–{{ result.sourceEndLine }}</dd>
+                      </div>
+                    }
                     <div>
                       <dt>Approved</dt>
                       <dd>{{ result.approvedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>

@@ -2,6 +2,7 @@ package com.cguzowski.paymentcopilot.knowledge.retrieval;
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeSourceFormat;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -17,8 +18,15 @@ record KnowledgeSearchCandidate(
         String appliesTo,
         String sectionPath,
         String rawContent,
-        int sourceStartLine,
-        int sourceEndLine,
+        String sourceName,
+        KnowledgeSourceFormat sourceFormat,
+        String pdfSha256,
+        Integer sourceStartLine,
+        Integer sourceEndLine,
+        Integer sourceStartPage,
+        Integer sourceEndPage,
+        Integer sourceStartBlock,
+        Integer sourceEndBlock,
         KnowledgeApprovalStatus approvalStatus,
         UUID approvedBy,
         Instant approvedAt,
@@ -27,4 +35,60 @@ record KnowledgeSearchCandidate(
         Integer lexicalPosition,
         Float vectorSimilarity,
         Integer vectorPosition,
-        double fusedScore) {}
+        double fusedScore) {
+
+    KnowledgeSearchCandidate(
+            UUID tenantId,
+            UUID chunkId,
+            UUID documentVersionId,
+            UUID documentId,
+            KnowledgeDocumentType documentType,
+            String documentTitle,
+            String documentVersion,
+            String incidentFamily,
+            String appliesTo,
+            String sectionPath,
+            String rawContent,
+            int sourceStartLine,
+            int sourceEndLine,
+            KnowledgeApprovalStatus approvalStatus,
+            UUID approvedBy,
+            Instant approvedAt,
+            Instant effectiveAt,
+            Float lexicalRank,
+            Integer lexicalPosition,
+            Float vectorSimilarity,
+            Integer vectorPosition,
+            double fusedScore) {
+        this(
+                tenantId,
+                chunkId,
+                documentVersionId,
+                documentId,
+                documentType,
+                documentTitle,
+                documentVersion,
+                incidentFamily,
+                appliesTo,
+                sectionPath,
+                rawContent,
+                "legacy-markdown.md",
+                KnowledgeSourceFormat.MARKDOWN,
+                null,
+                sourceStartLine,
+                sourceEndLine,
+                null,
+                null,
+                null,
+                null,
+                approvalStatus,
+                approvedBy,
+                approvedAt,
+                effectiveAt,
+                lexicalRank,
+                lexicalPosition,
+                vectorSimilarity,
+                vectorPosition,
+                fusedScore);
+    }
+}

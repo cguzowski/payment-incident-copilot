@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeSourceFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -110,7 +111,7 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                 KnowledgeApprovalStatus.SUPERSEDED,
                 "AUTHORIZATION_DECLINE_RATE_SPIKE",
                 "Superseded policy",
-                "GATEWAY_TIMEOUT superseded text must not be retrieved.",
+                "Zebra protocol automatic approval superseded text must not be retrieved.",
                 unitVector(0));
         insertDocumentAndChunk(
                 TENANT_ID,
@@ -124,6 +125,7 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                 vectorLiteral(unitVectorArray(1024, 0)),
                 "amazon.titan-embed-text-v2:0",
                 1024);
+        insertUnembeddedPdfDocumentAndChunk();
     }
 
     @Test
@@ -163,6 +165,45 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
             assertThat(candidate.approvalStatus()).isEqualTo(KnowledgeApprovalStatus.APPROVED);
             assertThat(candidate.incidentFamily()).isEqualTo("AUTHORIZATION_DECLINE_RATE_SPIKE");
         });
+    }
+
+    @Test
+    void retrievesApprovedUnembeddedPdfLexicallyAndExcludesSupersededExactMatch() {
+        KnowledgeSearchRequest request = new KnowledgeSearchRequest(
+                TENANT_ID,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                Instant.parse("2026-08-28T10:00:00Z"),
+                "zebra protocol automatic approval",
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
+                unitVectorArray(0),
+                20,
+                60,
+                0.0f,
+                0.55f);
+
+        List<KnowledgeSearchCandidate> candidates = repository.search(request);
+
+        KnowledgeSearchCandidate pdf = candidates.stream()
+                .filter(candidate ->
+                        candidate.chunkId().equals(UUID.fromString("28888888-8888-4888-8888-888888888888")))
+                .findFirst()
+                .orElseThrow();
+        assertThat(pdf.sourceName()).isEqualTo("rb-zebra-provider-isolation.pdf");
+        assertThat(pdf.sourceFormat()).isEqualTo(KnowledgeSourceFormat.PDF);
+        assertThat(pdf.pdfSha256()).isEqualTo("d".repeat(64));
+        assertThat(pdf.sourceStartLine()).isNull();
+        assertThat(pdf.sourceEndLine()).isNull();
+        assertThat(pdf.sourceStartPage()).isEqualTo(2);
+        assertThat(pdf.sourceEndPage()).isEqualTo(2);
+        assertThat(pdf.sourceStartBlock()).isEqualTo(3);
+        assertThat(pdf.sourceEndBlock()).isEqualTo(5);
+        assertThat(pdf.lexicalPosition()).isNotNull();
+        assertThat(pdf.vectorPosition()).isNull();
+        assertThat(pdf.vectorSimilarity()).isNull();
+        assertThat(candidates)
+                .extracting(KnowledgeSearchCandidate::chunkId)
+                .doesNotContain(UUID.fromString("26666666-6666-4666-8666-666666666666"));
     }
 
     private void insertDocumentAndChunk(
@@ -208,14 +249,18 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                             id, tenant_id, document_id, document_type, title,
                             document_version, incident_family, applies_to,
                             approval_status, approved_by, approved_at, effective_at,
-                            source_name, source_content_hash, imported_at
+                            source_name, source_content_hash, source_format,
+                            source_artifact_hash, pdf_artifact_hash,
+                            extraction_strategy_version, imported_at
                         ) VALUES (
                             :id, :tenantId, :documentId, :type, :title,
                             '1.0.0', :incidentFamily, 'Card authorization',
                             :status, :approvedBy,
                             TIMESTAMPTZ '2026-08-20 10:00:00Z',
                             TIMESTAMPTZ '2026-08-21 00:00:00Z',
-                            :sourceName, :hash, TIMESTAMPTZ '2026-08-28 09:00:00Z'
+                            :sourceName, :hash, 'MARKDOWN', :hash, NULL,
+                            'markdown-front-matter/v1',
+                            TIMESTAMPTZ '2026-08-28 09:00:00Z'
                         )
                         """)
                 .param("id", versionId)
@@ -266,6 +311,68 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                 .param("modelId", modelId)
                 .param("dimensions", dimensions)
                 .param("embedding", vector)
+                .update();
+    }
+
+    private void insertUnembeddedPdfDocumentAndChunk() {
+        UUID documentVersionId = UUID.fromString("18888888-8888-4888-8888-888888888888");
+        jdbcClient
+                .sql("""
+                        INSERT INTO knowledge_document_version (
+                            id, tenant_id, document_id, document_type, title,
+                            document_version, incident_family, applies_to,
+                            approval_status, approved_by, approved_at, effective_at,
+                            source_name, source_content_hash, source_format,
+                            source_artifact_hash, pdf_artifact_hash,
+                            extraction_strategy_version, imported_at
+                        ) VALUES (
+                            :id, :tenantId, :documentId, 'RUNBOOK',
+                            'Zebra Provider Isolation Runbook', '1.0.0',
+                            'AUTHORIZATION_DECLINE_RATE_SPIKE', 'Provider isolation',
+                            'APPROVED', :approvedBy,
+                            TIMESTAMPTZ '2026-08-20 10:00:00Z',
+                            TIMESTAMPTZ '2026-08-21 00:00:00Z',
+                            'rb-zebra-provider-isolation.pdf', :contentHash, 'PDF',
+                            :sourceHash, :pdfHash, 'pdfbox-text-pages/v1',
+                            TIMESTAMPTZ '2026-08-28 09:00:00Z'
+                        )
+                        """)
+                .param("id", documentVersionId)
+                .param("tenantId", TENANT_ID)
+                .param("documentId", UUID.fromString("38888888-8888-4888-8888-888888888888"))
+                .param("approvedBy", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
+                .param("contentHash", "e".repeat(64))
+                .param("sourceHash", "a".repeat(64))
+                .param("pdfHash", "d".repeat(64))
+                .update();
+        jdbcClient
+                .sql("""
+                        INSERT INTO knowledge_chunk (
+                            id, tenant_id, document_version_id, chunk_ordinal,
+                            section_path, raw_content, embedding_input,
+                            raw_content_hash, embedding_input_hash,
+                            embedding_input_template_version, chunking_strategy_version,
+                            source_start_line, source_end_line,
+                            source_start_page, source_end_page,
+                            source_start_block, source_end_block, estimated_tokens,
+                            embedding_model_id, embedding_dimensions,
+                            embedding_normalized, embedded_at, embedding
+                        ) VALUES (
+                            :id, :tenantId, :documentVersionId, 0,
+                            'Provider isolation',
+                            'Zebra protocol requires provider isolation before manual review.',
+                            'Document: Zebra Provider Isolation Runbook',
+                            :rawHash, :embeddingHash,
+                            'embedding-input/v1', 'pdf-page-sections/v1',
+                            NULL, NULL, 2, 2, 3, 5, 9,
+                            NULL, NULL, NULL, NULL, NULL
+                        )
+                        """)
+                .param("id", UUID.fromString("28888888-8888-4888-8888-888888888888"))
+                .param("tenantId", TENANT_ID)
+                .param("documentVersionId", documentVersionId)
+                .param("rawHash", "b".repeat(64))
+                .param("embeddingHash", "c".repeat(64))
                 .update();
     }
 

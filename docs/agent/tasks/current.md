@@ -1,165 +1,249 @@
-# Task: Select the PDF extraction, locator, and chunking contract
+# Task: Catalog the SynTen Inc PDFs with exact page provenance
 
-Status: Ready
+Status: Implementation in progress — Docker-backed PostgreSQL acceptance pending
 Created: 2026-08-31
 Owner: Christopher Guzowski
 
 ## Goal
 
-Accept the architectural contract that will let `knowledge.catalog` ingest the
-SynTen Inc PDFs into deterministic, versioned chunks with stable source
-locations before executable ingestion changes begin.
+Implement ADR-0009 end to end: validate and parse all 30 SynTen Inc PDFs into
+deterministic page-aware chunks, persist the complete catalog without requiring
+a model, make approved chunks available to existing lexical retrieval, and
+show exact PDF/page citations while preserving the completed Markdown path.
 
 ## User story
 
-As a payment operations analyst, I want every retrieved excerpt to resolve to
-the exact PDF version and location that produced it, so I can review the source
-and distinguish approved guidance from superseded or malformed material.
+As a payment operations analyst, I want a retrieved SynTen Inc excerpt to name
+the exact PDF version, SHA-256, page, and block range that produced it, so I can
+review the source and trust that superseded or changed guidance did not enter
+the result.
 
 ## Context
 
-K1 fixed `synten-auth-knowledge/v1`; K2 generated and validated 30 maintained
-Markdown/PDF pairs totaling 112 pages. The current application ingests two
-Markdown documents through `knowledge.catalog` under ADR-0002. K3 must revise
-that Markdown-only decision deliberately rather than inserting a PDF parser or
-page assumptions into the existing path without an accepted contract.
+K1 defined `synten-auth-knowledge/v1`; K2 generated and validated 30 maintained
+Markdown/PDF pairs totaling 112 pages; ADR-0009 selected PDFBox 3.0.8,
+`pdfbox-text-pages/v1`, and `pdf-page-sections/v1`. The application currently
+persists embedded chunks from two classpath Markdown documents. K3 adds a
+parallel explicit catalog import for the repository-owned SynTen corpus. K4,
+not this task, will populate PDF embeddings and measure hybrid retrieval with
+Ollama.
 
 ## Chosen contract
 
-- This task selects and records the contract; it does not implement ingestion.
-- The accepted ADR must precede any executable PDF catalog change.
-- Existing Markdown ingestion behavior and public retrieval/report behavior
-  remain unchanged during this task.
-- K3 v1 may support the maintained text-based, unencrypted SynTen Inc PDFs and
-  fail closed on encrypted, malformed, scanned-only, or unsupported PDFs; OCR
-  is not required.
-- Every extracted representation and chunk must retain tenant identity, exact
-  document ID/version/status, source and PDF hashes, parser version, chunker
-  version, and a stable human-reviewable PDF locator.
-- Chunking must be deterministic, bounded, section-aware where feasible, and
-  independently testable without a live embedding or chat model.
-- Superseded documents remain auditable inputs but must not become retrieval-
-  eligible content.
+- Pin `org.apache.pdfbox:pdfbox:3.0.8` in `copilot-api`.
+- Read SynTen membership and artifact hashes from
+  `SynTen Inc/corpus/validation-manifest.json`; read catalog metadata from each
+  paired maintained source front matter; verify both artifacts before parsing.
+- Require the exact SynTen tenant, 30 unique manifest entries, 1-15 pages,
+  unencrypted text on every page, supported `RUNBOOK`/`POLICY` type, and
+  `APPROVED`/`SUPERSEDED` status. Reject the whole import before writes when any
+  input is invalid.
+- Normalize and parse physical pages exactly as ADR-0009 specifies. Remove only
+  the exact validated generated header/footer; retain superseded banners,
+  ordered table text, headings, lists, machine codes, and page boundaries.
+- Use 1-based inclusive PDF page/block locators. A chunk never crosses a page.
+  Use `pdf-page-sections/v1` with target 400, maximum 600, overlap 50, and
+  preferred minimum 80 estimated tokens.
+- Persist all 30 versions and their chunks. Superseded chunks remain auditable
+  but the existing approval filter excludes them before ranking.
+- PDF chunks have a complete embedding-input wrapper and hashes but an absent
+  embedding tuple. Embedding model, dimensions, normalized flag, timestamp,
+  and vector are either all present or all absent.
+- Existing lexical search includes approved unembedded PDF chunks. Existing
+  vector search ignores chunks without a compatible complete embedding.
+- Retrieval-result snapshots and API responses copy source name, source format,
+  PDF hash, and the PDF page/block range. Historical Markdown results continue
+  to use line ranges.
+- The operator console labels either `PDF page N, blocks A-B` with filename and
+  hash or the historical Markdown line range. No raw repository path is sent
+  to the browser.
+- Import remains explicit and disabled by default. A configured corpus root is
+  required when PDF catalog import is enabled; normal startup and automated
+  tests do not depend on a working-directory-relative production default.
+- Existing Markdown ingestion, retrieval ranking constants, report schema,
+  report source-reference validation, tenant boundary, and incident family do
+  not change.
 
 ## In scope
 
-- Inspect the current `knowledge.catalog` source, parser, chunking, persistence,
-  tests, ADR-0002, and Flyway schema relevant to knowledge versions and chunks.
-- Compare the smallest credible Java PDF extraction choices against the actual
-  corpus and repository constraints.
-- Define text normalization, page/section locator semantics, chunk identity and
-  ordering, metadata/version propagation, failure behavior, and migration
-  compatibility.
-- Record the accepted decision as a new ADR and update architecture/quality
-  documentation and the implementation test map.
-- Prove the selected extractor/locator assumptions against representative
-  approved and superseded corpus PDFs without writing embeddings or database
-  rows.
+- PDFBox dependency and immutable PDF parsed-document/page/block records.
+- Manifest and paired-source metadata loading under `knowledge.catalog`.
+- PDF validation, normalization, header/footer removal, extraction, hashing,
+  deterministic page-aware chunking, and stable IDs.
+- An explicit all-or-nothing SynTen PDF catalog import path.
+- Flyway V9 catalog, nullable-embedding, chunk-locator, and retrieval-snapshot
+  evolution with existing-row backfill and constraints.
+- Lexical retrieval of approved unembedded chunks and vector null-safety.
+- Additive retrieval API and operator-console provenance rendering.
+- Documentation, task evidence, and deterministic verification.
 
 ## Out of scope
 
-- Production PDF ingestion code, schema migrations, or API changes.
-- Embedding generation, pgvector writes, hybrid retrieval measurement, or live
-  Ollama calls.
-- OCR, scanned-document support, password handling, external document stores,
-  or continuous content synchronization.
-- Changing the K1 inventory, K2 PDFs, existing retrieval ranking, report schema,
-  tenant boundary, or incident family.
+- Generating or editing the K2 sources or PDFs.
+- Calling Ollama, downloading models, creating PDF embeddings, or measuring
+  semantic/hybrid retrieval quality; those are K4.
+- OCR, passwords, scanned documents, rotated/multi-column generalization,
+  semantic table reconstruction, or arbitrary external PDF ingestion.
+- Continuous file watching, uploads, object storage, or a content-management
+  API.
+- Serving PDF bytes from the API or adding a browser PDF viewer.
+- Re-ranking changes, a second incident family, authentication, or deployment.
 
 ## Constraints
 
-- Follow the repository documentation and ADR process.
-- Prefer the smallest dependency and representation that preserve correct text
-  order and stable locators for the real K2 corpus.
-- Do not infer page numbers from text alone or silently discard extraction
-  failures, empty pages, duplicate versions, or superseded status.
-- Do not claim byte offsets are stable unless the selected library and contract
-  can actually guarantee them.
-- Keep automated checks deterministic and network-free.
-- Keep every exploratory extraction artifact under `SynTen Inc/validation` or
-  a temporary ignored path and do not commit render output.
+- Follow ADR-0009 and do not weaken a fail-closed rule to admit a fixture.
+- All SynTen-specific data and fixtures stay under `SynTen Inc/`; shared Java,
+  schema, UI, and project documentation stay in their existing boundaries.
+- Use TDD for every behavior change and record the intended red failure before
+  production code.
+- Keep automated verification network-free and model-free after Maven resolves
+  the pinned build dependency.
+- Preserve immutable historical retrieval/report references and all existing
+  V1-V8 Flyway checksums.
+- Do not expose filesystem paths, source Markdown bodies, or whole PDFs through
+  the retrieval API.
 
 ## Acceptance criteria
 
-- [ ] A new accepted ADR selects the PDF library and immutable parsed-document
-      representation, with rejected alternatives and tradeoffs recorded.
-- [ ] The ADR defines a stable locator that can take a reviewer from a chunk to
-      an exact PDF version and page, plus section/block context where reliable.
-- [ ] Text normalization, repeated headers/footers, page boundaries, table
-      handling, empty/invalid input, and deterministic ordering are explicit.
-- [ ] Chunk identity, maximum/minimum sizing, overlap or non-overlap behavior,
-      source-hash/parser-version/chunker-version propagation, and regeneration
-      semantics are explicit.
-- [ ] Approval/effective/superseded behavior and tenant propagation remain
-      compatible with current persistence and retrieval guardrails.
-- [ ] Representative extraction probes pass against an approved runbook, an
-      approved policy, the densest table-oriented runbook, and a superseded
-      document, with exact page locators reviewed.
-- [ ] The follow-on implementation task maps every contract rule to a named
-      red-green test and identifies any required migration without starting it.
-- [ ] Repository static verification and diff checks pass.
+- [x] `SynTenCorpusSourceRepositoryTest.loadsTheExactThirtyManifestVersionsInOrder`
+      proves exact membership, tenant, metadata, maintained-source/PDF hashes,
+      and 27 approved plus 3 superseded versions.
+- [x] Repository failure tests reject source/PDF hash mismatch, duplicate
+      tenant/document/version, missing/extra artifact, unsupported metadata,
+      path escape, wrong tenant, and manifest/source disagreement before parse.
+- [x] `PdfBoxKnowledgeDocumentParserTest.extractsDeterministicPageBlocksAndRemovesOnlyGeneratedMargins`
+      covers RB-002 and exact page counts/block order across two parses.
+- [x] Parser tests cover PL-001 policy structure, RB-011 table reading order,
+      retained RB-022 superseded banners, CR/LF/NBSP/NFC normalization, and
+      exact page locators.
+- [x] Parser failure tests reject encrypted, malformed, empty/scanned-only,
+      zero-page or over-15-page, missing expected margin, and page-count-
+      mismatch PDFs with bounded non-sensitive errors.
+- [x] `PdfKnowledgeChunkerTest.neverCrossesPagesAndCarriesSectionContext`
+      proves deterministic order/IDs, page/block ranges, section carry-forward,
+      table-line order, target/hard maximum, same-page overlap, short-tail
+      merging, and oversized-block splitting.
+- [ ] `SynTenPdfCatalogImportServiceTest.validatesTheWholeCorpusBeforeOneAtomicWrite`
+      proves all-or-nothing validation, stable repeat imports, changed-content
+      rejection, 30 catalogued versions, and no embedding calls.
+- [ ] Flyway V9 preserves V1-V8 checksums and enforces source-format/hash,
+      exactly-one-locator-family, PDF range, all-or-none embedding tuple,
+      tenant foreign-key, and 600-token constraints for both legacy and PDF
+      rows.
+- [ ] `SynTenPdfCatalogPostgresIntegrationTest.catalogsThirtyVersionsWithStablePdfLocators`
+      stores the real corpus with 27 approved and 3 superseded versions and
+      obtains the same document/chunk IDs and hashes on a repeat plan.
+- [ ] Hybrid-search integration proves an approved unembedded PDF chunk is
+      lexically eligible, absent from vector ranking, tenant-filtered, and that
+      an exact superseded near-match is excluded before ranking.
+- [ ] Retrieval persistence and HTTP tests prove source format, safe filename,
+      PDF hash, and page/block range are copied into immutable attempt history;
+      Markdown line locators remain backward compatible.
+- [x] Operator-console tests render PDF citation fields for PDF results and
+      line ranges for Markdown results with no regression to loading, history,
+      retry, or status states.
+- [ ] Focused backend/frontend suites, PostgreSQL integration tests, Spotless,
+      Prettier, builds, Compose validation, `git diff --check`, and the
+      authoritative `./verify.ps1` gate pass with zero skipped tests.
 
-## Test plan
+## Test plan and red-green order
 
-- Parser feasibility -> extract representative PDFs twice and compare ordered
-  page/block output and hashes.
-- Locator feasibility -> resolve selected excerpts back to exact document ID,
-  version, PDF hash, page, and stable section/block context.
-- Layout cases -> inspect headings, lists, tables, repeated headers/footers,
-  long machine codes, and superseded banners.
-- Failure contract -> define tests for encrypted, malformed, empty/scanned-only,
-  duplicate, wrong-tenant, and unsupported-version inputs.
-- Compatibility -> map the new parsed/chunk metadata to current catalog records,
-  Flyway constraints, retrieval filters, and immutable snapshot references.
-
-## Expected approach
-
-1. Read ADR-0002 and the current catalog parser/chunker, schema, and tests.
-2. Probe representative K2 PDFs with the candidate extraction library or
-   libraries using repository-local, non-production code.
-3. Choose the smallest contract that preserves ordered text and reviewable
-   page provenance for the actual corpus.
-4. Write and review the ADR, update architecture/quality references, and create
-   the locked implementation task with named red-green tests.
-5. Run repository static verification and archive this task only after the ADR
-   and implementation contract are complete.
+1. Red: add `SynTenCorpusSourceRepositoryTest` membership/hashing and rejection
+   cases before implementing manifest/front-matter loading.
+2. Green: add only the immutable source descriptors and safe filesystem loader.
+3. Red: add `PdfBoxKnowledgeDocumentParserTest` representative and failure
+   cases before adding PDFBox parser production code.
+4. Green: implement `pdfbox-text-pages/v1` and immutable page/block records.
+5. Red: add `PdfKnowledgeChunkerTest` before implementing
+   `pdf-page-sections/v1` and stable chunk IDs.
+6. Red: add V9 schema assertions and catalog persistence tests before the
+   migration and repository changes.
+7. Red: add import-service atomicity/idempotency tests before the explicit
+   import service/command.
+8. Red: add lexical/vector eligibility and locator snapshot tests before
+   changing search and retrieval persistence.
+9. Red: add Angular provenance rendering tests before model/template changes.
+10. Green/refactor: run focused suites after each behavior, then backend,
+    frontend, repository, and authoritative gates.
 
 ## Likely files or components
 
-- `docs/agent/decisions/`
-- `docs/agent/ARCHITECTURE.md`
-- `docs/agent/QUALITY.md`
-- `docs/agent/tasks/current.md`
+- `backend/copilot-api/pom.xml`
 - `backend/copilot-api/src/main/java/.../knowledge/catalog/`
-- `backend/copilot-api/src/test/java/.../knowledge/catalog/`
-- `backend/copilot-api/src/main/resources/db/migration/`
-- `SynTen Inc/corpus/pdfs/`
+- `backend/copilot-api/src/main/java/.../knowledge/retrieval/`
+- `backend/copilot-api/src/main/resources/db/migration/V9__*.sql`
+- `backend/copilot-api/src/test/java/.../knowledge/`
+- `frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/`
 - `SynTen Inc/corpus/validation-manifest.json`
+- `docs/agent/STATUS.md`
 
 ## Validation commands
 
-The exact representative extraction probes and focused test commands will be
-recorded after the current catalog and candidate library APIs are inspected.
-Repository completion uses `.\verify.ps1 -Scope Repository`.
+```powershell
+./mvnw.cmd -pl backend/copilot-api -Dtest=SynTenCorpusSourceRepositoryTest,PdfBoxKnowledgeDocumentParserTest,PdfKnowledgeChunkerTest,SynTenPdfCatalogImportServiceTest test
+./mvnw.cmd -pl backend/copilot-api -Dtest=KnowledgeSchemaPostgresIntegrationTest,SynTenPdfCatalogPostgresIntegrationTest,KnowledgeHybridSearchPostgresIntegrationTest,KnowledgeRetrievalPersistencePostgresIntegrationTest,KnowledgeRetrievalApiPostgresIntegrationTest test
+./verify.ps1 -Scope Backend
+./verify.ps1 -Scope Frontend
+./verify.ps1 -Scope Repository
+./verify.ps1
+```
 
 ## Decisions needed
 
-- Select the Java PDF extraction library and its pinned version.
-- Select the canonical parsed-document representation and stable locator.
-- Select the deterministic chunk boundaries and version identifiers that will
-  revise ADR-0002 for PDF sources.
+None. ADR-0009 and this contract authorize implementation.
 
 ## Progress notes
 
-- 2026-08-31: K2 completed with 30 deterministic PDFs, 112 visually reviewed
-  pages, exact manifest hashes, and a hard observed maximum of 4 pages against
-  the 15-page contract. K3 contract selection is ready.
+- 2026-08-31: ADR-0009 accepted after repeatable PDFBox 3.0.8 probes over
+  RB-002, PL-001, RB-011, and RB-022. The design-task repository gate passed.
+- 2026-08-31: Implemented fail-closed manifest/source validation, PDFBox page
+  extraction, deterministic page-confined chunking, stable IDs/hashes, and an
+  explicit all-or-nothing catalog command. A real-corpus model-free test parsed
+  all 30 PDFs into 180 chunks with 27 approved and 3 superseded versions.
+- 2026-08-31: Added Flyway V9, nullable all-or-none embedding support,
+  PostgreSQL catalog/search/snapshot contracts, additive API provenance, and
+  operator citations for PDF page/block or historical Markdown line locators.
+- 2026-08-31: Red-green evidence includes repository, PDF parser/chunker,
+  import orchestration, API, and Angular citation tests. A late fail-closed
+  audit added and proved rejection of `DRAFT` corpus metadata after its focused
+  test first failed for accepting it.
+- 2026-08-31: Docker Desktop reported an error. Work continued through every
+  model-free path; Testcontainers was not treated as passing or replaced with
+  skipped-test evidence.
+- 2026-08-31: Reproduced the reported Maven startup exit. With `.env` loaded,
+  the actionable cause was Spring constructor ambiguity in
+  `SynTenCorpusSourceRepository`. Added a context regression that failed with
+  `No default constructor found`, marked the configuration constructor for
+  injection, and proved the regression green.
 
 ## Completion evidence
 
-Not complete.
+- `./mvnw.cmd "-Dtest=!*PostgresIntegrationTest" verify` passed 159 copilot API
+  and 9 operations MCP tests with zero failures, errors, or skips, including
+  Spotless and both deployable JAR builds.
+- With the ignored root `.env` loaded, `./mvnw.cmd -pl backend/copilot-api
+  spring-boot:run` started the API against native PostgreSQL 18.3, validated
+  Flyway V1-V9 at schema version 9, and returned `UP` from
+  `/actuator/health` before a graceful shutdown.
+- The focused PDF/API suite passed 28/28 tests with zero skips; final parser and
+  corpus validation reruns passed 12/12 after the fail-closed metadata audit.
+- `./verify.ps1 -Scope Frontend` passed locked installation with zero audit
+  vulnerabilities, 78/78 tests with zero skips, Prettier, and the 389.32 kB
+  raw production build.
+- `./verify.ps1 -Scope Repository` passed verification-system tests, Compose
+  configuration, and `git diff --check`.
+- All 56 copilot API test sources, including the new PostgreSQL integration
+  contracts, compile successfully.
+- Completion is not claimed until the Docker-backed tests and authoritative
+  zero-skip gate execute successfully.
 
 ## Remaining limitations
 
-No PDF extraction/locator ADR has been accepted and the application still
-ingests only its two baseline Markdown sources.
+- Docker Desktop is stopped after previously reporting an error, so the new atomic catalog,
+  idempotency/conflict, lexical eligibility, vector null-safety, and immutable
+  snapshot integration tests have not executed. Flyway V9 itself is verified
+  on native PostgreSQL 18.3, but the backend and aggregate verification gates
+  remain pending.
+- The explicit PDF catalog command has not been run against a real PostgreSQL
+  database in this environment. PDF embeddings and live-model evaluation
+  remain intentionally deferred to K4.

@@ -2,6 +2,7 @@ package com.cguzowski.paymentcopilot.knowledge.retrieval;
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeSourceFormat;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -50,6 +51,10 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                    c.raw_content,
                                    c.source_start_line,
                                    c.source_end_line,
+                                   c.source_start_page,
+                                   c.source_end_page,
+                                   c.source_start_block,
+                                   c.source_end_block,
                                    c.embedding,
                                    c.embedding_model_id,
                                    c.embedding_dimensions,
@@ -63,6 +68,9 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                    d.approved_by,
                                    d.approved_at,
                                    d.effective_at,
+                                   d.source_name,
+                                   d.source_format,
+                                   d.pdf_artifact_hash,
                                    SETWEIGHT(TO_TSVECTOR('english', d.title), 'A')
                                    || SETWEIGHT(TO_TSVECTOR('english', d.applies_to), 'A')
                                    || c.search_vector AS combined_search
@@ -106,6 +114,7 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                        AS vector_similarity
                             FROM eligible e
                             WHERE CAST(:queryVector AS TEXT) IS NOT NULL
+                              AND e.embedding IS NOT NULL
                               AND e.embedding_model_id = :embeddingModelId
                               AND e.embedding_dimensions = :embeddingDimensions
                         ),
@@ -150,8 +159,15 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                e.applies_to,
                                e.section_path,
                                e.raw_content,
+                               e.source_name,
+                               e.source_format,
+                               e.pdf_artifact_hash,
                                e.source_start_line,
                                e.source_end_line,
+                               e.source_start_page,
+                               e.source_end_page,
+                               e.source_start_block,
+                               e.source_end_block,
                                e.approval_status,
                                e.approved_by,
                                e.approved_at,
@@ -201,8 +217,15 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                 resultSet.getString("applies_to"),
                 resultSet.getString("section_path"),
                 resultSet.getString("raw_content"),
-                resultSet.getInt("source_start_line"),
-                resultSet.getInt("source_end_line"),
+                resultSet.getString("source_name"),
+                KnowledgeSourceFormat.valueOf(resultSet.getString("source_format")),
+                resultSet.getString("pdf_artifact_hash"),
+                nullableInteger(resultSet, "source_start_line"),
+                nullableInteger(resultSet, "source_end_line"),
+                nullableInteger(resultSet, "source_start_page"),
+                nullableInteger(resultSet, "source_end_page"),
+                nullableInteger(resultSet, "source_start_block"),
+                nullableInteger(resultSet, "source_end_block"),
                 KnowledgeApprovalStatus.valueOf(resultSet.getString("approval_status")),
                 resultSet.getObject("approved_by", UUID.class),
                 resultSet.getTimestamp("approved_at").toInstant(),

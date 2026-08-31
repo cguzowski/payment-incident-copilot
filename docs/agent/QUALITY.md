@@ -62,6 +62,23 @@ record that evidence instead.
   version, test query, expected sources, actual selected sources, and observed
   limitations.
 
+## PDF catalog testing
+
+- PDF parser tests use repository-owned synthetic fixtures and never require a
+  network call, live embedding model, or chat model.
+- Contract coverage includes exact source/PDF hashes, 1-15 page bounds,
+  encryption and malformed-input rejection, empty/scanned-only rejection,
+  exact generated header/footer removal, retained superseded banners, ordered
+  table text, and repeatable page/block output.
+- Chunker coverage proves page confinement, section carry-forward,
+  deterministic order and IDs, the 400/600/50 token contract, short-tail
+  behavior, and exact PDF locators.
+- PostgreSQL coverage proves atomic manifest import, nullable all-or-none
+  embedding tuples, approved lexical eligibility, superseded exclusion, tenant
+  isolation, and immutable retrieval snapshots carrying PDF provenance.
+- Operator-console coverage displays PDF filename, SHA-256, page, and block
+  range while preserving line locators for historical Markdown results.
+
 ## Coverage expectations
 
 - Unit tests for domain rules and state transitions

@@ -44,12 +44,16 @@ class PostgresKnowledgeIndexRepository implements KnowledgeIndexRepository {
                             id, tenant_id, document_id, document_type, title,
                             document_version, incident_family, applies_to,
                             approval_status, approved_by, approved_at, effective_at,
-                            source_name, source_content_hash, imported_at
+                            source_name, source_content_hash, source_format,
+                            source_artifact_hash, pdf_artifact_hash,
+                            extraction_strategy_version, imported_at
                         ) VALUES (
                             :id, :tenantId, :documentId, :documentType, :title,
                             :documentVersion, :incidentFamily, :appliesTo,
                             :approvalStatus, :approvedBy, :approvedAt, :effectiveAt,
-                            :sourceName, :sourceContentHash, :importedAt
+                            :sourceName, :sourceContentHash, 'MARKDOWN',
+                            :sourceArtifactHash, NULL, 'markdown-front-matter/v1',
+                            :importedAt
                         )
                         ON CONFLICT (tenant_id, document_id, document_version) DO NOTHING
                         """)
@@ -67,6 +71,7 @@ class PostgresKnowledgeIndexRepository implements KnowledgeIndexRepository {
                 .param("effectiveAt", utc(document.effectiveAt()))
                 .param("sourceName", document.sourceName())
                 .param("sourceContentHash", indexed.sourceContentHash())
+                .param("sourceArtifactHash", indexed.sourceContentHash())
                 .param("importedAt", utc(indexed.importedAt()))
                 .update();
         if (inserted == 0) {

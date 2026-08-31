@@ -68,5 +68,8 @@ app:
   knowledge:
     ingestion:
       enabled: false
+    pdf-catalog:
+      enabled: false
+      corpus-root: ${SYNTEN_CORPUS_ROOT:}
     embedding-smoke-test:
       enabled: false

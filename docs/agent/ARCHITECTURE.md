@@ -147,11 +147,16 @@ that feature boundary. Retrieval and report generation continue to consume
 persisted catalog records rather than reading PDFs directly or sending whole
 documents to a model.
 
-PDF ingestion must produce an immutable parsed representation and retain the
-source document version, source hash, extraction strategy version, chunking
-strategy version, and a stable locator back to the PDF. A new accepted ADR must
-select the PDF extraction and locator contract and revise ADR-0002's
-Markdown-aware chunking decision before executable ingestion changes begin.
+ADR-0009 selects PDFBox 3.0.8 and an immutable page/block representation for
+PDF ingestion. A PDF catalog row retains the exact maintained-source and PDF
+hashes plus `pdfbox-text-pages/v1`; each `pdf-page-sections/v1` chunk has a
+1-based physical page and block range and never crosses a page. Retrieval
+snapshots copy that locator rather than resolving it from mutable files.
+
+K3 may persist a PDF chunk without an embedding so approved content can enter
+the existing lexical retrieval path before Ollama is available. Vector ranking
+must ignore incomplete embedding tuples. K4 owns embedding those same stable
+chunks, measuring hybrid retrieval, and exercising the live report path.
 
 Live local-model evaluation is an explicit smoke/evaluation workflow over
 synthetic data. Normal automated verification remains deterministic and

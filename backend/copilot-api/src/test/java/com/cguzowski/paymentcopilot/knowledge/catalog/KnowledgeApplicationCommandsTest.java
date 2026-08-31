@@ -20,6 +20,16 @@ class KnowledgeApplicationCommandsTest {
     }
 
     @Test
+    void explicitPdfCatalogCommandImportsTheConfiguredCorpus() throws Exception {
+        SynTenPdfCatalogImportService importService = mock(SynTenPdfCatalogImportService.class);
+        when(importService.importCorpus()).thenReturn(new PdfCatalogImportSummary(30, 0, 180));
+
+        new SynTenPdfCatalogImportCommand(importService).run(null);
+
+        verify(importService).importCorpus();
+    }
+
+    @Test
     void embeddingSmokeCommandValidatesTheConfiguredModelContract() throws Exception {
         KnowledgeEmbeddingClient client = mock(KnowledgeEmbeddingClient.class);
         when(client.embed(KnowledgeEmbeddingSmokeTestCommand.SMOKE_INPUT)).thenReturn(normalizedEmbedding());

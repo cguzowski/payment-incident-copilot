@@ -134,9 +134,10 @@ Pop-Location
 ```
 
 The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V8 when the API starts. V8 adds append-only final
+Flyway applies V1 through V9 when the API starts. V8 adds append-only final
 human decisions plus nullable historical attribution for evidence and retrieval
-attempts; new attempts always persist their requesting operator.
+attempts; V9 adds the page-aware PDF knowledge catalog and retrieval provenance.
+New attempts always persist their requesting operator.
 
 ### Docker PostgreSQL 17.11 on port 5433
 

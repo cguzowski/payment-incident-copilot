@@ -121,23 +121,29 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
 
 ## In progress
 
-- Selecting the PDF extraction, source-locator, and deterministic chunking
-  contract before changing the existing knowledge-catalog ingestion path.
+- ADR-0009 implementation is present in the working tree: deterministic
+  PDFBox extraction, 180 page-aware chunks over all 30 PDFs, explicit catalog
+  persistence, lexical retrieval support, and exact PDF citations. Native API
+  startup and Flyway V9 are verified; Docker-backed catalog integration tests
+  remain pending because Docker Desktop is stopped.
 
 ## Next
 
-1. Accept a PDF extraction/chunking/provenance ADR, then implement the tested
-   catalog path without changing retrieval or report ownership.
-2. Ingest the 30-document corpus with stable PDF locators and deterministic,
-   versioned chunks while preserving approval and tenant filters.
-3. Install Ollama outside the repository, index the corpus with
+1. Restore Docker, execute the catalog/search/snapshot PostgreSQL tests against
+   Flyway V9, and run the authoritative zero-skip gate.
+2. After K3 is accepted, install Ollama outside the repository and embed the
+   stable corpus chunks with
    `nomic-embed-text`, measure hybrid retrieval, and run a cited report through
    `qwen3.5:4b` for human review.
 
 ## Blockers
 
-- No blocker prevents the PDF extraction/chunking design or its deterministic
-  implementation slice.
+- Docker Desktop is currently stopped after previously reporting an error, so
+  Testcontainers cannot start.
+  This blocks integration evidence for atomic catalog persistence,
+  lexical/vector eligibility, immutable retrieval snapshots, and the
+  authoritative backend/all gates; it does not block model-free unit or UI
+  work. Flyway V9 itself has executed successfully on native PostgreSQL 18.3.
 - Ollama and its pinned models are not installed in this task environment, so
   the later live embedding, retrieval, and report evaluation remains external.
 
@@ -146,9 +152,9 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
 - No authentication yet.
 - Only `getRecentServiceErrors` is implemented; additional evidence domains and
   operator-selected investigation areas remain future product tasks.
-- The knowledge catalog still ingests only two Markdown documents. The SynTen
-  Inc PDF corpus now exists, but no accepted PDF extraction/locator contract or
-  application ingestion path exists yet.
+- The running knowledge catalog still contains only its baseline Markdown
+  documents until the explicit SynTen PDF import is executed. The application
+  path now exists, but its PostgreSQL acceptance evidence is pending Docker.
 - Live Ollama embedding and report behavior has not yet been verified on this
   machine; local and CI verification use mocked or deterministic model doubles.
 - Historical Titan rows remain auditable and lexically retrievable but are not
@@ -291,6 +297,28 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
   unencrypted, text-extractable PDFs totaling 112 pages (3-4 each). All 112
   rendered pages passed visual review, including every superseded banner and
   replacement reference.
+- 2026-08-31: ADR-0009 accepted PDFBox 3.0.8, exact PDF hash plus 1-based
+  page/block locators, deterministic page-confined chunks, and lexical-before-
+  vector persistence. Repeat extraction probes passed for RB-002, PL-001,
+  table-heavy RB-011, and superseded RB-022; repository verification passed.
+- 2026-08-31: K3 model-free verification parsed all 30 manifest PDFs into 180
+  deterministic bounded chunks. The final non-PostgreSQL Maven reactor passed
+  159 copilot API and 9 MCP tests with zero skips plus Spotless; Angular passed
+  78/78 tests, Prettier, and its production build; repository verification and
+  `git diff --check` passed. PostgreSQL tests remain unexecuted because Docker
+  Desktop reports an error, so no backend or aggregate gate pass is claimed.
+- 2026-08-31: Reproduced and fixed API startup failure caused by Spring choosing
+  no constructor for the two-constructor SynTen corpus repository. The new
+  context regression failed with `No default constructor found`, then passed
+  after the configuration constructor was marked for injection. With `.env`
+  loaded, the API started against native PostgreSQL 18.3, validated all nine
+  Flyway migrations at schema version 9, and returned `UP` from its health
+  endpoint before a graceful shutdown.
+- 2026-08-31: Follow-up health check passed the root local-startup preflight
+  for MCP configuration, tools, native PostgreSQL, and frontend dependencies.
+  `SyntenInc` tracks `origin/SyntenInc`, repository verification and
+  `git diff --check` pass, and Docker Desktop reports `stopped`; the work is on
+  track with only Docker-backed acceptance still pending.
 
 ## Update rule
 
