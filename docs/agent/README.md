@@ -23,6 +23,8 @@ For executable changes, also read `QUALITY.md` and the nearest service-specific
   implementation.
 - `decisions/` — proposed or accepted architectural decisions affected by the
   task.
+- `../../SynTen Inc/README.md` — tenant-specific profile, corpus, PDF, and
+  retrieval-evaluation ownership when working on the SynTen Inc phase.
 
 ## Canonical ownership
 
@@ -39,6 +41,7 @@ Keep each fact in one place:
 | Domain vocabulary | `DOMAIN.md` |
 | Test and verification policy | `QUALITY.md` |
 | Consequential decisions | `decisions/` |
+| SynTen Inc-specific assets | `../../SynTen Inc/` |
 
 ## Maintenance rules
 

@@ -1,10 +1,12 @@
 # Constraints and guardrails
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 
 ## Product constraints
 
 - Build one convincing vertical slice before adding additional incident types.
+- Preserve the completed authorization-decline vertical slice while expanding
+  knowledge depth; do not use the corpus phase to add another incident family.
 - Use synthetic scenarios and synthetic operational records only.
 - The platform investigates; it does not process payments.
 - The model assists; the operator makes the final decision.
@@ -31,6 +33,13 @@ Last reviewed: 2026-08-30
 
 - Never commit AWS keys, database secrets, tokens, or private endpoints.
 - Never use real cardholder, bank-account, customer, or merchant data.
+- SynTen Inc is fictional. Its profile, runbooks, policies, examples, names,
+  identifiers, and operational history must be synthetic and must not reproduce
+  a real company's confidential or proprietary material.
+- Keep SynTen Inc-specific profiles, source content, PDFs, manifests, corpus
+  validation assets, and retrieval-evaluation fixtures under `SynTen Inc/`.
+- Make each SynTen Inc PDF operationally credible and no more than 15 pages,
+  counting cover pages, document-control pages, appendices, and revision history.
 - Use opaque synthetic identifiers rather than realistic sensitive values.
 - Carry `tenant_id` through persistence and retrieval boundaries.
 - Avoid sensitive data in prompts, logs, traces, exceptions, and audit details.
@@ -42,6 +51,9 @@ Last reviewed: 2026-08-30
 - Every observation and inference must be traceable to evidence identifiers.
 - Store model identifier, prompt/template version, generation timestamp, and
   retrieval context identifiers.
+- Preserve enough immutable document, extraction, and source-location metadata
+  to trace each future PDF-derived chunk back to the exact synthetic source
+  version.
 - A schema-valid report can still be wrong; the UI must communicate this.
 - Missing or contradictory evidence must reduce confidence, not invite
   fabrication.

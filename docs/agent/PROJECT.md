@@ -1,8 +1,8 @@
 # Project definition
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 Owner: Christopher Guzowski
-Status: Foundation
+Status: Core vertical slice and SynTen Inc PDF corpus complete; PDF ingestion next
 
 ## One-sentence goal
 
@@ -42,12 +42,13 @@ snapshot without pretending that AI inference is verified fact.
 
 ## MVP scope
 
-- One synthetic financial-services tenant
+- One synthetic financial-services tenant, SynTen Inc
 - One payment incident family
 - Synthetic alert ingestion and one tenant-scoped incident work queue
 - Operator-triggered investigation
 - A small set of read-only MCP tools
-- Markdown runbook and policy ingestion
+- Repository-owned runbook and policy ingestion; the completed slice uses
+  Markdown and the next phase adds a substantial synthetic PDF corpus
 - PostgreSQL and pgvector retrieval
 - Structured report generation with Ollama locally
 - Evidence citations and retrieval status
@@ -78,8 +79,31 @@ snapshot without pretending that AI inference is verified fact.
 - Auditable evidence and decision provenance
 - Docker, CI, testing, and AWS deployment
 
+## Current expansion phase
+
+The completed vertical slice proves the operator workflow from synthetic alert
+through an attributable human decision and audit timeline with deterministic
+model boundaries. The active expansion increases the realism of the approved
+knowledge and live AI path without changing the single-tenant, single-incident-
+family product boundary:
+
+1. Complete: define SynTen Inc and an auditable inventory of synthetic runbooks
+   and policies under `SynTen Inc/`.
+2. Complete: generate and validate a substantial, version-controlled set of
+   text-based PDF source documents in that directory.
+3. Add PDF-aware extraction and chunk provenance while preserving the existing
+   knowledge-catalog boundary.
+4. Embed and index the corpus in PostgreSQL/pgvector with the configured live
+   local embedding model.
+5. Evaluate retrieval and report generation through the real local model path
+   using synthetic incidents and expected source references.
+
 ## Decisions still to fill in
 
+- SynTen Inc corpus: `synten-auth-knowledge/v1`, comprising 22 runbooks and 8
+  policies under `SynTen Inc/`, governed by `synten-pdf-authoring/v1`.
+- PDF extraction, source-location, and chunking contract:
+  `[choose before PDF ingestion implementation]`
 - Bedrock production-profile details: `[choose during deployment milestone]`
 - AWS deployment services: `[choose during deployment milestone]`
-- Authentication approach: `[defer until the core flow works]`
+- Authentication approach: `[deferred to D2 after the live-model knowledge phase]`

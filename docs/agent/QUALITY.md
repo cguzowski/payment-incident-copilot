@@ -1,6 +1,6 @@
 # Quality and validation
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 
 ## Standard commands
 
@@ -57,6 +57,10 @@ record that evidence instead.
   credentials, model downloads, or external network access.
 - Live Ollama smoke checks are explicit local-development checks and do not
   replace the deterministic completion gate.
+- Live corpus evaluations record the exact source-corpus version, extraction
+  and chunking strategy versions, embedding and chat model identifiers, index
+  version, test query, expected sources, actual selected sources, and observed
+  limitations.
 
 ## Coverage expectations
 
@@ -66,7 +70,10 @@ record that evidence instead.
 - Repeatable synthetic scenarios for demonstrations
 - Failure tests for unavailable sources, incomplete evidence, invalid model
   output, duplicate alerts, and rejected reports
-- End-to-end happy path after the vertical slice stabilizes
+- The completed deterministic end-to-end path remains green while the SynTen
+  Inc PDF and live-model path is added
+- Static corpus checks for manifest membership, source/PDF pairing, synthetic
+  metadata, text extraction, rendering, and source-location provenance
 
 ## Observability expectations
 

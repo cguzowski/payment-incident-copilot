@@ -4,7 +4,7 @@ Last updated: 2026-08-31
 
 ## Current milestone
 
-Milestone 1 — Establish the operator investigation workflow.
+Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
 
 ## Completed
 
@@ -109,31 +109,46 @@ Milestone 1 — Establish the operator investigation workflow.
   stable during background requests and transient failures.
 - Consolidated Windows startup so the root launcher starts and opens the
   synthetic incident generator last, with no separate generator launcher.
+- Completed the initial synthetic end-to-end vertical slice from alert intake
+  through human decision and audit timeline. The owner accepted the recorded
+  deterministic implementation and verification evidence on 2026-08-31.
+- Defined `synten-auth-knowledge/v1`: one fictional tenant profile, an exact
+  30-document inventory, a realistic PDF authoring standard, all 36 scenario
+  mappings, all 49 error codes, and 23 retrieval-evaluation cases.
+- Generated and validated 22 runbook PDFs and 8 policy PDFs with maintained
+  Markdown authorities, stable SHA-256 hashes, 27 approved and 3 superseded
+  versions, full-page visual review, and no document over 4 pages.
 
 ## In progress
 
-- Live Ollama smoke verification remains pending outside the deterministic
-  automated suite.
+- Selecting the PDF extraction, source-locator, and deterministic chunking
+  contract before changing the existing knowledge-catalog ingestion path.
 
 ## Next
 
-1. Perform a final hands-on keyboard-only decision-form check; semantic form,
-   focus, and validation behavior are automated, but the browser-control surface
-   could not drive Tab/Space during the live smoke.
-2. Install Ollama outside the repository, pull `qwen3.5:4b` and
-   `nomic-embed-text`, and run the documented embedding and report smokes.
-3. Activate P4 when its behavioral contract is selected and approved.
+1. Accept a PDF extraction/chunking/provenance ADR, then implement the tested
+   catalog path without changing retrieval or report ownership.
+2. Ingest the 30-document corpus with stable PDF locators and deterministic,
+   versioned chunks while preserving approval and tenant filters.
+3. Install Ollama outside the repository, index the corpus with
+   `nomic-embed-text`, measure hybrid retrieval, and run a cited report through
+   `qwen3.5:4b` for human review.
 
 ## Blockers
 
+- No blocker prevents the PDF extraction/chunking design or its deterministic
+  implementation slice.
 - Ollama and its pinned models are not installed in this task environment, so
-  live embedding and report smoke verification remains external.
+  the later live embedding, retrieval, and report evaluation remains external.
 
 ## Known deliberate gaps
 
 - No authentication yet.
 - Only `getRecentServiceErrors` is implemented; additional evidence domains and
   operator-selected investigation areas remain future product tasks.
+- The knowledge catalog still ingests only two Markdown documents. The SynTen
+  Inc PDF corpus now exists, but no accepted PDF extraction/locator contract or
+  application ingestion path exists yet.
 - Live Ollama embedding and report behavior has not yet been verified on this
   machine; local and CI verification use mocked or deterministic model doubles.
 - Historical Titan rows remain auditable and lexically retrievable but are not
@@ -269,6 +284,13 @@ Milestone 1 — Establish the operator investigation workflow.
 - 2026-08-31: The synthetic generator's launcher regression failed before the
   consolidation, then its full standalone gate passed 16/16 tests with
   Spotless. The root launcher's `--CheckOnly` preflight also passed.
+- 2026-08-31: K1 corpus-contract checks passed for 30 unique versions, all 36
+  scenario mappings, all 49 error codes, 23 retrieval cases, sensitive-pattern
+  review, diff checks, and repository verification.
+- 2026-08-31: K2 passed 6/6 focused PDF tests and validated 30 deterministic,
+  unencrypted, text-extractable PDFs totaling 112 pages (3-4 each). All 112
+  rendered pages passed visual review, including every superseded banner and
+  replacement reference.
 
 ## Update rule
 

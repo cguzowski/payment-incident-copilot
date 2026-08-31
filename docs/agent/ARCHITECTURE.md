@@ -1,6 +1,6 @@
 # Architecture
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 
 ## System boundaries
 
@@ -136,6 +136,26 @@ Both paths are implemented. Report generation uses the application-owned
 `report-v1` prompt/schema contract and validates every source reference before
 persistence. Tests disable chat and embedding provider auto-configuration and
 replace model responses with mocks or deterministic doubles.
+
+## Knowledge-source evolution
+
+The completed slice loads two repository-owned Markdown sources through
+`knowledge.catalog`. The SynTen Inc expansion now provides 30 repository-owned,
+text-based PDFs under `SynTen Inc/`; the next catalog change will ingest them
+without moving parsing, chunking, hashing, embedding, or index writes out of
+that feature boundary. Retrieval and report generation continue to consume
+persisted catalog records rather than reading PDFs directly or sending whole
+documents to a model.
+
+PDF ingestion must produce an immutable parsed representation and retain the
+source document version, source hash, extraction strategy version, chunking
+strategy version, and a stable locator back to the PDF. A new accepted ADR must
+select the PDF extraction and locator contract and revise ADR-0002's
+Markdown-aware chunking decision before executable ingestion changes begin.
+
+Live local-model evaluation is an explicit smoke/evaluation workflow over
+synthetic data. Normal automated verification remains deterministic and
+network-free.
 
 ## Primary states
 
