@@ -1,8 +1,8 @@
 # Project definition
 
-Last reviewed: 2026-08-31
+Last reviewed: 2026-09-01
 Owner: Christopher Guzowski
-Status: Core vertical slice and SynTen Inc PDF corpus complete; PDF ingestion next
+Status: Core vertical slice and K4 complete; K5 live retrieval proof active
 
 ## One-sentence goal
 
@@ -91,12 +91,13 @@ family product boundary:
    and policies under `SynTen Inc/`.
 2. Complete: generate and validate a substantial, version-controlled set of
    text-based PDF source documents in that directory.
-3. Add PDF-aware extraction and chunk provenance while preserving the existing
-   knowledge-catalog boundary.
-4. Embed and index the corpus in PostgreSQL/pgvector with the configured live
-   local embedding model.
-5. Evaluate retrieval and report generation through the real local model path
-   using synthetic incidents and expected source references.
+3. Complete: add PDF-aware extraction and chunk provenance while preserving
+   the existing knowledge-catalog boundary.
+4. Complete: embed and index the corpus in PostgreSQL/pgvector with the
+   configured live local embedding model.
+5. Retrieval evaluation completed with a retained factual FAIL result; K5 will
+   address the approved-knowledge retrieval path and prove a cited result in the
+   operator workflow with live `nomic-embed-text`.
 
 ## Decisions still to fill in
 

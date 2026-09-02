@@ -270,7 +270,7 @@ class HumanDecisionPersistencePostgresIntegrationTest {
                 .andExpect(jsonPath("$[3].eventType").value("KNOWLEDGE_RETRIEVAL"))
                 .andExpect(jsonPath("$[3].actorKind").value("UNATTRIBUTED"))
                 .andExpect(jsonPath("$[4].eventType").value("REPORT_GENERATION"))
-                .andExpect(jsonPath("$[4].modelId").value("qwen3.5:4b"))
+                .andExpect(jsonPath("$[4].modelId").value("test-report-model"))
                 .andExpect(jsonPath("$[4].promptVersion").value("report-prompt/v1"))
                 .andExpect(jsonPath("$[5].eventType").value("HUMAN_DECISION"))
                 .andExpect(jsonPath("$[5].reason").value("The evidence is insufficient."))
@@ -428,7 +428,7 @@ class HumanDecisionPersistencePostgresIntegrationTest {
                             :reportId, :tenantId, :investigationId, :incidentId,
                             :correlationId, :operatorId, 'AVAILABLE',
                             TIMESTAMPTZ '2026-08-30 11:59:10Z',
-                            TIMESTAMPTZ '2026-08-30 11:59:20Z', 'qwen3.5:4b', 0,
+                            TIMESTAMPTZ '2026-08-30 11:59:20Z', 'test-report-model', 0,
                             4096, 'report-prompt/v1', :promptHash,
                             'report-v1', :schemaHash, :evidenceId,
                             :evidenceId, :retrievalId, 'INSUFFICIENT_EVIDENCE',

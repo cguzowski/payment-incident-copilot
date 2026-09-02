@@ -1,249 +1,193 @@
-# Task: Catalog the SynTen Inc PDFs with exact page provenance
+# Task: Prove live approved-knowledge retrieval in the operator workflow
 
-Status: Implementation in progress — Docker-backed PostgreSQL acceptance pending
-Created: 2026-08-31
+Status: Complete with factual evaluation FAIL
+Created: 2026-09-01
 Owner: Christopher Guzowski
 
 ## Goal
 
-Implement ADR-0009 end to end: validate and parse all 30 SynTen Inc PDFs into
-deterministic page-aware chunks, persist the complete catalog without requiring
-a model, make approved chunks available to existing lexical retrieval, and
-show exact PDF/page citations while preserving the completed Markdown path.
+Improve the approved-knowledge retrieval path from the retained K4 baseline and
+prove that a repeatable synthetic investigation using live
+`nomic-embed-text` returns and displays eligible cited SynTen PDF guidance when
+the operator clicks **Retrieve approved knowledge**.
 
 ## User story
 
-As a payment operations analyst, I want a retrieved SynTen Inc excerpt to name
-the exact PDF version, SHA-256, page, and block range that produced it, so I can
-review the source and trust that superseded or changed guidance did not enter
-the result.
-
-## Context
-
-K1 defined `synten-auth-knowledge/v1`; K2 generated and validated 30 maintained
-Markdown/PDF pairs totaling 112 pages; ADR-0009 selected PDFBox 3.0.8,
-`pdfbox-text-pages/v1`, and `pdf-page-sections/v1`. The application currently
-persists embedded chunks from two classpath Markdown documents. K3 adds a
-parallel explicit catalog import for the repository-owned SynTen corpus. K4,
-not this task, will populate PDF embeddings and measure hybrid retrieval with
-Ollama.
+As a payment operations analyst, I want the approved-knowledge action to show
+relevant runbook and policy excerpts with exact PDF provenance, so I can review
+useful operational guidance instead of receiving an unexplained no-match for a
+supported synthetic incident.
 
 ## Chosen contract
 
-- Pin `org.apache.pdfbox:pdfbox:3.0.8` in `copilot-api`.
-- Read SynTen membership and artifact hashes from
-  `SynTen Inc/corpus/validation-manifest.json`; read catalog metadata from each
-  paired maintained source front matter; verify both artifacts before parsing.
-- Require the exact SynTen tenant, 30 unique manifest entries, 1-15 pages,
-  unencrypted text on every page, supported `RUNBOOK`/`POLICY` type, and
-  `APPROVED`/`SUPERSEDED` status. Reject the whole import before writes when any
-  input is invalid.
-- Normalize and parse physical pages exactly as ADR-0009 specifies. Remove only
-  the exact validated generated header/footer; retain superseded banners,
-  ordered table text, headings, lists, machine codes, and page boundaries.
-- Use 1-based inclusive PDF page/block locators. A chunk never crosses a page.
-  Use `pdf-page-sections/v1` with target 400, maximum 600, overlap 50, and
-  preferred minimum 80 estimated tokens.
-- Persist all 30 versions and their chunks. Superseded chunks remain auditable
-  but the existing approval filter excludes them before ranking.
-- PDF chunks have a complete embedding-input wrapper and hashes but an absent
-  embedding tuple. Embedding model, dimensions, normalized flag, timestamp,
-  and vector are either all present or all absent.
-- Existing lexical search includes approved unembedded PDF chunks. Existing
-  vector search ignores chunks without a compatible complete embedding.
-- Retrieval-result snapshots and API responses copy source name, source format,
-  PDF hash, and the PDF page/block range. Historical Markdown results continue
-  to use line ranges.
-- The operator console labels either `PDF page N, blocks A-B` with filename and
-  hash or the historical Markdown line range. No raw repository path is sent
-  to the browser.
-- Import remains explicit and disabled by default. A configured corpus root is
-  required when PDF catalog import is enabled; normal startup and automated
-  tests do not depend on a working-directory-relative production default.
-- Existing Markdown ingestion, retrieval ranking constants, report schema,
-  report source-reference validation, tenant boundary, and incident family do
-  not change.
+- Preserve the immutable K4 FAIL artifact, `synten-retrieval-eval/v1` labels,
+  corpus content, 30 document versions, 705 chunk identities, embedding tuples,
+  tenant filters, approval/effective-version rules, and superseded exclusions.
+- Keep live K5 model use embedding-only: Ollama `nomic-embed-text`, normalized
+  768 dimensions. Keep `spring.ai.model.chat=none`; do not select, pull, or call
+  a chat model.
+- Introduce `knowledge-query/v2`. When applicable evidence contains a service
+  or error observations, build the query from the scenario-specific description,
+  evidence status, service, and ordered error codes/counts; omit the repeated
+  incident-family and generic alert-title boilerplate. When evidence is absent
+  or unavailable, retain the normalized title/description and explicit status
+  without inventing observations.
+- Introduce `postgres-hybrid-rrf/v2`. Keep candidate depth 20, RRF `k=60`,
+  cosine threshold `0.55`, exact pgvector search, and existing tie-break fields,
+  but apply candidate depth independently to RUNBOOK and POLICY within each
+  lexical and vector modality. Rank positions are type-local, matching the
+  existing four-runbook/three-policy allocation. The bounded fused union is at
+  most 80 chunks.
+- Select context in two stable passes per document type: first take the highest-
+  ranked chunk from distinct document versions, then fill any remaining type
+  slots from the still-ranked candidate stream. Never include an ineligible or
+  weaker type merely to fill a quota.
+- Use S001 as the primary live operator proof because its reviewed labels are
+  RB-002 and PL-006 and its evidence contains both `GATEWAY_TIMEOUT` and
+  `UPSTREAM_CONNECTION_RESET`. Completion requires an AVAILABLE retrieval with
+  at least RB-002 displayed as a cited PDF result; PL-006 remains part of the
+  fixed evaluation rather than being hard-coded into product behavior.
+- Re-run all 23 cases/37 variants through the unchanged evaluator. K5 must keep
+  zero ineligible candidates and all KQ-020/KQ-022/KQ-023 semantics, must not
+  reduce any K4 aggregate, and must retain a complete factual result even if the
+  fixed quality thresholds still fail.
 
 ## In scope
 
-- PDFBox dependency and immutable PDF parsed-document/page/block records.
-- Manifest and paired-source metadata loading under `knowledge.catalog`.
-- PDF validation, normalization, header/footer removal, extraction, hashing,
-  deterministic page-aware chunking, and stable IDs.
-- An explicit all-or-nothing SynTen PDF catalog import path.
-- Flyway V9 catalog, nullable-embedding, chunk-locator, and retrieval-snapshot
-  evolution with existing-row backfill and constraints.
-- Lexical retrieval of approved unembedded chunks and vector null-safety.
-- Additive retrieval API and operator-console provenance rendering.
-- Documentation, task evidence, and deterministic verification.
+- Query-template v2 and its persisted/audited version metadata.
+- Type-balanced lexical/vector candidate generation and bounded artifact rules.
+- Document-diverse context selection.
+- Deterministic unit and PostgreSQL regression tests, including S001-shaped
+  retrieval data and unavailable/partial evidence behavior.
+- A fresh live evaluation artifact comparable with the retained K4 baseline.
+- Live API and operator-console verification against the dedicated K4/K5
+  synthetic database, using the real button and visible PDF citation.
+- README, ADR, roadmap, status, and task evidence updates.
 
 ## Out of scope
 
-- Generating or editing the K2 sources or PDFs.
-- Calling Ollama, downloading models, creating PDF embeddings, or measuring
-  semantic/hybrid retrieval quality; those are K4.
-- OCR, passwords, scanned documents, rotated/multi-column generalization,
-  semantic table reconstruction, or arbitrary external PDF ingestion.
-- Continuous file watching, uploads, object storage, or a content-management
-  API.
-- Serving PDF bytes from the API or adding a browser PDF viewer.
-- Re-ranking changes, a second incident family, authentication, or deployment.
+- Editing corpus sources, PDFs, validation manifest, labels, expected document
+  keys, or the retained K4 artifact.
+- Hard-coding scenario IDs, error-code-to-document mappings, expected document
+  IDs, or evaluation labels into product retrieval.
+- Lowering eligibility, approval, effective-time, tenant, or superseded-source
+  protections.
+- Approximate indexes, a new database migration, re-embedding, another tenant
+  or incident family, authentication, deployment, or AWS work.
+- Live report generation, report grading, or any chat-model selection.
 
 ## Constraints
 
-- Follow ADR-0009 and do not weaken a fail-closed rule to admit a fixture.
-- All SynTen-specific data and fixtures stay under `SynTen Inc/`; shared Java,
-  schema, UI, and project documentation stay in their existing boundaries.
-- Use TDD for every behavior change and record the intended red failure before
-  production code.
-- Keep automated verification network-free and model-free after Maven resolves
-  the pinned build dependency.
-- Preserve immutable historical retrieval/report references and all existing
-  V1-V8 Flyway checksums.
-- Do not expose filesystem paths, source Markdown bodies, or whole PDFs through
-  the retrieval API.
+- Follow ADR-0002, ADR-0009, ADR-0010, and the repository product guardrails.
+- Every executable behavior change follows red-green-refactor.
+- Automated verification remains deterministic, network-free, and model-free.
+- Persist exact query/ranking versions and candidate/selection provenance.
+- Never log or publish vectors, embedding inputs, source text outside the
+  existing operator result contract, credentials, database URLs, or stack traces.
+- Preserve all V1-V9 Flyway checksums and independently deployable services.
 
 ## Acceptance criteria
 
-- [x] `SynTenCorpusSourceRepositoryTest.loadsTheExactThirtyManifestVersionsInOrder`
-      proves exact membership, tenant, metadata, maintained-source/PDF hashes,
-      and 27 approved plus 3 superseded versions.
-- [x] Repository failure tests reject source/PDF hash mismatch, duplicate
-      tenant/document/version, missing/extra artifact, unsupported metadata,
-      path escape, wrong tenant, and manifest/source disagreement before parse.
-- [x] `PdfBoxKnowledgeDocumentParserTest.extractsDeterministicPageBlocksAndRemovesOnlyGeneratedMargins`
-      covers RB-002 and exact page counts/block order across two parses.
-- [x] Parser tests cover PL-001 policy structure, RB-011 table reading order,
-      retained RB-022 superseded banners, CR/LF/NBSP/NFC normalization, and
-      exact page locators.
-- [x] Parser failure tests reject encrypted, malformed, empty/scanned-only,
-      zero-page or over-15-page, missing expected margin, and page-count-
-      mismatch PDFs with bounded non-sensitive errors.
-- [x] `PdfKnowledgeChunkerTest.neverCrossesPagesAndCarriesSectionContext`
-      proves deterministic order/IDs, page/block ranges, section carry-forward,
-      table-line order, target/hard maximum, same-page overlap, short-tail
-      merging, and oversized-block splitting.
-- [ ] `SynTenPdfCatalogImportServiceTest.validatesTheWholeCorpusBeforeOneAtomicWrite`
-      proves all-or-nothing validation, stable repeat imports, changed-content
-      rejection, 30 catalogued versions, and no embedding calls.
-- [ ] Flyway V9 preserves V1-V8 checksums and enforces source-format/hash,
-      exactly-one-locator-family, PDF range, all-or-none embedding tuple,
-      tenant foreign-key, and 600-token constraints for both legacy and PDF
-      rows.
-- [ ] `SynTenPdfCatalogPostgresIntegrationTest.catalogsThirtyVersionsWithStablePdfLocators`
-      stores the real corpus with 27 approved and 3 superseded versions and
-      obtains the same document/chunk IDs and hashes on a repeat plan.
-- [ ] Hybrid-search integration proves an approved unembedded PDF chunk is
-      lexically eligible, absent from vector ranking, tenant-filtered, and that
-      an exact superseded near-match is excluded before ranking.
-- [ ] Retrieval persistence and HTTP tests prove source format, safe filename,
-      PDF hash, and page/block range are copied into immutable attempt history;
-      Markdown line locators remain backward compatible.
-- [x] Operator-console tests render PDF citation fields for PDF results and
-      line ranges for Markdown results with no regression to loading, history,
-      retry, or status states.
-- [ ] Focused backend/frontend suites, PostgreSQL integration tests, Spotless,
-      Prettier, builds, Compose validation, `git diff --check`, and the
-      authoritative `./verify.ps1` gate pass with zero skipped tests.
+- [x] Query-builder tests prove evidence-focused `knowledge-query/v2`, bounded
+      normalized text, stable evidence IDs, and honest unavailable/no-evidence
+      behavior without generic-boilerplate dominance.
+- [x] PostgreSQL tests prove each modality contributes at most 20 RUNBOOK and
+      20 POLICY candidates, preserves exact eligibility/model filtering, emits
+      deterministic type-local positions, and bounds the fused union at 80.
+- [x] Selector tests prove distinct document versions receive the first slots
+      per type before repeat chunks, while four-runbook/three-policy limits and
+      ranked fill behavior remain stable.
+- [x] Retrieval/API persistence tests record `knowledge-query/v2` and
+      `postgres-hybrid-rrf/v2`, return AVAILABLE for an S001-shaped deterministic
+      case, and preserve partial/unavailable/no-match semantics.
+- [x] The fixed live evaluation preserves zero ineligible candidates and all
+      KQ-020/KQ-022/KQ-023 semantics, does not reduce the K4 aggregates
+      9/22, 1/20, and 16/21, and retains exact comparative diagnostics.
+- [x] In the live operator console, clicking **Retrieve approved knowledge** for
+      the accepted S001 investigation displays an AVAILABLE attempt containing
+      RB-002 source text, filename, PDF SHA-256, page, block range, and IDs; the
+      no-match copy is not shown for that attempt.
+- [x] Focused backend/PostgreSQL/frontend tests, Spotless, Prettier, production
+      builds, repository checks, `git diff --check`, and `./verify.ps1` pass
+      with zero skips and no Ollama dependency in automation.
 
-## Test plan and red-green order
+## Test plan
 
-1. Red: add `SynTenCorpusSourceRepositoryTest` membership/hashing and rejection
-   cases before implementing manifest/front-matter loading.
-2. Green: add only the immutable source descriptors and safe filesystem loader.
-3. Red: add `PdfBoxKnowledgeDocumentParserTest` representative and failure
-   cases before adding PDFBox parser production code.
-4. Green: implement `pdfbox-text-pages/v1` and immutable page/block records.
-5. Red: add `PdfKnowledgeChunkerTest` before implementing
-   `pdf-page-sections/v1` and stable chunk IDs.
-6. Red: add V9 schema assertions and catalog persistence tests before the
-   migration and repository changes.
-7. Red: add import-service atomicity/idempotency tests before the explicit
-   import service/command.
-8. Red: add lexical/vector eligibility and locator snapshot tests before
-   changing search and retrieval persistence.
-9. Red: add Angular provenance rendering tests before model/template changes.
-10. Green/refactor: run focused suites after each behavior, then backend,
-    frontend, repository, and authoritative gates.
-
-## Likely files or components
-
-- `backend/copilot-api/pom.xml`
-- `backend/copilot-api/src/main/java/.../knowledge/catalog/`
-- `backend/copilot-api/src/main/java/.../knowledge/retrieval/`
-- `backend/copilot-api/src/main/resources/db/migration/V9__*.sql`
-- `backend/copilot-api/src/test/java/.../knowledge/`
-- `frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/`
-- `SynTen Inc/corpus/validation-manifest.json`
-- `docs/agent/STATUS.md`
-
-## Validation commands
-
-```powershell
-./mvnw.cmd -pl backend/copilot-api -Dtest=SynTenCorpusSourceRepositoryTest,PdfBoxKnowledgeDocumentParserTest,PdfKnowledgeChunkerTest,SynTenPdfCatalogImportServiceTest test
-./mvnw.cmd -pl backend/copilot-api -Dtest=KnowledgeSchemaPostgresIntegrationTest,SynTenPdfCatalogPostgresIntegrationTest,KnowledgeHybridSearchPostgresIntegrationTest,KnowledgeRetrievalPersistencePostgresIntegrationTest,KnowledgeRetrievalApiPostgresIntegrationTest test
-./verify.ps1 -Scope Backend
-./verify.ps1 -Scope Frontend
-./verify.ps1 -Scope Repository
-./verify.ps1
-```
-
-## Decisions needed
-
-None. ADR-0009 and this contract authorize implementation.
+1. Red/green `KnowledgeRetrievalQueryBuilderTest` for available evidence,
+   unavailable evidence, no evidence, normalization, truncation, and version.
+2. Red/green `KnowledgeContextSelectorTest` for repeated leading chunks,
+   distinct-document first pass, stable fill, and type quotas.
+3. Red/green PostgreSQL hybrid-search tests for per-type modality depth,
+   type-local positions, 80-candidate bound, filters, fallback, and tie-breaks.
+4. Update artifact-bound tests from a 40-candidate to an 80-candidate valid
+   maximum and reject 81.
+5. Run retrieval service/controller/persistence/evaluation focused suites, then
+   backend and repository gates.
+6. Run a fresh live evaluation against the retained database and compare every
+   aggregate and special semantic with the K4 artifact.
+7. Start the isolated live API and operator console, use the browser to click
+   the real S001 action, and inspect the visible citation and absence of the
+   no-match message.
+8. Run the unscoped authoritative gate and final secret/generated-output audit.
 
 ## Progress notes
 
-- 2026-08-31: ADR-0009 accepted after repeatable PDFBox 3.0.8 probes over
-  RB-002, PL-001, RB-011, and RB-022. The design-task repository gate passed.
-- 2026-08-31: Implemented fail-closed manifest/source validation, PDFBox page
-  extraction, deterministic page-confined chunking, stable IDs/hashes, and an
-  explicit all-or-nothing catalog command. A real-corpus model-free test parsed
-  all 30 PDFs into 180 chunks with 27 approved and 3 superseded versions.
-- 2026-08-31: Added Flyway V9, nullable all-or-none embedding support,
-  PostgreSQL catalog/search/snapshot contracts, additive API provenance, and
-  operator citations for PDF page/block or historical Markdown line locators.
-- 2026-08-31: Red-green evidence includes repository, PDF parser/chunker,
-  import orchestration, API, and Angular citation tests. A late fail-closed
-  audit added and proved rejection of `DRAFT` corpus metadata after its focused
-  test first failed for accepting it.
-- 2026-08-31: Docker Desktop reported an error. Work continued through every
-  model-free path; Testcontainers was not treated as passing or replaced with
-  skipped-test evidence.
-- 2026-08-31: Reproduced the reported Maven startup exit. With `.env` loaded,
-  the actionable cause was Spring constructor ambiguity in
-  `SynTenCorpusSourceRepository`. Added a context regression that failed with
-  `No default constructor found`, marked the configuration constructor for
-  injection, and proved the regression green.
+- 2026-09-01: The owner authorized K5 after K4 completed and selected
+  `nomic-embed-text` as the only live K5 model. ADR-0010 fixes the operator-
+  visible cited-retrieval outcome and defers live report generation.
+- 2026-09-01: K4 diagnostics show generic RB-001 and PL-001 chunks monopolizing
+  global candidate pools and repeated chunks consuming context slots. The K5
+  contract addresses those measured causes without changing labels or corpus.
+- 2026-09-01: Red-green coverage introduced the v2 evidence query, type-local
+  candidate depth and ranks, an 80-candidate union bound, and distinct-document
+  first-pass selection. The focused K5 suite passed 17/17 tests; the bounded
+  full-evaluation artifact suite passed 6/6 tests.
+- 2026-09-01: Fresh live run `375ebc04ba894e84b2d18aeb6bc4d3cb`
+  evaluated all 23 cases/37 variants against the retained 30-document,
+  705-chunk `nomic-embed-text` catalog. It preserved zero ineligible
+  candidates and all KQ-020/KQ-022/KQ-023 semantics and improved the three
+  aggregates from 9/22, 1/20, 16/21 to 19/22, 12/20, 16/21.
+- 2026-09-01: In the real operator console, the existing **Retrieve approved
+  knowledge** button produced AVAILABLE attempt
+  `bcf58984-c8c1-464e-9fed-5f2515705f4a` for S001 and visibly rendered RB-002
+  with its exact PDF filename, SHA-256, page 3, block range 34-50, and document,
+  version, and chunk IDs. The no-match copy was absent.
 
 ## Completion evidence
 
-- `./mvnw.cmd "-Dtest=!*PostgresIntegrationTest" verify` passed 159 copilot API
-  and 9 operations MCP tests with zero failures, errors, or skips, including
-  Spotless and both deployable JAR builds.
-- With the ignored root `.env` loaded, `./mvnw.cmd -pl backend/copilot-api
-  spring-boot:run` started the API against native PostgreSQL 18.3, validated
-  Flyway V1-V9 at schema version 9, and returned `UP` from
-  `/actuator/health` before a graceful shutdown.
-- The focused PDF/API suite passed 28/28 tests with zero skips; final parser and
-  corpus validation reruns passed 12/12 after the fail-closed metadata audit.
-- `./verify.ps1 -Scope Frontend` passed locked installation with zero audit
-  vulnerabilities, 78/78 tests with zero skips, Prettier, and the 389.32 kB
-  raw production build.
-- `./verify.ps1 -Scope Repository` passed verification-system tests, Compose
-  configuration, and `git diff --check`.
-- All 56 copilot API test sources, including the new PostgreSQL integration
-  contracts, compile successfully.
-- Completion is not claimed until the Docker-backed tests and authoritative
-  zero-skip gate execute successfully.
+- Live artifact:
+  `SynTen Inc/evaluation/results/375ebc04ba894e84b2d18aeb6bc4d3cb-FAIL.json`
+  (SHA-256
+  `5a58f03654d9bdaba267ce01a62537536f8fdf7c0b8686967f3b926a2021503e`).
+  The immutable K4 comparison artifact remains
+  `14588db4735841ffb5711a962e2c5119-FAIL.json`.
+- S001 selected RB-002 plus RB-001, RB-011, RB-003, PL-005, PL-001, and PL-002;
+  RB-002 was the first rendered result. Its cited source was
+  `rb-002-gateway-connectivity-and-timeouts-v2.0.0.pdf`, SHA-256
+  `7ea219d9ed06f921feeaea683d8ee4003047755eee0c1eefd240d82dcd484149`,
+  page 3, blocks 34-50.
+- The focused PostgreSQL API regression passed 2/2 with zero skips after the
+  v1 query assertion was updated to the locked v2 contract.
+- Authoritative `./verify.ps1` passed 289/289 copilot API, 9/9 operations MCP,
+  and 78/78 Angular tests with zero failures, errors, or skips. The seven-test
+  evaluation runner, Spotless, Prettier, both production builds, locked npm
+  install with zero vulnerabilities, Compose validation, repository checks,
+  and `git diff --check` also passed.
+- Active source and current documentation contain no `qwen3.5` model reference;
+  K5 live retrieval used only `nomic-embed-text`, and chat remained disabled.
 
 ## Remaining limitations
 
-- Docker Desktop is stopped after previously reporting an error, so the new atomic catalog,
-  idempotency/conflict, lexical eligibility, vector null-safety, and immutable
-  snapshot integration tests have not executed. Flyway V9 itself is verified
-  on native PostgreSQL 18.3, but the backend and aggregate verification gates
-  remain pending.
-- The explicit PDF catalog command has not been run against a real PostgreSQL
-  database in this environment. PDF embeddings and live-model evaluation
-  remain intentionally deferred to K4.
+- The fresh K5 artifact factually remains FAIL: primary runbook retrieval is
+  19/22, supporting policy retrieval is 12/20, and primary-over-weak ranking is
+  16/21 against a required 19. K5 completion does not reinterpret or lower
+  those fixed thresholds.
+- Passing the S001 operator proof does not imply that every possible
+  investigation has eligible knowledge.
+- Live report generation and chat-model selection remain deferred and were not
+  exercised by K5.
+
+## Decisions needed
+
+None. The owner authorized K5 on 2026-09-01; ADR-0010 and this chosen contract
+define the implementation boundary.

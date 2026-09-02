@@ -1,7 +1,7 @@
 package com.cguzowski.paymentcopilot.knowledge.catalog;
 
-import java.util.List;
+import java.time.Instant;
 
 interface SynTenPdfCatalogRepository {
-    PdfCatalogImportSummary importAll(List<PdfCatalogDocumentPlan> plans);
+    PdfCatalogImportSummary importAll(SynTenPdfCatalogPlan plan, Instant importedAt) throws IllegalArgumentException;
 }

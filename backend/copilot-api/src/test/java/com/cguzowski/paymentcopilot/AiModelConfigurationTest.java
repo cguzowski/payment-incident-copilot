@@ -16,17 +16,17 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 class AiModelConfigurationTest {
 
     @Test
-    void configuresOneAuditableModelCallAndABoundedReportDeadline() throws IOException {
+    void configuresEmbeddingOnlyLocalK5AndABoundedReportDeadline() throws IOException {
         List<PropertySource<?>> localSources =
                 new YamlPropertySourceLoader().load("application", new ClassPathResource("application.yml"));
         assertThat(localSources).hasSize(1);
         PropertySource<?> local = localSources.getFirst();
 
-        assertThat(local.getProperty("spring.ai.model.chat")).isEqualTo("ollama");
+        assertThat(local.getProperty("spring.ai.model.chat")).isEqualTo("none");
         assertThat(local.getProperty("spring.ai.model.embedding")).isEqualTo("ollama");
         assertThat(local.getProperty("spring.ai.ollama.base-url")).isEqualTo("http://localhost:11434");
-        assertThat(local.getProperty("spring.ai.ollama.chat.model")).isEqualTo("qwen3.5:4b");
-        assertThat(local.getProperty("spring.ai.ollama.chat.temperature")).isEqualTo(0);
+        assertThat(local.getProperty("spring.ai.ollama.chat.model")).isNull();
+        assertThat(local.getProperty("spring.ai.ollama.chat.temperature")).isNull();
         assertThat(local.getProperty("spring.ai.ollama.embedding.model")).isEqualTo("nomic-embed-text");
         assertThat(local.getProperty("spring.ai.retry.max-attempts")).isEqualTo(1);
         assertThat(local.getProperty("app.report.generation-timeout")).isEqualTo("${REPORT_GENERATION_TIMEOUT:2m}");

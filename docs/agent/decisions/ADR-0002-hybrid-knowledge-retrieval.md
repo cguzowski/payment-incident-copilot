@@ -1,12 +1,15 @@
 # ADR-0002: Hybrid tenant-scoped operational-knowledge retrieval
 
-Status: Accepted; provider-specific portions superseded by ADR-0007
+Status: Accepted; provider-specific portions superseded by ADR-0007 and K5
+candidate pooling/context selection superseded by ADR-0011
 Date: 2026-08-28
 Decision owner: Christopher Guzowski
 
 ADR-0007 changes the active local embedding provider, model, dimensions, and
-test-provider boundary. This record remains authoritative for hybrid search,
-chunking, RRF, provenance, and the historical Titan index contract.
+test-provider boundary. ADR-0011 changes how the fixed candidate depth is
+allocated and how repeated document chunks enter final context. This record
+remains authoritative for the underlying hybrid-search approach, chunking,
+RRF, provenance, and the historical Titan index contract.
 
 ## Context
 

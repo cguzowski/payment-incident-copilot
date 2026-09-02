@@ -93,20 +93,19 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                         lexical_ranked AS (
                             SELECT lexical_scored.*,
                                    ROW_NUMBER() OVER (
+                                       PARTITION BY document_type
                                        ORDER BY lexical_rank DESC,
-                                                document_type,
                                                 document_id,
                                                 document_version,
                                                 chunk_ordinal
                                    ) AS lexical_position
                             FROM lexical_scored
                             WHERE lexical_rank > :minimumLexicalRank
-                            ORDER BY lexical_rank DESC,
-                                     document_type,
-                                     document_id,
-                                     document_version,
-                                     chunk_ordinal
-                            LIMIT :candidateDepth
+                        ),
+                        lexical_limited AS (
+                            SELECT *
+                            FROM lexical_ranked
+                            WHERE lexical_position <= :candidateDepth
                         ),
                         vector_scored AS (
                             SELECT e.*,
@@ -121,20 +120,19 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                         vector_ranked AS (
                             SELECT vector_scored.*,
                                    ROW_NUMBER() OVER (
+                                       PARTITION BY document_type
                                        ORDER BY vector_similarity DESC,
-                                                document_type,
                                                 document_id,
                                                 document_version,
                                                 chunk_ordinal
                                    ) AS vector_position
                             FROM vector_scored
                             WHERE vector_similarity >= :minimumVectorSimilarity
-                            ORDER BY vector_similarity DESC,
-                                     document_type,
-                                     document_id,
-                                     document_version,
-                                     chunk_ordinal
-                            LIMIT :candidateDepth
+                        ),
+                        vector_limited AS (
+                            SELECT *
+                            FROM vector_ranked
+                            WHERE vector_position <= :candidateDepth
                         ),
                         fused AS (
                             SELECT COALESCE(l.chunk_id, v.chunk_id) AS chunk_id,
@@ -145,11 +143,12 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                    COALESCE(1.0 / (:rrfK + l.lexical_position), 0.0)
                                    + COALESCE(1.0 / (:rrfK + v.vector_position), 0.0)
                                        AS fused_score
-                            FROM lexical_ranked l
-                            FULL OUTER JOIN vector_ranked v ON v.chunk_id = l.chunk_id
+                            FROM lexical_limited l
+                            FULL OUTER JOIN vector_limited v ON v.chunk_id = l.chunk_id
                         )
                         SELECT e.tenant_id,
                                e.chunk_id,
+                               e.chunk_ordinal,
                                e.document_version_id,
                                e.document_id,
                                e.document_type,
@@ -208,6 +207,7 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
         return new KnowledgeSearchCandidate(
                 resultSet.getObject("tenant_id", UUID.class),
                 resultSet.getObject("chunk_id", UUID.class),
+                resultSet.getInt("chunk_ordinal"),
                 resultSet.getObject("document_version_id", UUID.class),
                 resultSet.getObject("document_id", UUID.class),
                 KnowledgeDocumentType.valueOf(resultSet.getString("document_type")),

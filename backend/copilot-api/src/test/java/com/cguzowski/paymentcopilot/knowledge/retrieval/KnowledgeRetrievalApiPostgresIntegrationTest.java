@@ -97,7 +97,11 @@ class KnowledgeRetrievalApiPostgresIntegrationTest {
             assertThat(TransactionSynchronizationManager.isActualTransactionActive())
                     .isFalse();
             assertThat(invocation.<String>getArgument(0))
-                    .contains("Incident type: AUTHORIZATION_DECLINE_RATE_SPIKE", "GATEWAY_TIMEOUT");
+                    .contains(
+                            "Description: Synthetic gateway failures increased authorization declines.",
+                            "Observed evidence status: AVAILABLE",
+                            "Observed service: authorization-gateway",
+                            "GATEWAY_TIMEOUT");
             observedCommittedStartedAttempt.set(jdbcClient
                     .sql("""
                             SELECT EXISTS (

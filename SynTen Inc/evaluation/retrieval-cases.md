@@ -12,9 +12,10 @@ RRF fusion, and final context selection without treating model output as ground
 truth. The labels come from the synthetic scenario catalog and the approved
 corpus inventory.
 
-K3 may use deterministic embeddings to test pipeline behavior. K4 runs these
-same labels through the configured live embedding model. K5 separately assesses
-the live chat report; a plausible report cannot compensate for failed retrieval
+K3 may use deterministic embeddings to test pipeline behavior. K4 and K5 run
+these same labels through the configured live embedding model. K5 also proves
+the operator-visible approved-knowledge action; live chat/report evaluation is
+deferred. A plausible future report cannot compensate for failed retrieval
 eligibility or missing required sources.
 
 ## Fixed eligibility rules
@@ -39,8 +40,8 @@ when a query exactly repeats their title or distinctive legacy terminology.
   selected policy context unless the case explicitly says `none`.
 - **Weak approved match**: overlapping content may be a candidate, but its best
   fused rank must not beat the primary runbook's best fused rank.
-- **Expected report posture**: a K5 review label, not part of the K4 retrieval
-  pass/fail calculation.
+- **Expected report posture**: a future report-review label, not part of the
+  K4 or K5 retrieval pass/fail calculation.
 
 Exact evaluation queries must be produced by the application's versioned query
 builder from the referenced synthetic scenario and persisted evidence. The

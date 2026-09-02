@@ -1,6 +1,6 @@
 package com.cguzowski.paymentcopilot.knowledge.catalog;
 
-import java.util.List;
+import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +14,7 @@ class SynTenPdfCatalogPersistenceService {
     }
 
     @Transactional
-    PdfCatalogImportSummary importAll(List<PdfCatalogDocumentPlan> plans) {
-        return repository.importAll(plans);
+    PdfCatalogImportSummary importAll(SynTenPdfCatalogPlan plan, Instant importedAt) {
+        return repository.importAll(plan, importedAt);
     }
 }

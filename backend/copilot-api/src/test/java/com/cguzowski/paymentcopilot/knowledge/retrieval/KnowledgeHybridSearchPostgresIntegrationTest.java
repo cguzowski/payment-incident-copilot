@@ -48,10 +48,7 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
 
     @BeforeEach
     void setUpCorpus() {
-        jdbcClient.sql("DELETE FROM knowledge_retrieval_result").update();
-        jdbcClient.sql("DELETE FROM knowledge_retrieval_attempt").update();
-        jdbcClient.sql("DELETE FROM knowledge_chunk").update();
-        jdbcClient.sql("DELETE FROM knowledge_document_version").update();
+        clearCorpus();
 
         insertDocumentAndChunk(
                 TENANT_ID,
@@ -146,17 +143,19 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
         List<KnowledgeSearchCandidate> candidates = repository.search(request);
 
         assertThat(candidates).hasSize(3);
-        assertThat(candidates.getFirst().rawContent()).contains("GATEWAY_TIMEOUT");
-        assertThat(candidates.getFirst().lexicalPosition()).isEqualTo(1);
-        assertThat(candidates.getFirst().vectorPosition()).isEqualTo(1);
-        assertThat(candidates.getFirst().vectorSimilarity()).isEqualTo(1.0f);
-        assertThat(candidates.getFirst().fusedScore())
-                .isGreaterThan(candidates.getLast().fusedScore());
+        KnowledgeSearchCandidate gateway = candidates.stream()
+                .filter(candidate -> candidate.rawContent().contains("GATEWAY_TIMEOUT"))
+                .findFirst()
+                .orElseThrow();
+        assertThat(gateway.lexicalPosition()).isEqualTo(1);
+        assertThat(gateway.vectorPosition()).isEqualTo(1);
+        assertThat(gateway.vectorSimilarity()).isEqualTo(1.0f);
         KnowledgeSearchCandidate historical = candidates.stream()
                 .filter(candidate ->
                         candidate.chunkId().equals(UUID.fromString("27777777-7777-4777-8777-777777777777")))
                 .findFirst()
                 .orElseThrow();
+        assertThat(gateway.fusedScore()).isGreaterThan(historical.fusedScore());
         assertThat(historical.lexicalPosition()).isNotNull();
         assertThat(historical.vectorPosition()).isNull();
         assertThat(historical.vectorSimilarity()).isNull();
@@ -204,6 +203,73 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
         assertThat(candidates)
                 .extracting(KnowledgeSearchCandidate::chunkId)
                 .doesNotContain(UUID.fromString("26666666-6666-4666-8666-666666666666"));
+    }
+
+    @Test
+    void appliesCandidateDepthSeparatelyToEachDocumentTypeAndModality() {
+        clearCorpus();
+
+        insertBalancedCandidate(
+                KnowledgeDocumentType.RUNBOOK, "runbook-lexical-1", "zebra exact signal", unitVector(1));
+        insertBalancedCandidate(
+                KnowledgeDocumentType.RUNBOOK, "runbook-lexical-2", "zebra exact signal", unitVector(1));
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "runbook-vector-1", "unrelated guidance", unitVector(0));
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "runbook-vector-2", "unrelated guidance", unitVector(0));
+        insertBalancedCandidate(KnowledgeDocumentType.POLICY, "policy-lexical-1", "zebra exact signal", unitVector(1));
+        insertBalancedCandidate(KnowledgeDocumentType.POLICY, "policy-lexical-2", "zebra exact signal", unitVector(1));
+        insertBalancedCandidate(KnowledgeDocumentType.POLICY, "policy-vector-1", "unrelated guidance", unitVector(0));
+        insertBalancedCandidate(KnowledgeDocumentType.POLICY, "policy-vector-2", "unrelated guidance", unitVector(0));
+
+        KnowledgeSearchRequest request = new KnowledgeSearchRequest(
+                TENANT_ID,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                Instant.parse("2026-08-28T10:00:00Z"),
+                "zebra exact signal",
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
+                unitVectorArray(0),
+                2,
+                60,
+                0.0f,
+                0.55f);
+
+        List<KnowledgeSearchCandidate> candidates = repository.search(request);
+
+        assertThat(candidates).hasSize(8);
+        assertThat(candidates)
+                .filteredOn(candidate -> candidate.documentType() == KnowledgeDocumentType.RUNBOOK)
+                .hasSize(4);
+        assertThat(candidates)
+                .filteredOn(candidate -> candidate.documentType() == KnowledgeDocumentType.POLICY)
+                .hasSize(4);
+        assertThat(candidates)
+                .filteredOn(candidate -> candidate.lexicalPosition() != null)
+                .extracting(KnowledgeSearchCandidate::lexicalPosition)
+                .containsOnly(1, 2);
+        assertThat(candidates)
+                .filteredOn(candidate -> candidate.vectorPosition() != null)
+                .extracting(KnowledgeSearchCandidate::vectorPosition)
+                .containsOnly(1, 2);
+    }
+
+    private void clearCorpus() {
+        jdbcClient.sql("DELETE FROM knowledge_retrieval_result").update();
+        jdbcClient.sql("DELETE FROM knowledge_retrieval_attempt").update();
+        jdbcClient.sql("DELETE FROM knowledge_chunk").update();
+        jdbcClient.sql("DELETE FROM knowledge_document_version").update();
+    }
+
+    private void insertBalancedCandidate(KnowledgeDocumentType type, String key, String rawContent, String vector) {
+        insertDocumentAndChunk(
+                TENANT_ID,
+                UUID.nameUUIDFromBytes((key + "-version").getBytes()).toString(),
+                UUID.nameUUIDFromBytes((key + "-chunk").getBytes()).toString(),
+                type,
+                KnowledgeApprovalStatus.APPROVED,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                key,
+                rawContent,
+                vector);
     }
 
     private void insertDocumentAndChunk(

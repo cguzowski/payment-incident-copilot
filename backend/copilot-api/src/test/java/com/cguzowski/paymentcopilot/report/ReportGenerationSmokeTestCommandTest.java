@@ -17,7 +17,7 @@ class ReportGenerationSmokeTestCommandTest {
     @Test
     void validatesOnePromptGuidedOllamaReportWithoutPersistence() {
         ReportModel model = mock(ReportModel.class);
-        when(model.modelId()).thenReturn("qwen3.5:4b");
+        when(model.modelId()).thenReturn("test-report-model");
         when(model.generate(contains("report-v1")))
                 .thenReturn(new ReportModelResponse(validInsufficientReportJson(), "safe-request-id"));
         JsonMapper mapper = JsonMapper.builder().build();

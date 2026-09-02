@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [switch] $CheckOnly
+    [switch] $CheckOnly,
+    [switch] $PrepareKnowledge
 )
 
 Set-StrictMode -Version Latest
@@ -209,11 +210,57 @@ function Install-FrontendDependenciesIfNeeded {
     }
 }
 
+function Invoke-LocalKnowledgePreparation {
+    param(
+        [Parameter(Mandatory)]
+        [object[]] $Plan,
+
+        [Parameter(Mandatory)]
+        [string] $MavenCommand,
+
+        [Parameter(Mandatory)]
+        [string] $BackendDirectory
+    )
+
+    $variableNames = @($Plan |
+            ForEach-Object { $_.EnvironmentVariables.Keys } |
+            Select-Object -Unique)
+    $previousValues = @{}
+    foreach ($name in $variableNames) {
+        $previousValues[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+    }
+
+    try {
+        foreach ($step in $Plan) {
+            foreach ($entry in $step.EnvironmentVariables.GetEnumerator()) {
+                [Environment]::SetEnvironmentVariable($entry.Key, $entry.Value, 'Process')
+            }
+
+            Write-Host "$($step.Description)..."
+            Push-Location -LiteralPath $BackendDirectory
+            try {
+                & $MavenCommand @($step.MavenArguments)
+                if ($LASTEXITCODE -ne 0) {
+                    throw "Local knowledge preparation step '$($step.Name)' failed with exit code $LASTEXITCODE."
+                }
+            } finally {
+                Pop-Location
+            }
+        }
+    } finally {
+        foreach ($name in $variableNames) {
+            [Environment]::SetEnvironmentVariable($name, $previousValues[$name], 'Process')
+        }
+    }
+}
+
 function Start-LocalApplication {
     $repositoryRoot = Split-Path -Parent $PSScriptRoot
     $mcpDirectory = Join-Path $repositoryRoot 'backend/operations-mcp-server'
     $backendDirectory = Join-Path $repositoryRoot 'backend/copilot-api'
     $frontendDirectory = Join-Path $repositoryRoot 'frontend/operator-console'
+    $knowledgePreparationModule = Join-Path $repositoryRoot 'scripts/local/LocalKnowledgePreparation.psm1'
+    Import-Module $knowledgePreparationModule -Force
 
     Import-DotEnv -Path (Join-Path $repositoryRoot '.env')
     Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_BASE_URL' -Value 'http://localhost:8081'
@@ -229,7 +276,7 @@ function Start-LocalApplication {
     $mcpHealthUri = Get-McpHealthUri -BaseUrl $env:OPERATIONS_MCP_BASE_URL
 
     $javaCommand = Get-RequiredCommand -Name 'java.exe' -InstallHint 'Install Java 21 and add it to PATH.'
-    $null = Get-RequiredCommand -Name 'mvn.cmd' -InstallHint 'Install Maven 3.9+ and add it to PATH.'
+    $mavenCommand = Get-RequiredCommand -Name 'mvn.cmd' -InstallHint 'Install Maven 3.9+ and add it to PATH.'
     $null = Get-RequiredCommand -Name 'node.exe' -InstallHint 'Install a Node.js version supported by the Angular project.'
     $npmCommand = Get-RequiredCommand -Name 'npm.cmd' -InstallHint 'Install Node.js and npm, then add them to PATH.'
 
@@ -244,6 +291,15 @@ function Start-LocalApplication {
     if ($CheckOnly) {
         Write-Host 'Local startup preflight passed: MCP configuration, tools, PostgreSQL, and frontend dependencies are ready.'
         return
+    }
+
+    if ($PrepareKnowledge) {
+        $preparationPlan = @(Get-LocalKnowledgePreparationPlan -RepositoryRoot $repositoryRoot)
+        Invoke-LocalKnowledgePreparation `
+            -Plan $preparationPlan `
+            -MavenCommand $mavenCommand `
+            -BackendDirectory $backendDirectory
+        Write-Host 'Local SynTen PDF knowledge is ready.'
     }
 
     if (Test-HttpEndpoint -Uri $mcpHealthUri) {

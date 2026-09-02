@@ -61,19 +61,19 @@ All tenant-specific assets for this path live under `SynTen Inc/`.
 | P4 | Prove and harden the initial closed loop | Complete | The repeatable synthetic workflow and its important terminal/failure states pass the authoritative gate. |
 | K1 | Define the SynTen Inc PDF knowledge corpus | Complete | The exact tenant profile, document inventory, authoring rules, validation contract, and retrieval-evaluation cases are approved. |
 | K2 | Generate and validate the SynTen Inc PDF corpus | Complete | Every inventoried runbook and policy has reproducible source, a valid text-based PDF, matching metadata, and successful render/extraction checks. |
-| K3 | Ingest and chunk PDFs with source provenance | Active | An accepted ADR and tested catalog path produce deterministic, versioned chunks traceable to exact PDF locations. |
-| K4 | Embed, vectorize, and evaluate the corpus | Planned | The configured live Ollama embedding model indexes the corpus in pgvector and measured hybrid retrieval satisfies the approved evaluation cases. |
-| K5 | Prove the live-model end-to-end scenario | Planned | A repeatable synthetic incident uses live retrieval and chat models to produce a cited report for human review, with results and limitations recorded. |
+| K3 | Ingest and chunk PDFs with source provenance | Complete | The tested catalog path produces deterministic, versioned chunks traceable to exact PDF locations. |
+| K4 | Embed, vectorize, and evaluate the corpus | Complete with factual FAIL | Live `nomic-embed-text` indexed all 705 chunks; the retained evaluation artifact records the exact fixed-threshold misses without tuning the contract. |
+| K5 | Prove live approved-knowledge retrieval in the operator workflow | Active | A repeatable synthetic investigation uses live `nomic-embed-text` retrieval, and **Retrieve approved knowledge** displays eligible cited PDF guidance instead of the no-match state. |
 | D1 | Select and implement the initial AWS deployment shape | Deferred | The verified closed loop runs through least-privilege AWS infrastructure. |
 | D2 | Add authentication and enforce operator identity | Deferred | Identity is authenticated and tenant authorization is enforced at every public boundary. |
 
 ## Active product slice
 
-K3, `Ingest and chunk PDFs with source provenance`, is active. K1 and K2 fixed
-the 30-document corpus and produced 112 visually reviewed pages. K3 must first
-accept the extraction, stable source-locator, and deterministic chunking
-contract, then extend `knowledge.catalog` without changing retrieval or report
-ownership.
+K4 is complete with a retained factual FAIL artifact. K5 is the next planned
+slice: improve the approved retrieval path under a separately accepted contract,
+then prove through the real operator action that an eligible, cited PDF result
+is displayed. K5 uses live `nomic-embed-text`; live chat/report-model selection
+is deferred.
 
 The active contract is in `tasks/current.md`. The maintained sources, generated
 PDFs, manifest, validation tooling, and retrieval oracle remain under

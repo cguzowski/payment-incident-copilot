@@ -28,7 +28,8 @@ SynTen Inc/
 │   ├── validation/
 │   └── validation-manifest.json
 └── evaluation/
-    └── retrieval-cases.md
+    ├── retrieval-cases.md
+    └── results/
 ```
 
 The K1 corpus contract is now defined in:
@@ -48,6 +49,13 @@ unencrypted, visually reviewed page by page, and below the hard 15-page limit.
 counts, extraction results, required error codes, status, and validation
 outcome for each version. Shared task status remains authoritative in
 `docs/agent/tasks/current.md`.
+
+K4 retained the first fixed live retrieval result under `evaluation/results`
+with 9/22 primary-runbook, 1/20 required-policy, and 16/21 primary-over-weak
+coverage. K5 retained a separate factual result with 19/22, 12/20, and 16/21;
+both contain zero ineligible candidates and preserve the special evidence and
+superseded-source semantics. The K5 operator proof uses the existing button and
+displays RB-002 with exact PDF provenance for S001.
 
 ## Guardrails
 

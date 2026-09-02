@@ -151,7 +151,7 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
                         List.of(KnowledgeDocumentType.RUNBOOK, KnowledgeDocumentType.POLICY),
                         KnowledgeApprovalStatus.APPROVED,
                         requestedAt),
-                KnowledgeRetrievalService.RANKING_VERSION,
+                "postgres-hybrid-rrf/v1",
                 60,
                 20,
                 0.0f,

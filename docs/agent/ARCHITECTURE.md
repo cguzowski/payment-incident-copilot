@@ -155,12 +155,15 @@ snapshots copy that locator rather than resolving it from mutable files.
 
 K3 may persist a PDF chunk without an embedding so approved content can enter
 the existing lexical retrieval path before Ollama is available. Vector ranking
-must ignore incomplete embedding tuples. K4 owns embedding those same stable
-chunks, measuring hybrid retrieval, and exercising the live report path.
+must ignore incomplete embedding tuples. K4 embedded those same stable chunks
+with `nomic-embed-text` and retained its measured hybrid-retrieval result. K5
+owns the separately approved retrieval-quality changes and operator-workflow
+proof that **Retrieve approved knowledge** displays eligible cited guidance.
 
 Live local-model evaluation is an explicit smoke/evaluation workflow over
-synthetic data. Normal automated verification remains deterministic and
-network-free.
+synthetic data. K5 uses the embedding-only `nomic-embed-text` model and disables
+chat-model startup; live report-model selection is deferred. Normal automated
+verification remains deterministic and network-free.
 
 ## Primary states
 
