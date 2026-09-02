@@ -177,15 +177,13 @@ class KnowledgeRetrievalServiceTest {
         KnowledgeRetrievalIdentifierGenerator identifiers = mock(KnowledgeRetrievalIdentifierGenerator.class);
         when(contextAssembler.find(lookupTenantId, INVESTIGATION_ID)).thenReturn(context);
         when(identifiers.next()).thenReturn(RETRIEVAL_ID);
-        KnowledgeRetrievalService service = new KnowledgeRetrievalService(
-                contextAssembler,
-                persistence,
+        KnowledgeRetrievalExecutor executor = new KnowledgeRetrievalExecutor(
                 embeddingClient,
                 searchRepository,
                 new KnowledgeContextSelector(4, 3),
-                new KnowledgeRetrievalQueryBuilder(),
-                identifiers,
-                Clock.fixed(NOW, ZoneOffset.UTC));
+                new KnowledgeRetrievalQueryBuilder());
+        KnowledgeRetrievalService service = new KnowledgeRetrievalService(
+                contextAssembler, persistence, executor, identifiers, Clock.fixed(NOW, ZoneOffset.UTC));
         return new Fixture(service, contextAssembler, persistence, embeddingClient, searchRepository);
     }
 

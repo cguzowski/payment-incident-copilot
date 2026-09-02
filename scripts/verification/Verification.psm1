@@ -244,6 +244,8 @@ function Invoke-RepositoryVerificationStep {
         }
         'verification-system-tests' {
             & (Join-Path $RepositoryRoot 'scripts/verification/Verification.Tests.ps1')
+            & (Join-Path $RepositoryRoot 'scripts/local/LocalKnowledgePreparation.Tests.ps1')
+            & (Join-Path $RepositoryRoot 'scripts/evaluation/SynTenRetrievalEvaluationV1.Tests.ps1')
         }
         'maven-verify' {
             $invocation = Get-MavenWrapperInvocation `

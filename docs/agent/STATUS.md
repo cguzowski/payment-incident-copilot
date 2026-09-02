@@ -1,10 +1,10 @@
 # Project status
 
-Last updated: 2026-08-31
+Last updated: 2026-09-01
 
 ## Current milestone
 
-Milestone 1 — Establish the operator investigation workflow.
+Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
 
 ## Completed
 
@@ -91,9 +91,9 @@ Milestone 1 — Establish the operator investigation workflow.
 - Verified P2 through focused and unscoped backend, PostgreSQL, HTTP,
   architecture, Angular, formatting, build, Compose, diff, desktop, and
   390-CSS-pixel checks with zero skipped tests.
-- Switched the active local Spring AI provider to Ollama with `qwen3.5:4b`
-  report generation and normalized 768-dimensional `nomic-embed-text`
-  embeddings while keeping automated tests network-free.
+- Switched the active local embedding provider to Ollama with normalized
+  768-dimensional `nomic-embed-text` vectors while keeping automated tests
+  network-free. Live chat-model selection is now deferred outside K5.
 - Preserved report-persistence Flyway V6 and added Flyway V7 for compatible
   local embedding dimensions and model/dimension-filtered vector scoring.
 - Bounded every report model invocation with a configurable two-minute total
@@ -109,33 +109,75 @@ Milestone 1 — Establish the operator investigation workflow.
   stable during background requests and transient failures.
 - Consolidated Windows startup so the root launcher starts and opens the
   synthetic incident generator last, with no separate generator launcher.
+- Completed the initial synthetic end-to-end vertical slice from alert intake
+  through human decision and audit timeline. The owner accepted the recorded
+  deterministic implementation and verification evidence on 2026-08-31.
+- Defined `synten-auth-knowledge/v1`: one fictional tenant profile, an exact
+  30-document inventory, a realistic PDF authoring standard, all 36 scenario
+  mappings, all 49 error codes, and 23 retrieval-evaluation cases.
+- Generated and validated 22 runbook PDFs and 8 policy PDFs with maintained
+  Markdown authorities, stable SHA-256 hashes, 27 approved and 3 superseded
+  versions, full-page visual review, and no document over 4 pages.
+- Completed the page-aware SynTen PDF catalog: deterministic PDFBox extraction,
+  705 bounded page-aware chunks, Flyway V9 persistence, approved lexical
+  retrieval without embeddings, immutable PDF citations, and preserved
+  Markdown compatibility.
+- Verified K3 against PostgreSQL 17.11 with Testcontainers and through the
+  authoritative repository gate with zero skipped tests.
+- Completed K4 stages 0-2: preserved and fingerprinted the K3 baseline,
+  extracted one immutable 30-document/705-chunk catalog plan shared by import
+  and backfill, and added fail-closed persisted-catalog and embedding-state
+  validation before any model or write boundary.
+- Completed K4 stages 3-5: all 705 responses are prepared and validated in
+  memory under explicit deadlines before one atomic, catalog-revalidating
+  PostgreSQL write; invalid, unavailable, drifted, partial, and concurrent
+  states fail closed while exact complete reruns are no-ops.
+- Completed K4 stages 6-9: locked the exact 23-case/37-variant contract, reused
+  the production retrieval executor, added HTTP-only synthetic seeding, and
+  produced strict, bounded, atomic PASS/FAIL evaluation artifacts without
+  exposing source content, vectors, credentials, or stack traces.
+- Completed the model-free half of K4 Stage 10 in a dedicated PostgreSQL 17.11
+  database: Flyway V1-V9 and the immutable 30-document/705-chunk catalog are
+  present, with all 705 embedding tuples wholly absent.
+- Completed K4 live acceptance with normalized 768-dimensional
+  `nomic-embed-text` embeddings on all 705 PDF chunks, independently verified
+  atomic database invariants, an exact same-model no-op rerun, and all 37
+  HTTP/MCP-seeded evaluation variants.
+- Preserved the complete factual K4 FAIL result: all eligibility and special
+  semantics passed, while fixed retrieval-quality thresholds missed at 9/22
+  primary-runbook cases, 1/20 supporting-policy cases, and 16/21
+  primary-over-weak cases against 19 required.
 
 ## In progress
 
-- Live Ollama smoke verification remains pending outside the deterministic
-  automated suite.
+- K5 implementation is active under ADR-0010 and the locked current task. It
+  preserves the K4 artifact/corpus/labels while introducing an evidence-focused
+  query, type-balanced candidate pools, document-diverse selection, and a live
+  S001 operator-button proof with `nomic-embed-text`.
 
 ## Next
 
-1. Perform a final hands-on keyboard-only decision-form check; semantic form,
-   focus, and validation behavior are automated, but the browser-control surface
-   could not drive Tab/Space during the live smoke.
-2. Install Ollama outside the repository, pull `qwen3.5:4b` and
-   `nomic-embed-text`, and run the documented embedding and report smokes.
-3. Activate P4 when its behavioral contract is selected and approved.
+1. Implement and verify K5 query/candidate/selection behavior through strict
+   red-green tests without changing corpus, labels, or eligibility.
+2. Re-run the fixed live evaluation, then prove the S001 operator action
+   displays eligible cited RB-002 guidance instead of the no-match state.
 
 ## Blockers
 
-- Ollama and its pinned models are not installed in this task environment, so
-  live embedding and report smoke verification remains external.
+- No external-environment blocker is currently known. K5 must still prove its
+  ranking changes against the fixed live evaluation and operator workflow.
 
 ## Known deliberate gaps
 
 - No authentication yet.
 - Only `getRecentServiceErrors` is implemented; additional evidence domains and
   operator-selected investigation areas remain future product tasks.
-- Live Ollama embedding and report behavior has not yet been verified on this
-  machine; local and CI verification use mocked or deterministic model doubles.
+- The normal development database remains independently managed. A dedicated
+  K4 database on local container port 15432 retains the exact PDF catalog and
+  705 complete live embedding tuples.
+- Live Ollama embedding behavior is verified on this machine. K5 will continue
+  to use `nomic-embed-text` with chat disabled; report behavior remains outside
+  that milestone and local/CI automation still uses deterministic doubles.
 - Historical Titan rows remain auditable and lexically retrievable but are not
   vector-compared with `nomic-embed-text` queries or silently re-embedded.
 - Knowledge ingestion is intentionally explicit and disabled during normal
@@ -269,6 +311,88 @@ Milestone 1 — Establish the operator investigation workflow.
 - 2026-08-31: The synthetic generator's launcher regression failed before the
   consolidation, then its full standalone gate passed 16/16 tests with
   Spotless. The root launcher's `--CheckOnly` preflight also passed.
+- 2026-08-31: K1 corpus-contract checks passed for 30 unique versions, all 36
+  scenario mappings, all 49 error codes, 23 retrieval cases, sensitive-pattern
+  review, diff checks, and repository verification.
+- 2026-08-31: K2 passed 6/6 focused PDF tests and validated 30 deterministic,
+  unencrypted, text-extractable PDFs totaling 112 pages (3-4 each). All 112
+  rendered pages passed visual review, including every superseded banner and
+  replacement reference.
+- 2026-08-31: ADR-0009 accepted PDFBox 3.0.8, exact PDF hash plus 1-based
+  page/block locators, deterministic page-confined chunks, and lexical-before-
+  vector persistence. Repeat extraction probes passed for RB-002, PL-001,
+  table-heavy RB-011, and superseded RB-022; repository verification passed.
+- 2026-08-31: K3 model-free verification parsed all 30 manifest PDFs into 705
+  deterministic bounded chunks. The final non-PostgreSQL Maven reactor passed
+  159 copilot API and 9 MCP tests with zero skips plus Spotless; Angular passed
+  78/78 tests, Prettier, and its production build; repository verification and
+  `git diff --check` passed. PostgreSQL tests remain unexecuted because Docker
+  Desktop reports an error, so no backend or aggregate gate pass is claimed.
+- 2026-08-31: Reproduced and fixed API startup failure caused by Spring choosing
+  no constructor for the two-constructor SynTen corpus repository. The new
+  context regression failed with `No default constructor found`, then passed
+  after the configuration constructor was marked for injection. With `.env`
+  loaded, the API started against native PostgreSQL 18.3, validated all nine
+  Flyway migrations at schema version 9, and returned `UP` from its health
+  endpoint before a graceful shutdown.
+- 2026-08-31: Follow-up health check passed the root local-startup preflight
+  for MCP configuration, tools, native PostgreSQL, and frontend dependencies.
+  `SyntenInc` tracks `origin/SyntenInc`, repository verification and
+  `git diff --check` pass, and Docker Desktop reports `stopped`; the work is on
+  track with only Docker-backed acceptance still pending.
+- 2026-08-31: Restored the Docker engine and ran the focused PostgreSQL 17.11
+  K3 group. Its first 11-test run exposed one translated repository exception;
+  the regression passed after the repository contract fix, followed by 11/11
+  focused tests with zero skips.
+- 2026-08-31: Backend verification passed 210 copilot API and 9 MCP tests;
+  frontend verification passed 78 Angular tests, Prettier, npm audit, and the
+  production build; repository verification passed. The authoritative
+  `./verify.ps1` gate then passed the same suites, Spotless, Compose, and diff
+  checks with zero failures, errors, or skips.
+- 2026-09-01: The combined K4 Stage 1-2 focused suite passed 19/19 tests with
+  zero skips, including the real 30-document/705-chunk plan and five
+  PostgreSQL 17.11 catalog/state scenarios. Backend verification then passed
+  221/221 copilot API and 9/9 MCP tests with zero skips and Spotless.
+- 2026-09-01: Repository verification passed all verification-system tests,
+  Compose validation, and `git diff --check`. The authoritative `./verify.ps1`
+  gate passed 221/221 copilot API, 9/9 MCP, and 78/78 Angular tests with zero
+  skips, plus formatting, production builds, zero-vulnerability npm audit,
+  Compose, and diff checks.
+- 2026-09-01: The complete K4 focused suite passed 73/73 tests with zero skips,
+  the standalone synthetic generator passed 16/16, and the PowerShell
+  evaluation-runner suite passed 6/6.
+- 2026-09-01: `./verify.ps1 -Scope Backend` passed 282/282 copilot API and 9/9
+  MCP tests with zero skips, including PostgreSQL 17.11, Flyway V1-V9,
+  packaging, architecture checks, and Spotless.
+- 2026-09-01: Repository verification passed all verification-system and six
+  evaluation-runner tests, Compose validation, and `git diff --check`. The
+  authoritative `./verify.ps1` gate then passed 282/282 copilot API, 9/9 MCP,
+  and 78/78 Angular tests with zero skips, plus Spotless, Prettier, production
+  builds, zero-vulnerability npm audit, Compose, and diff checks.
+- 2026-09-01: The dedicated live database preflight proved 9 successful
+  migrations at V9, 30 PDF documents, 705 PDF chunks, 705 wholly absent
+  embedding tuples, and zero non-absent tuples. Live model work stopped before
+  any write because Ollama is unavailable.
+- 2026-09-01: The pinned live embedding smoke passed for `nomic-embed-text`,
+  768 dimensions, and normalized output. Backfill then wrote all 705 tuples
+  atomically; SQL verified zero incomplete, wrong-dimension, or non-normalized
+  vectors and one shared timestamp. The repeat run was an exact no-op.
+- 2026-09-01: All 37 fixed variants were seeded and read-back-verified through
+  HTTP and MCP. Two live-only boundary defects received red-green regressions:
+  the PowerShell runner suite now passes 7/7 and the artifact-writer suite 5/5.
+- 2026-09-01: Live evaluation published
+  `14588db4735841ffb5711a962e2c5119-FAIL.json` (SHA-256
+  `b9acc9bd4493e7c91405dc104b4c6629f59fd05a2baf9aebba502bbc779753bc`).
+  Its 37 variants and 23 cases contain zero ineligible candidates, preserve all
+  special semantics, and factually record the fixed quality-threshold misses.
+- 2026-09-01: Final K4 verification passed 284/284 copilot API, 9/9 MCP, and
+  78/78 Angular tests with zero skips, plus the seven-test evaluation runner,
+  Spotless, Prettier, both production builds, zero-vulnerability npm audit,
+  Compose validation, repository checks, and `git diff --check`.
+- 2026-09-01: The owner selected live `nomic-embed-text` retrieval—not a live
+  chat model—for K5. K5's required operator outcome is an eligible, cited PDF
+  result after clicking **Retrieve approved knowledge**; report-model selection
+  is deferred.
 
 ## Update rule
 

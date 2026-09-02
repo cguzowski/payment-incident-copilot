@@ -34,7 +34,38 @@ describe('ApprovedKnowledgePanelComponent', () => {
     expect(text).toContain('Authorization Decline Runbook');
     expect(text).toContain('Inspect GATEWAY_TIMEOUT observations.');
     expect(text).toContain('chunk-1');
+    expect(text).toContain('rb-002-gateway-connectivity.pdf');
+    expect(text).toContain('PDF page 4, blocks 2–4');
+    expect(text).toContain('d'.repeat(64));
     expect(text).toContain('not an AI conclusion or executable instruction');
+  });
+
+  it('keepsHistoricalMarkdownLineCitationsBackwardCompatible', () => {
+    const attempt = knowledge('AVAILABLE');
+    attempt.results = [
+      {
+        ...attempt.results[0],
+        sourceName: 'authorization-decline-runbook.md',
+        sourceFormat: 'MARKDOWN',
+        pdfSha256: null,
+        sourceStartLine: 20,
+        sourceEndLine: 22,
+        sourceStartPage: null,
+        sourceEndPage: null,
+        sourceStartBlock: null,
+        sourceEndBlock: null,
+      },
+    ];
+    historyResponse = of([attempt]);
+
+    const fixture = create();
+    fixture.detectChanges();
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('authorization-decline-runbook.md');
+    expect(text).toContain('Source lines');
+    expect(text).toContain('20–22');
+    expect(text).not.toContain('PDF location');
+    expect(text).not.toContain('PDF SHA-256');
   });
 
   it('preservesDistinctTerminalAndInterruptedStatuses', () => {
@@ -152,8 +183,15 @@ describe('ApprovedKnowledgePanelComponent', () => {
         appliesTo: 'Card authorization',
         sectionPath: 'Gateway Failures > Diagnosis',
         rawContent: 'Inspect GATEWAY_TIMEOUT observations.',
-        sourceStartLine: 20,
-        sourceEndLine: 22,
+        sourceName: 'rb-002-gateway-connectivity.pdf',
+        sourceFormat: 'PDF',
+        pdfSha256: 'd'.repeat(64),
+        sourceStartLine: null,
+        sourceEndLine: null,
+        sourceStartPage: 4,
+        sourceEndPage: 4,
+        sourceStartBlock: 2,
+        sourceEndBlock: 4,
         approvalStatus: 'APPROVED',
         approvedBy: 'operator-1',
         approvedAt: '2026-08-20T10:00:00Z',

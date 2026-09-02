@@ -1,6 +1,6 @@
 # Architecture
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 
 ## System boundaries
 
@@ -136,6 +136,34 @@ Both paths are implemented. Report generation uses the application-owned
 `report-v1` prompt/schema contract and validates every source reference before
 persistence. Tests disable chat and embedding provider auto-configuration and
 replace model responses with mocks or deterministic doubles.
+
+## Knowledge-source evolution
+
+The completed slice loads two repository-owned Markdown sources through
+`knowledge.catalog`. The SynTen Inc expansion now provides 30 repository-owned,
+text-based PDFs under `SynTen Inc/`; the next catalog change will ingest them
+without moving parsing, chunking, hashing, embedding, or index writes out of
+that feature boundary. Retrieval and report generation continue to consume
+persisted catalog records rather than reading PDFs directly or sending whole
+documents to a model.
+
+ADR-0009 selects PDFBox 3.0.8 and an immutable page/block representation for
+PDF ingestion. A PDF catalog row retains the exact maintained-source and PDF
+hashes plus `pdfbox-text-pages/v1`; each `pdf-page-sections/v1` chunk has a
+1-based physical page and block range and never crosses a page. Retrieval
+snapshots copy that locator rather than resolving it from mutable files.
+
+K3 may persist a PDF chunk without an embedding so approved content can enter
+the existing lexical retrieval path before Ollama is available. Vector ranking
+must ignore incomplete embedding tuples. K4 embedded those same stable chunks
+with `nomic-embed-text` and retained its measured hybrid-retrieval result. K5
+owns the separately approved retrieval-quality changes and operator-workflow
+proof that **Retrieve approved knowledge** displays eligible cited guidance.
+
+Live local-model evaluation is an explicit smoke/evaluation workflow over
+synthetic data. K5 uses the embedding-only `nomic-embed-text` model and disables
+chat-model startup; live report-model selection is deferred. Normal automated
+verification remains deterministic and network-free.
 
 ## Primary states
 

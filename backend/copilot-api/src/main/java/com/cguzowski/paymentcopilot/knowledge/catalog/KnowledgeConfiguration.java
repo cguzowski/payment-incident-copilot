@@ -15,4 +15,9 @@ class KnowledgeConfiguration {
     MarkdownKnowledgeChunker markdownKnowledgeChunker(TokenEstimator knowledgeTokenEstimator) {
         return new MarkdownKnowledgeChunker(knowledgeTokenEstimator, 400, 600, 50);
     }
+
+    @Bean
+    PdfKnowledgeChunker pdfKnowledgeChunker(TokenEstimator knowledgeTokenEstimator) {
+        return new PdfKnowledgeChunker(knowledgeTokenEstimator, 400, 600, 50, 80);
+    }
 }

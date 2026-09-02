@@ -143,7 +143,7 @@ class ReportGenerationServiceTest {
         when(identifiers.next()).thenReturn(ATTEMPT_ID);
         when(prompts.build(context)).thenReturn(prompt);
         when(persistence.start(any())).thenReturn(true);
-        when(model.modelId()).thenReturn("qwen3.5:4b");
+        when(model.modelId()).thenReturn("test-report-model");
         when(model.generate("prompt")).thenAnswer(invocation -> {
             try {
                 new java.util.concurrent.CountDownLatch(1).await();

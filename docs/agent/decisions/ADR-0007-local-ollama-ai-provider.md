@@ -1,6 +1,6 @@
 # ADR-0007: Use Ollama for local AI development
 
-Status: Accepted
+Status: Accepted; report-model choice superseded by ADR-0010
 Date: 2026-08-30
 Decision owner: Christopher Guzowski
 
@@ -18,7 +18,7 @@ Use Spring AI as the provider boundary with these local defaults:
 
 | Function | Local choice |
 |---|---|
-| Report generation | Ollama `qwen3.5:4b`, temperature `0` |
+| Report generation | No active live model; `spring.ai.model.chat=none` |
 | Embeddings | Ollama `nomic-embed-text`, normalized 768 dimensions |
 | Vector storage/search | PostgreSQL with pgvector |
 | Orchestration | Spring AI |
@@ -26,10 +26,10 @@ Use Spring AI as the provider boundary with these local defaults:
 
 The copilot API uses `spring-ai-starter-model-ollama`, connects to
 `http://localhost:11434`, and never pulls models automatically. The completed
-report feature uses the same Spring AI boundary with Ollama chat options. This
-ADR supersedes the provider-specific local-development portion of ADR-0006; it
-does not change ADR-0006's report schema, validation, citation, persistence, or
-human-review controls.
+report feature retains its Spring AI boundary and deterministic tests, but no
+live chat model is selected or started. This ADR supersedes the provider-
+specific local-development portion of ADR-0006; it does not change ADR-0006's
+report schema, validation, citation, persistence, or human-review controls.
 
 Automated tests disable both Spring AI model providers and use mocked or
 deterministic model responses. Live Ollama checks are explicit developer
@@ -65,7 +65,10 @@ fallback, credential requirement, or profile in local development.
 
 ### Negative or accepted tradeoffs
 
-- Developers must install Ollama and pull both pinned models themselves.
+- Developers must install Ollama and pull the pinned embedding model
+  themselves for live retrieval.
+- Live report generation remains unavailable until a separate chat-model
+  decision is accepted and implemented.
 - Live model behavior is environment-dependent and requires an explicit smoke
   check outside automated verification.
 - A mixed historical index cannot compare vectors across model/dimension pairs;

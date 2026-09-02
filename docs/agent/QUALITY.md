@@ -1,6 +1,6 @@
 # Quality and validation
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 
 ## Standard commands
 
@@ -57,6 +57,27 @@ record that evidence instead.
   credentials, model downloads, or external network access.
 - Live Ollama smoke checks are explicit local-development checks and do not
   replace the deterministic completion gate.
+- Live corpus evaluations record the exact source-corpus version, extraction
+  and chunking strategy versions, embedding and chat model identifiers, index
+  version, test query, expected sources, actual selected sources, and observed
+  limitations.
+
+## PDF catalog testing
+
+- PDF parser tests use repository-owned synthetic fixtures and never require a
+  network call, live embedding model, or chat model.
+- Contract coverage includes exact source/PDF hashes, 1-15 page bounds,
+  encryption and malformed-input rejection, empty/scanned-only rejection,
+  exact generated header/footer removal, retained superseded banners, ordered
+  table text, and repeatable page/block output.
+- Chunker coverage proves page confinement, section carry-forward,
+  deterministic order and IDs, the 400/600/50 token contract, short-tail
+  behavior, and exact PDF locators.
+- PostgreSQL coverage proves atomic manifest import, nullable all-or-none
+  embedding tuples, approved lexical eligibility, superseded exclusion, tenant
+  isolation, and immutable retrieval snapshots carrying PDF provenance.
+- Operator-console coverage displays PDF filename, SHA-256, page, and block
+  range while preserving line locators for historical Markdown results.
 
 ## Coverage expectations
 
@@ -66,7 +87,10 @@ record that evidence instead.
 - Repeatable synthetic scenarios for demonstrations
 - Failure tests for unavailable sources, incomplete evidence, invalid model
   output, duplicate alerts, and rejected reports
-- End-to-end happy path after the vertical slice stabilizes
+- The completed deterministic end-to-end path remains green while the SynTen
+  Inc PDF and live-model path is added
+- Static corpus checks for manifest membership, source/PDF pairing, synthetic
+  metadata, text extraction, rendering, and source-location provenance
 
 ## Observability expectations
 

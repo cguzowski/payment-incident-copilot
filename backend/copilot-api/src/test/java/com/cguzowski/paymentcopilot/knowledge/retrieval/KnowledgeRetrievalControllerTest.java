@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeSourceFormat;
 import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextExceptionHandler;
 import com.cguzowski.paymentcopilot.requestcontext.SyntheticRequestContextResolver;
 import java.time.Instant;
@@ -56,6 +57,14 @@ class KnowledgeRetrievalControllerTest {
                 .andExpect(jsonPath("$.status").value("AVAILABLE"))
                 .andExpect(jsonPath("$.results[0].documentType").value("RUNBOOK"))
                 .andExpect(jsonPath("$.results[0].rawContent").value("Inspect GATEWAY_TIMEOUT observations."))
+                .andExpect(jsonPath("$.results[0].sourceName").value("rb-002-gateway-connectivity.pdf"))
+                .andExpect(jsonPath("$.results[0].sourceFormat").value("PDF"))
+                .andExpect(jsonPath("$.results[0].pdfSha256").value("d".repeat(64)))
+                .andExpect(jsonPath("$.results[0].sourceStartPage").value(3))
+                .andExpect(jsonPath("$.results[0].sourceEndPage").value(3))
+                .andExpect(jsonPath("$.results[0].sourceStartBlock").value(4))
+                .andExpect(jsonPath("$.results[0].sourceEndBlock").value(8))
+                .andExpect(jsonPath("$.results[0].sourceStartLine").isEmpty())
                 .andExpect(jsonPath("$.results[0].embeddingInput").doesNotExist());
 
         verify(service).retrieve(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
@@ -70,6 +79,31 @@ class KnowledgeRetrievalControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].retrievalId")
                         .value(response().retrievalId().toString()));
+    }
+
+    @Test
+    void returnsHistoricalMarkdownLineLocatorsWithoutPdfFields() throws Exception {
+        KnowledgeRetrievalResponse markdown = response(result(
+                "authorization-decline-runbook.md",
+                KnowledgeSourceFormat.MARKDOWN,
+                null,
+                20,
+                22,
+                null,
+                null,
+                null,
+                null));
+        when(service.history(TENANT_ID, INVESTIGATION_ID)).thenReturn(List.of(markdown));
+
+        mockMvc.perform(get("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].results[0].sourceName").value("authorization-decline-runbook.md"))
+                .andExpect(jsonPath("$[0].results[0].sourceFormat").value("MARKDOWN"))
+                .andExpect(jsonPath("$[0].results[0].pdfSha256").isEmpty())
+                .andExpect(jsonPath("$[0].results[0].sourceStartLine").value(20))
+                .andExpect(jsonPath("$[0].results[0].sourceEndLine").value(22))
+                .andExpect(jsonPath("$[0].results[0].sourceStartPage").isEmpty());
     }
 
     @Test
@@ -119,6 +153,11 @@ class KnowledgeRetrievalControllerTest {
     }
 
     private static KnowledgeRetrievalResponse response() {
+        return response(result(
+                "rb-002-gateway-connectivity.pdf", KnowledgeSourceFormat.PDF, "d".repeat(64), null, null, 3, 3, 4, 8));
+    }
+
+    private static KnowledgeRetrievalResponse response(KnowledgeRetrievalResultResponse result) {
         Instant requestedAt = Instant.parse("2026-08-28T10:00:00Z");
         return new KnowledgeRetrievalResponse(
                 UUID.fromString("a74f88ed-e295-4caf-9404-a22f733d86ec"),
@@ -141,29 +180,49 @@ class KnowledgeRetrievalControllerTest {
                 0.0f,
                 0.55f,
                 null,
-                List.of(new KnowledgeRetrievalResultResponse(
-                        UUID.fromString("21111111-1111-4111-8111-111111111111"),
-                        UUID.fromString("11111111-1111-4111-8111-111111111111"),
-                        UUID.fromString("31111111-1111-4111-8111-111111111111"),
-                        1,
-                        0.5f,
-                        1,
-                        1.0f,
-                        0.0f,
-                        1,
-                        1,
-                        2.0 / 61.0,
-                        KnowledgeDocumentType.RUNBOOK,
-                        "Authorization Decline Runbook",
-                        "1.0.0",
-                        "Card authorization",
-                        "Gateway Failures > Diagnosis",
-                        "Inspect GATEWAY_TIMEOUT observations.",
-                        20,
-                        22,
-                        KnowledgeApprovalStatus.APPROVED,
-                        UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"),
-                        Instant.parse("2026-08-20T10:00:00Z"),
-                        Instant.parse("2026-08-21T00:00:00Z"))));
+                List.of(result));
+    }
+
+    private static KnowledgeRetrievalResultResponse result(
+            String sourceName,
+            KnowledgeSourceFormat sourceFormat,
+            String pdfSha256,
+            Integer sourceStartLine,
+            Integer sourceEndLine,
+            Integer sourceStartPage,
+            Integer sourceEndPage,
+            Integer sourceStartBlock,
+            Integer sourceEndBlock) {
+        return new KnowledgeRetrievalResultResponse(
+                UUID.fromString("21111111-1111-4111-8111-111111111111"),
+                UUID.fromString("11111111-1111-4111-8111-111111111111"),
+                UUID.fromString("31111111-1111-4111-8111-111111111111"),
+                1,
+                0.5f,
+                1,
+                1.0f,
+                0.0f,
+                1,
+                1,
+                2.0 / 61.0,
+                KnowledgeDocumentType.RUNBOOK,
+                "Authorization Decline Runbook",
+                "1.0.0",
+                "Card authorization",
+                "Gateway Failures > Diagnosis",
+                "Inspect GATEWAY_TIMEOUT observations.",
+                sourceName,
+                sourceFormat,
+                pdfSha256,
+                sourceStartLine,
+                sourceEndLine,
+                sourceStartPage,
+                sourceEndPage,
+                sourceStartBlock,
+                sourceEndBlock,
+                KnowledgeApprovalStatus.APPROVED,
+                UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"),
+                Instant.parse("2026-08-20T10:00:00Z"),
+                Instant.parse("2026-08-21T00:00:00Z"));
     }
 }

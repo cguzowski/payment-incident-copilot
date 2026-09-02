@@ -21,7 +21,7 @@ import org.springframework.ai.ollama.api.OllamaChatOptions;
 
 class SpringAiReportModelTest {
 
-    private static final String MODEL_ID = "qwen3.5:4b";
+    private static final String MODEL_ID = "test-report-model";
 
     @Test
     void callsConverseOnceWithDeterministicBoundedOptionsAndNoTools() {

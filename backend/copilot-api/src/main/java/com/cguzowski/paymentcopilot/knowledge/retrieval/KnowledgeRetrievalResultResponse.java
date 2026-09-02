@@ -2,6 +2,7 @@ package com.cguzowski.paymentcopilot.knowledge.retrieval;
 
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeApprovalStatus;
 import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeDocumentType;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeSourceFormat;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -23,8 +24,15 @@ public record KnowledgeRetrievalResultResponse(
         String appliesTo,
         String sectionPath,
         String rawContent,
-        int sourceStartLine,
-        int sourceEndLine,
+        String sourceName,
+        KnowledgeSourceFormat sourceFormat,
+        String pdfSha256,
+        Integer sourceStartLine,
+        Integer sourceEndLine,
+        Integer sourceStartPage,
+        Integer sourceEndPage,
+        Integer sourceStartBlock,
+        Integer sourceEndBlock,
         KnowledgeApprovalStatus approvalStatus,
         UUID approvedBy,
         Instant approvedAt,
@@ -49,8 +57,15 @@ public record KnowledgeRetrievalResultResponse(
                 result.appliesTo(),
                 result.sectionPath(),
                 result.rawContent(),
+                result.sourceName(),
+                result.sourceFormat(),
+                result.pdfSha256(),
                 result.sourceStartLine(),
                 result.sourceEndLine(),
+                result.sourceStartPage(),
+                result.sourceEndPage(),
+                result.sourceStartBlock(),
+                result.sourceEndBlock(),
                 result.approvalStatus(),
                 result.approvedBy(),
                 result.approvedAt(),

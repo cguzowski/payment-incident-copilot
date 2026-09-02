@@ -33,11 +33,9 @@ class KnowledgeRetrievalQueryBuilderTest {
 
         DerivedKnowledgeQuery query = new KnowledgeRetrievalQueryBuilder().build(context);
 
-        assertThat(query.templateVersion()).isEqualTo("knowledge-query/v1");
+        assertThat(query.templateVersion()).isEqualTo("knowledge-query/v2");
         assertThat(query.contributingEvidenceIds()).containsExactly(EVIDENCE_ID);
         assertThat(query.text()).isEqualTo("""
-                Incident type: AUTHORIZATION_DECLINE_RATE_SPIKE
-                Title: Authorization declines elevated
                 Description: Synthetic authorization declines exceeded the observation threshold.
                 Observed evidence status: AVAILABLE
                 Observed service: authorization-gateway
@@ -59,8 +57,36 @@ class KnowledgeRetrievalQueryBuilderTest {
 
         DerivedKnowledgeQuery query = new KnowledgeRetrievalQueryBuilder().build(context);
 
-        assertThat(query.text()).contains("Observed evidence status: UNAVAILABLE");
+        assertThat(query.templateVersion()).isEqualTo("knowledge-query/v2");
+        assertThat(query.text()).isEqualTo("""
+                Title: Authorization declines elevated
+                Description: No service observations were returned.
+                Observed evidence status: UNAVAILABLE""");
         assertThat(query.text()).doesNotContain("Observed service:", "Observed errors:");
         assertThat(query.contributingEvidenceIds()).containsExactly(unavailableId);
+    }
+
+    @Test
+    void preservesBoundedNormalizedIncidentContextWhenEvidenceWasNotCollected() {
+        String longDescription = "  Synthetic   gateway context  ".repeat(150);
+        KnowledgeRetrievalContext context = new KnowledgeRetrievalContext(
+                TENANT_ID,
+                INVESTIGATION_ID,
+                CORRELATION_ID,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                "  Authorization   declines elevated  ",
+                longDescription,
+                null);
+
+        DerivedKnowledgeQuery query = new KnowledgeRetrievalQueryBuilder().build(context);
+
+        assertThat(query.templateVersion()).isEqualTo("knowledge-query/v2");
+        assertThat(query.text()).startsWith("""
+                Title: Authorization declines elevated
+                Description: Synthetic gateway context""");
+        assertThat(query.text()).endsWith("Observed evidence status: NOT_COLLECTED");
+        assertThat(query.text()).doesNotContain("  ", "Observed service:", "Observed errors:");
+        assertThat(query.text()).hasSizeLessThanOrEqualTo(2000);
+        assertThat(query.contributingEvidenceIds()).isEmpty();
     }
 }

@@ -127,6 +127,61 @@ class KnowledgeSchemaPostgresIntegrationTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
+    @Test
+    void storesPdfLocatorWithoutEmbeddingAndRejectsIncompleteCatalogRows() {
+        assertThat(jdbcClient
+                        .sql("SELECT description FROM flyway_schema_history WHERE version = '9'")
+                        .query(String.class)
+                        .single())
+                .isEqualTo("add page aware pdf knowledge catalog");
+        insertPdfDocument();
+        insertPdfChunk(CHUNK_ID, false, false);
+
+        assertThat(jdbcClient.sql("""
+                                SELECT d.source_format, d.source_artifact_hash,
+                                       d.pdf_artifact_hash, d.extraction_strategy_version,
+                                       c.source_start_line, c.source_start_page,
+                                       c.source_end_page, c.source_start_block,
+                                       c.source_end_block, c.embedding_model_id,
+                                       c.embedding_dimensions, c.embedding
+                                FROM knowledge_chunk c
+                                JOIN knowledge_document_version d
+                                  ON d.tenant_id = c.tenant_id
+                                 AND d.id = c.document_version_id
+                                WHERE c.id = :id
+                                """).param("id", CHUNK_ID).query().singleRow())
+                .containsEntry("source_format", "PDF")
+                .containsEntry("source_artifact_hash", "a".repeat(64))
+                .containsEntry("pdf_artifact_hash", "d".repeat(64))
+                .containsEntry("extraction_strategy_version", "pdfbox-text-pages/v1")
+                .containsEntry("source_start_page", 3)
+                .containsEntry("source_end_page", 3)
+                .containsEntry("source_start_block", 4)
+                .containsEntry("source_end_block", 8)
+                .containsEntry("source_start_line", null)
+                .containsEntry("embedding_model_id", null)
+                .containsEntry("embedding_dimensions", null)
+                .containsEntry("embedding", null);
+
+        assertThatThrownBy(() -> insertPdfChunk(UUID.fromString("d0f6a021-e6d3-4f05-bbad-7a2cb7652714"), true, false))
+                .isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> insertPdfChunk(UUID.fromString("e0f6a021-e6d3-4f05-bbad-7a2cb7652714"), false, true))
+                .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void rejectsPdfWithoutArtifactHashAndOutOfRangePageOrTokenCount() {
+        assertThatThrownBy(this::insertPdfDocumentWithoutHash).isInstanceOf(RuntimeException.class);
+        insertPdfDocument();
+
+        assertThatThrownBy(() ->
+                        insertPdfChunk(UUID.fromString("f0f6a021-e6d3-4f05-bbad-7a2cb7652714"), false, false, 16, 5))
+                .isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() ->
+                        insertPdfChunk(UUID.fromString("f1f6a021-e6d3-4f05-bbad-7a2cb7652714"), false, false, 3, 601))
+                .isInstanceOf(RuntimeException.class);
+    }
+
     private void insertDocument() {
         jdbcClient
                 .sql("""
@@ -134,7 +189,9 @@ class KnowledgeSchemaPostgresIntegrationTest {
                             id, tenant_id, document_id, document_type, title,
                             document_version, incident_family, applies_to,
                             approval_status, approved_by, approved_at, effective_at,
-                            source_name, source_content_hash, imported_at
+                            source_name, source_content_hash, source_format,
+                            source_artifact_hash, pdf_artifact_hash,
+                            extraction_strategy_version, imported_at
                         ) VALUES (
                             :id, :tenantId, :documentId, 'RUNBOOK',
                             'Authorization Decline Runbook', '1.0.0',
@@ -142,7 +199,8 @@ class KnowledgeSchemaPostgresIntegrationTest {
                             'APPROVED', :approvedBy,
                             TIMESTAMPTZ '2026-08-20 10:00:00Z',
                             TIMESTAMPTZ '2026-08-21 00:00:00Z',
-                            'authorization-decline-runbook.md', :hash,
+                            'authorization-decline-runbook.md', :hash, 'MARKDOWN',
+                            :hash, NULL, 'markdown-front-matter/v1',
                             TIMESTAMPTZ '2026-08-28 10:00:00Z'
                         )
                         """)
@@ -151,6 +209,109 @@ class KnowledgeSchemaPostgresIntegrationTest {
                 .param("documentId", DOCUMENT_ID)
                 .param("approvedBy", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
                 .param("hash", "a".repeat(64))
+                .update();
+    }
+
+    private void insertPdfDocument() {
+        jdbcClient
+                .sql("""
+                        INSERT INTO knowledge_document_version (
+                            id, tenant_id, document_id, document_type, title,
+                            document_version, incident_family, applies_to,
+                            approval_status, approved_by, approved_at, effective_at,
+                            source_name, source_content_hash, source_format,
+                            source_artifact_hash, pdf_artifact_hash,
+                            extraction_strategy_version, imported_at
+                        ) VALUES (
+                            :id, :tenantId, :documentId, 'RUNBOOK',
+                            'Authorization Decline Runbook', '1.0.0',
+                            'AUTHORIZATION_DECLINE_RATE_SPIKE', 'Card authorization',
+                            'APPROVED', :approvedBy,
+                            TIMESTAMPTZ '2026-08-20 10:00:00Z',
+                            TIMESTAMPTZ '2026-08-21 00:00:00Z',
+                            'rb-001.pdf', :contentHash, 'PDF', :sourceHash,
+                            :pdfHash, 'pdfbox-text-pages/v1',
+                            TIMESTAMPTZ '2026-08-28 10:00:00Z'
+                        )
+                        """)
+                .param("id", DOCUMENT_VERSION_ID)
+                .param("tenantId", TENANT_ID)
+                .param("documentId", DOCUMENT_ID)
+                .param("approvedBy", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
+                .param("contentHash", "e".repeat(64))
+                .param("sourceHash", "a".repeat(64))
+                .param("pdfHash", "d".repeat(64))
+                .update();
+    }
+
+    private void insertPdfDocumentWithoutHash() {
+        jdbcClient
+                .sql("""
+                        INSERT INTO knowledge_document_version (
+                            id, tenant_id, document_id, document_type, title,
+                            document_version, incident_family, applies_to,
+                            approval_status, approved_by, approved_at, effective_at,
+                            source_name, source_content_hash, source_format,
+                            source_artifact_hash, pdf_artifact_hash,
+                            extraction_strategy_version, imported_at
+                        ) VALUES (
+                            :id, :tenantId, :documentId, 'RUNBOOK',
+                            'Authorization Decline Runbook', '1.0.0',
+                            'AUTHORIZATION_DECLINE_RATE_SPIKE', 'Card authorization',
+                            'APPROVED', :approvedBy,
+                            TIMESTAMPTZ '2026-08-20 10:00:00Z',
+                            TIMESTAMPTZ '2026-08-21 00:00:00Z',
+                            'rb-001.pdf', :contentHash, 'PDF', :sourceHash,
+                            NULL, 'pdfbox-text-pages/v1',
+                            TIMESTAMPTZ '2026-08-28 10:00:00Z'
+                        )
+                        """)
+                .param("id", DOCUMENT_VERSION_ID)
+                .param("tenantId", TENANT_ID)
+                .param("documentId", DOCUMENT_ID)
+                .param("approvedBy", UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"))
+                .param("contentHash", "e".repeat(64))
+                .param("sourceHash", "a".repeat(64))
+                .update();
+    }
+
+    private void insertPdfChunk(UUID chunkId, boolean partialEmbedding, boolean includeLineLocator) {
+        insertPdfChunk(chunkId, partialEmbedding, includeLineLocator, 3, 5);
+    }
+
+    private void insertPdfChunk(
+            UUID chunkId, boolean partialEmbedding, boolean includeLineLocator, int pageNumber, int tokens) {
+        jdbcClient
+                .sql("""
+                        INSERT INTO knowledge_chunk (
+                            id, tenant_id, document_version_id, chunk_ordinal,
+                            section_path, raw_content, embedding_input,
+                            raw_content_hash, embedding_input_hash,
+                            embedding_input_template_version, chunking_strategy_version,
+                            source_start_line, source_end_line,
+                            source_start_page, source_end_page,
+                            source_start_block, source_end_block, estimated_tokens,
+                            embedding_model_id, embedding_dimensions,
+                            embedding_normalized, embedded_at, embedding
+                        ) VALUES (
+                            :id, :tenantId, :documentVersionId, 0,
+                            'Diagnostic procedure', 'Exact PDF source paragraph.',
+                            'Document: fixture', :rawHash, :embeddingHash,
+                            'embedding-input/v1', 'pdf-page-sections/v1',
+                            :startLine, :endLine, :pageNumber, :pageNumber, 4, 8, :tokens,
+                            :modelId, NULL, NULL, NULL, NULL
+                        )
+                        """)
+                .param("id", chunkId)
+                .param("tenantId", TENANT_ID)
+                .param("documentVersionId", DOCUMENT_VERSION_ID)
+                .param("rawHash", "b".repeat(64))
+                .param("embeddingHash", "c".repeat(64))
+                .param("startLine", includeLineLocator ? 20 : null)
+                .param("endLine", includeLineLocator ? 22 : null)
+                .param("pageNumber", pageNumber)
+                .param("tokens", tokens)
+                .param("modelId", partialEmbedding ? "nomic-embed-text" : null)
                 .update();
     }
 

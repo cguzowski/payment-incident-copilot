@@ -57,13 +57,63 @@ class KnowledgeContextSelectorTest {
                         item -> assertThat(item.candidate().documentType()).isEqualTo(KnowledgeDocumentType.RUNBOOK));
     }
 
+    @Test
+    void selectsDistinctDocumentVersionsBeforeRepeatingAHighlyRankedDocument() {
+        List<KnowledgeSearchCandidate> candidates = List.of(
+                candidate(KnowledgeDocumentType.RUNBOOK, "runbook-a", 0, 1.00),
+                candidate(KnowledgeDocumentType.RUNBOOK, "runbook-a", 1, 0.99),
+                candidate(KnowledgeDocumentType.RUNBOOK, "runbook-b", 2, 0.98),
+                candidate(KnowledgeDocumentType.RUNBOOK, "runbook-c", 3, 0.97),
+                candidate(KnowledgeDocumentType.RUNBOOK, "runbook-d", 4, 0.96));
+
+        List<SelectedKnowledgeChunk> selected = new KnowledgeContextSelector(4, 0).select(candidates);
+
+        assertThat(selected)
+                .extracting(item -> item.candidate().chunkId())
+                .containsExactly(
+                        candidates.get(0).chunkId(),
+                        candidates.get(2).chunkId(),
+                        candidates.get(3).chunkId(),
+                        candidates.get(4).chunkId());
+        assertThat(selected).extracting(SelectedKnowledgeChunk::fusedPosition).containsExactly(1, 3, 4, 5);
+        assertThat(selected)
+                .extracting(SelectedKnowledgeChunk::selectedPosition)
+                .containsExactly(1, 2, 3, 4);
+    }
+
+    @Test
+    void fillsRemainingTypeCapacityFromTheOriginalRankingAfterDiversityPass() {
+        List<KnowledgeSearchCandidate> candidates = List.of(
+                candidate(KnowledgeDocumentType.POLICY, "policy-a", 0, 1.00),
+                candidate(KnowledgeDocumentType.POLICY, "policy-a", 1, 0.99),
+                candidate(KnowledgeDocumentType.POLICY, "policy-b", 2, 0.98),
+                candidate(KnowledgeDocumentType.POLICY, "policy-b", 3, 0.97));
+
+        List<SelectedKnowledgeChunk> selected = new KnowledgeContextSelector(0, 3).select(candidates);
+
+        assertThat(selected)
+                .extracting(item -> item.candidate().chunkId())
+                .containsExactly(
+                        candidates.get(0).chunkId(),
+                        candidates.get(2).chunkId(),
+                        candidates.get(1).chunkId());
+        assertThat(selected)
+                .extracting(SelectedKnowledgeChunk::selectedPosition)
+                .containsExactly(1, 2, 3);
+    }
+
     private static KnowledgeSearchCandidate candidate(KnowledgeDocumentType type, int ordinal, double score) {
+        return candidate(type, type + "-version-" + ordinal, ordinal, score);
+    }
+
+    private static KnowledgeSearchCandidate candidate(
+            KnowledgeDocumentType type, String documentVersionKey, int ordinal, double score) {
         UUID chunkId = UUID.nameUUIDFromBytes((type + "-chunk-" + ordinal).getBytes());
         return new KnowledgeSearchCandidate(
                 UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61"),
                 chunkId,
-                UUID.nameUUIDFromBytes((type + "-version-" + ordinal).getBytes()),
-                UUID.nameUUIDFromBytes((type + "-document-" + ordinal).getBytes()),
+                UUID.nameUUIDFromBytes(documentVersionKey.getBytes()),
+                UUID.nameUUIDFromBytes((documentVersionKey + "-document").getBytes()),
                 type,
                 type + " fixture",
                 "1.0.0",

@@ -17,7 +17,7 @@ class SpringAiReportModel implements ReportModel {
     private final String modelId;
 
     SpringAiReportModel(
-            Optional<ChatModel> chatModel, @Value("${spring.ai.ollama.chat.model:qwen3.5:4b}") String modelId) {
+            Optional<ChatModel> chatModel, @Value("${spring.ai.ollama.chat.model:unconfigured}") String modelId) {
         this.chatModel = chatModel;
         this.modelId = modelId;
     }

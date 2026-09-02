@@ -2,6 +2,7 @@ export type KnowledgeRetrievalStatus =
   'STARTED' | 'AVAILABLE' | 'PARTIAL' | 'NO_MATCH' | 'UNAVAILABLE' | 'TIMED_OUT' | 'MALFORMED';
 
 export type KnowledgeDocumentType = 'RUNBOOK' | 'POLICY';
+export type KnowledgeSourceFormat = 'MARKDOWN' | 'PDF';
 
 export interface KnowledgeMetadataFilters {
   incidentFamily: string;
@@ -28,8 +29,15 @@ export interface KnowledgeRetrievalResult {
   appliesTo: string;
   sectionPath: string;
   rawContent: string;
-  sourceStartLine: number;
-  sourceEndLine: number;
+  sourceName: string;
+  sourceFormat: KnowledgeSourceFormat;
+  pdfSha256: string | null;
+  sourceStartLine: number | null;
+  sourceEndLine: number | null;
+  sourceStartPage: number | null;
+  sourceEndPage: number | null;
+  sourceStartBlock: number | null;
+  sourceEndBlock: number | null;
   approvalStatus: 'APPROVED';
   approvedBy: string;
   approvedAt: string;

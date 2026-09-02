@@ -1,296 +1,430 @@
 # Payment Incident Investigation Copilot
 
-An auditable, human-in-the-loop application for investigating synthetic payment
-incidents. It gathers operational evidence, retrieves approved knowledge,
-generates a structured AI-assisted report, and requires an operator decision.
+> **An auditable, human-in-the-loop AI copilot for payment-operations incident investigation.**
 
-This is a portfolio project under active development, not a production payment
-system. See the factual [project status](docs/agent/STATUS.md) and the active
-[task brief](docs/agent/tasks/current.md).
+The Payment Incident Investigation Copilot helps a payment operations analyst move from a synthetic alert to a structured, reviewable investigation.
 
-## Intended workflow
+It brings together:
 
-```text
-synthetic alert
--> incident work queue
--> operator starts investigation
--> read-only MCP tools gather evidence
--> approved runbooks and policies are retrieved
--> the configured Spring AI chat model proposes an evidence-linked report
--> operator approves or rejects
--> the final decision and complete projected audit timeline remain reviewable
+**synthetic alert → incident work queue → investigation → operational evidence → approved runbooks/policies → AI-assisted report → human decision → audit timeline**
+
+The system is intentionally designed so that **observed evidence, retrieved knowledge, AI inference, and human decisions remain distinct and traceable**.
+
+> **Project status:** The core end-to-end vertical slice is implemented and verified. The current SynTen Inc branch is focused on live approved-knowledge retrieval using Ollama `nomic-embed-text`. The fixed retrieval-quality benchmark remains a factual **FAIL** by design, while the engineering and operator-workflow acceptance criteria are satisfied.
+
+---
+
+## Why this project exists
+
+Payment incidents rarely have a single source of truth.
+
+An analyst may need to correlate:
+
+- alerts and incident metadata
+- service errors and operational telemetry
+- gateway or upstream failures
+- internal runbooks and policies
+- retrieved source provenance
+- the analyst's final decision
+
+The goal of this project is not to replace the analyst. It is to **reduce the manual work of assembling an investigation while making the resulting reasoning auditable**.
+
+The platform deliberately avoids autonomous remediation and does not process or move real money.
+
+---
+
+## What the operator sees
+
+The main investigation workspace is built around independently loading panels for the major stages of an investigation:
+
+- **Observed Evidence** — operational facts collected through read-only tools
+- **Approved Knowledge** — relevant runbook/policy guidance with source provenance
+- **Proposed Incident Report** — structured AI-generated analysis for human review
+- **Audit Timeline** — chronological, reviewable history of the investigation and decision
+
+The UI keeps evidence and inference visually separate so an analyst can distinguish what the system **observed** from what the model **concluded**.
+
+![Investigation workspace](docs/screenshots/investigation-workspace.png)
+
+> The screenshot above is a UI reference for the investigation workspace. The live SynTen Inc branch also records PDF provenance such as filename, SHA-256, page/block location, document/version/chunk IDs, approval actor, and effective time when approved knowledge is returned.
+
+---
+
+## Core workflow
+
+```mermaid
+flowchart LR
+    A[Synthetic alert] --> B[Incident work queue]
+    B --> C[Start investigation]
+    C --> D[Read-only MCP evidence]
+    D --> E[Normalize evidence]
+    E --> F[Retrieve approved knowledge]
+    F --> G[Generate structured report]
+    G --> H[Human review]
+    H --> I[Approve or reject]
+    I --> J[Audit timeline]
 ```
 
-## Components
+The backend preserves the provenance of the major stages rather than collapsing them into one opaque AI call.
+
+---
+
+## Architecture
+
+The repository is a monorepo containing independently deployable application boundaries.
+
+```text
+                           ┌──────────────────────┐
+                           │  Synthetic Alert     │
+                           │      Source          │
+                           └──────────┬───────────┘
+                                      │
+                                      ▼
+┌──────────────────────┐      ┌──────────────────────┐
+│ Angular Operator     │◄────►│   Copilot API        │
+│ Console              │      │ Spring Boot / Java 21│
+└──────────────────────┘      └───────┬──────────────┘
+                                      │
+                 ┌────────────────────┼────────────────────┐
+                 │                    │                    │
+                 ▼                    ▼                    ▼
+        ┌────────────────┐   ┌─────────────────┐   ┌─────────────────┐
+        │ Operations MCP │   │ PostgreSQL +     │   │ Spring AI       │
+        │ Server         │   │ pgvector         │   │ Provider        │
+        │ read-only      │   │ state + retrieval│   │ Ollama locally  │
+        └────────────────┘   └─────────────────┘   └─────────────────┘
+```
+
+### Service boundaries
 
 | Component | Responsibility |
 |---|---|
-| `frontend/operator-console` | Active incident triage, investigation review, and human decisions |
-| `backend/copilot-api` | Workflow, persistence, retrieval, report generation, and audit history |
-| `backend/operations-mcp-server` | Deterministic synthetic evidence exposed through read-only MCP tools |
-| PostgreSQL/pgvector | Application state, approved knowledge, and vector retrieval |
-| Ollama | Local `nomic-embed-text` embeddings and `qwen3.5:4b` report generation |
-| Amazon Bedrock | Optional production provider profile deferred until deployment work |
+| `frontend/operator-console` | Incident queue, investigation workspace, review, and human decisions |
+| `backend/copilot-api` | Workflow, persistence, retrieval, report generation, decisions, and audit history |
+| `backend/operations-mcp-server` | Deterministic synthetic operational tools and fixtures |
+| PostgreSQL | Transactional application state and audit records |
+| pgvector | Tenant-filtered knowledge embeddings and vector retrieval |
+| Ollama | Local embedding and model provider boundary used by the current development path |
 
-The applications share one repository but remain independently buildable and
-deployable. See [Architecture](docs/agent/ARCHITECTURE.md) for ownership and
-data flow.
+The Copilot API is internally divided into explicit feature areas for incident lifecycle, evidence, knowledge catalog, knowledge retrieval, report generation, decisions, and audit projection. Architecture tests enforce the allowed package directions.
 
-## Non-negotiable boundaries
+---
 
-- Synthetic data only; the application does not process or move money.
-- AI output is advisory and always requires human review.
-- Observed evidence remains distinct from AI inference.
-- Missing or contradictory evidence stays visible.
-- No autonomous remediation or approval.
-- Evidence, model, prompt, retrieval, and decision provenance is retained.
+## AI / RAG design
 
-See [Constraints](docs/agent/CONSTRAINTS.md) for the complete contract.
+This project uses retrieval as a **controlled evidence pipeline**, not as a black box.
+
+Approved operational sources are:
+
+1. versioned and validated
+2. converted into page-aware chunks
+3. embedded for semantic retrieval
+4. filtered for tenant, approval, effective version, model compatibility, and superseded-source rules
+5. ranked using hybrid lexical + vector retrieval
+6. persisted with retrieval provenance
+
+The current SynTen Inc corpus contains **30 PDF document versions**:
+
+- 22 runbooks
+- 8 policies
+- 705 page-aware chunks
+
+The active local embedding model is **Ollama `nomic-embed-text`** with normalized 768-dimensional vectors.
+
+### Retrieval strategy
+
+The current K5 retrieval path introduces:
+
+- an evidence-focused `knowledge-query/v2`
+- type-balanced lexical/vector candidate pools
+- deterministic Reciprocal Rank Fusion (`postgres-hybrid-rrf/v2`)
+- document-diverse context selection
+- explicit eligibility and superseded-version filtering
+- persisted query/ranking versions and retrieval provenance
+
+This keeps retrieval behavior deterministic and inspectable instead of relying on an unconstrained similarity search.
+
+---
+
+## Human-in-the-loop by design
+
+The application has explicit guardrails:
+
+- **Synthetic data only**
+- **No payment processing or money movement**
+- **No autonomous remediation**
+- **No autonomous report approval**
+- **Observed evidence remains separate from AI inference**
+- **Missing and contradictory evidence stays visible**
+- **Human decisions are persisted as immutable-style records**
+- **Evidence, retrieval, model, prompt, report, and decision provenance is retained**
+
+These constraints are architectural requirements, not just UI messaging.
+
+---
+
+## SynTen Inc demonstration scenario
+
+The project uses **SynTen Inc**, a fictional financial-services tenant, to keep the entire demonstration synthetic.
+
+The primary incident family is a **payment authorization decline-rate spike**.
+
+The live retrieval proof currently uses scenario `S001`, where the observed evidence includes:
+
+- `GATEWAY_TIMEOUT`
+- `UPSTREAM_CONNECTION_RESET`
+
+For that scenario, the approved-knowledge workflow successfully returns the expected cited runbook as part of the operator-visible retrieval result.
+
+---
+
+## Current status
+
+### Completed
+
+- Synthetic alert ingestion and idempotent incident persistence
+- Tenant-scoped incident work queue
+- Investigation lifecycle and operator workspace
+- Read-only MCP integration
+- Append-only evidence collection/history
+- Approved runbook/policy ingestion
+- PostgreSQL + pgvector hybrid retrieval
+- PDF-aware extraction and stable chunk provenance
+- Structured report-generation path with strict schema validation
+- Human approve/reject workflow
+- Immutable-style audit timeline
+- Docker/local development workflow
+- Repository-wide verification and CI checks
+- SynTen Inc synthetic corpus and retrieval evaluation framework
+- Live `nomic-embed-text` embedding/index path
+- Live operator proof showing cited approved knowledge
+
+### K5 retrieval evaluation
+
+The current fixed evaluation is intentionally preserved rather than "passed" by weakening its thresholds.
+
+| Metric | Previous K4 | Current K5 |
+|---|---:|---:|
+| Primary runbook coverage | 9 / 22 | **19 / 22** |
+| Supporting policy coverage | 1 / 20 | **12 / 20** |
+| Primary-over-weak ranking | 16 / 21 | **16 / 21** |
+
+The fixed thresholds require the third metric to reach 19/21, so the retained evaluation artifact remains a factual **FAIL**.
+
+That distinction matters: the implementation passes its engineering/behavioral acceptance criteria while the benchmark continues to expose a measurable retrieval-quality gap.
+
+### Current deliberate limitations
+
+- Authentication is not implemented yet.
+- Only `getRecentServiceErrors` is currently implemented as an operational evidence domain.
+- Live chat-model selection is deferred from the current K5 milestone.
+- AWS infrastructure and the production Bedrock profile are deferred.
+- Knowledge ingestion is explicit rather than a continuous content-management pipeline.
+- The project remains a single synthetic tenant and single incident family demonstration.
+
+---
 
 ## Technology
 
 | Area | Technology |
 |---|---|
 | Backend | Java 21, Spring Boot, Maven |
+| AI orchestration | Spring AI |
+| Local AI | Ollama |
+| Retrieval | PostgreSQL + pgvector + hybrid lexical/vector search |
+| Integration | Model Context Protocol (MCP) |
 | Frontend | Angular, TypeScript, SCSS |
-| Data | PostgreSQL, pgvector, Flyway |
-| AI and integration | Spring AI, Ollama locally, MCP; optional Bedrock production profile deferred |
-| Delivery | Docker Compose, GitHub Actions, AWS |
+| Database migrations | Flyway |
+| Infrastructure | Docker Compose |
+| CI | GitHub Actions |
+| Future deployment direction | AWS / optional Amazon Bedrock profile |
 
-Versions belong in Maven or npm configuration, not in documentation.
+---
 
 ## Repository layout
 
 ```text
-backend/
-  copilot-api/              Main workflow application
-  operations-mcp-server/    Synthetic operational tools
-frontend/
-  operator-console/         Angular application boundary
-docs/agent/                 Canonical project and agent context
-infra/                      Deployment infrastructure when selected
-.github/workflows/          Continuous integration
+payment-incident-copilot/
+├── backend/
+│   ├── copilot-api/               # Main investigation application
+│   └── operations-mcp-server/     # Synthetic read-only operational tools
+├── frontend/
+│   └── operator-console/          # Angular operator UI
+├── SynTen Inc/
+│   ├── corpus/                    # Synthetic runbooks and policies
+│   └── evaluation/                # Retrieval cases and evaluation artifacts
+├── contracts/
+│   └── mcp/                       # Versioned MCP contract artifacts
+├── docs/
+│   └── agent/                     # Architecture, constraints, status, decisions
+├── infra/                         # Deployment infrastructure
+├── scripts/                       # Verification/evaluation tooling
+├── syntheticIncidentGenerator/   # Synthetic incident generator
+├── docker-compose.yml
+├── verify.ps1
+└── pom.xml
 ```
 
-## Local development
+---
 
-Prerequisites:
+## Run locally
+
+### Prerequisites
 
 - Java 21
-- Node.js 24.14.1 and npm 10.8.3
-- PowerShell 7 on non-Windows hosts
-- Either native PostgreSQL 18 with pgvector or Docker with Docker Compose
-- Ollama with `qwen3.5:4b` and `nomic-embed-text` for live local AI work
+- Node.js 24.14.1
+- npm 10.8.3
+- PowerShell 7
+- PostgreSQL with pgvector, or Docker Compose
+- Ollama for live knowledge retrieval
 
-Create ignored local configuration from the safe placeholders:
+Create local configuration from the safe template:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Put real local values only in `.env`. Never put them in `.env.example`.
-Git ignores `.env`, but verify with `git check-ignore .env` before adding new
-local variables.
-
-On Windows, after configuring `.env` and the database, double-click
-`start-local.bat` in the repository root. The launcher checks the local tools
-and database, installs locked frontend dependencies when needed, starts the
-operations MCP server, copilot API, and operator console in separate terminals,
-waits for all three to be ready in dependency order, then starts the synthetic
-incident generator. It opens the operator console at `http://localhost:4200`
-and the generator at `http://localhost:8082`. Press `Ctrl+C` in each service
-terminal, or close the terminals, to stop the application.
-
-Run `start-local.bat --CheckOnly` from a terminal to perform the startup
-preflight without starting any service.
-
-### Native PostgreSQL 18 on port 5432
-
-Create a dedicated database and non-superuser login matching `.env`. Install
-pgvector for PostgreSQL 18 by following the
-[official Windows instructions](https://github.com/pgvector/pgvector#installation-notes---windows),
-then enable `vector` once in the project database as a database administrator.
-Do not put a password directly in SQL or shell history; use the interactive
-`psql` password prompt when provisioning the local role.
-
-Spring Boot does not load `.env` automatically. From the repository root, load
-the file into the current PowerShell process without printing its values, then
-start the API:
+For live embedding retrieval:
 
 ```powershell
-$projectEnv = Resolve-Path .env
-Get-Content -LiteralPath $projectEnv | ForEach-Object {
-  if ($_ -match '^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$') {
-    [Environment]::SetEnvironmentVariable(
-      $matches[1],
-      $matches[2].Trim().Trim('"').Trim("'"),
-      'Process'
-    )
-  }
-}
-Push-Location backend/copilot-api
-../../mvnw.cmd spring-boot:run
-Pop-Location
-```
-
-The current native verification target is PostgreSQL 18 on `localhost:5432`.
-Flyway applies V1 through V8 when the API starts. V8 adds append-only final
-human decisions plus nullable historical attribution for evidence and retrieval
-attempts; new attempts always persist their requesting operator.
-
-### Docker PostgreSQL 17.11 on port 5433
-
-The repeatable Docker baseline remains `pgvector/pgvector:pg17`, currently
-verified as PostgreSQL 17.11. When native PostgreSQL owns 5432, override only
-the Docker host port:
-
-```powershell
-$env:POSTGRES_PORT = '5433'
-docker compose up -d postgres
-docker compose ps
-docker compose port postgres 5432
-```
-
-After loading `.env` as shown above, point a backend process at Docker without
-changing tracked configuration:
-
-```powershell
-$env:SPRING_DATASOURCE_URL = 'jdbc:postgresql://localhost:5433/payment_copilot'
-Push-Location backend/copilot-api
-../../mvnw.cmd spring-boot:run
-Pop-Location
-```
-
-Compose reads `.env` automatically; Spring Boot does not. PostgreSQL container
-initialization variables apply only when a data volume is first created, so a
-preserved volume must be used with the credentials that initialized it.
-
-Run the authoritative repository verification from the root:
-
-```powershell
-./verify.ps1
-```
-
-It uses the pinned Maven Wrapper, locked frontend installation, backend and
-frontend zero-skip checks, formatting, the Angular production build, Compose
-validation, and diff-integrity checks. `-Scope Backend`, `-Scope Frontend`, and
-`-Scope Repository` are available for focused work; the unscoped command is the
-completion gate and is also used by CI.
-
-Build both Java services directly when iterating on backend code. Use
-`./mvnw.cmd` on Windows PowerShell and `sh ./mvnw` on non-Windows PowerShell:
-
-```powershell
-./mvnw.cmd clean verify
-```
-
-Run each service in a separate terminal after loading the required environment:
-
-```powershell
-./mvnw.cmd -pl backend/operations-mcp-server -am spring-boot:run
-./mvnw.cmd -pl backend/copilot-api -am spring-boot:run
-```
-
-Default application ports are `8080` for the copilot API and `8081` for the MCP
-server. Native PostgreSQL uses `5432`; the Docker baseline uses `5433` when both
-servers coexist.
-
-### Synthetic HTTP request context
-
-Application HTTP calls carry the demonstration tenant in the required
-`X-Synthetic-Tenant-Id` header. Operator-attributed mutations carry
-`X-Synthetic-Operator-Id`; investigation start, evidence collection, knowledge
-retrieval, report generation, and final human decisions all require it.
-Resource identifiers remain in paths, queue reads use `GET /api/incidents`,
-and tenant/operator identity is not accepted in resource paths, query
-parameters, or request bodies. These caller-supplied synthetic headers are a
-local portfolio convention, not authentication or a production authorization
-claim.
-
-### Local Ollama models and approved-knowledge ingestion
-
-Install Ollama outside the repository, then make the two pinned local models
-available before invoking live AI behavior:
-
-```powershell
-ollama pull qwen3.5:4b
 ollama pull nomic-embed-text
 ollama serve
 ```
 
-The API uses Ollama at `http://localhost:11434`. It never pulls models
-automatically. Normal startup does not invoke a model or mutate the knowledge
-index, and no AWS credential is required for local development.
+### Windows quick start
 
-Each Generate action makes one auditable provider call. Report generation has
-a two-minute total deadline so provider retries or a stalled model cannot leave
-the operator console busy indefinitely. A refused provider is recorded as
-`UNAVAILABLE`; exceeding the deadline is recorded as `TIMED_OUT`, and either
-outcome can be retried explicitly. Slower local hardware can set the positive
-Spring duration `REPORT_GENERATION_TIMEOUT` (for example `3m`) in `.env`.
-
-After loading `.env` and pointing the API at a running PostgreSQL/pgvector
-database, run the safe model-contract smoke test as a one-shot application:
+After configuring `.env` and the database:
 
 ```powershell
-$env:APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = 'true'
-Push-Location backend/copilot-api
-../../mvnw.cmd "-Dspring-boot.run.arguments=--spring.main.web-application-type=none" spring-boot:run
-Pop-Location
+.\start-local.bat
 ```
 
-The smoke test sends one fixed synthetic string and reports only the model ID,
-dimension count, and normalization result. To explicitly ingest the two
-repository-owned approved Markdown sources, use the same command with
-`APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED=false` and
-`APP_KNOWLEDGE_INGESTION_ENABLED=true`.
+The launcher checks prerequisites and starts:
 
-To exercise the implemented report adapter with one fixed synthetic context,
-run the same one-shot application with knowledge commands disabled and
-`APP_REPORT_SMOKE_TEST_ENABLED=true`. The command validates the returned JSON
-against `report-v1` and logs only safe model/schema/disposition metadata; it
-does not persist a report or expose the prompt or provider payload.
+- the operations MCP server
+- the Copilot API
+- the Angular operator console
+- the synthetic incident generator
 
-`nomic-embed-text` uses the current 768-dimensional index contract. Flyway V7
-preserves historical 1,024-dimensional Titan rows, and vector scoring compares
-only matching model/dimension pairs; lexical retrieval can still return older
-approved chunks. Re-importing an unchanged document version is idempotent, so
-an existing Titan-indexed local database is not silently re-embedded. For full
-local semantic coverage, use a fresh synthetic database or publish a new
-document version and run the explicit importer. Do not delete or rewrite an
-index without reviewing its retained audit history.
+The normal local endpoints are:
 
-Flyway V6 is the immutable, provider-neutral report-persistence migration from
-the preserved production branch. Keeping its original checksum allows the same
-local database to move between that history and this Ollama branch without
-`flyway repair`; V7 contains the Ollama vector change.
+```text
+Operator Console   http://localhost:4200
+Copilot API        http://localhost:8080
+MCP Server         http://localhost:8081
+Incident Generator http://localhost:8082
+```
 
-Automated tests set both Spring AI providers to `none` and use mocked or
-deterministic model responses, so neither Ollama nor Bedrock is contacted by
-the test suite. Bedrock remains a future optional production profile to be
-designed near the deployment milestone.
+To run only the startup checks:
 
-Run the Angular operator console in another terminal:
+```powershell
+.\start-local.bat --CheckOnly
+```
 
-```bash
+### Manual development
+
+Backend:
+
+```powershell
+.\mvnw.cmd clean verify
+```
+
+Operations MCP server:
+
+```powershell
+.\mvnw.cmd -pl backend/operations-mcp-server -am spring-boot:run
+```
+
+Copilot API:
+
+```powershell
+.\mvnw.cmd -pl backend/copilot-api -am spring-boot:run
+```
+
+Frontend:
+
+```powershell
 cd frontend/operator-console
 npm ci
 npm start
 ```
 
-The development server proxies `/api` requests to the copilot API on port
-`8080`. See the [operator console guide](frontend/operator-console/README.md)
-for its test and production-build commands.
+The Angular development server proxies `/api` to the Copilot API.
 
-## Agent development
+---
 
-`AGENTS.md` is the repository-wide source of truth. It routes agents to the
-minimum required project context, enforces test-driven development, and defines
-completion evidence. Nested `AGENTS.md` files add only service-specific rules.
+## Verification
 
-Start with the [agent context map](docs/agent/README.md). Keep durable facts in
-their canonical files rather than copying them into prompts or task notes.
+The repository has a single authoritative verification entry point:
 
-## Author
+```powershell
+.\verify.ps1
+```
 
-Christopher Guzowski
+Focused scopes are also available:
+
+```powershell
+.\verify.ps1 -Scope Backend
+.\verify.ps1 -Scope Frontend
+.\verify.ps1 -Scope Repository
+```
+
+The verification contract covers backend tests, PostgreSQL/Testcontainers scenarios, frontend tests, formatting, production builds, Compose validation, repository checks, and diff integrity.
+
+Automated tests use deterministic/mock model responses and do **not** require a live Ollama or Bedrock connection.
+
+---
+
+## Design principles
+
+### Evidence before inference
+
+The system distinguishes:
+
+```text
+observed evidence
+      ↓
+approved knowledge
+      ↓
+AI inference
+      ↓
+human decision
+```
+
+The model never gets to redefine what counts as observed evidence.
+
+### Provenance is part of the product
+
+A useful answer is not enough for an incident system.
+
+The platform keeps track of where information came from, including retrieval and source metadata, so an operator can inspect the basis for a conclusion.
+
+### Fail closed
+
+Eligibility, tenant, approval, effective-version, and superseded-source protections are enforced before retrieved knowledge becomes operator-visible context.
+
+### One coherent vertical slice
+
+The project intentionally prioritizes a complete incident workflow over adding many incident types or hypothetical infrastructure.
+
+---
+
+## Documentation
+
+The repository's deeper engineering documentation lives under [`docs/agent`](docs/agent):
+
+- [`PROJECT.md`](docs/agent/PROJECT.md) — product goal and MVP scope
+- [`ARCHITECTURE.md`](docs/agent/ARCHITECTURE.md) — service boundaries and data flow
+- [`CONSTRAINTS.md`](docs/agent/CONSTRAINTS.md) — non-negotiable product and technical guardrails
+- [`STATUS.md`](docs/agent/STATUS.md) — current implementation status and verification evidence
+- [`tasks/current.md`](docs/agent/tasks/current.md) — current retrieval milestone and acceptance criteria
+
+---
+
+## Important disclaimer
+
+This is a **portfolio and engineering demonstration**, not a production payment platform.
+
+All organizations, incidents, identifiers, operational records, runbooks, policies, and customer-related data are synthetic.
+
+The application does not process real payments, move money, or provide autonomous operational remediation.

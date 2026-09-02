@@ -1,6 +1,6 @@
 # Domain glossary
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 
 ## Core terms
 
@@ -82,6 +82,27 @@ operator.
 The financial-services organization whose incidents, knowledge, and audit data
 are logically isolated. The MVP demonstrates one tenant while retaining tenant
 identifiers in the model.
+
+**SynTen Inc**
+
+The fictional company name assigned to the existing MVP synthetic tenant,
+`8b860d80-d17f-4e6b-8c48-af35f26a4d61`. It is not a real company or a second
+tenant. All incidents, operational records, runbooks, policies, people, and
+identifiers associated with it are synthetic. Tenant-specific assets live
+under `SynTen Inc/`.
+
+**Synthetic knowledge corpus**
+
+The version-controlled collection of SynTen Inc runbooks, policies, metadata,
+and later retrieval-evaluation cases. Source documents are not evidence of a
+real event and do not become report truth merely because retrieval selected
+them.
+
+**Source PDF**
+
+A human-readable, text-based synthetic runbook or policy artifact. PDF-derived
+chunks must remain traceable to the exact document version and source location;
+the extraction and locator contract is selected before ingestion is changed.
 
 ## Vocabulary rule
 
