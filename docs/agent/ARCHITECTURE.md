@@ -170,9 +170,11 @@ owns the separately approved retrieval-quality changes and operator-workflow
 proof that **Retrieve approved knowledge** displays eligible cited guidance.
 
 Live local-model evaluation is an explicit smoke/evaluation workflow over
-synthetic data. K5 uses the embedding-only `nomic-embed-text` model and disables
-chat-model startup; live report-model selection is deferred. Normal automated
-verification remains deterministic and network-free.
+synthetic data. Retrieval uses `nomic-embed-text`; report generation uses
+`qwen3:8b-q4_K_M` with thinking disabled, temperature zero, no tools, a bounded
+output budget, and a context-constrained `report-v1` schema. Application parsing
+and citation validation remain authoritative. Normal automated verification is
+deterministic and network-free.
 
 ## Primary states
 

@@ -18,7 +18,7 @@ class ReportGenerationSmokeTestCommandTest {
     void validatesOnePromptGuidedOllamaReportWithoutPersistence() {
         ReportModel model = mock(ReportModel.class);
         when(model.modelId()).thenReturn("test-report-model");
-        when(model.generate(contains("report-v1")))
+        when(model.generate(contains("report-v1"), contains("\"evidenceId\"")))
                 .thenReturn(new ReportModelResponse(validInsufficientReportJson(), "safe-request-id"));
         JsonMapper mapper = JsonMapper.builder().build();
         ReportPromptFactory prompts = new ReportPromptFactory(mapper);
@@ -32,7 +32,8 @@ class ReportGenerationSmokeTestCommandTest {
     @Test
     void failsSafelyWhenProviderOutputDoesNotValidate() {
         ReportModel model = mock(ReportModel.class);
-        when(model.generate(contains("report-v1"))).thenReturn(new ReportModelResponse("untrusted", null));
+        when(model.generate(contains("report-v1"), contains("\"evidenceId\"")))
+                .thenReturn(new ReportModelResponse("untrusted", null));
         JsonMapper mapper = JsonMapper.builder().build();
         ReportPromptFactory prompts = new ReportPromptFactory(mapper);
 

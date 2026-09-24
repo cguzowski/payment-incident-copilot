@@ -22,6 +22,15 @@ class ReportModelCallExecutor {
 
     ReportModelResponse generate(ReportModel model, String prompt) {
         FutureTask<ReportModelResponse> invocation = new FutureTask<>(() -> model.generate(prompt));
+        return await(invocation);
+    }
+
+    ReportModelResponse generate(ReportModel model, String prompt, String outputSchema) {
+        FutureTask<ReportModelResponse> invocation = new FutureTask<>(() -> model.generate(prompt, outputSchema));
+        return await(invocation);
+    }
+
+    private ReportModelResponse await(FutureTask<ReportModelResponse> invocation) {
         Thread.ofVirtual().name("report-model-call-", 0).start(invocation);
         try {
             return invocation.get(timeout.toNanos(), TimeUnit.NANOSECONDS);

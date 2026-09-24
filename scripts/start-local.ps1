@@ -261,7 +261,9 @@ function Start-LocalApplication {
     $backendDirectory = Join-Path $repositoryRoot 'backend/copilot-api'
     $frontendDirectory = Join-Path $repositoryRoot 'frontend/operator-console'
     $knowledgePreparationModule = Join-Path $repositoryRoot 'scripts/local/LocalKnowledgePreparation.psm1'
+    $aiPrerequisitesModule = Join-Path $repositoryRoot 'scripts/local/LocalAiPrerequisites.psm1'
     Import-Module $knowledgePreparationModule -Force
+    Import-Module $aiPrerequisitesModule -Force
 
     Import-DotEnv -Path (Join-Path $repositoryRoot '.env')
     if ($UseGeneratorMcp) {
@@ -269,12 +271,18 @@ function Start-LocalApplication {
     }
     Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_BASE_URL' -Value 'http://localhost:8081'
     Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_REQUEST_TIMEOUT' -Value '5s'
+    Set-DefaultEnvironmentVariable -Name 'OLLAMA_BASE_URL' -Value 'http://localhost:11434'
+    Set-DefaultEnvironmentVariable -Name 'REPORT_CHAT_MODEL' -Value 'qwen3:8b-q4_K_M'
+    Set-DefaultEnvironmentVariable -Name 'KNOWLEDGE_EMBEDDING_MODEL' -Value 'nomic-embed-text'
     Assert-RequiredEnvironmentVariables -Names @(
         'SPRING_DATASOURCE_URL',
         'SPRING_DATASOURCE_USERNAME',
         'SPRING_DATASOURCE_PASSWORD',
         'OPERATIONS_MCP_BASE_URL',
-        'OPERATIONS_MCP_REQUEST_TIMEOUT'
+        'OPERATIONS_MCP_REQUEST_TIMEOUT',
+        'OLLAMA_BASE_URL',
+        'REPORT_CHAT_MODEL',
+        'KNOWLEDGE_EMBEDDING_MODEL'
     )
 
     $mcpHealthUri = Get-McpHealthUri -BaseUrl $env:OPERATIONS_MCP_BASE_URL
@@ -289,11 +297,14 @@ function Start-LocalApplication {
         throw 'Java 21 is required. Check java -version and your PATH.'
     }
 
+    Assert-LocalOllamaModels `
+        -BaseUrl $env:OLLAMA_BASE_URL `
+        -RequiredModels @($env:REPORT_CHAT_MODEL, $env:KNOWLEDGE_EMBEDDING_MODEL)
     Assert-PostgresReachable -JdbcUrl $env:SPRING_DATASOURCE_URL
     Install-FrontendDependenciesIfNeeded -FrontendDirectory $frontendDirectory -NpmCommand $npmCommand
 
     if ($CheckOnly) {
-        Write-Host 'Local startup preflight passed: MCP configuration, tools, PostgreSQL, and frontend dependencies are ready.'
+        Write-Host 'Local startup preflight passed: MCP configuration, tools, Ollama models, PostgreSQL, and frontend dependencies are ready.'
         return
     }
 

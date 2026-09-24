@@ -88,7 +88,7 @@ class ReportApiPostgresIntegrationTest {
     @Test
     void createsAndReturnsReportHistoryWithCommittedStartedBeforeModelCall() throws Exception {
         AtomicBoolean observedStartedOutsideTransaction = new AtomicBoolean();
-        when(model.generate(any())).thenAnswer(invocation -> {
+        when(model.generate(any(), any())).thenAnswer(invocation -> {
             String prompt = invocation.getArgument(0);
             assertThat(TransactionSynchronizationManager.isActualTransactionActive())
                     .isFalse();

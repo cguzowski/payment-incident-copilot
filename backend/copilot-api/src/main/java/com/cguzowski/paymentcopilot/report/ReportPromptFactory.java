@@ -5,15 +5,20 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 @Component
 class ReportPromptFactory {
 
-    static final String PROMPT_VERSION = "report-prompt/v1";
+    static final String PROMPT_VERSION = "report-prompt/v3";
     static final String SCHEMA_VERSION = "report-v1";
 
     private final JsonMapper jsonMapper;
@@ -30,7 +35,9 @@ class ReportPromptFactory {
         try {
             String input = jsonMapper.writeValueAsString(context);
             String text = template.replace("{{SCHEMA}}", schema).replace("{{INPUT}}", input);
-            return new ReportPrompt(text, PROMPT_VERSION, sha256(template), SCHEMA_VERSION, sha256(schema));
+            String outputSchema = constrainedSchema(context);
+            return new ReportPrompt(
+                    text, PROMPT_VERSION, sha256(template), SCHEMA_VERSION, sha256(outputSchema), outputSchema);
         } catch (JacksonException exception) {
             throw new IllegalStateException("The validated report context could not be serialized.", exception);
         }
@@ -38,6 +45,33 @@ class ReportPromptFactory {
 
     String schema() {
         return schema;
+    }
+
+    private String constrainedSchema(ReportGenerationContext context) throws JacksonException {
+        ObjectNode root = (ObjectNode) jsonMapper.readTree(schema);
+        ObjectNode definitions = (ObjectNode) root.get("$defs");
+        Set<UUID> evidenceIds = new LinkedHashSet<>();
+        evidenceIds.add(context.evidence().latestAttemptId());
+        if (context.evidence().applicableAttemptId() != null) {
+            evidenceIds.add(context.evidence().applicableAttemptId());
+        }
+        replaceIdentifierDefinition(definitions, "evidenceId", evidenceIds);
+        replaceIdentifierDefinition(
+                definitions,
+                "knowledgeChunkId",
+                context.knowledge().chunks().stream()
+                        .map(chunk -> chunk.chunkId())
+                        .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new)));
+        return jsonMapper.writeValueAsString(root);
+    }
+
+    private void replaceIdentifierDefinition(ObjectNode definitions, String name, Set<UUID> identifiers) {
+        ObjectNode definition = jsonMapper.createObjectNode();
+        definition.put("type", "string");
+        definition.put("format", "uuid");
+        ArrayNode values = definition.putArray("enum");
+        identifiers.forEach(identifier -> values.add(identifier.toString()));
+        definitions.set(name, definition);
     }
 
     private static String read(String path) {

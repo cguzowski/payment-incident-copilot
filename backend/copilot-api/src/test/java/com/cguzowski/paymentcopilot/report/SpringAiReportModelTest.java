@@ -18,19 +18,25 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.ai.ollama.api.ThinkOption;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 class SpringAiReportModelTest {
 
     private static final String MODEL_ID = "test-report-model";
 
     @Test
-    void callsConverseOnceWithDeterministicBoundedOptionsAndNoTools() {
+    void callsOllamaOnceWithDeterministicSchemaConstrainedOptionsAndNoTools() throws JacksonException {
         ChatModel chatModel = mock(ChatModel.class);
         when(chatModel.call(any(Prompt.class)))
                 .thenReturn(new ChatResponse(List.of(new Generation(new AssistantMessage("{\"result\":true}")))));
-        SpringAiReportModel model = new SpringAiReportModel(Optional.of(chatModel), MODEL_ID);
+        ReportPromptFactory prompts =
+                new ReportPromptFactory(JsonMapper.builder().build());
+        SpringAiReportModel model = new SpringAiReportModel(Optional.of(chatModel), MODEL_ID, prompts);
 
-        ReportModelResponse result = model.generate("prompt");
+        String outputSchema = "{\"type\":\"object\"}";
+        ReportModelResponse result = model.generate("prompt", outputSchema);
 
         assertThat(result.output()).isEqualTo("{\"result\":true}");
         ArgumentCaptor<Prompt> prompt = ArgumentCaptor.forClass(Prompt.class);
@@ -39,14 +45,17 @@ class SpringAiReportModelTest {
         OllamaChatOptions options = (OllamaChatOptions) prompt.getValue().getOptions();
         assertThat(options.getModel()).isEqualTo(MODEL_ID);
         assertThat(options.getTemperature()).isZero();
-        assertThat(options.getMaxTokens()).isEqualTo(4096);
+        assertThat(options.getMaxTokens()).isEqualTo(1536);
         assertThat(options.getToolCallbacks()).isNullOrEmpty();
-        assertThat(options.getOutputSchema()).isNull();
+        assertThat(options.getThinkOption()).isEqualTo(ThinkOption.ThinkBoolean.DISABLED);
+        assertThat(options.getOutputSchema()).isEqualTo(outputSchema);
     }
 
     @Test
     void mapsMissingProviderAndTimeoutWithoutLeakingProviderDetails() {
-        assertThatThrownBy(() -> new SpringAiReportModel(Optional.empty(), MODEL_ID).generate("prompt"))
+        ReportPromptFactory prompts =
+                new ReportPromptFactory(JsonMapper.builder().build());
+        assertThatThrownBy(() -> new SpringAiReportModel(Optional.empty(), MODEL_ID, prompts).generate("prompt", "{}"))
                 .isInstanceOf(ReportModelUnavailableException.class)
                 .hasMessage(null);
 
@@ -54,7 +63,8 @@ class SpringAiReportModelTest {
         when(chatModel.call(any(Prompt.class)))
                 .thenThrow(new RuntimeException(new SocketTimeoutException("provider detail")));
 
-        assertThatThrownBy(() -> new SpringAiReportModel(Optional.of(chatModel), MODEL_ID).generate("prompt"))
+        assertThatThrownBy(() ->
+                        new SpringAiReportModel(Optional.of(chatModel), MODEL_ID, prompts).generate("prompt", "{}"))
                 .isInstanceOf(ReportModelTimedOutException.class)
                 .hasMessage(null);
     }

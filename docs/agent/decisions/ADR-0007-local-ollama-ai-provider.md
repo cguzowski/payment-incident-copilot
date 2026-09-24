@@ -1,6 +1,6 @@
 # ADR-0007: Use Ollama for local AI development
 
-Status: Accepted; report-model choice superseded by ADR-0010
+Status: Accepted; report-model choice superseded by ADR-0012
 Date: 2026-08-30
 Decision owner: Christopher Guzowski
 
@@ -67,8 +67,7 @@ fallback, credential requirement, or profile in local development.
 
 - Developers must install Ollama and pull the pinned embedding model
   themselves for live retrieval.
-- Live report generation remains unavailable until a separate chat-model
-  decision is accepted and implemented.
+- The original report-model deferral is superseded by ADR-0012.
 - Live model behavior is environment-dependent and requires an explicit smoke
   check outside automated verification.
 - A mixed historical index cannot compare vectors across model/dimension pairs;

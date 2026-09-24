@@ -129,7 +129,9 @@ The current SynTen Inc corpus contains **30 PDF document versions**:
 - 8 policies
 - 705 page-aware chunks
 
-The active local embedding model is **Ollama `nomic-embed-text`** with normalized 768-dimensional vectors.
+The active local models are **Ollama `nomic-embed-text`** for normalized
+768-dimensional embeddings and **Ollama `qwen3:8b-q4_K_M`** for advisory
+report generation.
 
 ### Retrieval strategy
 
@@ -198,6 +200,7 @@ For that scenario, the approved-knowledge workflow successfully returns the expe
 - SynTen Inc synthetic corpus and retrieval evaluation framework
 - Live `nomic-embed-text` embedding/index path
 - Live operator proof showing cited approved knowledge
+- Live local Qwen report generation with schema- and citation-constrained output
 
 ### K5 retrieval evaluation
 
@@ -217,7 +220,8 @@ That distinction matters: the implementation passes its engineering/behavioral a
 
 - Authentication is not implemented yet.
 - Only `getRecentServiceErrors` is currently implemented as an operational evidence domain.
-- Live chat-model selection is deferred from the current K5 milestone.
+- Local report generation is pinned to `qwen3:8b-q4_K_M`; broader model-quality
+  evaluation and production-provider selection remain future work.
 - AWS infrastructure and the production Bedrock profile are deferred.
 - Knowledge ingestion is explicit rather than a continuous content-management pipeline.
 - The project remains a single synthetic tenant and single incident family demonstration.
@@ -276,7 +280,7 @@ payment-incident-copilot/
 - npm 10.8.3
 - PowerShell 7
 - PostgreSQL with pgvector, or Docker Compose
-- Ollama for live knowledge retrieval
+- Ollama with `nomic-embed-text` and `qwen3:8b-q4_K_M`
 
 Create local configuration from the safe template:
 
@@ -284,10 +288,11 @@ Create local configuration from the safe template:
 Copy-Item .env.example .env
 ```
 
-For live embedding retrieval:
+For live retrieval and report generation:
 
 ```powershell
 ollama pull nomic-embed-text
+ollama pull qwen3:8b-q4_K_M
 ollama serve
 ```
 
@@ -304,6 +309,9 @@ The launcher checks prerequisites and starts:
 - the synthetic incident generator and its MCP evidence endpoint first
 - the Copilot API
 - the Angular operator console
+
+Before starting services, it verifies that Ollama is reachable and that both
+pinned models are already installed. It never downloads models automatically.
 
 The launcher explicitly configures the Copilot API to use the generator at
 `http://localhost:8082` for evidence belonging to generated `sig-v1` alerts.

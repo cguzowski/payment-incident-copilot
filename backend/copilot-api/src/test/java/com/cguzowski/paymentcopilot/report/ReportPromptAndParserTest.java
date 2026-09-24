@@ -26,14 +26,25 @@ class ReportPromptAndParserTest {
     void buildsVersionedBoundedReportInputFromExactSnapshots() {
         ReportPrompt prompt = prompts.build(context());
 
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v1");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v3");
         assertThat(prompt.schemaVersion()).isEqualTo("report-v1");
         assertThat(prompt.promptHash()).matches("[0-9a-f]{64}");
         assertThat(prompt.schemaHash()).matches("[0-9a-f]{64}");
+        assertThat(prompt.outputSchema())
+                .contains("\"evidenceId\"")
+                .contains("\"enum\":[\"" + EVIDENCE_ID + "\"]")
+                .contains("\"knowledgeChunkId\"")
+                .contains("\"enum\":[\"" + CHUNK_ID + "\"]");
         assertThat(prompt.text())
                 .contains("Return exactly one JSON object")
+                .contains("Use PROPOSED when")
+                .contains("Use only latestAttemptId or applicableAttemptId in evidenceIds")
+                .contains("probableCause and recommendation must both be null")
+                .contains("at most 2 observations")
+                .contains("Keep every statement and rationale under 300 characters")
                 .contains("\"sourceEventId\":\"evt-1\"")
                 .contains("\"chunkId\":\"" + CHUNK_ID + "\"")
+                .doesNotContain("\"$defs\"")
                 .doesNotContain("{{SCHEMA}}", "{{INPUT}}");
     }
 
@@ -50,6 +61,48 @@ class ReportPromptAndParserTest {
                 .isInstanceOf(InvalidReportDocumentException.class);
         assertThatThrownBy(() -> parser.parse(
                         json.replace("\"observations\":[", "\"unsupported\":true,\"observations\":["), context()))
+                .isInstanceOf(InvalidReportDocumentException.class);
+    }
+
+    @Test
+    void schemaEncodesTheConciseEvidenceOnlyObservationContract() throws Exception {
+        ReportDocument valid = validDocument();
+        String summaryWithKnowledge = jsonMapper.writeValueAsString(new ReportDocument(
+                valid.disposition(),
+                new ReportClaim("Timeouts were observed.", List.of(EVIDENCE_ID), List.of(CHUNK_ID)),
+                valid.observations(),
+                valid.inferences(),
+                valid.probableCause(),
+                valid.confidence(),
+                valid.recommendation(),
+                valid.contradictions(),
+                valid.evidenceGaps()));
+        String observationWithKnowledge = jsonMapper.writeValueAsString(new ReportDocument(
+                valid.disposition(),
+                valid.summary(),
+                List.of(new ReportClaim("Timeouts were observed.", List.of(EVIDENCE_ID), List.of(CHUNK_ID))),
+                valid.inferences(),
+                valid.probableCause(),
+                valid.confidence(),
+                valid.recommendation(),
+                valid.contradictions(),
+                valid.evidenceGaps()));
+        String excessiveObservations = jsonMapper.writeValueAsString(new ReportDocument(
+                valid.disposition(),
+                valid.summary(),
+                List.of(valid.summary(), valid.summary(), valid.summary()),
+                valid.inferences(),
+                valid.probableCause(),
+                valid.confidence(),
+                valid.recommendation(),
+                valid.contradictions(),
+                valid.evidenceGaps()));
+
+        assertThatThrownBy(() -> parser.parse(summaryWithKnowledge, context()))
+                .isInstanceOf(InvalidReportDocumentException.class);
+        assertThatThrownBy(() -> parser.parse(observationWithKnowledge, context()))
+                .isInstanceOf(InvalidReportDocumentException.class);
+        assertThatThrownBy(() -> parser.parse(excessiveObservations, context()))
                 .isInstanceOf(InvalidReportDocumentException.class);
     }
 

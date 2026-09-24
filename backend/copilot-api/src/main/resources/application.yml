@@ -22,14 +22,16 @@ spring:
     retry:
       max-attempts: 1
     model:
-      chat: none
+      chat: ollama
       embedding: ollama
     ollama:
-      base-url: http://localhost:11434
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
       init:
         pull-model-strategy: never
+      chat:
+        model: ${REPORT_CHAT_MODEL:qwen3:8b-q4_K_M}
       embedding:
-        model: nomic-embed-text
+        model: ${KNOWLEDGE_EMBEDDING_MODEL:nomic-embed-text}
     mcp:
       client:
         initialized: false

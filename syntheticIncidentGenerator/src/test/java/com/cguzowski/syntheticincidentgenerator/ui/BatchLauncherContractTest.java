@@ -39,8 +39,13 @@ class BatchLauncherContractTest {
         assertThat(powershellLauncher)
                 .contains("[switch] $UseGeneratorMcp")
                 .contains("if ($UseGeneratorMcp)")
+                .contains("LocalAiPrerequisites.psm1")
+                .contains("Assert-LocalOllamaModels")
+                .contains("qwen3:8b-q4_K_M")
+                .contains("nomic-embed-text")
                 .contains(
                         "[Environment]::SetEnvironmentVariable('OPERATIONS_MCP_BASE_URL', 'http://localhost:8082', 'Process')");
+        assertThat(powershellLauncher).doesNotContain("ollama pull");
         assertThat(powershellLauncher.indexOf("Import-DotEnv -Path"))
                 .isLessThan(powershellLauncher.indexOf("if ($UseGeneratorMcp)"));
     }

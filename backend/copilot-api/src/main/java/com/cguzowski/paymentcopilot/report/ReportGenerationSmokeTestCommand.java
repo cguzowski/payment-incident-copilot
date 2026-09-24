@@ -39,7 +39,8 @@ class ReportGenerationSmokeTestCommand implements ApplicationRunner {
     public void run(ApplicationArguments arguments) {
         ReportGenerationContext context = syntheticContext();
         try {
-            ReportModelResponse response = model.generate(prompts.build(context).text());
+            ReportPrompt prompt = prompts.build(context);
+            ReportModelResponse response = model.generate(prompt.text(), prompt.outputSchema());
             ReportDocument report = parser.parse(response.output(), context);
             LOGGER.info(
                     "Report generation smoke test passed: modelId={}, schemaVersion={}, disposition={}, validated=true",

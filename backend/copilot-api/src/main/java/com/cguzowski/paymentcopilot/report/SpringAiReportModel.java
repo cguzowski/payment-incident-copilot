@@ -15,11 +15,15 @@ class SpringAiReportModel implements ReportModel {
 
     private final Optional<ChatModel> chatModel;
     private final String modelId;
+    private final ReportPromptFactory prompts;
 
     SpringAiReportModel(
-            Optional<ChatModel> chatModel, @Value("${spring.ai.ollama.chat.model:unconfigured}") String modelId) {
+            Optional<ChatModel> chatModel,
+            @Value("${spring.ai.ollama.chat.model:unconfigured}") String modelId,
+            ReportPromptFactory prompts) {
         this.chatModel = chatModel;
         this.modelId = modelId;
+        this.prompts = prompts;
     }
 
     @Override
@@ -29,11 +33,18 @@ class SpringAiReportModel implements ReportModel {
 
     @Override
     public ReportModelResponse generate(String promptText) {
+        return generate(promptText, prompts.schema());
+    }
+
+    @Override
+    public ReportModelResponse generate(String promptText, String outputSchema) {
         ChatModel provider = chatModel.orElseThrow(ReportModelUnavailableException::new);
         OllamaChatOptions options = OllamaChatOptions.builder()
                 .model(modelId)
                 .temperature(0.0)
-                .maxTokens(4_096)
+                .maxTokens(1_536)
+                .disableThinking()
+                .outputSchema(outputSchema)
                 .build();
         try {
             ChatResponse response = provider.call(new Prompt(promptText, options));

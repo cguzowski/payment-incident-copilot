@@ -57,7 +57,7 @@ class ReportGenerationService {
 
         ReportModelResponse modelResponse = null;
         try {
-            modelResponse = modelCalls.generate(model, prompt.text());
+            modelResponse = modelCalls.generate(model, prompt.text(), prompt.outputSchema());
             ReportDocument document = parser.parse(modelResponse.output(), context);
             ReportGenerationAttempt completed = started.completeAvailable(Instant.now(clock), modelResponse, document);
             if (!persistence.completeAvailable(completed)) {

@@ -65,16 +65,16 @@ All tenant-specific assets for this path live under `SynTen Inc/`.
 | K4 | Embed, vectorize, and evaluate the corpus | Complete with factual FAIL | Live `nomic-embed-text` indexed all 705 chunks; the retained evaluation artifact records the exact fixed-threshold misses without tuning the contract. |
 | K5 | Prove live approved-knowledge retrieval in the operator workflow | Complete with factual FAIL | A repeatable synthetic investigation uses live `nomic-embed-text` retrieval and displays eligible cited PDF guidance; the fixed benchmark remains below its ranking threshold. |
 | R1 | Connect generated incidents to operational evidence | Complete | The one-click SynTen workflow routes generated `sig-v1` incidents to their matching deterministic generator MCP evidence instead of the legacy fixture provider. |
+| R2 | Generate live local advisory reports | Complete | Local Qwen3 8B produces a schema-valid, evidence-linked S001 report that enters `AWAITING_REVIEW`; deterministic tests remain provider-free. |
 | D1 | Select and implement the initial AWS deployment shape | Deferred | The verified closed loop runs through least-privilege AWS infrastructure. |
 | D2 | Add authentication and enforce operator identity | Deferred | Identity is authenticated and tenant authorization is enforced at every public boundary. |
 
 ## Active product slice
 
 K5 is complete with a retained factual FAIL artifact and a successful live
-operator proof. R1 is also complete: the local startup order and MCP endpoint
-selection now give generator-created SynTen incidents the evidence encoded by
-their opaque scenario references. The next product slice requires owner
-selection; live chat/report-model selection remains deferred.
+operator proof. R1 connects generated incidents to their matching evidence, and
+R2 enables bounded local report generation with Qwen3 8B. The next product
+slice requires owner selection.
 
 The active contract is in `tasks/current.md`. The maintained sources, generated
 PDFs, manifest, validation tooling, and retrieval oracle remain under

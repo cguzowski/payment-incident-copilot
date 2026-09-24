@@ -1,4 +1,4 @@
-# Task: Connect generated SynTen incidents to service-error evidence
+# Task: Generate live local reports with Qwen3 8B
 
 Status: Complete
 Created: 2026-09-24
@@ -6,132 +6,139 @@ Owner: Christopher Guzowski
 
 ## Goal
 
-Make the one-click local SynTen workflow collect the deterministic service-error
-evidence owned by the standalone synthetic incident generator instead of
-returning `NOT_FOUND` for every generated `sig-v1` alert reference.
+Make **Generate proposed report** produce a schema-valid, evidence-linked report
+in the one-click local SynTen workflow using the installed Ollama
+`qwen3:8b-q4_K_M` model.
 
 ## User story
 
-As a payment operations analyst, I want **Collect service-error evidence** to
-return the observations belonging to the generated SynTen incident, so the
-rest of the investigation uses the scenario that actually produced the alert.
+As a payment operations analyst, I want report generation to use the evidence
+and approved knowledge already collected for my investigation, so I can review
+an attributable proposed report without sending synthetic data to a hosted
+model provider.
 
 ## Chosen contract
 
-- The standalone synthetic incident generator remains the authoritative local
-  evidence provider for alerts it creates. It continues to expose the immutable
-  `getRecentServiceErrors` v1 MCP contract on port 8082.
-- The root one-click Windows launcher starts or reuses the generator and waits
-  for its health endpoint before starting the copilot API.
-- The launcher supplies `OPERATIONS_MCP_BASE_URL=http://localhost:8082` to the
-  copilot API process. It must not start the API against the legacy port-8081
-  fixture server and switch providers afterward.
-- The independently buildable operations MCP server and its legacy fixtures
-  remain unchanged. Direct `scripts/start-local.ps1` configuration remains
-  environment-overridable; this task fixes the root SynTen demonstration path.
-- Generated S001 evidence remains `AVAILABLE` with `GATEWAY_TIMEOUT` and
-  `UPSTREAM_CONNECTION_RESET`. Unknown scenarios and the wrong tenant remain
-  `NOT_FOUND`.
-- Existing recorded attempts are immutable. The fix applies to new collection
-  attempts after the correctly configured API starts.
+- Local report generation uses Ollama `qwen3:8b-q4_K_M` at
+  `http://localhost:11434`; local embeddings remain Ollama
+  `nomic-embed-text`.
+- Report requests use temperature zero, at most 4,096 output tokens, no tools,
+  explicitly disabled thinking, and Ollama-native `report-v1` JSON Schema
+  output constraints.
+- Application-owned parsing, semantic validation, citation validation,
+  immutable attempts, the two-minute total deadline, and human review remain
+  authoritative even when the provider constrains output.
+- The launcher preflight verifies that Ollama is reachable and that both exact
+  local model tags are installed. It does not pull models automatically.
+- Automated tests disable live chat and embedding providers and remain
+  deterministic and network-free.
+- Direct API provider failures remain reviewable `UNAVAILABLE`, `TIMED_OUT`, or
+  `MALFORMED` attempts; no cloud fallback is introduced.
 
 ## In scope
 
-- Root launcher startup order, health wait, environment wiring, and browser
-  opening behavior.
-- Launcher and live generator MCP regression tests.
-- Authoritative verification coverage for the standalone generator so the
-  launcher/MCP regressions run in local and CI completion gates.
-- A live S001 operator/API smoke through generation, investigation start, and
-  evidence collection when local prerequisites are available.
-- Factual README, architecture, roadmap, status, and task updates.
+- Local Spring AI chat configuration and report-model options.
+- Passing the existing report schema to the Ollama provider boundary.
+- Launcher Ollama/model prerequisite checks and regression coverage.
+- A live report smoke and full generated S001 report workflow.
+- Relevant ADR, setup, architecture, status, and task documentation.
 
 ## Out of scope
 
-- Changing the MCP v1 wire contract, scenario catalog, evidence payload, or
-  error-code mappings.
-- Copying generator scenarios into the legacy operations MCP fixture server.
-- Database migrations, frontend presentation changes, knowledge ranking,
-  report generation, authentication, AWS, or another tenant/incident family.
-- Rewriting historical `NOT_FOUND` attempts.
+- Report schema, persistence schema, HTTP contract, lifecycle, or UI changes.
+- Automatic Ollama installation or model downloads.
+- Hosted model providers, credentials, cloud fallback, or AWS deployment.
+- Knowledge ranking changes, new evidence domains, authentication, or another
+  tenant or incident family.
 
 ## Constraints
 
-- Follow ADR-0001, ADR-0004, and ADR-0005 and preserve independent builds.
-- Follow red-green-refactor for executable changes.
-- Automated verification must be deterministic and network-free.
-- Do not weaken tenant matching or unknown-scenario behavior.
-- Do not expose generator truth through the alert or evidence response.
+- Follow ADR-0006, ADR-0007, and ADR-0010 while recording the newly selected
+  live report model decision.
+- Follow red-green-refactor for every executable change.
+- Preserve strict evidence and approved-knowledge source validation.
+- Never persist or display hidden reasoning output.
+- Use only synthetic data and never add credentials.
 
 ## Acceptance criteria
 
-- [x] A launcher regression proves the generator is started/reused and healthy
-      before `scripts/start-local.ps1` starts the API.
-- [x] The root launcher supplies the generator MCP URL to the API process and
-      does not silently retain port 8081 for the one-click SynTen workflow.
-- [x] Live generator MCP coverage proves S001 returns `AVAILABLE` with exactly
-      `GATEWAY_TIMEOUT` and `UPSTREAM_CONNECTION_RESET`, while wrong-tenant and
-      unknown-scenario calls remain `NOT_FOUND`.
-- [x] The authoritative backend and full verification plans build and test the
-      standalone generator and reject skipped generator tests.
-- [x] A live generated S001 investigation records and displays a new AVAILABLE
-      collection attempt containing both expected error codes.
-- [x] Relevant focused suites, generator verification, repository checks, and
-      `./verify.ps1` pass with zero skips.
+- [x] Local configuration enables Ollama chat with exact model ID
+      `qwen3:8b-q4_K_M` while retaining `nomic-embed-text` embeddings.
+- [x] Each report call explicitly disables thinking, uses temperature zero,
+      caps output at 4,096 tokens, provides the exact `report-v1` JSON Schema,
+      and registers no tools.
+- [x] Automated tests remain network-free and cover unavailable, timeout,
+      malformed, schema-invalid, and successful report outcomes.
+- [x] Launcher preflight rejects unreachable Ollama or either missing model with
+      an actionable command and never downloads a model automatically.
+- [x] A live report smoke returns one application-valid `report-v1` document
+      using the installed local model.
+- [x] A newly generated S001 investigation produces an `AVAILABLE` report,
+      moves to `AWAITING_REVIEW`, and displays only persisted source references.
+- [x] Focused suites and the authoritative `./verify.ps1` gate pass with zero
+      failures, errors, or skips.
 
 ## Test plan
 
-1. Change `BatchLauncherContractTest` first and confirm it fails against the
-   current generator-last launcher.
-2. Strengthen `GeneratorMcpContractTest` for exact S001 observations plus
-   wrong-tenant and unknown-scenario `NOT_FOUND` results.
-3. Extend verification-plan tests first, confirm red, then add standalone
-   generator verify/no-skip steps to the authoritative gate.
-4. Implement the minimal launcher reorder and environment wiring.
-5. Run focused generator and verification-system tests, then backend,
-   repository, and unscoped authoritative gates.
-6. Run the local S001 workflow and record the resulting evidence attempt.
+1. Change configuration and model-adapter tests first and confirm they fail
+   against chat-disabled, unconstrained behavior.
+2. Extend launcher contract coverage first and confirm it fails before adding
+   Ollama inventory validation.
+3. Implement the minimal local configuration, schema-bearing model request,
+   and preflight changes.
+4. Run focused report/configuration and launcher tests, followed by backend and
+   repository scopes.
+5. Run the explicit live report smoke and the complete S001 workflow.
+6. Run the authoritative gate and review the final diff for secrets, generated
+   output, and unrelated changes.
 
 ## Progress notes
 
-- 2026-09-24: Diagnosis confirmed that generated alerts use opaque references
-  such as `sig-v1-S001-...`, while the one-click launcher starts the API against
-  the legacy port-8081 fixture provider, which only recognizes references such
-  as `alert-auth-decline-001`. The generator's port-8082 MCP implementation
-  already decodes the generated reference and returns the catalogued evidence.
-- 2026-09-24: The owner authorized this task. The completed K5 task was archived
-  unchanged before this contract became active.
-- 2026-09-24: Red-green launcher coverage first failed against the legacy
-  port-8081/start-generator-last path, then passed after the root launcher began
-  starting and health-checking port 8082 before starting the API and explicitly
-  selected that MCP endpoint after `.env` loading.
-- 2026-09-24: The authoritative verification plan now builds the standalone
-  generator and rejects skipped generator tests in both backend and aggregate
-  scopes.
-- 2026-09-24: A live S001 API and operator-console smoke recorded and displayed
-  an `AVAILABLE` attempt with both catalogued error codes.
+- 2026-09-24: Diagnosis proved local chat was intentionally disabled with
+  `spring.ai.model.chat=none`, so the optional report provider deterministically
+  recorded `UNAVAILABLE` while embeddings and retrieval continued to work.
+- 2026-09-24: The owner selected fully local Ollama
+  `qwen3:8b-q4_K_M`. Local inventory verification found the exact 8.2B Q4_K_M
+  tag and `nomic-embed-text` installed.
+- 2026-09-24: Red tests captured the previously disabled chat configuration,
+  missing Ollama inventory preflight, unconstrained provider call, and report
+  schema bounds. The implementation now sends deterministic, no-tool requests
+  with thinking disabled and a per-investigation schema whose citation enums
+  contain only the persisted evidence and approved-knowledge IDs.
+- 2026-09-24: Direct Qwen trials exposed evidence/knowledge ID role mixing.
+  Native schema constraints now prevent that at the provider boundary while
+  the existing application parser and semantic validator remain authoritative.
 
 ## Completion evidence
 
-- Focused generator launcher/MCP tests passed 4/4 with zero skips; the full
-  generator build passed 17/17 with zero skips and Spotless.
-- Verification-plan tests and `start-local.bat --CheckOnly` passed.
-- Live alert reference `sig-v1-S001-1790246971-c0de1234abcd` produced incident
-  `07f91da2-b031-420a-b22d-3f78c09686c7`, investigation
-  `e14a942d-c0a4-445c-bd7a-6e4eec8e0b32`, and evidence attempt
-  `f84af625-4279-4c71-9d98-a5a5a4463a59`. The API and rendered workspace both
-  showed `AVAILABLE`, `payment-authorization`, `GATEWAY_TIMEOUT`, and
-  `UPSTREAM_CONNECTION_RESET`.
-- `./verify.ps1` passed 289/289 copilot API, 9/9 operations MCP server, 17/17
-  generator, and 78/78 Angular tests with zero failures, errors, or skips, plus
-  Spotless, Prettier, production builds, Compose validation, and diff checks.
+- Focused configuration/report tests passed 17/17 and the report package passed
+  16/16 with no network access; launcher prerequisite and system tests passed.
+- `./start-local.bat --CheckOnly` passed with exact local model inventory, and
+  the standalone generator launcher contract passed.
+- Live generated S001 incident `0e1c29f6-03c4-4dea-8858-cc2323db9c4e`
+  produced report attempt `90da759c-263a-4761-b946-b7cc5f422870` as
+  `AVAILABLE`/`PROPOSED` with `qwen3:8b-q4_K_M`, `report-prompt/v3`, and
+  `report-v1`; the incident moved to `AWAITING_REVIEW`.
+- API and browser review confirmed the report displayed only the persisted
+  evidence ID `c0d5efde-b545-4a80-a7ed-692bd0e0b905` and approved-knowledge
+  snapshot references. The browser showed the report content and audit state.
+- `./verify.ps1` passed 290/290 copilot API, 9/9 operations MCP, 17/17
+  standalone generator, and 78/78 Angular tests with zero failures, errors, or
+  skips. Spotless, Prettier, production builds, Compose validation,
+  verification contracts, and `git diff --check` also passed.
 
 ## Remaining limitations
 
-- Existing `NOT_FOUND` evidence attempts remain immutable; operators must make a
-  new collection attempt after launching the API with the corrected endpoint.
-- The legacy port-8081 operations MCP fixture remains independently usable and
-  intentionally does not recognize generated `sig-v1` references.
+- The verified report took about 76 seconds on this machine. It remains inside
+  the two-minute deadline but local latency depends on available CPU/GPU and
+  memory.
+- Live acceptance covers one generated S001 scenario, not a broad report-
+  quality benchmark. Automated tests continue to use deterministic doubles.
+- Local startup requires Ollama plus the exact `qwen3:8b-q4_K_M` and
+  `nomic-embed-text` tags; the launcher intentionally never downloads them.
+- The locked frontend install reports three dependency advisories (two
+  moderate, one high). They predate and are outside this report-generation
+  change; the authoritative repository gate does not currently fail on them.
 
 ## Decisions needed
 

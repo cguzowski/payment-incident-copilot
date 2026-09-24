@@ -93,7 +93,7 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
   390-CSS-pixel checks with zero skipped tests.
 - Switched the active local embedding provider to Ollama with normalized
   768-dimensional `nomic-embed-text` vectors while keeping automated tests
-  network-free. Live chat-model selection is now deferred outside K5.
+  network-free. R2 subsequently selected local Qwen for report generation.
 - Preserved report-persistence Flyway V6 and added Flyway V7 for compatible
   local embedding dimensions and model/dimension-filtered vector scoring.
 - Bounded every report model invocation with a configurable two-minute total
@@ -154,6 +154,11 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
   generator before the API, selects its port-8082 MCP endpoint after `.env`
   loading, and a live generated S001 investigation records and displays the
   expected `AVAILABLE` service-error evidence.
+- Completed R2: local `qwen3:8b-q4_K_M` report generation now uses deterministic
+  request settings and a context-constrained `report-v1` schema. A generated
+  S001 report was persisted as `AVAILABLE`, moved the incident to
+  `AWAITING_REVIEW`, and displayed exact evidence and approved-knowledge
+  references in the operator console.
 
 ## In progress
 
@@ -176,9 +181,9 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
 - The normal development database remains independently managed. A dedicated
   K4 database on local container port 15432 retains the exact PDF catalog and
   705 complete live embedding tuples.
-- Live Ollama embedding behavior is verified on this machine. K5 will continue
-  to use `nomic-embed-text` with chat disabled; report behavior remains outside
-  that milestone and local/CI automation still uses deterministic doubles.
+- Live Ollama embedding and report behavior are verified on this machine with
+  `nomic-embed-text` and `qwen3:8b-q4_K_M`; local/CI automation still uses
+  deterministic doubles and never requires Ollama.
 - Historical Titan rows remain auditable and lexically retrievable but are not
   vector-compared with `nomic-embed-text` queries or silently re-embedded.
 - Knowledge ingestion is intentionally explicit and disabled during normal
@@ -404,6 +409,16 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
   `f84af625-4279-4c71-9d98-a5a5a4463a59` as `AVAILABLE`; API and browser review
   showed `GATEWAY_TIMEOUT` and `UPSTREAM_CONNECTION_RESET` for
   `payment-authorization`.
+- 2026-09-24: Local Qwen report attempt
+  `90da759c-263a-4761-b946-b7cc5f422870` completed in 76 seconds as
+  `AVAILABLE` with `report-prompt/v3` and `report-v1`. API and browser review
+  confirmed `qwen3:8b-q4_K_M`, exact persisted citations, `PROPOSED`, and the
+  resulting `AWAITING_REVIEW` incident state.
+- 2026-09-24: The final authoritative `./verify.ps1` gate passed 290/290
+  copilot API, 9/9 operations MCP server, 17/17 standalone generator, and
+  78/78 Angular tests with zero failures, errors, or skips. Spotless, Prettier,
+  production builds, Compose validation, verification contracts, and
+  `git diff --check` also passed.
 
 ## Update rule
 

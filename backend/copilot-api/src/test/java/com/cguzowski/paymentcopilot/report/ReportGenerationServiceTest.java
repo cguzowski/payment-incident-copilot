@@ -66,7 +66,8 @@ class ReportGenerationServiceTest {
         when(prompts.build(context)).thenReturn(prompt);
         when(persistence.start(any())).thenReturn(true);
         when(model.modelId()).thenReturn("global.amazon.nova-2-lite-v1:0");
-        when(model.generate(prompt.text())).thenReturn(new ReportModelResponse("{json}", "provider-request-1"));
+        when(model.generate(prompt.text(), prompt.outputSchema()))
+                .thenReturn(new ReportModelResponse("{json}", "provider-request-1"));
         when(parser.parse("{json}", context)).thenReturn(document);
         when(persistence.completeAvailable(any())).thenReturn(true);
 
@@ -77,7 +78,7 @@ class ReportGenerationServiceTest {
         InOrder order = inOrder(contexts, persistence, model, parser);
         order.verify(contexts).find(TENANT_ID, INVESTIGATION_ID);
         order.verify(persistence).start(any());
-        order.verify(model).generate("prompt");
+        order.verify(model).generate("prompt", "{}");
         order.verify(parser).parse("{json}", context);
         order.verify(persistence).completeAvailable(any());
     }
@@ -90,7 +91,7 @@ class ReportGenerationServiceTest {
                 .isInstanceOf(ReportGenerationConflictException.class);
 
         verify(persistence, never()).start(any());
-        verify(model, never()).generate(any());
+        verify(model, never()).generate(any(), any());
     }
 
     @Test
@@ -107,7 +108,7 @@ class ReportGenerationServiceTest {
         assertThatThrownBy(() -> service.generate(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID))
                 .isInstanceOf(ReportGenerationConflictException.class);
 
-        verify(model, never()).generate(any());
+        verify(model, never()).generate(any(), any());
         verify(persistence, never()).completeAvailable(any());
         verify(persistence, never()).completeFailure(any());
     }
@@ -122,7 +123,7 @@ class ReportGenerationServiceTest {
         when(prompts.build(context)).thenReturn(prompt);
         when(persistence.start(any())).thenReturn(true);
         when(model.modelId()).thenReturn("global.amazon.nova-2-lite-v1:0");
-        when(model.generate("prompt")).thenThrow(new ReportModelTimedOutException());
+        when(model.generate("prompt", "{}")).thenThrow(new ReportModelTimedOutException());
         when(persistence.completeFailure(any())).thenReturn(true);
 
         ReportGenerationResponse response = service.generate(TENANT_ID, INVESTIGATION_ID, OPERATOR_ID);
@@ -144,7 +145,7 @@ class ReportGenerationServiceTest {
         when(prompts.build(context)).thenReturn(prompt);
         when(persistence.start(any())).thenReturn(true);
         when(model.modelId()).thenReturn("test-report-model");
-        when(model.generate("prompt")).thenAnswer(invocation -> {
+        when(model.generate("prompt", "{}")).thenAnswer(invocation -> {
             try {
                 new java.util.concurrent.CountDownLatch(1).await();
                 throw new AssertionError("The stalled model should be cancelled.");
@@ -183,7 +184,7 @@ class ReportGenerationServiceTest {
         when(prompts.build(context)).thenReturn(prompt);
         when(persistence.start(any())).thenReturn(true);
         when(model.modelId()).thenReturn("global.amazon.nova-2-lite-v1:0");
-        when(model.generate("prompt")).thenReturn(new ReportModelResponse("untrusted", "provider-request-2"));
+        when(model.generate("prompt", "{}")).thenReturn(new ReportModelResponse("untrusted", "provider-request-2"));
         when(parser.parse("untrusted", context)).thenThrow(new InvalidReportDocumentException("invalid"));
         when(persistence.completeFailure(any())).thenReturn(true);
 

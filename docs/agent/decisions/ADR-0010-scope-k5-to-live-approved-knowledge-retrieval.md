@@ -1,6 +1,6 @@
 # ADR-0010: Scope K5 to live approved-knowledge retrieval
 
-Status: Accepted  
+Status: Accepted; report-model deferral superseded by ADR-0012
 Date: 2026-09-01  
 Decision owner: Christopher Guzowski
 
