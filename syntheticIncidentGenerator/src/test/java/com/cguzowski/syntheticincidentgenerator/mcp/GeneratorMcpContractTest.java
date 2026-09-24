@@ -12,6 +12,7 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -101,6 +102,46 @@ class GeneratorMcpContractTest {
                         "status",
                         "contentSchemaVersion",
                         "content"));
+        Map<String, Object> content = object(structured.get("content"));
+        assertThat(content.get("serviceName")).isEqualTo("payment-authorization");
+        assertThat(errorCodes(content)).containsExactly("GATEWAY_TIMEOUT", "UPSTREAM_CONNECTION_RESET");
+    }
+
+    @Test
+    void liveInvocationKeepsWrongTenantAndUnknownScenarioNotFound() {
+        assertThat(status(call("f36b7324-bb3e-47c4-ab53-38b11d988a19", "sig-v1-S001-1788167730-1234567890ab")))
+                .isEqualTo("NOT_FOUND");
+        assertThat(status(call("8b860d80-d17f-4e6b-8c48-af35f26a4d61", "sig-v1-S999-1788167730-1234567890ab")))
+                .isEqualTo("NOT_FOUND");
+    }
+
+    private CallToolResult call(String tenantId, String scenarioReference) {
+        return client.callTool(CallToolRequest.builder("getRecentServiceErrors")
+                .arguments(Map.of(
+                        "tenantId",
+                        tenantId,
+                        "scenarioReference",
+                        scenarioReference,
+                        "correlationId",
+                        "e147fdc4-2bf8-4708-bbb1-f19556292ed7",
+                        "toolCallId",
+                        "31b783f7-adea-46e1-a479-fe33adc1766d"))
+                .build());
+    }
+
+    private static String status(CallToolResult result) {
+        return (String) object(result.structuredContent()).get("status");
+    }
+
+    private static List<String> errorCodes(Map<String, Object> content) {
+        Object rawErrors = content.get("errors");
+        if (!(rawErrors instanceof List<?> errors)) {
+            throw new AssertionError("MCP errors are not an array.");
+        }
+        return errors.stream()
+                .map(GeneratorMcpContractTest::object)
+                .map(error -> (String) error.get("errorCode"))
+                .toList();
     }
 
     @SuppressWarnings("unchecked")

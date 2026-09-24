@@ -1,193 +1,138 @@
-# Task: Prove live approved-knowledge retrieval in the operator workflow
+# Task: Connect generated SynTen incidents to service-error evidence
 
-Status: Complete with factual evaluation FAIL
-Created: 2026-09-01
+Status: Complete
+Created: 2026-09-24
 Owner: Christopher Guzowski
 
 ## Goal
 
-Improve the approved-knowledge retrieval path from the retained K4 baseline and
-prove that a repeatable synthetic investigation using live
-`nomic-embed-text` returns and displays eligible cited SynTen PDF guidance when
-the operator clicks **Retrieve approved knowledge**.
+Make the one-click local SynTen workflow collect the deterministic service-error
+evidence owned by the standalone synthetic incident generator instead of
+returning `NOT_FOUND` for every generated `sig-v1` alert reference.
 
 ## User story
 
-As a payment operations analyst, I want the approved-knowledge action to show
-relevant runbook and policy excerpts with exact PDF provenance, so I can review
-useful operational guidance instead of receiving an unexplained no-match for a
-supported synthetic incident.
+As a payment operations analyst, I want **Collect service-error evidence** to
+return the observations belonging to the generated SynTen incident, so the
+rest of the investigation uses the scenario that actually produced the alert.
 
 ## Chosen contract
 
-- Preserve the immutable K4 FAIL artifact, `synten-retrieval-eval/v1` labels,
-  corpus content, 30 document versions, 705 chunk identities, embedding tuples,
-  tenant filters, approval/effective-version rules, and superseded exclusions.
-- Keep live K5 model use embedding-only: Ollama `nomic-embed-text`, normalized
-  768 dimensions. Keep `spring.ai.model.chat=none`; do not select, pull, or call
-  a chat model.
-- Introduce `knowledge-query/v2`. When applicable evidence contains a service
-  or error observations, build the query from the scenario-specific description,
-  evidence status, service, and ordered error codes/counts; omit the repeated
-  incident-family and generic alert-title boilerplate. When evidence is absent
-  or unavailable, retain the normalized title/description and explicit status
-  without inventing observations.
-- Introduce `postgres-hybrid-rrf/v2`. Keep candidate depth 20, RRF `k=60`,
-  cosine threshold `0.55`, exact pgvector search, and existing tie-break fields,
-  but apply candidate depth independently to RUNBOOK and POLICY within each
-  lexical and vector modality. Rank positions are type-local, matching the
-  existing four-runbook/three-policy allocation. The bounded fused union is at
-  most 80 chunks.
-- Select context in two stable passes per document type: first take the highest-
-  ranked chunk from distinct document versions, then fill any remaining type
-  slots from the still-ranked candidate stream. Never include an ineligible or
-  weaker type merely to fill a quota.
-- Use S001 as the primary live operator proof because its reviewed labels are
-  RB-002 and PL-006 and its evidence contains both `GATEWAY_TIMEOUT` and
-  `UPSTREAM_CONNECTION_RESET`. Completion requires an AVAILABLE retrieval with
-  at least RB-002 displayed as a cited PDF result; PL-006 remains part of the
-  fixed evaluation rather than being hard-coded into product behavior.
-- Re-run all 23 cases/37 variants through the unchanged evaluator. K5 must keep
-  zero ineligible candidates and all KQ-020/KQ-022/KQ-023 semantics, must not
-  reduce any K4 aggregate, and must retain a complete factual result even if the
-  fixed quality thresholds still fail.
+- The standalone synthetic incident generator remains the authoritative local
+  evidence provider for alerts it creates. It continues to expose the immutable
+  `getRecentServiceErrors` v1 MCP contract on port 8082.
+- The root one-click Windows launcher starts or reuses the generator and waits
+  for its health endpoint before starting the copilot API.
+- The launcher supplies `OPERATIONS_MCP_BASE_URL=http://localhost:8082` to the
+  copilot API process. It must not start the API against the legacy port-8081
+  fixture server and switch providers afterward.
+- The independently buildable operations MCP server and its legacy fixtures
+  remain unchanged. Direct `scripts/start-local.ps1` configuration remains
+  environment-overridable; this task fixes the root SynTen demonstration path.
+- Generated S001 evidence remains `AVAILABLE` with `GATEWAY_TIMEOUT` and
+  `UPSTREAM_CONNECTION_RESET`. Unknown scenarios and the wrong tenant remain
+  `NOT_FOUND`.
+- Existing recorded attempts are immutable. The fix applies to new collection
+  attempts after the correctly configured API starts.
 
 ## In scope
 
-- Query-template v2 and its persisted/audited version metadata.
-- Type-balanced lexical/vector candidate generation and bounded artifact rules.
-- Document-diverse context selection.
-- Deterministic unit and PostgreSQL regression tests, including S001-shaped
-  retrieval data and unavailable/partial evidence behavior.
-- A fresh live evaluation artifact comparable with the retained K4 baseline.
-- Live API and operator-console verification against the dedicated K4/K5
-  synthetic database, using the real button and visible PDF citation.
-- README, ADR, roadmap, status, and task evidence updates.
+- Root launcher startup order, health wait, environment wiring, and browser
+  opening behavior.
+- Launcher and live generator MCP regression tests.
+- Authoritative verification coverage for the standalone generator so the
+  launcher/MCP regressions run in local and CI completion gates.
+- A live S001 operator/API smoke through generation, investigation start, and
+  evidence collection when local prerequisites are available.
+- Factual README, architecture, roadmap, status, and task updates.
 
 ## Out of scope
 
-- Editing corpus sources, PDFs, validation manifest, labels, expected document
-  keys, or the retained K4 artifact.
-- Hard-coding scenario IDs, error-code-to-document mappings, expected document
-  IDs, or evaluation labels into product retrieval.
-- Lowering eligibility, approval, effective-time, tenant, or superseded-source
-  protections.
-- Approximate indexes, a new database migration, re-embedding, another tenant
-  or incident family, authentication, deployment, or AWS work.
-- Live report generation, report grading, or any chat-model selection.
+- Changing the MCP v1 wire contract, scenario catalog, evidence payload, or
+  error-code mappings.
+- Copying generator scenarios into the legacy operations MCP fixture server.
+- Database migrations, frontend presentation changes, knowledge ranking,
+  report generation, authentication, AWS, or another tenant/incident family.
+- Rewriting historical `NOT_FOUND` attempts.
 
 ## Constraints
 
-- Follow ADR-0002, ADR-0009, ADR-0010, and the repository product guardrails.
-- Every executable behavior change follows red-green-refactor.
-- Automated verification remains deterministic, network-free, and model-free.
-- Persist exact query/ranking versions and candidate/selection provenance.
-- Never log or publish vectors, embedding inputs, source text outside the
-  existing operator result contract, credentials, database URLs, or stack traces.
-- Preserve all V1-V9 Flyway checksums and independently deployable services.
+- Follow ADR-0001, ADR-0004, and ADR-0005 and preserve independent builds.
+- Follow red-green-refactor for executable changes.
+- Automated verification must be deterministic and network-free.
+- Do not weaken tenant matching or unknown-scenario behavior.
+- Do not expose generator truth through the alert or evidence response.
 
 ## Acceptance criteria
 
-- [x] Query-builder tests prove evidence-focused `knowledge-query/v2`, bounded
-      normalized text, stable evidence IDs, and honest unavailable/no-evidence
-      behavior without generic-boilerplate dominance.
-- [x] PostgreSQL tests prove each modality contributes at most 20 RUNBOOK and
-      20 POLICY candidates, preserves exact eligibility/model filtering, emits
-      deterministic type-local positions, and bounds the fused union at 80.
-- [x] Selector tests prove distinct document versions receive the first slots
-      per type before repeat chunks, while four-runbook/three-policy limits and
-      ranked fill behavior remain stable.
-- [x] Retrieval/API persistence tests record `knowledge-query/v2` and
-      `postgres-hybrid-rrf/v2`, return AVAILABLE for an S001-shaped deterministic
-      case, and preserve partial/unavailable/no-match semantics.
-- [x] The fixed live evaluation preserves zero ineligible candidates and all
-      KQ-020/KQ-022/KQ-023 semantics, does not reduce the K4 aggregates
-      9/22, 1/20, and 16/21, and retains exact comparative diagnostics.
-- [x] In the live operator console, clicking **Retrieve approved knowledge** for
-      the accepted S001 investigation displays an AVAILABLE attempt containing
-      RB-002 source text, filename, PDF SHA-256, page, block range, and IDs; the
-      no-match copy is not shown for that attempt.
-- [x] Focused backend/PostgreSQL/frontend tests, Spotless, Prettier, production
-      builds, repository checks, `git diff --check`, and `./verify.ps1` pass
-      with zero skips and no Ollama dependency in automation.
+- [x] A launcher regression proves the generator is started/reused and healthy
+      before `scripts/start-local.ps1` starts the API.
+- [x] The root launcher supplies the generator MCP URL to the API process and
+      does not silently retain port 8081 for the one-click SynTen workflow.
+- [x] Live generator MCP coverage proves S001 returns `AVAILABLE` with exactly
+      `GATEWAY_TIMEOUT` and `UPSTREAM_CONNECTION_RESET`, while wrong-tenant and
+      unknown-scenario calls remain `NOT_FOUND`.
+- [x] The authoritative backend and full verification plans build and test the
+      standalone generator and reject skipped generator tests.
+- [x] A live generated S001 investigation records and displays a new AVAILABLE
+      collection attempt containing both expected error codes.
+- [x] Relevant focused suites, generator verification, repository checks, and
+      `./verify.ps1` pass with zero skips.
 
 ## Test plan
 
-1. Red/green `KnowledgeRetrievalQueryBuilderTest` for available evidence,
-   unavailable evidence, no evidence, normalization, truncation, and version.
-2. Red/green `KnowledgeContextSelectorTest` for repeated leading chunks,
-   distinct-document first pass, stable fill, and type quotas.
-3. Red/green PostgreSQL hybrid-search tests for per-type modality depth,
-   type-local positions, 80-candidate bound, filters, fallback, and tie-breaks.
-4. Update artifact-bound tests from a 40-candidate to an 80-candidate valid
-   maximum and reject 81.
-5. Run retrieval service/controller/persistence/evaluation focused suites, then
-   backend and repository gates.
-6. Run a fresh live evaluation against the retained database and compare every
-   aggregate and special semantic with the K4 artifact.
-7. Start the isolated live API and operator console, use the browser to click
-   the real S001 action, and inspect the visible citation and absence of the
-   no-match message.
-8. Run the unscoped authoritative gate and final secret/generated-output audit.
+1. Change `BatchLauncherContractTest` first and confirm it fails against the
+   current generator-last launcher.
+2. Strengthen `GeneratorMcpContractTest` for exact S001 observations plus
+   wrong-tenant and unknown-scenario `NOT_FOUND` results.
+3. Extend verification-plan tests first, confirm red, then add standalone
+   generator verify/no-skip steps to the authoritative gate.
+4. Implement the minimal launcher reorder and environment wiring.
+5. Run focused generator and verification-system tests, then backend,
+   repository, and unscoped authoritative gates.
+6. Run the local S001 workflow and record the resulting evidence attempt.
 
 ## Progress notes
 
-- 2026-09-01: The owner authorized K5 after K4 completed and selected
-  `nomic-embed-text` as the only live K5 model. ADR-0010 fixes the operator-
-  visible cited-retrieval outcome and defers live report generation.
-- 2026-09-01: K4 diagnostics show generic RB-001 and PL-001 chunks monopolizing
-  global candidate pools and repeated chunks consuming context slots. The K5
-  contract addresses those measured causes without changing labels or corpus.
-- 2026-09-01: Red-green coverage introduced the v2 evidence query, type-local
-  candidate depth and ranks, an 80-candidate union bound, and distinct-document
-  first-pass selection. The focused K5 suite passed 17/17 tests; the bounded
-  full-evaluation artifact suite passed 6/6 tests.
-- 2026-09-01: Fresh live run `375ebc04ba894e84b2d18aeb6bc4d3cb`
-  evaluated all 23 cases/37 variants against the retained 30-document,
-  705-chunk `nomic-embed-text` catalog. It preserved zero ineligible
-  candidates and all KQ-020/KQ-022/KQ-023 semantics and improved the three
-  aggregates from 9/22, 1/20, 16/21 to 19/22, 12/20, 16/21.
-- 2026-09-01: In the real operator console, the existing **Retrieve approved
-  knowledge** button produced AVAILABLE attempt
-  `bcf58984-c8c1-464e-9fed-5f2515705f4a` for S001 and visibly rendered RB-002
-  with its exact PDF filename, SHA-256, page 3, block range 34-50, and document,
-  version, and chunk IDs. The no-match copy was absent.
+- 2026-09-24: Diagnosis confirmed that generated alerts use opaque references
+  such as `sig-v1-S001-...`, while the one-click launcher starts the API against
+  the legacy port-8081 fixture provider, which only recognizes references such
+  as `alert-auth-decline-001`. The generator's port-8082 MCP implementation
+  already decodes the generated reference and returns the catalogued evidence.
+- 2026-09-24: The owner authorized this task. The completed K5 task was archived
+  unchanged before this contract became active.
+- 2026-09-24: Red-green launcher coverage first failed against the legacy
+  port-8081/start-generator-last path, then passed after the root launcher began
+  starting and health-checking port 8082 before starting the API and explicitly
+  selected that MCP endpoint after `.env` loading.
+- 2026-09-24: The authoritative verification plan now builds the standalone
+  generator and rejects skipped generator tests in both backend and aggregate
+  scopes.
+- 2026-09-24: A live S001 API and operator-console smoke recorded and displayed
+  an `AVAILABLE` attempt with both catalogued error codes.
 
 ## Completion evidence
 
-- Live artifact:
-  `SynTen Inc/evaluation/results/375ebc04ba894e84b2d18aeb6bc4d3cb-FAIL.json`
-  (SHA-256
-  `5a58f03654d9bdaba267ce01a62537536f8fdf7c0b8686967f3b926a2021503e`).
-  The immutable K4 comparison artifact remains
-  `14588db4735841ffb5711a962e2c5119-FAIL.json`.
-- S001 selected RB-002 plus RB-001, RB-011, RB-003, PL-005, PL-001, and PL-002;
-  RB-002 was the first rendered result. Its cited source was
-  `rb-002-gateway-connectivity-and-timeouts-v2.0.0.pdf`, SHA-256
-  `7ea219d9ed06f921feeaea683d8ee4003047755eee0c1eefd240d82dcd484149`,
-  page 3, blocks 34-50.
-- The focused PostgreSQL API regression passed 2/2 with zero skips after the
-  v1 query assertion was updated to the locked v2 contract.
-- Authoritative `./verify.ps1` passed 289/289 copilot API, 9/9 operations MCP,
-  and 78/78 Angular tests with zero failures, errors, or skips. The seven-test
-  evaluation runner, Spotless, Prettier, both production builds, locked npm
-  install with zero vulnerabilities, Compose validation, repository checks,
-  and `git diff --check` also passed.
-- Active source and current documentation contain no `qwen3.5` model reference;
-  K5 live retrieval used only `nomic-embed-text`, and chat remained disabled.
+- Focused generator launcher/MCP tests passed 4/4 with zero skips; the full
+  generator build passed 17/17 with zero skips and Spotless.
+- Verification-plan tests and `start-local.bat --CheckOnly` passed.
+- Live alert reference `sig-v1-S001-1790246971-c0de1234abcd` produced incident
+  `07f91da2-b031-420a-b22d-3f78c09686c7`, investigation
+  `e14a942d-c0a4-445c-bd7a-6e4eec8e0b32`, and evidence attempt
+  `f84af625-4279-4c71-9d98-a5a5a4463a59`. The API and rendered workspace both
+  showed `AVAILABLE`, `payment-authorization`, `GATEWAY_TIMEOUT`, and
+  `UPSTREAM_CONNECTION_RESET`.
+- `./verify.ps1` passed 289/289 copilot API, 9/9 operations MCP server, 17/17
+  generator, and 78/78 Angular tests with zero failures, errors, or skips, plus
+  Spotless, Prettier, production builds, Compose validation, and diff checks.
 
 ## Remaining limitations
 
-- The fresh K5 artifact factually remains FAIL: primary runbook retrieval is
-  19/22, supporting policy retrieval is 12/20, and primary-over-weak ranking is
-  16/21 against a required 19. K5 completion does not reinterpret or lower
-  those fixed thresholds.
-- Passing the S001 operator proof does not imply that every possible
-  investigation has eligible knowledge.
-- Live report generation and chat-model selection remain deferred and were not
-  exercised by K5.
+- Existing `NOT_FOUND` evidence attempts remain immutable; operators must make a
+  new collection attempt after launching the API with the corrected endpoint.
+- The legacy port-8081 operations MCP fixture remains independently usable and
+  intentionally does not recognize generated `sig-v1` references.
 
 ## Decisions needed
 
-None. The owner authorized K5 on 2026-09-01; ADR-0010 and this chosen contract
-define the implementation boundary.
+None.

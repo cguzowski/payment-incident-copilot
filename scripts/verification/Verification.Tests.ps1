@@ -68,6 +68,8 @@ Invoke-VerificationTest 'buildsTheCompletePlanInRequiredOrder' {
         'verification-system-tests'
         'maven-verify'
         'backend-no-skips'
+        'generator-verify'
+        'generator-no-skips'
         'frontend-install'
         'frontend-test'
         'frontend-no-skips'
@@ -84,6 +86,8 @@ Invoke-VerificationTest 'buildsIndependentBackendAndFrontendPlans' {
         'check-repository-tools'
         'maven-verify'
         'backend-no-skips'
+        'generator-verify'
+        'generator-no-skips'
     ) (Get-VerificationStepNames -Scope Backend) 'Backend verification scope differs.'
     Assert-Equal @(
         'check-node'

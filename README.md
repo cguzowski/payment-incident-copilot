@@ -10,7 +10,7 @@ It brings together:
 
 The system is intentionally designed so that **observed evidence, retrieved knowledge, AI inference, and human decisions remain distinct and traceable**.
 
-> **Project status:** The core end-to-end vertical slice is implemented and verified. The current SynTen Inc branch is focused on live approved-knowledge retrieval using Ollama `nomic-embed-text`. The fixed retrieval-quality benchmark remains a factual **FAIL** by design, while the engineering and operator-workflow acceptance criteria are satisfied.
+> **Project status:** The core end-to-end vertical slice and live SynTen Inc approved-knowledge proof are implemented. The fixed retrieval-quality benchmark remains a factual **FAIL** by design. The one-click local workflow now connects generator-created SynTen alerts to their matching service-error evidence.
 
 ---
 
@@ -301,18 +301,22 @@ After configuring `.env` and the database:
 
 The launcher checks prerequisites and starts:
 
-- the operations MCP server
+- the synthetic incident generator and its MCP evidence endpoint first
 - the Copilot API
 - the Angular operator console
-- the synthetic incident generator
+
+The launcher explicitly configures the Copilot API to use the generator at
+`http://localhost:8082` for evidence belonging to generated `sig-v1` alerts.
+The legacy fixture-based operations MCP server remains separately runnable for
+contract development and compatibility checks.
 
 The normal local endpoints are:
 
 ```text
 Operator Console   http://localhost:4200
 Copilot API        http://localhost:8080
-MCP Server         http://localhost:8081
-Incident Generator http://localhost:8082
+Legacy MCP Server  http://localhost:8081
+Incident Generator and MCP evidence source http://localhost:8082
 ```
 
 To run only the startup checks:
@@ -417,7 +421,7 @@ The repository's deeper engineering documentation lives under [`docs/agent`](doc
 - [`ARCHITECTURE.md`](docs/agent/ARCHITECTURE.md) — service boundaries and data flow
 - [`CONSTRAINTS.md`](docs/agent/CONSTRAINTS.md) — non-negotiable product and technical guardrails
 - [`STATUS.md`](docs/agent/STATUS.md) — current implementation status and verification evidence
-- [`tasks/current.md`](docs/agent/tasks/current.md) — current retrieval milestone and acceptance criteria
+- [`tasks/current.md`](docs/agent/tasks/current.md) — latest task contract, acceptance criteria, and completion evidence
 
 ---
 

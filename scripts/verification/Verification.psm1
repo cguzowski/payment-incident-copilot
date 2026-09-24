@@ -9,7 +9,14 @@ function Get-VerificationStepNames {
 
     switch ($Scope) {
         'Backend' {
-            return @('check-java', 'check-repository-tools', 'maven-verify', 'backend-no-skips')
+            return @(
+                'check-java',
+                'check-repository-tools',
+                'maven-verify',
+                'backend-no-skips',
+                'generator-verify',
+                'generator-no-skips'
+            )
         }
         'Frontend' {
             return @(
@@ -34,6 +41,8 @@ function Get-VerificationStepNames {
                 'verification-system-tests',
                 'maven-verify',
                 'backend-no-skips',
+                'generator-verify',
+                'generator-no-skips',
                 'frontend-install',
                 'frontend-test',
                 'frontend-no-skips',
@@ -262,6 +271,22 @@ function Invoke-RepositoryVerificationStep {
                 -File `
                 -ErrorAction SilentlyContinue | ForEach-Object FullName)
             Assert-JUnitReportsHaveNoSkippedTests -ReportPaths $reports -Description 'backend'
+        }
+        'generator-verify' {
+            $invocation = Get-MavenWrapperInvocation `
+                -RepositoryRoot $RepositoryRoot `
+                -WindowsPlatform (Test-WindowsPlatform)
+            Invoke-ExternalCommand `
+                -Executable $invocation.Executable `
+                -Arguments $invocation.Arguments `
+                -WorkingDirectory (Join-Path $RepositoryRoot 'syntheticIncidentGenerator')
+        }
+        'generator-no-skips' {
+            $reports = @(Get-ChildItem `
+                -Path (Join-Path $RepositoryRoot 'syntheticIncidentGenerator/target/surefire-reports/TEST-*.xml') `
+                -File `
+                -ErrorAction SilentlyContinue | ForEach-Object FullName)
+            Assert-JUnitReportsHaveNoSkippedTests -ReportPaths $reports -Description 'generator'
         }
         'frontend-install' {
             Invoke-ExternalCommand -Executable 'npm' -Arguments @('ci') -WorkingDirectory $frontendRoot

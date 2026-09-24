@@ -1,7 +1,7 @@
 # Product roadmap
 
 Status: Active
-Last reviewed: 2026-08-31
+Last reviewed: 2026-09-24
 Owner: Christopher Guzowski
 
 ## Purpose
@@ -63,17 +63,18 @@ All tenant-specific assets for this path live under `SynTen Inc/`.
 | K2 | Generate and validate the SynTen Inc PDF corpus | Complete | Every inventoried runbook and policy has reproducible source, a valid text-based PDF, matching metadata, and successful render/extraction checks. |
 | K3 | Ingest and chunk PDFs with source provenance | Complete | The tested catalog path produces deterministic, versioned chunks traceable to exact PDF locations. |
 | K4 | Embed, vectorize, and evaluate the corpus | Complete with factual FAIL | Live `nomic-embed-text` indexed all 705 chunks; the retained evaluation artifact records the exact fixed-threshold misses without tuning the contract. |
-| K5 | Prove live approved-knowledge retrieval in the operator workflow | Active | A repeatable synthetic investigation uses live `nomic-embed-text` retrieval, and **Retrieve approved knowledge** displays eligible cited PDF guidance instead of the no-match state. |
+| K5 | Prove live approved-knowledge retrieval in the operator workflow | Complete with factual FAIL | A repeatable synthetic investigation uses live `nomic-embed-text` retrieval and displays eligible cited PDF guidance; the fixed benchmark remains below its ranking threshold. |
+| R1 | Connect generated incidents to operational evidence | Complete | The one-click SynTen workflow routes generated `sig-v1` incidents to their matching deterministic generator MCP evidence instead of the legacy fixture provider. |
 | D1 | Select and implement the initial AWS deployment shape | Deferred | The verified closed loop runs through least-privilege AWS infrastructure. |
 | D2 | Add authentication and enforce operator identity | Deferred | Identity is authenticated and tenant authorization is enforced at every public boundary. |
 
 ## Active product slice
 
-K4 is complete with a retained factual FAIL artifact. K5 is the next planned
-slice: improve the approved retrieval path under a separately accepted contract,
-then prove through the real operator action that an eligible, cited PDF result
-is displayed. K5 uses live `nomic-embed-text`; live chat/report-model selection
-is deferred.
+K5 is complete with a retained factual FAIL artifact and a successful live
+operator proof. R1 is also complete: the local startup order and MCP endpoint
+selection now give generator-created SynTen incidents the evidence encoded by
+their opaque scenario references. The next product slice requires owner
+selection; live chat/report-model selection remains deferred.
 
 The active contract is in `tasks/current.md`. The maintained sources, generated
 PDFs, manifest, validation tooling, and retrieval oracle remain under

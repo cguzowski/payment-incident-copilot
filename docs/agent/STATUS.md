@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-01
+Last updated: 2026-09-24
 
 ## Current milestone
 
@@ -107,8 +107,8 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
 - Added lifecycle-bound five-second polling to the incident work queue so new
   alerts appear without a manual refresh while visible queue results remain
   stable during background requests and transient failures.
-- Consolidated Windows startup so the root launcher starts and opens the
-  synthetic incident generator last, with no separate generator launcher.
+- Consolidated Windows startup under the root launcher with no separate
+  generator launcher.
 - Completed the initial synthetic end-to-end vertical slice from alert intake
   through human decision and audit timeline. The owner accepted the recorded
   deterministic implementation and verification evidence on 2026-08-31.
@@ -147,25 +147,26 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
   semantics passed, while fixed retrieval-quality thresholds missed at 9/22
   primary-runbook cases, 1/20 supporting-policy cases, and 16/21
   primary-over-weak cases against 19 required.
+- Completed K5 with a live S001 operator proof: approved knowledge returned and
+  displayed cited RB-002 guidance while the unchanged evaluation factually
+  remained below its primary-over-weak ranking threshold.
+- Completed R1: the root launcher starts and health-checks the standalone
+  generator before the API, selects its port-8082 MCP endpoint after `.env`
+  loading, and a live generated S001 investigation records and displays the
+  expected `AVAILABLE` service-error evidence.
 
 ## In progress
 
-- K5 implementation is active under ADR-0010 and the locked current task. It
-  preserves the K4 artifact/corpus/labels while introducing an evidence-focused
-  query, type-balanced candidate pools, document-diverse selection, and a live
-  S001 operator-button proof with `nomic-embed-text`.
+- None. The next product slice requires owner selection.
 
 ## Next
 
-1. Implement and verify K5 query/candidate/selection behavior through strict
-   red-green tests without changing corpus, labels, or eligibility.
-2. Re-run the fixed live evaluation, then prove the S001 operator action
-   displays eligible cited RB-002 guidance instead of the no-match state.
+1. Select the next product milestone while preserving the verified local S001
+   `AVAILABLE` evidence path.
 
 ## Blockers
 
-- No external-environment blocker is currently known. K5 must still prove its
-  ranking changes against the fixed live evaluation and operator workflow.
+- No external-environment blocker is currently known.
 
 ## Known deliberate gaps
 
@@ -393,6 +394,16 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
   chat model—for K5. K5's required operator outcome is an eligible, cited PDF
   result after clicking **Retrieve approved knowledge**; report-model selection
   is deferred.
+- 2026-09-24: After stale Docker Desktop runtime sockets were moved aside and
+  Docker restarted successfully, the authoritative `./verify.ps1` gate passed
+  289/289 copilot API, 9/9 operations MCP server, 17/17 standalone generator,
+  and 78/78 Angular tests with zero failures, errors, or skips. Spotless,
+  Prettier, both production builds, Compose validation, verification contracts,
+  and `git diff --check` also passed.
+- 2026-09-24: A live generated S001 workflow recorded evidence attempt
+  `f84af625-4279-4c71-9d98-a5a5a4463a59` as `AVAILABLE`; API and browser review
+  showed `GATEWAY_TIMEOUT` and `UPSTREAM_CONNECTION_RESET` for
+  `payment-authorization`.
 
 ## Update rule
 

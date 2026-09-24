@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [switch] $CheckOnly,
+    [switch] $UseGeneratorMcp,
     [switch] $PrepareKnowledge
 )
 
@@ -263,6 +264,9 @@ function Start-LocalApplication {
     Import-Module $knowledgePreparationModule -Force
 
     Import-DotEnv -Path (Join-Path $repositoryRoot '.env')
+    if ($UseGeneratorMcp) {
+        [Environment]::SetEnvironmentVariable('OPERATIONS_MCP_BASE_URL', 'http://localhost:8082', 'Process')
+    }
     Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_BASE_URL' -Value 'http://localhost:8081'
     Set-DefaultEnvironmentVariable -Name 'OPERATIONS_MCP_REQUEST_TIMEOUT' -Value '5s'
     Assert-RequiredEnvironmentVariables -Names @(

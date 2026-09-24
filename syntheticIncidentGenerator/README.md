@@ -57,13 +57,14 @@ SYNTHETIC_TENANT_ID=8b860d80-d17f-4e6b-8c48-af35f26a4d61
 
 ## One-click Windows startup
 
-Double-click `start-local.bat` in the repository root. After starting the
-operations MCP server, copilot API, and operator console, the launcher:
+Double-click `start-local.bat` in the repository root. The launcher:
 
 1. reuses the generator if it is already healthy;
 2. otherwise starts it in a separate PowerShell window;
-3. waits up to 60 seconds for the health endpoint; and
-4. opens `http://localhost:8082` in the default browser.
+3. waits up to 60 seconds for the health endpoint;
+4. configures and starts the copilot API against the generator MCP endpoint;
+5. starts the operator console; and
+6. opens `http://localhost:8082` in the default browser.
 
 The root launcher ensures that the copilot API and PostgreSQL are available so
 the red button can add an incident to the Active work queue.

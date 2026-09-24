@@ -1,8 +1,8 @@
 # Project definition
 
-Last reviewed: 2026-09-01
+Last reviewed: 2026-09-24
 Owner: Christopher Guzowski
-Status: Core vertical slice and K4 complete; K5 live retrieval proof active
+Status: Core vertical slice, K5 live retrieval proof, and R1 generated-evidence reliability complete
 
 ## One-sentence goal
 

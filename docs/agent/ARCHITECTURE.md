@@ -1,6 +1,6 @@
 # Architecture
 
-Last reviewed: 2026-08-31
+Last reviewed: 2026-09-24
 
 ## System boundaries
 
@@ -8,7 +8,8 @@ Last reviewed: 2026-08-31
 |---|---|---|
 | Operator console | Incident work queue, investigation UX, review and decision input | Investigation reasoning or persistence |
 | Copilot API | Workflow, persistence, retrieval, report generation, decisions, audit | Synthetic source-system behavior |
-| Operations MCP server | Deterministic synthetic operational tools and fixtures | LLM calls or investigation decisions |
+| Synthetic incident generator | Generated SynTen alerts and deterministic MCP evidence reconstructed from their opaque `sig-v1` references | Copilot persistence, LLM calls, or investigation decisions |
+| Operations MCP server | Legacy deterministic fixtures and independent MCP v1 compatibility verification | Generated `sig-v1` scenario ownership, LLM calls, or investigation decisions |
 | PostgreSQL | Transactional application state and audit records | Unstructured object storage |
 | pgvector | Tenant-filtered knowledge chunks and embeddings | Final report truth |
 | Spring AI provider boundary | Ollama embeddings and report generation locally; optional Bedrock production profile later | Autonomous operational authority |
@@ -85,6 +86,14 @@ live MCP discovery and structured responses semantically with it. Consumer
 tests decode the canonical fixtures and reject incompatible payloads. The
 copilot API keeps transport failure mapping in its MCP gateway and evidence
 payload validation in a typed evidence-owned decoder.
+
+For the one-click SynTen demonstration, the root launcher starts or reuses the
+synthetic incident generator before the copilot API and points the API's single
+operations MCP connection at port 8082. This preserves the v1 wire contract
+while allowing the same service that created an opaque `sig-v1` alert reference
+to reconstruct its matching evidence. The fixture-based port-8081 provider
+remains independently buildable and runnable, but it is not the evidence source
+for generator-created alerts.
 
 ## End-to-end scenario
 
