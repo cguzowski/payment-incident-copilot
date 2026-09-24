@@ -1,10 +1,10 @@
 # SynTen Inc authorization knowledge corpus inventory
 
-Status: Implementation-ready
+Status: Frozen v1 inventory; source and PDF generation completed
 Corpus version: `synten-auth-knowledge/v1`
 Tenant ID: `8b860d80-d17f-4e6b-8c48-af35f26a4d61`
 Incident family: `AUTHORIZATION_DECLINE_RATE_SPIKE`
-Total planned PDFs: 30
+Total PDFs: 30
 Hard page limit: 15 pages per PDF, inclusive
 
 ## Distribution
@@ -40,8 +40,9 @@ it has these exact values:
 | PDF path | `SynTen Inc/corpus/pdfs/<pdf-filename>` |
 
 `approvedBy` is the existing fictional role account defined in `../profile.md`.
-The inventory is authoritative for membership and metadata. K2 records source
-and PDF SHA-256 hashes only after the files exist; hashes must never be guessed.
+The inventory is authoritative for membership and metadata. The generated
+`validation-manifest.json` records source and PDF SHA-256 hashes; hashes must
+never be guessed.
 
 Target page ranges are editorial budgets, not permission to exceed the hard
 limit. A document may finish below its range when complete, but any PDF with

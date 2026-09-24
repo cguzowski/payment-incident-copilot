@@ -1,6 +1,6 @@
 # Domain glossary
 
-Last reviewed: 2026-08-31
+Last reviewed: 2026-09-24
 
 ## Core terms
 
@@ -94,7 +94,7 @@ under `SynTen Inc/`.
 **Synthetic knowledge corpus**
 
 The version-controlled collection of SynTen Inc runbooks, policies, metadata,
-and later retrieval-evaluation cases. Source documents are not evidence of a
+and retrieval-evaluation cases. Source documents are not evidence of a
 real event and do not become report truth merely because retrieval selected
 them.
 
@@ -102,7 +102,7 @@ them.
 
 A human-readable, text-based synthetic runbook or policy artifact. PDF-derived
 chunks must remain traceable to the exact document version and source location;
-the extraction and locator contract is selected before ingestion is changed.
+ADR-0009 defines the implemented extraction and locator contract.
 
 ## Vocabulary rule
 

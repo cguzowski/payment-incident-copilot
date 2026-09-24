@@ -1,62 +1,46 @@
 # Agent context map
 
-This directory contains shared, version-controlled context for both humans and
-coding agents. It is not a transcript archive and must not contain secrets.
+This directory holds maintained engineering context, not conversation transcripts.
 
-## Always read
+## Required reading
 
-1. `PROJECT.md` — why the product exists and what the MVP includes.
-2. `CONSTRAINTS.md` — boundaries that implementation must respect.
-3. `STATUS.md` — current state, next milestone, and known blockers.
-4. `tasks/current.md` — the one active implementation outcome.
-
-For executable changes, also read `QUALITY.md` and the nearest service-specific
-`AGENTS.md`.
-
-## Read when relevant
-
-- `ARCHITECTURE.md` — cross-service ownership and data flow.
-- `DOMAIN.md` — shared payment-operations vocabulary.
-- `ROADMAP.md` — ordered future outcomes and the boundary of the next product
-  slice.
-- `tasks/proposed/` — reviewable future contracts that are not authorized for
-  implementation.
-- `decisions/` — proposed or accepted architectural decisions affected by the
-  task.
-- `../../SynTen Inc/README.md` — tenant-specific profile, corpus, PDF, and
-  retrieval-evaluation ownership when working on the SynTen Inc phase.
+Follow root [AGENTS.md](../../AGENTS.md) for required context, service-specific
+rules, task locking, and verification. Do not duplicate those instructions in
+task bodies.
 
 ## Canonical ownership
 
-Keep each fact in one place:
-
-| Topic | Canonical file |
+| Topic | Authority |
 |---|---|
-| Product goal and MVP scope | `PROJECT.md` |
-| Non-negotiable boundaries | `CONSTRAINTS.md` |
-| Current facts and blockers | `STATUS.md` |
-| Active acceptance criteria and evidence | `tasks/current.md` |
-| Ordered future product outcomes | `ROADMAP.md` |
-| System boundaries and flow | `ARCHITECTURE.md` |
-| Domain vocabulary | `DOMAIN.md` |
-| Test and verification policy | `QUALITY.md` |
-| Consequential decisions | `decisions/` |
-| SynTen Inc-specific assets | `../../SynTen Inc/` |
+| Product goal and scope | [PROJECT.md](PROJECT.md) |
+| Non-negotiable boundaries | [CONSTRAINTS.md](CONSTRAINTS.md) |
+| Current state, limitations, latest verification | [STATUS.md](STATUS.md) |
+| Latest authorized task and its evidence | [tasks/current.md](tasks/current.md) |
+| Ordered future outcomes | [ROADMAP.md](ROADMAP.md) |
+| System ownership and data flow | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| Shared vocabulary | [DOMAIN.md](DOMAIN.md) |
+| Verification policy and commands | [QUALITY.md](QUALITY.md) |
+| Architectural decisions | [decisions](decisions) |
+| Tenant corpus and retrieval evaluation | [SynTen Inc](../../SynTen%20Inc/README.md) |
 
-## Maintenance rules
+## Task and decision lifecycle
 
-- Keep durable instructions in `AGENTS.md`, not in task files.
-- Link to canonical context instead of copying it into multiple files.
-- Keep only one `tasks/current.md` active at a time.
-- Keep future task proposals under `tasks/proposed/`. They do not replace the
-  active contract or authorize executable changes.
-- When a proposal is approved and activated, move its contract to
-  `tasks/current.md` only after the existing active task is completed or
-  explicitly superseded by the owner.
-- After all criteria and evidence are complete, archive the task as
-  `tasks/completed/YYYY-MM-DD-short-name.md`; create the directory when first
-  needed.
-- Record consequential decisions as ADRs instead of silently rewriting history.
-- Update documentation in the same change as the behavior it describes.
-- Delete or correct stale context immediately.
-- Never paste full AI conversations into the repository.
+- Keep one authorized contract in `tasks/current.md`. Its Status makes clear
+  whether work is active or complete; a completed task may remain there until
+  another is activated.
+- Before replacement, preserve the completed contract and evidence in
+  `tasks/completed/YYYY-MM-DD-short-name.md`.
+- A future proposal, if needed, belongs in `tasks/proposed/` and does not
+  authorize implementation. Remove superseded proposals once the accepted
+  decision and completion evidence are recorded elsewhere.
+- Preserve historical task acceptance wording. Add dated corrections or
+  disposition notes rather than implying an unrun check passed.
+- Preserve ADR rationale. Mark partial supersession and link to the successor
+  so historical choices cannot be mistaken for active defaults.
+
+## Maintenance
+
+Link to canonical facts rather than duplicating milestone lists. Update current
+guidance with behavior changes; archive evidence instead of growing STATUS
+into a diary. Retain intentionally versioned corpus sources and compatibility
+fixtures even when they describe older guidance.

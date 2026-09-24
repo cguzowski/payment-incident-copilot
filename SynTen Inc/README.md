@@ -1,73 +1,69 @@
 # SynTen Inc
 
-SynTen Inc is the fictional company name for the project's existing synthetic
-tenant:
+SynTen Inc is the fictional tenant `8b860d80-d17f-4e6b-8c48-af35f26a4d61`.
+All data is synthetic and belongs to the single
+`AUTHORIZATION_DECLINE_RATE_SPIKE` incident family.
 
-- Tenant ID: `8b860d80-d17f-4e6b-8c48-af35f26a4d61`
-- Current incident family: `AUTHORIZATION_DECLINE_RATE_SPIKE`
-- Data classification: synthetic demonstration data only
+## Corpus authorities
 
-This directory is the canonical home for every SynTen Inc-specific profile,
-source document, generated PDF, corpus manifest, validation asset, and
-retrieval-evaluation fixture. Shared product, architecture, quality, and status
-documentation remains under `docs/agent/` and links here when tenant-specific
-detail is required.
+| File | Owns |
+|---|---|
+| [profile.md](profile.md) | Fictional systems, vocabulary, roles, and authority |
+| [corpus/inventory.md](corpus/inventory.md) | Exact document membership and metadata |
+| [corpus/authoring-standard.md](corpus/authoring-standard.md) | PDF authoring and validation contract |
+| [evaluation/retrieval-cases.md](evaluation/retrieval-cases.md) | Fixed retrieval labels and thresholds |
+| [corpus/validation-manifest.json](corpus/validation-manifest.json) | Source/PDF hashes and recorded validation |
 
-## Layout
+The corpus contains 30 maintained Markdown sources and 30 PDFs: 22 runbooks and
+8 policies, comprising 27 approved and 3 superseded versions. The K2 record
+reports 112 pages, 3-4 per document, with page-by-page visual review; the hard
+maximum is 15. K3 produced 705 page-aware chunks. The inventory covers all
+36 generator scenarios.
 
-```text
-SynTen Inc/
-├── AGENTS.md
-├── README.md
-├── profile.md
-├── corpus/
-│   ├── inventory.md
-│   ├── authoring-standard.md
-│   ├── sources/
-│   ├── pdfs/
-│   ├── validation/
-│   └── validation-manifest.json
-└── evaluation/
-    ├── retrieval-cases.md
-    └── results/
-```
+Original page targets are advisory budgets; shorter complete documents are
+allowed by the inventory. Repeated source procedures and unsupported
+workspace-record instructions are known v1 limitations, not permission to
+expand the UI. See [project limitations](../docs/agent/STATUS.md).
 
-The K1 corpus contract is now defined in:
+## Recorded retrieval results
 
-- `profile.md` — fictional company, system, role, and authority context;
-- `corpus/inventory.md` — the exact 30-document corpus and scenario coverage;
-- `corpus/authoring-standard.md` — realistic PDF composition, hard 15-page
-  limit, generation, validation, and visual-QA requirements; and
-- `evaluation/retrieval-cases.md` — 23 human-labeled retrieval cases covering
-  all 36 generator scenarios.
+Historical K4 and K5 task records report:
 
-K2 generated 30 maintained Markdown sources and 30 deterministic PDFs: 22
-runbooks and 8 policies, comprising 27 approved and 3 superseded versions. The
-corpus contains 112 pages in total; every PDF is 3-4 pages, text-extractable,
-unencrypted, visually reviewed page by page, and below the hard 15-page limit.
-`corpus/validation-manifest.json` records the exact source/PDF hashes, page
-counts, extraction results, required error codes, status, and validation
-outcome for each version. Shared task status remains authoritative in
-`docs/agent/tasks/current.md`.
+| Measure | K4 passed | K5 passed | Applicable | Required to pass |
+|---|---:|---:|---:|---:|
+| Primary runbook selected | 9 | 19 | 22 | 22 |
+| Supporting policy selected | 1 | 12 | 22 | 20 |
+| Primary outranks weak match | 16 | 16 | 21 | 19 |
 
-K4 retained the first fixed live retrieval result under `evaluation/results`
-with 9/22 primary-runbook, 1/20 required-policy, and 16/21 primary-over-weak
-coverage. K5 retained a separate factual result with 19/22, 12/20, and 16/21;
-both contain zero ineligible candidates and preserve the special evidence and
-superseded-source semantics. The K5 operator proof uses the existing button and
-displays RB-002 with exact PDF provenance for S001.
+**Both runs failed all three quality thresholds.** Records also report zero
+ineligible candidates and preserved partial/unavailable/superseded semantics.
+K5's S001 operator proof displayed RB-002 with PDF provenance; it does not
+establish general retrieval quality.
 
-## Guardrails
+Evidence records:
 
-- Treat SynTen Inc as fictional; do not incorporate real customer, payment,
-  employee, merchant, or confidential company data.
-- Keep the corpus within the current incident family until the roadmap
-  explicitly authorizes expansion.
-- Keep stable document IDs, versions, approval/effective status, hashes, and
-  source provenance reviewable.
-- Generated PDFs are source artifacts, not authoritative incident evidence and
-  not preassembled model context.
-- Each PDF must use credible real-world runbook or policy structure and must not
-  exceed 15 pages, including front matter and appendices.
-- Do not commit model binaries, credentials, local database state, or extracted
-  third-party material here.
+- [K4 completion](../docs/agent/tasks/completed/2026-09-01-embed-and-evaluate-the-synten-inc-pdf-knowledge-catalog.md):
+  artifact `14588db4735841ffb5711a962e2c5119-FAIL.json`.
+- [K5 completion](../docs/agent/tasks/completed/2026-09-01-prove-live-approved-knowledge-retrieval-in-the-operator-workflow.md):
+  artifact `375ebc04ba894e84b2d18aeb6bc4d3cb-FAIL.json`.
+
+These artifacts are absent from this checkout and untracked. Their recorded
+hashes remain in the completed tasks; counts above are historical reports, not
+independently reverified results. Restore exact files to `evaluation/results/`,
+or identify a verifiable archive, before treating them as inspectable evidence.
+A fresh run is new evidence and must have its own ID.
+
+## Maintenance boundary
+
+Keep new tenant-specific assets here. The two legacy API Markdown knowledge
+resources remain under `backend/copilot-api/src/main/resources/knowledge/`
+for compatibility.
+
+Do not casually edit source versions, PDFs, hashes, evaluation labels, or
+chunking contracts. Corpus changes require explicit versioning, regeneration,
+validation, and evaluation. Superseded documents are deliberate exclusion
+fixtures; retain them for audit while excluding them from retrieval.
+
+The generator derives runbook text from scenario answer-key causes, so the
+corpus is not independent of that oracle. Evaluation integrity work is ordered
+in the [roadmap](../docs/agent/ROADMAP.md).

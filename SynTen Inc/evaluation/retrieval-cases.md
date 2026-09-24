@@ -15,8 +15,8 @@ corpus inventory.
 K3 may use deterministic embeddings to test pipeline behavior. K4 and K5 run
 these same labels through the configured live embedding model. K5 also proves
 the operator-visible approved-knowledge action; live chat/report evaluation is
-deferred. A plausible future report cannot compensate for failed retrieval
-eligibility or missing required sources.
+outside this retrieval benchmark. A plausible report cannot compensate for
+failed retrieval eligibility or missing required sources.
 
 ## Fixed eligibility rules
 
@@ -110,7 +110,7 @@ chunks, corpus/index versions, and suspected cause. Do not relabel an expected
 source after seeing model output. Any label change requires a reviewed update
 to this file and a new evaluation version.
 
-## K5 report review labels
+## Reserved report review labels
 
 For available scenarios, a valid report must cite persisted evidence for every
 observation and inference and cite at least one selected approved-knowledge

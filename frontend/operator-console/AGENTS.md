@@ -23,15 +23,16 @@ system actions and evidence provenance understandable.
 
 ## UX rules
 
-- Keep the alert queue scannable and sortable by severity and age.
+- Keep the incident work queue scannable and sortable by severity and age.
 - Clearly separate observed evidence, AI inference, and recommendation.
 - Show evidence source and retrieval status near each claim.
 - Require an explicit operator action before an investigation is accepted.
-- Rejection must capture a reason.
+- Approval and rejection must capture an attributable reason.
 - Do not imply the AI report is authoritative or automatically executed.
 
 ## Testing
 
 - Unit-test state transformations and meaningful component behavior.
 - Cover loading, empty, partial-data, failure, approved, and rejected states.
-- Add an end-to-end happy-path test after the first vertical slice is stable.
+- Verify the complete operator workflow and important failure states; retain
+  manual browser evidence where automation does not cover the full path.

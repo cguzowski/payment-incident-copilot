@@ -1,8 +1,12 @@
 # ADR-0001: Monorepo with independently deployable applications
 
-Status: Accepted  
-Date: 2026-08-20  
+Status: Accepted; runtime inventory extended by the standalone generator
+Date: 2026-08-20
 Decision owner: Christopher Guzowski
+
+The original three-application decision is retained below. The generator is an
+additional independently runnable system outside the root Maven reactor; see
+[current architecture](../ARCHITECTURE.md) for the complete runtime inventory.
 
 ## Context
 

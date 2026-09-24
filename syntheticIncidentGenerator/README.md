@@ -16,9 +16,11 @@ with the payment incident copilot.
 - The opaque alert ID lets this service reconstruct the selected scenario and
   deterministic evidence through the existing read-only
   `getRecentServiceErrors` MCP contract.
-- Ground truth is never sent in the alert or MCP evidence. The generator UI
-  keeps a separate answer key that the reviewer may reveal after reviewing the
-  proposed report.
+- Alert intake and MCP evidence omit dedicated answer-key fields. The
+  generation response nevertheless sends `answerKey` to the browser immediately;
+  the UI only collapses it. This is not a protected or auditable reveal boundary.
+  The corpus also contains oracle-derived causes; see
+  [evaluation limitations](../docs/agent/STATUS.md).
 - A report should be approved only when its probable cause, disposition,
   confidence, cited evidence signature, and safe recommendation satisfy the
   answer key. Otherwise it should be rejected. The rule makes the expected
@@ -66,8 +68,9 @@ Double-click `start-local.bat` in the repository root. The launcher:
 5. starts the operator console; and
 6. opens `http://localhost:8082` in the default browser.
 
-The root launcher ensures that the copilot API and PostgreSQL are available so
-the red button can add an incident to the Active work queue.
+The database must already be running. The launcher checks reachability and
+starts the API; it does not provision PostgreSQL. For prerequisites and first-run
+knowledge preparation, follow the [root README](../README.md).
 
 Build and test this system independently from the repository root:
 
@@ -85,6 +88,7 @@ PostgreSQL database are running.
 The current copilot investigates one incident family and retrieves one evidence
 domain. This generator therefore creates many real-world causes of an
 authorization-decline-rate spike and expresses their observable signature
-through the existing service-error contract. Some uncommon and rare signatures
-are intentionally beyond the current approved runbook; a careful report may
-correctly return `INSUFFICIENT_EVIDENCE` rather than inventing certainty.
+through the existing service-error contract. The corpus maps all 36 scenarios,
+but authored coverage does not guarantee successful retrieval or sufficient
+observed evidence. Partial and unavailable evidence can still require
+`INSUFFICIENT_EVIDENCE`; see [corpus results](../SynTen%20Inc/README.md).

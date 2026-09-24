@@ -111,17 +111,21 @@ sequenceDiagram
     U->>A: Load incident work queue
     A-->>U: Active incident summaries
     U->>A: Start investigation
+    U->>A: Collect observed evidence
     A->>M: Call required read-only tools
     M-->>A: Sourced operational evidence
-    A->>D: Persist evidence and retrieval STARTED
+    A->>D: Persist evidence attempt
+    U->>A: Retrieve approved knowledge
+    A->>D: Persist retrieval STARTED
     A->>O: Embed bounded derived retrieval query
     O-->>A: Normalized 768-dimension vector
     A->>D: Filtered full-text plus exact vector search
     D-->>A: Tenant-filtered knowledge chunks
     A->>D: Persist immutable retrieval snapshot
     A-->>U: Approved source excerpts and provenance
-    A->>A: Normalize and classify evidence
-    A->>O: Evidence plus versioned report schema
+    U->>A: Generate proposed report
+    A->>A: Resolve exact persisted evidence and knowledge snapshots
+    A->>O: Evidence, knowledge, and constrained report schema
     O-->>A: Structured proposed report
     A->>A: Validate schema and citations
     A->>D: Persist report, evidence, and metadata
@@ -148,13 +152,11 @@ replace model responses with mocks or deterministic doubles.
 
 ## Knowledge-source evolution
 
-The completed slice loads two repository-owned Markdown sources through
-`knowledge.catalog`. The SynTen Inc expansion now provides 30 repository-owned,
-text-based PDFs under `SynTen Inc/`; the next catalog change will ingest them
-without moving parsing, chunking, hashing, embedding, or index writes out of
-that feature boundary. Retrieval and report generation continue to consume
-persisted catalog records rather than reading PDFs directly or sending whole
-documents to a model.
+The catalog supports two legacy repository-owned Markdown sources and the
+30 SynTen Inc PDF versions. Parsing, chunking, hashing, embedding, and index
+writes remain inside `knowledge.catalog`. Retrieval and report generation
+consume persisted catalog records rather than reading PDFs directly or sending
+whole documents to a model.
 
 ADR-0009 selects PDFBox 3.0.8 and an immutable page/block representation for
 PDF ingestion. A PDF catalog row retains the exact maintained-source and PDF
@@ -162,23 +164,23 @@ hashes plus `pdfbox-text-pages/v1`; each `pdf-page-sections/v1` chunk has a
 1-based physical page and block range and never crosses a page. Retrieval
 snapshots copy that locator rather than resolving it from mutable files.
 
-K3 may persist a PDF chunk without an embedding so approved content can enter
-the existing lexical retrieval path before Ollama is available. Vector ranking
-must ignore incomplete embedding tuples. K4 embedded those same stable chunks
-with `nomic-embed-text` and retained its measured hybrid-retrieval result. K5
-owns the separately approved retrieval-quality changes and operator-workflow
-proof that **Retrieve approved knowledge** displays eligible cited guidance.
+The catalog can persist a PDF chunk without an embedding, allowing approved
+content into lexical retrieval before Ollama is available. Vector ranking
+ignores incomplete embedding tuples. K4 recorded embedding those stable chunks
+with `nomic-embed-text`. ADR-0011 defines the current query/ranking behavior;
+K5 recorded eligible cited guidance in the operator workflow. See
+[corpus results and evidence availability](../../SynTen%20Inc/README.md).
 
 Live local-model evaluation is an explicit smoke/evaluation workflow over
 synthetic data. Retrieval uses `nomic-embed-text`; report generation uses
 `qwen3:8b-q4_K_M` with thinking disabled, temperature zero, no tools, a bounded
 output budget, and a context-constrained `report-v1` schema. Application parsing
-and citation validation remain authoritative. Normal automated verification is
-deterministic and network-free.
+and citation validation remain authoritative. Model-facing tests use
+deterministic doubles and require no live AI provider.
 
 ## Primary states
 
-Suggested incident lifecycle:
+Implemented incident lifecycle:
 
 ```text
 NEW -> INVESTIGATING -> AWAITING_REVIEW -> APPROVED

@@ -1,6 +1,6 @@
 # Constraints and guardrails
 
-Last reviewed: 2026-08-31
+Last reviewed: 2026-09-24
 
 ## Product constraints
 
@@ -22,7 +22,7 @@ Last reviewed: 2026-08-31
   require a live model provider.
 - Amazon Bedrock may be added as an optional production profile near the
   deployment milestone, after the local closed loop is complete.
-- MCP integration begins with one deterministic synthetic server.
+- MCP evidence comes from deterministic synthetic providers.
 - Services remain independently deployable despite sharing one repository.
 - Use Flyway for database changes.
 - Use Docker Compose only for required local infrastructure.
@@ -38,6 +38,8 @@ Last reviewed: 2026-08-31
   a real company's confidential or proprietary material.
 - Keep SynTen Inc-specific profiles, source content, PDFs, manifests, corpus
   validation assets, and retrieval-evaluation fixtures under `SynTen Inc/`.
+  The two legacy Markdown knowledge resources remain under the API for
+  compatibility; do not move or rewrite those versioned inputs casually.
 - Make each SynTen Inc PDF operationally credible and no more than 15 pages,
   counting cover pages, document-control pages, appendices, and revision history.
 - Use opaque synthetic identifiers rather than realistic sensitive values.
@@ -52,7 +54,7 @@ Last reviewed: 2026-08-31
 - Store model identifier, prompt/template version, generation timestamp, and
   retrieval context identifiers.
 - Preserve enough immutable document, extraction, and source-location metadata
-  to trace each future PDF-derived chunk back to the exact synthetic source
+  to trace each PDF-derived chunk back to the exact synthetic source
   version.
 - A schema-valid report can still be wrong; the UI must communicate this.
 - Missing or contradictory evidence must reduce confidence, not invite

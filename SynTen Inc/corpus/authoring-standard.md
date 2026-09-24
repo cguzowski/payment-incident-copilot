@@ -1,6 +1,6 @@
 # SynTen Inc PDF authoring and validation standard
 
-Status: Approved for K2 generation
+Status: Approved v1 authoring contract; K2 generation completed
 Standard version: `synten-pdf-authoring/v1`
 Applies to: Every source and PDF in `corpus/inventory.md`
 
@@ -23,7 +23,7 @@ Each inventory row produces exactly two maintained artifacts:
 1. `corpus/sources/<pdf-basename>.md` is the editable authority.
 2. `corpus/pdfs/<pdf-basename>.pdf` is the reproducible rendered artifact.
 
-K2 may add a generator and validation tools under `SynTen Inc/corpus/validation/`.
+Generation and validation tools live under `SynTen Inc/corpus/validation/`.
 Temporary renders, extracted text, caches, and working files remain uncommitted.
 Do not hand-edit a PDF; update its Markdown authority and regenerate it.
 

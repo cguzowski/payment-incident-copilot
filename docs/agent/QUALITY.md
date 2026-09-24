@@ -1,6 +1,6 @@
 # Quality and validation
 
-Last reviewed: 2026-08-31
+Last reviewed: 2026-09-24
 
 ## Standard commands
 
@@ -12,9 +12,9 @@ The authoritative completion gate is:
 
 It verifies Java 21, Node.js 24.14.1, npm 10.8.3, the verification script's
 PowerShell tests, the pinned Maven Wrapper build, zero skipped backend and
-frontend tests, locked frontend installation, Prettier, the Angular production
-build, Compose configuration, and `git diff --check`. CI delegates to this same
-implementation.
+frontend tests, standalone generator tests, locked frontend installation,
+Prettier, the Angular production build, Compose configuration, and
+`git diff --check`. CI delegates to this same implementation.
 
 Focused scopes are available during development:
 
@@ -24,24 +24,19 @@ Focused scopes are available during development:
 ./verify.ps1 -Scope Repository
 ```
 
-Focused scopes do not replace the unscoped completion gate.
+For executable changes, focused scopes do not replace the unscoped completion
+gate. Documentation-only changes use relevant structural/static checks and the
+Repository scope; they do not require a new full application test run.
+
+The gate requires Docker and may download Maven/npm dependencies and container
+images when absent from local caches. It has no failing npm-audit step; advisory
+output from installation is not a clean security assessment.
 
 ## Test-driven development
 
-All production behavior changes follow a red-green-refactor cycle:
-
-1. Translate the user story and each acceptance criterion into named test
-   cases at the lowest suitable level.
-2. Write one focused test for the next behavior and run it to confirm that it
-   fails for the intended reason.
-3. Implement only enough production code to make that test pass.
-4. Refactor without changing behavior while keeping the tests green.
-5. Repeat for the remaining criteria, then run the broader relevant suite.
-
-For a defect, first add a failing regression test that reproduces it. Do not
-weaken a valid test to accommodate an implementation. If an acceptance
-criterion requires manual validation, record why it cannot be automated and
-add the closest meaningful automated coverage.
+Follow the red-green-refactor and acceptance-mapping requirements in
+[AGENTS.md](../../AGENTS.md). Record focused failures, passing coverage, and
+manual-verification exceptions in the task's completion evidence.
 
 Changes with no executable behavior, such as documentation-only edits, do not
 require artificial tests. Run the relevant static or structural validation and
@@ -53,8 +48,9 @@ record that evidence instead.
   `spring.ai.model.embedding=none`.
 - Tests at a model-facing boundary use mocked responses or deterministic
   doubles and cover malformed output, unavailability, and timeout behavior.
-- Normal automated verification never depends on Ollama, Bedrock, AWS
-  credentials, model downloads, or external network access.
+- Automated tests never require live Ollama/Bedrock, AWS credentials, or model
+  downloads. Dependency installation and container provisioning may need network
+  access; this is distinct from deterministic model-provider tests.
 - Live Ollama smoke checks are explicit local-development checks and do not
   replace the deterministic completion gate.
 - Live corpus evaluations record the exact source-corpus version, extraction
@@ -87,8 +83,8 @@ record that evidence instead.
 - Repeatable synthetic scenarios for demonstrations
 - Failure tests for unavailable sources, incomplete evidence, invalid model
   output, duplicate alerts, and rejected reports
-- The completed deterministic end-to-end path remains green while the SynTen
-  Inc PDF and live-model path is added
+- Preserve the deterministic end-to-end path and PDF/live-model integration
+  boundaries without requiring a live provider in tests
 - Static corpus checks for manifest membership, source/PDF pairing, synthetic
   metadata, text extraction, rendering, and source-location provenance
 
@@ -102,15 +98,7 @@ record that evidence instead.
 
 ## Definition of done
 
-- Acceptance criteria are demonstrably satisfied.
-- Each acceptance criterion is mapped to automated coverage or a documented
-  manual-verification reason.
-- Red-phase and green-phase evidence is recorded for behavior changes.
-- Relevant automated tests pass.
-- Failure and invalid-input behavior is intentional.
-- Database changes use migrations.
-- Public API changes are documented.
-- Audit-impacting behavior is tested.
-- Documentation reflects the resulting system.
-- The final diff contains no secrets, generated build output, or unrelated
-  refactoring.
+Use the completion standard in [AGENTS.md](../../AGENTS.md). In addition,
+database changes use migrations, public API changes are documented, and
+audit-impacting behavior has regression coverage. Record exact commands and
+remaining risks when a required check cannot run.

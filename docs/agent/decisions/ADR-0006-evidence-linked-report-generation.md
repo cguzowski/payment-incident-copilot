@@ -1,8 +1,12 @@
 # ADR-0006: Evidence-linked structured report generation
 
-Status: Accepted
+Status: Accepted; local provider choice superseded by ADR-0007 and ADR-0012
 Date: 2026-08-29
 Decision owner: Christopher Guzowski
+
+The Nova/Bedrock settings below describe the original decision. Current local
+reports use Ollama as specified in [ADR-0012](ADR-0012-local-qwen3-report-generation.md).
+Schema, citation, persistence, and human-review decisions remain applicable.
 
 ## Context
 

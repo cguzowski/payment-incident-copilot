@@ -56,7 +56,9 @@ observed service/error signals carry more of the lexical and semantic query.
 - S001 selects RB-002 first and the real operator action displays its cited PDF
   excerpt instead of a no-match state.
 - The fixed evaluation improves primary-runbook coverage from 9/22 to 19/22
-  and supporting-policy coverage from 1/20 to 12/20.
+  and supporting-policy passing cases from 1 to 12 out of 22 applicable
+  (20 required). These are historical task-recorded counts; raw artifacts are
+  currently unavailable in this checkout.
 - Tenant, approval, effective-time, model/dimension, and superseded-source
   filters remain unchanged; the live K5 result contains zero ineligible
   candidates.
@@ -68,9 +70,10 @@ observed service/error signals carry more of the lexical and semantic query.
   records, so its serialized bound increases from 2 MB to 4 MB.
 - Type-local ranks are not directly comparable as a single global modality
   position; the persisted document type and fused score must be read with them.
-- The fixed evaluation still fails its original quality thresholds: 19/22
-  primary-runbook cases, 12/20 required supporting-policy cases, and 16/21
-  primary-over-weak cases versus 19 required.
+- All three quality thresholds remain unmet: 19 of 22 primary-runbook cases
+  (22 required), 12 of 22 supporting-policy cases (20 required), and 16 of 21
+  primary-over-weak cases (19 required). See [recorded results](../../../SynTen%20Inc/README.md)
+  for evidence availability.
 
 ## Validation or revisit trigger
 

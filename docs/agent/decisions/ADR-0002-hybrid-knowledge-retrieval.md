@@ -8,8 +8,10 @@ Decision owner: Christopher Guzowski
 ADR-0007 changes the active local embedding provider, model, dimensions, and
 test-provider boundary. ADR-0011 changes how the fixed candidate depth is
 allocated and how repeated document chunks enter final context. This record
-remains authoritative for the underlying hybrid-search approach, chunking,
-RRF, provenance, and the historical Titan index contract.
+remains authoritative for the underlying hybrid-search approach, Markdown
+chunking, RRF, provenance, and the historical Titan index contract.
+[ADR-0009](ADR-0009-page-aware-pdf-knowledge-catalog.md) extends the catalog with
+page-aware PDF extraction and chunking.
 
 ## Context
 

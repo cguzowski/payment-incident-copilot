@@ -28,8 +28,9 @@ It consumes MCP tools but does not implement synthetic source systems.
 - Store source references with every evidence-backed assertion.
 - Represent missing evidence explicitly; never ask the model to fill gaps.
 - Keep prompts versioned and testable.
-- Do not allow a model response to change incident state without an explicit
-  operator decision.
+- Only application validation of an operator-requested report may move an
+  incident to `AWAITING_REVIEW`. Model content never selects workflow state;
+  terminal approval or rejection requires an explicit human decision.
 
 ## Testing
 

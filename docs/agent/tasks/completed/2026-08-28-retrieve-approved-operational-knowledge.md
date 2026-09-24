@@ -1,6 +1,12 @@
 # Task: Retrieve approved operational knowledge
 
 Status: Implementation Complete; External Verification Pending
+
+Archive note (2026-09-24): this status records the original unperformed live
+Titan verification. ADR-0007 replaced the active local provider with Ollama;
+the later K4/K5 tasks record live local retrieval. The original Bedrock smoke
+was not proved by those runs and is not an active local-development blocker.
+The acceptance contract and historical evidence below remain unchanged.
 Created: 2026-08-28
 Owner: Christopher Guzowski
 

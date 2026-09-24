@@ -16,6 +16,10 @@ As a [user], I want [capability], so that [value].
 
 [Why this task exists and where it belongs in the vertical slice.]
 
+## Chosen contract
+
+[Owner-approved behavior and explicit decisions; locked after work begins.]
+
 ## In scope
 
 - [Required behavior]
@@ -82,4 +86,7 @@ The agent may propose a simpler approach before implementation.
 - Full verification:
 - Manual verification:
 - Documentation updated:
-- Remaining limitations:
+
+## Remaining limitations
+
+[Known limitations, deferred work, or “None.”]

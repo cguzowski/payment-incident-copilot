@@ -21,7 +21,8 @@ Before planning or changing SynTen Inc assets, read:
   shared project facts or decisions in `docs/agent/`; link to tenant assets
   instead of duplicating them.
 - The corpus inventory is authoritative for generated document membership and
-  metadata once it exists.
+  metadata. Legacy API Markdown resources are an intentional compatibility
+  exception to this directory's ownership; preserve their versioned bytes.
 
 ## Synthetic-content guardrails
 

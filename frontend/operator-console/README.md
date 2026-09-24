@@ -1,42 +1,37 @@
 # Operator Console
 
-Angular application for payment operations analysts to triage synthetic alerts,
-start an investigation, review observed synthetic service-error evidence, and
-retrieve approved synthetic runbook and policy excerpts. Approved knowledge is
-kept separate from observed evidence; AI-assisted reports and human decisions
-remain later milestones.
+Angular UI for the synthetic incident work queue, investigations, observed
+evidence, approved knowledge, advisory reports, human decisions, and audit
+history. Active and Completed views retain work across its lifecycle.
 
-## Prerequisites
+## Development
 
-- Node.js `24.14.1`
-- npm `10.8.3`
-- The copilot API running on `http://localhost:8080`
-
-Install the locked dependencies and start the development server:
+Use Node.js 24.14.1 and npm 10.8.3. With the API running on port 8080:
 
 ```bash
 npm ci
 npm start
 ```
 
-Open `http://localhost:4200`. The development server proxies `/api` to the
-copilot API through `proxy.conf.json`.
+Open http://localhost:4200. The development server proxies `/api` through
+`proxy.conf.json`. For the complete environment and initial knowledge
+preparation, follow the [root README](../../README.md).
+
+## Request identity and review
 
 A core interceptor attaches `X-Synthetic-Tenant-Id` to application requests
-and `X-Synthetic-Operator-Id` to operator-attributed mutations. Feature API
-services do not place tenant or operator identity in URLs or request bodies.
-These caller-supplied values are synthetic demonstration context, not
-authentication or production authorization.
+and `X-Synthetic-Operator-Id` to operator-attributed mutations. These are
+synthetic context, not authentication or production authorization.
+
+Observed evidence, retrieved guidance, and AI inference remain distinct.
+Approval and rejection require an explicit human decision and a reason;
+neither executes the report recommendation.
 
 ## Verification
 
-```bash
-npm test -- --watch=false
-npm run build
-npx prettier --check "src/**/*.{ts,html,scss}" "*.json"
-```
+From the repository root, run `./verify.ps1 -Scope Frontend` for locked
+installation, tests, no-skips enforcement, formatting, and production build.
+Use [QUALITY.md](../../docs/agent/QUALITY.md) for the full completion policy.
 
-The tests cover the alert queue, incident and investigation routes, evidence
-collection, approved-knowledge retrieval history and failure states, retries,
-and centralized synthetic request context. The console uses synthetic data only
-and keeps source material separate from future AI inference and recommendation.
+Tests cover queue/navigation, evidence and knowledge outcomes, report failures,
+decision states, audit history, and centralized request context.

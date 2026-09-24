@@ -23,17 +23,12 @@ investigation reasoning or call an LLM.
 - Never introduce real credentials, endpoints, customer data, or transaction
   data.
 
-## Initial tool candidates
+## Implemented boundary
 
-- `getTransaction`
-- `getPaymentAttempts`
-- `getGatewayResponse`
-- `getAccountStatus`
-- `getRecentServiceErrors`
-- `getDeploymentHistory`
-- `getFeatureFlags`
-
-Only implement tools required by the active scenario.
+`getRecentServiceErrors` is the current evidence domain. This service owns the
+legacy fixtures; the standalone generator serves matching evidence for generated
+`sig-v1` alerts. Both providers retain the immutable MCP v1 contract. Add tools
+only when required by an activated task.
 
 ## Testing
 
