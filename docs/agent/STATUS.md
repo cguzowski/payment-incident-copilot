@@ -4,7 +4,8 @@ Last updated: 2026-09-24
 
 ## Current milestone
 
-Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
+Core MVP and live local demo loop complete — quality evaluation and hardening
+next.
 
 ## Completed
 
@@ -159,15 +160,29 @@ Milestone 2 — Establish the SynTen Inc knowledge corpus and live AI path.
   S001 report was persisted as `AVAILABLE`, moved the incident to
   `AWAITING_REVIEW`, and displayed exact evidence and approved-knowledge
   references in the operator console.
+- The owner closed the core MVP/live local demo loop on 2026-09-24. The product
+  now demonstrates generated alert intake, matching operational evidence,
+  approved-knowledge retrieval, constrained local report generation, mandatory
+  human review, terminal decision handling, and an auditable timeline. The
+  remaining ordered work is quality measurement and hardening.
 
 ## In progress
 
-- None. The next product slice requires owner selection.
+- None. Q1 evaluation integrity is selected next but does not yet have an
+  activated implementation contract.
 
 ## Next
 
-1. Select the next product milestone while preserving the verified local S001
-   `AVAILABLE` evidence path.
+1. Establish evaluation integrity: keep the answer key outside all evaluated
+   workflow inputs and reveal it only after the report and decision are frozen.
+2. Resolve the fixed retrieval-quality benchmark failure without weakening its
+   thresholds, or explicitly accept and document the measured limitation.
+3. Automate report grading against the scenario answer key with reproducible
+   correctness, citation, unsupported-claim, latency, and failure metrics.
+4. Complete one newly generated live-model report through an explicit human
+   decision and verify its terminal state and full audit timeline.
+5. Broaden live-model evaluation across representative common, uncommon, rare,
+   partial-evidence, and unavailable-evidence scenarios.
 
 ## Blockers
 

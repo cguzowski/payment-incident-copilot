@@ -36,7 +36,7 @@ builds, Compose configuration, and diff checks with zero skipped tests. Model
 boundaries remain deterministic in automated verification; exercising the
 configured live local models moves into the knowledge-expansion phase below.
 
-## Next target path
+## Completed live target path
 
 ```text
 SynTen Inc profile and corpus contract
@@ -49,6 +49,19 @@ SynTen Inc profile and corpus contract
 ```
 
 All tenant-specific assets for this path live under `SynTen Inc/`.
+
+## Next quality path
+
+```text
+evaluation integrity
+-> retrieval-quality resolution or explicit acceptance
+-> automated answer-key report grading
+-> complete live-model audit proof
+-> broader live-model scenario coverage
+```
+
+These are quality-hardening milestones for the completed core MVP/demo loop,
+not missing stages in the baseline operator workflow.
 
 ## Ordered work
 
@@ -66,15 +79,21 @@ All tenant-specific assets for this path live under `SynTen Inc/`.
 | K5 | Prove live approved-knowledge retrieval in the operator workflow | Complete with factual FAIL | A repeatable synthetic investigation uses live `nomic-embed-text` retrieval and displays eligible cited PDF guidance; the fixed benchmark remains below its ranking threshold. |
 | R1 | Connect generated incidents to operational evidence | Complete | The one-click SynTen workflow routes generated `sig-v1` incidents to their matching deterministic generator MCP evidence instead of the legacy fixture provider. |
 | R2 | Generate live local advisory reports | Complete | Local Qwen3 8B produces a schema-valid, evidence-linked S001 report that enters `AWAITING_REVIEW`; deterministic tests remain provider-free. |
+| Q1 | Establish evaluation integrity | Next | The answer key is inaccessible to evidence, retrieval, report generation, and decision inputs until the evaluated output is frozen, with tests and an auditable reveal boundary. |
+| Q2 | Resolve or explicitly accept the retrieval-quality failure | Planned | The fixed benchmark passes without weakened thresholds, or the owner accepts the retained FAIL with its measured limitation and consequences documented. |
+| Q3 | Grade reports automatically against the answer key | Planned | A reproducible runner evaluates generated reports across the scenario oracle and retains correctness, citation, unsupported-claim, latency, and failure metrics. |
+| Q4 | Complete one live-model audit proof | Planned | A newly generated live-model report receives an explicit human decision and its terminal state and complete audit timeline are verified. |
+| Q5 | Broaden live-model coverage | Planned | Live evaluation covers representative common, uncommon, rare, partial-evidence, and unavailable-evidence scenarios, not only S001. |
 | D1 | Select and implement the initial AWS deployment shape | Deferred | The verified closed loop runs through least-privilege AWS infrastructure. |
 | D2 | Add authentication and enforce operator identity | Deferred | Identity is authenticated and tenant authorization is enforced at every public boundary. |
 
 ## Active product slice
 
-K5 is complete with a retained factual FAIL artifact and a successful live
-operator proof. R1 connects generated incidents to their matching evidence, and
-R2 enables bounded local report generation with Qwen3 8B. The next product
-slice requires owner selection.
+The owner has closed the core MVP/live local demo loop. K5 remains complete
+with a retained factual FAIL artifact; R1 connects generated incidents to their
+matching evidence; and R2 enables bounded local report generation with Qwen3
+8B. Q1 evaluation integrity is the next selected outcome, but implementation
+does not begin until its task contract is activated.
 
 The active contract is in `tasks/current.md`. The maintained sources, generated
 PDFs, manifest, validation tooling, and retrieval oracle remain under

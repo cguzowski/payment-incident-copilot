@@ -108,6 +108,12 @@ model provider.
 - 2026-09-24: Direct Qwen trials exposed evidence/knowledge ID role mixing.
   Native schema constraints now prevent that at the provider boundary while
   the existing application parser and semantic validator remain authoritative.
+- 2026-09-24: After R2 acceptance, the owner closed the core MVP/live local
+  demo loop. Follow-on work is quality hardening in this order: evaluation
+  integrity; retrieval-quality resolution or explicit acceptance; automated
+  answer-key report grading; one complete live-model audit proof; and broader
+  live-model scenario coverage. This closure note does not expand the completed
+  R2 contract.
 
 ## Completion evidence
 

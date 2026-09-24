@@ -10,7 +10,11 @@ It brings together:
 
 The system is intentionally designed so that **observed evidence, retrieved knowledge, AI inference, and human decisions remain distinct and traceable**.
 
-> **Project status:** The core end-to-end vertical slice and live SynTen Inc approved-knowledge proof are implemented. The fixed retrieval-quality benchmark remains a factual **FAIL** by design. The one-click local workflow now connects generator-created SynTen alerts to their matching service-error evidence.
+> **Project status:** The core MVP and live local demonstration loop are
+> complete: a generated SynTen incident can move through evidence collection,
+> approved-knowledge retrieval, constrained report generation, human review,
+> and the auditable decision workflow. The next phase measures and hardens the
+> loop; the fixed retrieval-quality benchmark remains a factual **FAIL**.
 
 ---
 
@@ -215,6 +219,27 @@ The current fixed evaluation is intentionally preserved rather than "passed" by 
 The fixed thresholds require the third metric to reach 19/21, so the retained evaluation artifact remains a factual **FAIL**.
 
 That distinction matters: the implementation passes its engineering/behavioral acceptance criteria while the benchmark continues to expose a measurable retrieval-quality gap.
+
+### Next quality milestones
+
+The core MVP/demo loop is closed. The remaining work is ordered as quality
+hardening rather than missing baseline workflow:
+
+1. **Evaluation integrity** — prove the hidden answer key cannot influence
+   evidence, retrieval, report generation, or the operator decision before the
+   evaluated output is frozen.
+2. **Resolve or explicitly accept the retrieval-quality failure** — either
+   meet the fixed benchmark without weakening it or record a deliberate,
+   evidence-backed acceptance of the remaining ranking limitation.
+3. **Automated report grading against the answer key** — grade generated
+   reports across the scenario oracle and retain reproducible correctness,
+   citation, hallucination, latency, and failure metrics.
+4. **One complete live-model audit proof** — take a newly generated live-model
+   report through approve/reject and verify its terminal state and complete
+   audit timeline.
+5. **Broader live-model coverage** — exercise representative common, uncommon,
+   rare, partial-evidence, and unavailable-evidence scenarios rather than
+   relying on the successful S001 proof alone.
 
 ### Current deliberate limitations
 

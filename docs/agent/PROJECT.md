@@ -2,7 +2,7 @@
 
 Last reviewed: 2026-09-24
 Owner: Christopher Guzowski
-Status: Core vertical slice, K5 live retrieval proof, and R1 generated-evidence reliability complete
+Status: Core MVP and live local demo loop complete; quality hardening prioritized
 
 ## One-sentence goal
 
@@ -79,13 +79,13 @@ snapshot without pretending that AI inference is verified fact.
 - Auditable evidence and decision provenance
 - Docker, CI, testing, and AWS deployment
 
-## Current expansion phase
+## Completed MVP and next quality phase
 
-The completed vertical slice proves the operator workflow from synthetic alert
-through an attributable human decision and audit timeline with deterministic
-model boundaries. The active expansion increases the realism of the approved
-knowledge and live AI path without changing the single-tenant, single-incident-
-family product boundary:
+The completed core MVP proves the operator workflow from a generated synthetic
+alert through sourced evidence, approved knowledge, a schema- and
+citation-constrained live local report, mandatory human review, and an
+auditable final decision. The next phase measures and hardens that loop without
+changing the single-tenant, single-incident-family product boundary:
 
 1. Complete: define SynTen Inc and an auditable inventory of synthetic runbooks
    and policies under `SynTen Inc/`.
@@ -95,9 +95,23 @@ family product boundary:
    the existing knowledge-catalog boundary.
 4. Complete: embed and index the corpus in PostgreSQL/pgvector with the
    configured live local embedding model.
-5. Retrieval evaluation completed with a retained factual FAIL result; K5 will
-   address the approved-knowledge retrieval path and prove a cited result in the
-   operator workflow with live `nomic-embed-text`.
+5. Complete: prove cited approved-knowledge retrieval and constrained report
+   generation in the live local operator workflow with `nomic-embed-text` and
+   `qwen3:8b-q4_K_M`; retain the factual retrieval benchmark FAIL.
+
+The ordered quality priorities are:
+
+1. Evaluation integrity: isolate the answer key from every evaluated workflow
+   input and reveal it only after the report and decision under evaluation are
+   frozen.
+2. Retrieval-quality disposition: meet the fixed benchmark without weakening
+   it, or explicitly accept the remaining measured ranking limitation.
+3. Automated answer-key grading: reproducibly score report correctness,
+   evidence and citation use, unsupported claims, latency, and failures.
+4. Complete live-model audit proof: carry one newly generated live report
+   through a terminal human decision and verify the full audit timeline.
+5. Broader live-model coverage: evaluate representative common, uncommon,
+   rare, partial-evidence, and unavailable-evidence scenarios.
 
 ## Decisions still to fill in
 
