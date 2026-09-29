@@ -8,7 +8,6 @@ import com.cguzowski.syntheticincidentgenerator.scenario.ScenarioDefinition;
 import com.cguzowski.syntheticincidentgenerator.scenario.ScenarioError;
 import com.cguzowski.syntheticincidentgenerator.scenario.ScenarioEvidence;
 import com.cguzowski.syntheticincidentgenerator.scenario.ScenarioRarity;
-import com.cguzowski.syntheticincidentgenerator.scenario.ScenarioTruth;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -24,7 +23,7 @@ class IncidentGenerationServiceTest {
     private static final UUID INCIDENT_ID = UUID.fromString("36cfb9b5-21c9-44b8-b10c-ad2a60706ab6");
 
     @Test
-    void submitsOnlySparseAlertFieldsAndReturnsSeparateReviewOracle() throws Exception {
+    void submitsOnlySparseAlertFieldsAndDoesNotReturnTheReviewOracle() throws Exception {
         ScenarioDefinition scenario = scenario();
         AtomicReference<AlertIntakeRequest> submitted = new AtomicReference<>();
         AlertIntakeClient intake = request -> {
@@ -54,10 +53,18 @@ class IncidentGenerationServiceTest {
 
         assertThat(result.incidentId()).isEqualTo(INCIDENT_ID);
         assertThat(result.queueStatus()).isEqualTo("NEW");
-        assertThat(result.scenarioCode()).isEqualTo("S203");
-        assertThat(result.rarity()).isEqualTo(ScenarioRarity.RARE);
-        assertThat(result.answerKey()).isEqualTo(scenario.truth());
         assertThat(result.alert().externalAlertId()).isEqualTo(submitted.get().externalAlertId());
+        String serializedResult =
+                JsonMapper.builder().findAndAddModules().build().writeValueAsString(result);
+        assertThat(serializedResult)
+                .doesNotContain(
+                        "answerKey",
+                        "rootCause",
+                        "expectedDisposition",
+                        "requiredEvidence",
+                        "scenarioCode",
+                        "rarity",
+                        "OCSP responder");
     }
 
     private static ScenarioDefinition scenario() {
@@ -71,13 +78,6 @@ class IncidentGenerationServiceTest {
                         EvidenceAvailability.AVAILABLE,
                         null,
                         "payment-authorization",
-                        List.of(new ScenarioError("OCSP_RESPONDER_UNAVAILABLE", 12, 40))),
-                new ScenarioTruth(
-                        "The OCSP responder was unavailable.",
-                        "PROPOSED",
-                        "HIGH",
-                        List.of("OCSP_RESPONDER_UNAVAILABLE"),
-                        "Escalate for certificate-path review.",
-                        "Approve only if it matches; otherwise reject it."));
+                        List.of(new ScenarioError("OCSP_RESPONDER_UNAVAILABLE", 12, 40))));
     }
 }

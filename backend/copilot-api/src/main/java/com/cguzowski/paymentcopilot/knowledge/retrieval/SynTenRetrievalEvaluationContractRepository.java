@@ -28,7 +28,7 @@ import tools.jackson.databind.json.JsonMapper;
 class SynTenRetrievalEvaluationContractRepository {
 
     static final String EVALUATION_VERSION = "synten-retrieval-eval/v1";
-    static final String CORPUS_VERSION = "synten-auth-knowledge/v1";
+    static final String CORPUS_VERSION = "synten-auth-knowledge/v2";
     static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
     static final String INCIDENT_FAMILY = "AUTHORIZATION_DECLINE_RATE_SPIKE";
     static final Set<String> SUPERSEDED_KEYS = Set.of("RB-022", "PL-007", "PL-008");
@@ -285,10 +285,7 @@ class SynTenRetrievalEvaluationContractRepository {
                 || blank(scenario.description())
                 || scenario.evidence() == null
                 || blank(scenario.evidence().availability())
-                || scenario.evidence().errors() == null
-                || scenario.truth() == null
-                || blank(scenario.truth().expectedDisposition())
-                || blank(scenario.truth().expectedConfidence())) {
+                || scenario.evidence().errors() == null) {
             throw invalid("SynTen scenario catalog contains a malformed scenario.");
         }
     }

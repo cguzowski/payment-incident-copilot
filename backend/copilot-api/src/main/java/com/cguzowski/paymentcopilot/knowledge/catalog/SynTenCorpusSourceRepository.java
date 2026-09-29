@@ -26,7 +26,7 @@ import tools.jackson.databind.json.JsonMapper;
 class SynTenCorpusSourceRepository {
 
     static final UUID SYNTEN_TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
-    static final String CORPUS_VERSION = "synten-auth-knowledge/v1";
+    static final String CORPUS_VERSION = "synten-auth-knowledge/v2";
     private static final String INCIDENT_FAMILY = "AUTHORIZATION_DECLINE_RATE_SPIKE";
     private static final int DOCUMENT_COUNT = 30;
     private static final int MAXIMUM_PAGES = 15;

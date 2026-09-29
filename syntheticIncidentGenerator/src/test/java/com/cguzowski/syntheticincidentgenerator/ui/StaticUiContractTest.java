@@ -20,16 +20,20 @@ class StaticUiContractTest {
                 .contains("Not part of the operator console")
                 .contains("id=\"generate-incident\"")
                 .contains("Generate synthetic incident")
-                .contains("<details")
-                .contains("Reveal deterministic answer key after review");
+                .contains("id=\"reveal-answer-key\"")
+                .contains("available only after an approved or rejected decision")
+                .doesNotContain("<details");
         assertThat(css)
                 .contains("--danger: #b42318")
                 .contains(".generate-button")
                 .contains("background: var(--danger)");
         assertThat(javascript)
                 .contains("fetch('/api/generations', { method: 'POST' })")
+                .contains("/answer-key")
+                .contains("X-Synthetic-Operator-Id")
                 .contains("button.disabled = true")
                 .contains("textContent")
+                .doesNotContain("generation.answerKey")
                 .doesNotContain("innerHTML");
     }
 

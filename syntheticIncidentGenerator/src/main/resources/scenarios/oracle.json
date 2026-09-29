@@ -1,0 +1,437 @@
+{
+  "version": "scenario-oracle/v1",
+  "scenarios": [
+    {
+      "code": "S001",
+      "truth": {
+        "rootCause": "The primary payment gateway became intermittently unreachable, producing a concentrated timeout and connection-reset burst during the alert window.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "GATEWAY_TIMEOUT and UPSTREAM_CONNECTION_RESET both cluster inside the five-minute alert window."
+        ],
+        "recommendation": "Escalate the bounded gateway-connectivity evidence for human review; do not retry, reroute, or change gateway configuration automatically."
+      }
+    },
+    {
+      "code": "S002",
+      "truth": {
+        "rootCause": "The upstream gateway repeatedly reset established authorization connections.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "A sustained UPSTREAM_CONNECTION_RESET cluster overlaps the alert window."
+        ],
+        "recommendation": "Escalate the route and observation window to the gateway owner for confirmation; take no automated operational action."
+      }
+    },
+    {
+      "code": "S003",
+      "truth": {
+        "rootCause": "The upstream gateway rate-limited the authorization traffic burst.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "UPSTREAM_RATE_LIMITED dominates the same bounded window as the decline spike."
+        ],
+        "recommendation": "Ask the gateway-capacity owner to verify the synthetic route limit and traffic shape; do not alter limits automatically."
+      }
+    },
+    {
+      "code": "S004",
+      "truth": {
+        "rootCause": "The authorization service exhausted its database connection pool, causing state lookups to time out.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "Pool-exhaustion and state-lookup timeout observations co-occur inside the alert window."
+        ],
+        "recommendation": "Escalate the pool and lookup evidence to the service owner for capacity and leak checks; make no live pool change from the copilot."
+      }
+    },
+    {
+      "code": "S005",
+      "truth": {
+        "rootCause": "Issuer-originated do-not-honor responses increased across the observed issuer group.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "ISSUER_DO_NOT_HONOR_SURGE is present, while no local transport error is observed."
+        ],
+        "recommendation": "Request issuer-response and route breakdown evidence before attributing the increase to one issuer; do not retry payments automatically."
+      }
+    },
+    {
+      "code": "S006",
+      "truth": {
+        "rootCause": "A gateway timeout burst triggered excessive retries that exhausted the authorization retry budget and amplified load.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "GATEWAY_TIMEOUT precedes RETRY_BUDGET_EXHAUSTED within the same observation window."
+        ],
+        "recommendation": "Escalate the ordered timeout and retry evidence for human analysis; do not change retry policy automatically."
+      }
+    },
+    {
+      "code": "S007",
+      "truth": {
+        "rootCause": "CPU saturation in the authorization service caused request deadlines to expire.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "AUTHORIZATION_CPU_SATURATION and REQUEST_DEADLINE_EXCEEDED overlap the alert window."
+        ],
+        "recommendation": "Escalate the synthetic saturation window to the service owner for workload and capacity review; do not scale or restart automatically."
+      }
+    },
+    {
+      "code": "S008",
+      "truth": {
+        "rootCause": "The affected merchant segment had no matching authorization route configuration.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "ROUTE_CONFIGURATION_NOT_FOUND is isolated to the bounded decline window."
+        ],
+        "recommendation": "Request a human comparison with the approved route configuration and recent changes; do not create or modify a route automatically."
+      }
+    },
+    {
+      "code": "S009",
+      "truth": {
+        "rootCause": "The selected synthetic gateway route was rejecting authorizations during a maintenance window.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "GATEWAY_MAINTENANCE_REJECTION accounts for the observed route-specific errors."
+        ],
+        "recommendation": "Ask the gateway owner to confirm the maintenance interval and expected recovery; do not reroute traffic automatically."
+      }
+    },
+    {
+      "code": "S010",
+      "truth": {
+        "rootCause": "The synthetic merchant profile failed authorization configuration validation.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "MERCHANT_PROFILE_INVALID is the sole service error in the alert window."
+        ],
+        "recommendation": "Escalate the opaque merchant-profile reference for human configuration review; do not edit the profile automatically."
+      }
+    },
+    {
+      "code": "S011",
+      "truth": {
+        "rootCause": "A synthetic fraud-rule evaluation surge rejected the affected test cohort.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "FRAUD_RULE_REJECTION_SURGE coincides with the cohort decline alert."
+        ],
+        "recommendation": "Request rule-version and decision evidence from the authorized fraud owner; do not disable or modify a rule automatically."
+      }
+    },
+    {
+      "code": "S012",
+      "truth": {
+        "rootCause": "Packet loss on the regional gateway path caused upstream connections to reset.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "NETWORK_PACKET_LOSS precedes UPSTREAM_CONNECTION_RESET in the same regional window."
+        ],
+        "recommendation": "Escalate the regional path and bounded timestamps to network operations; do not change routing automatically."
+      }
+    },
+    {
+      "code": "S013",
+      "truth": {
+        "rootCause": "The gateway rejected the synthetic service credential used by the affected connection.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "GATEWAY_CREDENTIAL_REJECTED dominates the affected connection's alert window."
+        ],
+        "recommendation": "Escalate only the opaque connection identifier to the credential owner; never expose, rotate, or replace credentials from this workflow."
+      }
+    },
+    {
+      "code": "S014",
+      "truth": {
+        "rootCause": "Concurrent cache misses created a cache stampede and overloaded authorization state lookups.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "CACHE_STAMPEDE precedes AUTHORIZATION_STATE_LOOKUP_TIMEOUT inside the alert window."
+        ],
+        "recommendation": "Escalate the ordered cache and lookup evidence for human review; do not flush or reconfigure caches automatically."
+      }
+    },
+    {
+      "code": "S101",
+      "truth": {
+        "rootCause": "The synthetic gateway channel presented an expired TLS certificate, causing every handshake to fail.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "TLS_CERTIFICATE_EXPIRED and TLS_HANDSHAKE_FAILED have matching counts in the alert window."
+        ],
+        "recommendation": "Escalate the opaque connection and certificate-state evidence to the certificate owner; do not install or rotate certificates automatically."
+      }
+    },
+    {
+      "code": "S102",
+      "truth": {
+        "rootCause": "The authorization service could not resolve the synthetic upstream gateway hostname.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "DNS_RESOLUTION_FAILED spans the same routes and time window as the alert."
+        ],
+        "recommendation": "Escalate the bounded resolver evidence to network operations; do not edit DNS or hosts configuration automatically."
+      }
+    },
+    {
+      "code": "S103",
+      "truth": {
+        "rootCause": "Clock skew in one synthetic authorization instance group invalidated timestamp-bound gateway signatures.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "CLOCK_SKEW_REJECTED and REQUEST_SIGNATURE_INVALID match exactly in the alert window."
+        ],
+        "recommendation": "Escalate the instance group and bounded timestamps for time-synchronization review; do not change clocks automatically."
+      }
+    },
+    {
+      "code": "S104",
+      "truth": {
+        "rootCause": "Synthetic HSM signing latency caused authorization request deadlines to expire.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "HSM_SIGNING_TIMEOUT precedes REQUEST_DEADLINE_EXCEEDED in the same window."
+        ],
+        "recommendation": "Escalate the HSM partition and timing evidence to the cryptographic-service owner; do not fail over or restart HSMs automatically."
+      }
+    },
+    {
+      "code": "S105",
+      "truth": {
+        "rootCause": "A synthetic feature-flag assignment selected a route configuration incompatible with the test cohort.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "FEATURE_FLAG_ROUTE_MISMATCH is isolated to the newly enabled cohort."
+        ],
+        "recommendation": "Request approved flag and route history from their owners; do not toggle the feature flag automatically."
+      }
+    },
+    {
+      "code": "S106",
+      "truth": {
+        "rootCause": "The gateway response schema changed incompatibly and the authorization mapper rejected the new payload shape.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "GATEWAY_RESPONSE_SCHEMA_MISMATCH and RESPONSE_MAPPING_FAILED have identical counts."
+        ],
+        "recommendation": "Escalate schema-version metadata and the bounded failure counts for compatibility review; do not deploy or remap responses automatically."
+      }
+    },
+    {
+      "code": "S107",
+      "truth": {
+        "rootCause": "Competing regional health decisions created a failover loop while the gateway was timing out.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "REGIONAL_FAILOVER_LOOP begins before the concentrated GATEWAY_TIMEOUT observations."
+        ],
+        "recommendation": "Escalate both regions' bounded health evidence for human routing review; do not force failover automatically."
+      }
+    },
+    {
+      "code": "S108",
+      "truth": {
+        "rootCause": "Database lock contention caused authorization state updates to time out.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "DATABASE_LOCK_TIMEOUT and AUTHORIZATION_STATE_UPDATE_FAILED overlap the alert window."
+        ],
+        "recommendation": "Escalate the synthetic lock and update counts for query and transaction review; do not terminate sessions automatically."
+      }
+    },
+    {
+      "code": "S109",
+      "truth": {
+        "rootCause": "A stale synthetic BIN routing table left the affected issuer range without a route.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "BIN_ROUTE_TABLE_STALE and ISSUER_ROUTE_NOT_FOUND have matching counts for the affected range."
+        ],
+        "recommendation": "Request approved reference-data version and refresh evidence; do not reload or edit routing data automatically."
+      }
+    },
+    {
+      "code": "S110",
+      "truth": {
+        "rootCause": "The issuer connection returned malformed synthetic responses that could not be mapped.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "MALFORMED_ISSUER_RESPONSE and RESPONSE_MAPPING_FAILED match within the window."
+        ],
+        "recommendation": "Escalate bounded response-category metadata to the issuer-integration owner; do not expose raw payloads or modify mappings automatically."
+      }
+    },
+    {
+      "code": "S111",
+      "truth": {
+        "rootCause": "The available partition indicates token-vault latency, but the missing partition prevents a complete root-cause conclusion.",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "TOKEN_VAULT_TIMEOUT is observed only in partial evidence; one partition is explicitly missing."
+        ],
+        "recommendation": "Preserve the partial status and collect the missing partition or independent token-vault evidence before proposing a cause."
+      }
+    },
+    {
+      "code": "S201",
+      "truth": {
+        "rootCause": "Two authorization instance groups simultaneously used incompatible synthetic routing configuration versions.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "CONFIG_VERSION_SPLIT_BRAIN precedes ROUTE_DECISION_DIVERGENCE in the same window."
+        ],
+        "recommendation": "Escalate the opaque instance groups and configuration versions for human reconciliation; do not force configuration convergence automatically."
+      }
+    },
+    {
+      "code": "S202",
+      "truth": {
+        "rootCause": "An external route withdrawal made the synthetic gateway network path unreachable.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "BGP_ROUTE_UNREACHABLE precedes the GATEWAY_TIMEOUT cluster."
+        ],
+        "recommendation": "Escalate path and timestamp evidence to network operations for independent route confirmation; do not alter routing automatically."
+      }
+    },
+    {
+      "code": "S203",
+      "truth": {
+        "rootCause": "The certificate status responder was unavailable, so the synthetic channel failed closed during certificate validation.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "OCSP_RESPONDER_UNAVAILABLE and CERTIFICATE_STATUS_CHECK_FAILED have identical counts."
+        ],
+        "recommendation": "Escalate validation-path evidence to the certificate owner; do not bypass status checking automatically."
+      }
+    },
+    {
+      "code": "S204",
+      "truth": {
+        "rootCause": "The synthetic HSM cluster lost partition quorum and could not complete authorization signing operations.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "HSM_QUORUM_LOST precedes HSM_SIGNING_TIMEOUT during the alert window."
+        ],
+        "recommendation": "Escalate partition identifiers and bounded counts to the HSM owner; do not fail over, restart, or alter quorum automatically."
+      }
+    },
+    {
+      "code": "S205",
+      "truth": {
+        "rootCause": "A date-boundary defect in the synthetic recurring-authorization rule rejected the affected cohort.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "CALENDAR_RULE_EVALUATION_FAILED and RECURRING_AUTHORIZATION_REJECTED match for the cohort."
+        ],
+        "recommendation": "Escalate the opaque cohort and bounded rule failure for human defect review; do not change rules or replay payments automatically."
+      }
+    },
+    {
+      "code": "S206",
+      "truth": {
+        "rootCause": "The isolated runtime group's secure random source blocked, delaying request signatures beyond their deadlines.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "SECURE_RANDOM_SOURCE_BLOCKED precedes REQUEST_SIGNATURE_TIMEOUT."
+        ],
+        "recommendation": "Escalate runtime-group and timing evidence to platform security; do not weaken randomness or restart instances automatically."
+      }
+    },
+    {
+      "code": "S207",
+      "truth": {
+        "rootCause": "A Unicode normalization defect prevented the affected synthetic merchant profiles from being parsed consistently.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "UNICODE_NORMALIZATION_FAILURE and MERCHANT_PROFILE_PARSE_FAILED have matching counts."
+        ],
+        "recommendation": "Escalate the opaque cohort and parser categories for defect review; do not expose profile data or alter normalization automatically."
+      }
+    },
+    {
+      "code": "S208",
+      "truth": {
+        "rootCause": "The synthetic resolver's security policy blocked the gateway answer and returned resolution failures.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "DNS_SECURITY_POLICY_BLOCK and DNS_RESOLUTION_FAILED match exactly on the affected path."
+        ],
+        "recommendation": "Escalate policy and resolver metadata for security review; do not bypass validation or edit resolver policy automatically."
+      }
+    },
+    {
+      "code": "S209",
+      "truth": {
+        "rootCause": "The failover HSM partition used an incompatible synthetic firmware protocol and rejected signing requests.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "HIGH",
+        "requiredEvidence": [
+          "HSM_FIRMWARE_PROTOCOL_MISMATCH precedes HSM_SIGNING_FAILED after failover."
+        ],
+        "recommendation": "Escalate partition and protocol-version evidence to the HSM owner; do not change firmware or failback automatically."
+      }
+    },
+    {
+      "code": "S210",
+      "truth": {
+        "rootCause": "Synchronized circuit-breaker transitions caused authorization instances to reject upstream calls in lockstep.",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "CIRCUIT_BREAKER_SYNC_STORM precedes UPSTREAM_CALL_REJECTED during oscillation."
+        ],
+        "recommendation": "Escalate breaker-state and timing evidence for resilience review; do not reset or retune breakers automatically."
+      }
+    },
+    {
+      "code": "S211",
+      "truth": {
+        "rootCause": "The incident root cause is intentionally not determinable because the only configured evidence source is unavailable.",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "The evidence result is explicitly UNAVAILABLE and contains no observations."
+        ],
+        "recommendation": "Preserve the unavailable evidence state and retry or obtain an independent approved source before proposing a cause."
+      }
+    }
+  ]
+}

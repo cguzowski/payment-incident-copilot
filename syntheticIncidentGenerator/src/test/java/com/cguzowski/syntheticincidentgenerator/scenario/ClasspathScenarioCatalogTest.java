@@ -10,7 +10,7 @@ import tools.jackson.databind.json.JsonMapper;
 class ClasspathScenarioCatalogTest {
 
     @Test
-    void loadsBroadReviewedCatalogWithValidDeterministicTruthAndEvidence() {
+    void loadsBroadReviewedObservableCatalogWithoutOracleFields() throws Exception {
         ScenarioCatalog catalog = new ClasspathScenarioCatalog(
                 JsonMapper.builder().findAndAddModules().build());
 
@@ -32,12 +32,6 @@ class ClasspathScenarioCatalogTest {
             assertThat(scenario.code()).matches("S[0-9]{3}");
             assertThat(scenario.title()).isNotBlank().hasSizeLessThanOrEqualTo(500);
             assertThat(scenario.description()).isNotBlank().hasSizeLessThanOrEqualTo(2000);
-            assertThat(scenario.truth().rootCause()).isNotBlank();
-            assertThat(scenario.truth().expectedDisposition()).isIn("PROPOSED", "INSUFFICIENT_EVIDENCE");
-            assertThat(scenario.truth().expectedConfidence()).isIn("LOW", "MEDIUM", "HIGH");
-            assertThat(scenario.truth().requiredEvidence()).isNotEmpty();
-            assertThat(scenario.truth().recommendation()).isNotBlank();
-            assertThat(scenario.truth().decisionRule()).contains("Approve").contains("reject");
             assertThat(scenario.evidence().errors()).hasSizeLessThanOrEqualTo(100);
             assertThat(scenario.evidence().errors()).allSatisfy(error -> {
                 assertThat(error.errorCode()).isNotBlank().hasSizeLessThanOrEqualTo(120);
@@ -45,5 +39,18 @@ class ClasspathScenarioCatalogTest {
                 assertThat(error.secondsBeforeDetection()).isBetween(0, 300);
             });
         });
+
+        String resource = new String(getClass()
+                .getClassLoader()
+                .getResourceAsStream("scenarios/catalog.json")
+                .readAllBytes());
+        assertThat(resource)
+                .doesNotContain(
+                        "\"truth\"",
+                        "\"rootCause\"",
+                        "\"expectedDisposition\"",
+                        "\"expectedConfidence\"",
+                        "\"requiredEvidence\"",
+                        "\"recommendation\"");
     }
 }

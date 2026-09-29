@@ -2,7 +2,7 @@
 
 Status: Approved evaluation design
 Evaluation version: `synten-retrieval-eval/v1`
-Corpus version: `synten-auth-knowledge/v1`
+Corpus version: `synten-auth-knowledge/v2`
 
 ## Purpose
 

@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 
 $script:TenantId = '8b860d80-d17f-4e6b-8c48-af35f26a4d61'
 $script:EvaluationVersion = 'synten-retrieval-eval/v1'
-$script:CorpusVersion = 'synten-auth-knowledge/v1'
+$script:CorpusVersion = 'synten-auth-knowledge/v2'
 $script:SupersededKeys = @('PL-007', 'PL-008', 'RB-022')
 
 function Assert-FileExists {

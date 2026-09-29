@@ -96,7 +96,7 @@ class SynTenRetrievalEvaluationSeedRepositoryTest {
         Map<String, Object> manifest = new LinkedHashMap<>();
         manifest.put("schemaVersion", "synten-retrieval-eval-seed/v1");
         manifest.put("evaluationVersion", "synten-retrieval-eval/v1");
-        manifest.put("corpusVersion", "synten-auth-knowledge/v1");
+        manifest.put("corpusVersion", "synten-auth-knowledge/v2");
         manifest.put("runId", "0123456789abcdef0123456789abcdef");
         manifest.put("createdAt", "2026-09-01T12:01:00Z");
         manifest.put("evaluatedAt", EVALUATED_AT.toString());

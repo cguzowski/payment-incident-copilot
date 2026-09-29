@@ -36,7 +36,7 @@ class SynTenRetrievalEvaluationContractRepositoryTest {
                 repository(CASES, SCENARIOS, CORPUS).load(EVALUATED_AT);
 
         assertThat(contract.evaluationVersion()).isEqualTo("synten-retrieval-eval/v1");
-        assertThat(contract.corpusVersion()).isEqualTo("synten-auth-knowledge/v1");
+        assertThat(contract.corpusVersion()).isEqualTo("synten-auth-knowledge/v2");
         assertThat(contract.evaluatedAt()).isEqualTo(EVALUATED_AT);
         assertThat(contract.cases())
                 .extracting(RetrievalEvaluationCase::caseId)

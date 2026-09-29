@@ -16,7 +16,7 @@ class SynTenPdfCatalogPlanner {
     static final int EXPECTED_DOCUMENT_COUNT = 30;
     static final int EXPECTED_CHUNK_COUNT = 705;
     static final String ACCEPTED_CATALOG_FINGERPRINT =
-            "734461e767e08a59b83169fdf75d208d20c0366bebecd8825e2458c5f1b3d427";
+            "5d704fee24f9754176f1be2e449050190e0b78ffa3fdb9ddc92b464006d198e9";
 
     private final SynTenCorpusSourceRepository sources;
     private final PdfBoxKnowledgeDocumentParser parser;
@@ -60,7 +60,9 @@ class SynTenPdfCatalogPlanner {
         if (plan.documents().size() != EXPECTED_DOCUMENT_COUNT
                 || plan.chunkCount() != EXPECTED_CHUNK_COUNT
                 || !plan.catalogFingerprint().equals(ACCEPTED_CATALOG_FINGERPRINT)) {
-            throw new IllegalArgumentException("SynTen PDF catalog differs from the accepted K3 plan.");
+            throw new IllegalArgumentException("SynTen PDF catalog differs from the accepted K3 plan: documents="
+                    + plan.documents().size() + ", chunks=" + plan.chunkCount() + ", fingerprint="
+                    + plan.catalogFingerprint() + ".");
         }
         return plan;
     }

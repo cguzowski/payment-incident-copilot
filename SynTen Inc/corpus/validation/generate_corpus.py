@@ -28,7 +28,7 @@ from reportlab.pdfgen.canvas import Canvas
 from corpus_tools import InventoryDocument, parse_inventory
 
 
-GENERATOR_VERSION = "synten-pdf-generator/v1"
+GENERATOR_VERSION = "synten-pdf-generator/v2"
 TENANT_ID = "8b860d80-d17f-4e6b-8c48-af35f26a4d61"
 APPROVER_ID = "7b636625-53d1-46f7-92a9-9c8c27a243d1"
 INCIDENT_FAMILY = "AUTHORIZATION_DECLINE_RATE_SPIKE"
@@ -349,9 +349,11 @@ def signal_sections(selected: list[dict], codes: list[str]) -> list[str]:
         lines.append(f"- `{code}`")
     lines.extend(["", "| Exact signal | Bounded interpretation | Required caution |", "|---|---|---|"])
     for code in codes:
-        matching = [item for item in selected if code in {error["errorCode"] for error in item.get("evidence", {}).get("errors", [])}]
-        cause = matching[0]["truth"]["rootCause"] if matching else "The signal belongs to this dependency family."
-        lines.append(f"| `{code}` | {cause} | Treat as observed only when the persisted window contains the code; the cause remains an inference. |")
+        lines.append(
+            f"| `{code}` | The evidence source recorded this exact operational signal category. "
+            "Interpret its count, timing, service, and cohort only within the persisted observation window. | "
+            "The code does not establish a root cause; seek independent confirmation and preserve alternatives. |"
+        )
     lines.extend(["", "## 5. Diagnostic procedure", ""])
     steps = [
         "Anchor the analysis to the alert and observation windows. Reject a causal ordering that the timestamps do not support.",
@@ -367,7 +369,7 @@ def signal_sections(selected: list[dict], codes: list[str]) -> list[str]:
     for scenario in selected:
         scenario_codes_text = ", ".join(error["errorCode"] for error in scenario.get("evidence", {}).get("errors", [])) or "No returned error observations"
         lines.append(
-            f"| {scenario['code']} | {scenario['severity']} | {scenario_codes_text} | {scenario['truth']['rootCause']} Confirm the stated required evidence before using this as probable cause. |"
+            f"| {scenario['code']} | {scenario['severity']} | {scenario_codes_text} | Compare the bounded observations with independent service, dependency, and change evidence. Record missing or contradictory signals before proposing any explanation. |"
         )
     return lines
 

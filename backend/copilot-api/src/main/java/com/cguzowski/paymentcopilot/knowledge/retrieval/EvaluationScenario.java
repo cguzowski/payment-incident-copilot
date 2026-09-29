@@ -8,8 +8,7 @@ record EvaluationScenario(
         String severity,
         String title,
         String description,
-        EvaluationScenarioEvidence evidence,
-        EvaluationScenarioTruth truth) {}
+        EvaluationScenarioEvidence evidence) {}
 
 record EvaluationScenarioEvidence(
         String availability, String statusDetail, String serviceName, List<EvaluationScenarioError> errors) {
@@ -20,15 +19,3 @@ record EvaluationScenarioEvidence(
 }
 
 record EvaluationScenarioError(String errorCode, int count, int secondsBeforeDetection) {}
-
-record EvaluationScenarioTruth(
-        String rootCause,
-        String expectedDisposition,
-        String expectedConfidence,
-        List<String> requiredEvidence,
-        String recommendation) {
-
-    EvaluationScenarioTruth {
-        requiredEvidence = requiredEvidence == null ? List.of() : List.copyOf(requiredEvidence);
-    }
-}

@@ -38,13 +38,6 @@ public class IncidentGenerationService {
                 request.title(),
                 request.description());
         return new GeneratedIncident(
-                accepted.incidentId(),
-                accepted.incidentType(),
-                accepted.status(),
-                accepted.receivedAt(),
-                scenario.code(),
-                scenario.rarity(),
-                alert,
-                scenario.truth());
+                accepted.incidentId(), accepted.incidentType(), accepted.status(), accepted.receivedAt(), alert);
     }
 }

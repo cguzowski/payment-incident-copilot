@@ -14,16 +14,18 @@ All data is synthetic and belongs to the single
 | [evaluation/retrieval-cases.md](evaluation/retrieval-cases.md) | Fixed retrieval labels and thresholds |
 | [corpus/validation-manifest.json](corpus/validation-manifest.json) | Source/PDF hashes and recorded validation |
 
-The corpus contains 30 maintained Markdown sources and 30 PDFs: 22 runbooks and
-8 policies, comprising 27 approved and 3 superseded versions. The K2 record
-reports 112 pages, 3-4 per document, with page-by-page visual review; the hard
-maximum is 15. K3 produced 705 page-aware chunks. The inventory covers all
-36 generator scenarios.
+The active `synten-auth-knowledge/v2` corpus contains 30 maintained Markdown
+sources and 30 PDFs: 22 runbooks and 8 policies, comprising 27 approved and 3
+superseded versions. Its manifest reports 113 pages, 3-5 per document; all pages
+passed automated validation and visual inspection. The hard maximum is 15. The
+inventory covers all 36 observable generator scenarios. The exact v1 sources,
+PDFs, contract, tooling, and manifest remain under
+`corpus/versions/synten-auth-knowledge-v1/` and are hash-verifiable there.
 
 Original page targets are advisory budgets; shorter complete documents are
 allowed by the inventory. Repeated source procedures and unsupported
-workspace-record instructions are known v1 limitations, not permission to
-expand the UI. See [project limitations](../docs/agent/STATUS.md).
+workspace-record instructions remain limitations, not permission to expand the
+UI. See [project limitations](../docs/agent/STATUS.md).
 
 ## Recorded retrieval results
 
@@ -64,6 +66,7 @@ chunking contracts. Corpus changes require explicit versioning, regeneration,
 validation, and evaluation. Superseded documents are deliberate exclusion
 fixtures; retain them for audit while excluding them from retrieval.
 
-The generator derives runbook text from scenario answer-key causes, so the
-corpus is not independent of that oracle. Evaluation integrity work is ordered
-in the [roadmap](../docs/agent/ROADMAP.md).
+The v2 generator consumes only observable scenario evidence. Its signal tables
+state neutral operational semantics and do not load or reproduce the sealed
+oracle. The fixed `synten-retrieval-eval/v1` labels now bind to corpus v2; the
+historical K4/K5 measurements remain v1 evidence and were not rerun.

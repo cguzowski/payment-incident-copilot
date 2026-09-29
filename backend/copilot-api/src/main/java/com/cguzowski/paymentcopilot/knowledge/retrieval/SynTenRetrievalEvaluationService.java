@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 class SynTenRetrievalEvaluationService {
 
     private static final String CATALOG_FINGERPRINT =
-            "734461e767e08a59b83169fdf75d208d20c0366bebecd8825e2458c5f1b3d427";
+            "5d704fee24f9754176f1be2e449050190e0b78ffa3fdb9ddc92b464006d198e9";
     private static final String EXTRACTION_VERSION = "pdfbox-text-pages/v1";
     private static final String CHUNKING_VERSION = "pdf-page-sections/v1";
     private static final String EXCLUSION_TITLE = "Synthetic legacy knowledge exclusion probe";

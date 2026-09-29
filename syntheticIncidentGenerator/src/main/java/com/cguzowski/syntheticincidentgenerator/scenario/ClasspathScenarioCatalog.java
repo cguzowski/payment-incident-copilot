@@ -18,8 +18,6 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
 
     private static final String CATALOG_PATH = "scenarios/catalog.json";
     private static final Set<String> SEVERITIES = Set.of("LOW", "MEDIUM", "HIGH", "CRITICAL");
-    private static final Set<String> DISPOSITIONS = Set.of("PROPOSED", "INSUFFICIENT_EVIDENCE");
-    private static final Set<String> CONFIDENCES = Set.of("LOW", "MEDIUM", "HIGH");
 
     private final List<ScenarioDefinition> scenarios;
     private final Map<String, ScenarioDefinition> scenariosByCode;
@@ -79,36 +77,10 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
         require(bounded(fixture.title(), 500), "invalid title");
         require(bounded(fixture.description(), 2000), "invalid description");
         require(fixture.evidence() != null, "missing evidence");
-        require(fixture.truth() != null, "missing truth");
 
         ScenarioEvidence evidence = evidence(fixture.evidence());
-        FixtureTruth fixtureTruth = fixture.truth();
-        require(bounded(fixtureTruth.rootCause(), 500), "invalid root cause");
-        require(DISPOSITIONS.contains(fixtureTruth.expectedDisposition()), "invalid disposition");
-        require(CONFIDENCES.contains(fixtureTruth.expectedConfidence()), "invalid confidence");
-        require(
-                fixtureTruth.requiredEvidence() != null
-                        && !fixtureTruth.requiredEvidence().isEmpty()
-                        && fixtureTruth.requiredEvidence().stream().allMatch(item -> bounded(item, 500)),
-                "invalid required evidence");
-        require(bounded(fixtureTruth.recommendation(), 1000), "invalid recommendation");
-        String decisionRule = "Approve only if the proposed report matches this root cause, disposition, confidence, "
-                + "required evidence, and safe recommendation; otherwise reject it.";
-        ScenarioTruth truth = new ScenarioTruth(
-                fixtureTruth.rootCause(),
-                fixtureTruth.expectedDisposition(),
-                fixtureTruth.expectedConfidence(),
-                List.copyOf(fixtureTruth.requiredEvidence()),
-                fixtureTruth.recommendation(),
-                decisionRule);
         return new ScenarioDefinition(
-                fixture.code(),
-                fixture.rarity(),
-                fixture.severity(),
-                fixture.title(),
-                fixture.description(),
-                evidence,
-                truth);
+                fixture.code(), fixture.rarity(), fixture.severity(), fixture.title(), fixture.description(), evidence);
     }
 
     private static ScenarioEvidence evidence(FixtureEvidence fixture) {
@@ -153,18 +125,10 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
             String severity,
             String title,
             String description,
-            FixtureEvidence evidence,
-            FixtureTruth truth) {}
+            FixtureEvidence evidence) {}
 
     private record FixtureEvidence(
             EvidenceAvailability availability, String statusDetail, String serviceName, List<FixtureError> errors) {}
 
     private record FixtureError(String errorCode, int count, int secondsBeforeDetection) {}
-
-    private record FixtureTruth(
-            String rootCause,
-            String expectedDisposition,
-            String expectedConfidence,
-            List<String> requiredEvidence,
-            String recommendation) {}
 }

@@ -38,7 +38,7 @@ class SynTenPdfCatalogPlannerTest {
         assertThat(first.documents()).hasSize(30);
         assertThat(first.chunkCount()).isEqualTo(705);
         assertThat(first.catalogFingerprint())
-                .isEqualTo("734461e767e08a59b83169fdf75d208d20c0366bebecd8825e2458c5f1b3d427");
+                .isEqualTo("5d704fee24f9754176f1be2e449050190e0b78ffa3fdb9ddc92b464006d198e9");
         assertThat(first.documents())
                 .extracting(plan -> plan.document().source().documentKey())
                 .containsExactlyElementsOf(sources.findAll().stream()

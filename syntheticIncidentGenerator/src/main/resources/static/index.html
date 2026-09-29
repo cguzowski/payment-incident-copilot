@@ -43,8 +43,6 @@
           <div><dt>Opaque alert ID</dt><dd id="alert-id"></dd></div>
           <div><dt>Severity</dt><dd id="severity"></dd></div>
           <div><dt>Detected</dt><dd id="detected-at"></dd></div>
-          <div><dt>Selected tier</dt><dd id="rarity"></dd></div>
-          <div><dt>Scenario code</dt><dd id="scenario-code"></dd></div>
         </dl>
 
         <div class="alert-copy">
@@ -52,9 +50,24 @@
           <p id="alert-description"></p>
         </div>
 
-        <details id="answer-key" class="answer-key">
-          <summary>Reveal deterministic answer key after review</summary>
-          <p class="warning">Compare this oracle with the exact proposed report before recording a final decision.</p>
+        <div class="answer-key-gate">
+          <p class="warning">
+            The deterministic answer key is available only after an approved or rejected decision freezes the
+            evaluation.
+          </p>
+          <button id="reveal-answer-key" type="button">Reveal answer key after final decision</button>
+          <p id="reveal-status" class="status" role="status" aria-live="polite"></p>
+        </div>
+
+        <section id="answer-key" class="answer-key" aria-labelledby="answer-key-title" hidden>
+          <h3 id="answer-key-title">Deterministic answer key</h3>
+          <p class="warning">This reveal occurred after the human decision was frozen.</p>
+          <dl class="oracle-facts">
+            <div><dt>Terminal status</dt><dd id="terminal-status"></dd></div>
+            <div><dt>Revealed by</dt><dd id="revealed-by"></dd></div>
+            <div><dt>Revealed at</dt><dd id="revealed-at"></dd></div>
+            <div><dt>Oracle version</dt><dd id="oracle-version"></dd></div>
+          </dl>
           <dl class="oracle-facts">
             <div><dt>Expected root cause</dt><dd id="root-cause"></dd></div>
             <div><dt>Expected disposition</dt><dd id="expected-disposition"></dd></div>
@@ -64,7 +77,7 @@
           </dl>
           <h3>Required evidence signature</h3>
           <ul id="required-evidence"></ul>
-        </details>
+        </section>
       </section>
     </main>
   </body>

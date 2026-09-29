@@ -137,8 +137,8 @@ def main() -> None:
 
     page_counts = sorted(record["pageCount"] for record in records)
     manifest = {
-        "corpusVersion": "synten-auth-knowledge/v1",
-        "authoringStandardVersion": "synten-pdf-authoring/v1",
+        "corpusVersion": "synten-auth-knowledge/v2",
+        "authoringStandardVersion": "synten-pdf-authoring/v2",
         "generatorVersion": GENERATOR_VERSION,
         "validatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "documentCount": len(records),

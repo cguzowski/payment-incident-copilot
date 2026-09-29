@@ -6,5 +6,4 @@ public record ScenarioDefinition(
         String severity,
         String title,
         String description,
-        ScenarioEvidence evidence,
-        ScenarioTruth truth) {}
+        ScenarioEvidence evidence) {}

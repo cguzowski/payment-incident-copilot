@@ -1,7 +1,7 @@
 # SynTen Inc PDF authoring and validation standard
 
-Status: Approved v1 authoring contract; K2 generation completed
-Standard version: `synten-pdf-authoring/v1`
+Status: Approved v2 authoring contract; Q1 independent-input generation completed
+Standard version: `synten-pdf-authoring/v2`
 Applies to: Every source and PDF in `corpus/inventory.md`
 
 ## Objective
@@ -26,6 +26,11 @@ Each inventory row produces exactly two maintained artifacts:
 Generation and validation tools live under `SynTen Inc/corpus/validation/`.
 Temporary renders, extracted text, caches, and working files remain uncommitted.
 Do not hand-edit a PDF; update its Markdown authority and regenerate it.
+
+Corpus generation may consume only observable scenario fields (code, rarity,
+severity, title, description, and evidence). It must not load the sealed
+scenario oracle or reproduce its answers. Signal interpretation remains neutral:
+an error category identifies an observed signal, never a predetermined cause.
 
 The generated validation manifest records at least:
 

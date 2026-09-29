@@ -16,11 +16,14 @@ with the payment incident copilot.
 - The opaque alert ID lets this service reconstruct the selected scenario and
   deterministic evidence through the existing read-only
   `getRecentServiceErrors` MCP contract.
-- Alert intake and MCP evidence omit dedicated answer-key fields. The
-  generation response nevertheless sends `answerKey` to the browser immediately;
-  the UI only collapses it. This is not a protected or auditable reveal boundary.
-  The corpus also contains oracle-derived causes; see
-  [evaluation limitations](../docs/agent/STATUS.md).
+- Alert intake, MCP evidence, and generation responses omit answer-key fields.
+  The browser requests the oracle only after the copilot API confirms that the
+  exact incident is `APPROVED` or `REJECTED`. Successful reveals record the
+  synthetic operator, terminal state, scenario code, oracle version, and reveal
+  time in a truth-free structured audit log.
+- Observable scenarios and `scenario-oracle/v1` are separate resources. Only
+  the post-decision reveal service loads the oracle; evidence, generation,
+  retrieval evaluation, and corpus generation consume observable fields.
 - A report should be approved only when its probable cause, disposition,
   confidence, cited evidence signature, and safe recommendation satisfy the
   answer key. Otherwise it should be rejected. The rule makes the expected
@@ -31,11 +34,15 @@ with the payment incident copilot.
 
 | Behavior | Automated coverage |
 |---|---|
-| Broad, reviewed scenario catalog | `ClasspathScenarioCatalogTest` |
+| Broad, reviewed observable scenario catalog | `ClasspathScenarioCatalogTest` |
+| Complete separately loaded oracle | `ClasspathScenarioOracleCatalogTest` |
 | Weighted common/uncommon/rare selection | `WeightedScenarioSelectorTest` |
 | Opaque, unique, restart-safe references | `AlertReferenceCodecTest` |
 | Sparse alert payload with no leaked truth | `IncidentGenerationServiceTest` |
 | Exact intake HTTP contract and tenant header | `CopilotAlertHttpClientTest` |
+| Terminal decision required before answer-key reveal | `AnswerKeyRevealServiceTest` |
+| Tenant-scoped authoritative incident lookup | `CopilotIncidentReviewHttpClientTest` |
+| Reveal HTTP and safe error contracts | `IncidentGenerationControllerTest` |
 | Deterministic time-aligned MCP evidence | `RecentServiceErrorsToolTest` |
 | Live MCP v1 discovery and invocation | `GeneratorMcpContractTest` |
 | Clearly separate red-button UI | `StaticUiContractTest` |

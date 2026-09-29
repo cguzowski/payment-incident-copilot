@@ -62,13 +62,6 @@ class WeightedScenarioSelectorTest {
                         EvidenceAvailability.AVAILABLE,
                         null,
                         "payment-authorization",
-                        List.of(new ScenarioError("TEST_ERROR", 1, 30))),
-                new ScenarioTruth(
-                        "Root cause",
-                        "PROPOSED",
-                        "HIGH",
-                        List.of("TEST_ERROR"),
-                        "Escalate for review.",
-                        "Approve if correct; otherwise reject."));
+                        List.of(new ScenarioError("TEST_ERROR", 1, 30))));
     }
 }

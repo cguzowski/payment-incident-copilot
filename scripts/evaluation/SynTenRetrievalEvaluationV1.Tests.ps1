@@ -62,7 +62,7 @@ Invoke-EvaluationTest 'buildsTheExact37VariantSeedPlanFromReviewedSources' {
         -RunToken '1234567890ab'
 
     Assert-True ($plan.EvaluationVersion -eq 'synten-retrieval-eval/v1') 'Evaluation version differs.'
-    Assert-True ($plan.CorpusVersion -eq 'synten-auth-knowledge/v1') 'Corpus version differs.'
+    Assert-True ($plan.CorpusVersion -eq 'synten-auth-knowledge/v2') 'Corpus version differs.'
     Assert-True ($plan.Variants.Count -eq 37) 'Seed plan must contain 36 scenarios plus KQ-023.'
     Assert-True (($plan.Variants | Where-Object ScenarioCode -match '^S\d{3}$').Count -eq 37) 'Every variant needs an opaque scenario code.'
     Assert-True (($plan.Variants | Select-Object -ExpandProperty ScenarioReference -Unique).Count -eq 37) 'Scenario references must be unique.'
