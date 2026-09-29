@@ -80,6 +80,34 @@
   background: var(--surface-raised);
 }
 
+.knowledge-result > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.knowledge-result > summary::-webkit-details-marker {
+  display: none;
+}
+
+.knowledge-result > summary::before {
+  content: '›';
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.knowledge-result[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.knowledge-result > summary:focus-visible {
+  border-radius: 4px;
+  outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 3px;
+}
+
 .knowledge-result__section {
   margin-top: 0.35rem;
   font-size: 0.8rem;

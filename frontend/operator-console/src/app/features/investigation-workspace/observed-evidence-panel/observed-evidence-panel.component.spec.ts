@@ -39,6 +39,31 @@ describe('ObservedEvidencePanelComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('Observed synthetic evidence');
   });
 
+  it('makesPopulatedEvidenceAVisibleNativeDisclosure', () => {
+    historyResponse = of([evidence('AVAILABLE')]);
+    const fixture = create();
+    fixture.detectChanges();
+
+    const disclosure = fixture.nativeElement.querySelector(
+      '[data-testid="evidence-disclosure"]',
+    ) as HTMLDetailsElement;
+    expect(disclosure).not.toBeNull();
+    expect(disclosure.open).toBe(true);
+    expect(disclosure.querySelector('summary')?.textContent).toContain('Service-error evidence');
+
+    disclosure.querySelector('summary')?.click();
+    expect(disclosure.open).toBe(false);
+  });
+
+  it('keepsTheEmptyEvidenceStateExpandedWithoutADisclosure', () => {
+    const fixture = create();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="evidence-disclosure"]')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Evidence collection has not started');
+    expect(fixture.nativeElement.querySelector('[data-testid="collect-evidence"]')).not.toBeNull();
+  });
+
   it('preservesDistinctTerminalAndInterruptedStatuses', () => {
     const cases: [EvidenceCollectionStatus, string][] = [
       ['PARTIAL', 'Only part of the synthetic observation window was available.'],

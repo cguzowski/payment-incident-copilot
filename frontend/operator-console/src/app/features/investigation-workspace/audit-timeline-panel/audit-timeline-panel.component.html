@@ -26,104 +26,112 @@
   } @else if (events().length === 0) {
     <p class="state-card">No timeline events are available.</p>
   } @else {
-    <ol class="timeline">
-      @for (event of events(); track event.eventType + ':' + event.sourceId) {
-        <li class="timeline-event">
-          <div class="timeline-event__heading">
-            <h3>{{ eventLabel(event.eventType) }}</h3>
-            <span class="status status--compact">{{ event.status }}</span>
-          </div>
-          <p>{{ event.description }}</p>
-          @if (event.reason) {
-            <blockquote>{{ event.reason }}</blockquote>
-          }
-          <dl>
-            <div>
-              <dt>Started</dt>
-              <dd>{{ event.occurredAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+    <details class="panel-disclosure" data-testid="timeline-disclosure" open>
+      <summary>
+        <span>
+          <span class="panel-disclosure__context">Immutable-style history</span>
+          <span>Audit timeline events</span>
+        </span>
+      </summary>
+      <ol class="timeline">
+        @for (event of events(); track event.eventType + ':' + event.sourceId) {
+          <li class="timeline-event">
+            <div class="timeline-event__heading">
+              <h3>{{ eventLabel(event.eventType) }}</h3>
+              <span class="status status--compact">{{ event.status }}</span>
             </div>
-            @if (event.completedAt) {
-              <div>
-                <dt>Completed</dt>
-                <dd>{{ event.completedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
-              </div>
+            <p>{{ event.description }}</p>
+            @if (event.reason) {
+              <blockquote>{{ event.reason }}</blockquote>
             }
-            <div>
-              <dt>Actor</dt>
-              <dd>
-                <strong>{{ event.actorKind }}</strong>
-                @if (event.actorId) {
-                  <code>{{ event.actorId }}</code>
-                }
-              </dd>
-            </div>
-            <div>
-              <dt>Source ID</dt>
-              <dd>
-                <code>{{ event.sourceId }}</code>
-              </dd>
-            </div>
-            <div>
-              <dt>Correlation ID</dt>
-              <dd>
-                <code>{{ event.investigationCorrelationId }}</code>
-              </dd>
-            </div>
-            @if (event.toolCallId) {
+            <dl>
               <div>
-                <dt>Tool call ID</dt>
+                <dt>Started</dt>
+                <dd>{{ event.occurredAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+              </div>
+              @if (event.completedAt) {
+                <div>
+                  <dt>Completed</dt>
+                  <dd>{{ event.completedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+                </div>
+              }
+              <div>
+                <dt>Actor</dt>
                 <dd>
-                  <code>{{ event.toolCallId }}</code>
+                  <strong>{{ event.actorKind }}</strong>
+                  @if (event.actorId) {
+                    <code>{{ event.actorId }}</code>
+                  }
                 </dd>
               </div>
-            }
-            @if (event.relatedSourceId) {
               <div>
-                <dt>Related source ID</dt>
+                <dt>Source ID</dt>
                 <dd>
-                  <code>{{ event.relatedSourceId }}</code>
+                  <code>{{ event.sourceId }}</code>
                 </dd>
               </div>
-            }
-            @if (event.modelId) {
               <div>
-                <dt>Model</dt>
+                <dt>Correlation ID</dt>
                 <dd>
-                  <code>{{ event.modelId }}</code>
+                  <code>{{ event.investigationCorrelationId }}</code>
                 </dd>
               </div>
-            }
-            @if (event.promptVersion) {
-              <div>
-                <dt>Prompt version</dt>
-                <dd>
-                  <code>{{ event.promptVersion }}</code>
-                </dd>
-              </div>
-            }
-            @if (event.schemaVersion) {
-              <div>
-                <dt>Schema version</dt>
-                <dd>
-                  <code>{{ event.schemaVersion }}</code>
-                </dd>
-              </div>
-            }
-            @if (event.disposition) {
-              <div>
-                <dt>Disposition</dt>
-                <dd>{{ event.disposition }}</dd>
-              </div>
-            }
-            @if (event.resultingIncidentStatus) {
-              <div>
-                <dt>Resulting incident status</dt>
-                <dd>{{ event.resultingIncidentStatus }}</dd>
-              </div>
-            }
-          </dl>
-        </li>
-      }
-    </ol>
+              @if (event.toolCallId) {
+                <div>
+                  <dt>Tool call ID</dt>
+                  <dd>
+                    <code>{{ event.toolCallId }}</code>
+                  </dd>
+                </div>
+              }
+              @if (event.relatedSourceId) {
+                <div>
+                  <dt>Related source ID</dt>
+                  <dd>
+                    <code>{{ event.relatedSourceId }}</code>
+                  </dd>
+                </div>
+              }
+              @if (event.modelId) {
+                <div>
+                  <dt>Model</dt>
+                  <dd>
+                    <code>{{ event.modelId }}</code>
+                  </dd>
+                </div>
+              }
+              @if (event.promptVersion) {
+                <div>
+                  <dt>Prompt version</dt>
+                  <dd>
+                    <code>{{ event.promptVersion }}</code>
+                  </dd>
+                </div>
+              }
+              @if (event.schemaVersion) {
+                <div>
+                  <dt>Schema version</dt>
+                  <dd>
+                    <code>{{ event.schemaVersion }}</code>
+                  </dd>
+                </div>
+              }
+              @if (event.disposition) {
+                <div>
+                  <dt>Disposition</dt>
+                  <dd>{{ event.disposition }}</dd>
+                </div>
+              }
+              @if (event.resultingIncidentStatus) {
+                <div>
+                  <dt>Resulting incident status</dt>
+                  <dd>{{ event.resultingIncidentStatus }}</dd>
+                </div>
+              }
+            </dl>
+          </li>
+        }
+      </ol>
+    </details>
   }
 </section>

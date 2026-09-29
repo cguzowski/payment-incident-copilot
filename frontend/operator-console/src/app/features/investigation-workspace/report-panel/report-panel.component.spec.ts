@@ -44,6 +44,31 @@ describe('ReportPanelComponent', () => {
     expect(controls).not.toContain('Reject');
   });
 
+  it('makesPopulatedReportHistoryAVisibleNativeDisclosure', () => {
+    historyResponse = of([attempt('AVAILABLE')]);
+    const fixture = create();
+    fixture.detectChanges();
+
+    const disclosure = fixture.nativeElement.querySelector(
+      '[data-testid="report-disclosure"]',
+    ) as HTMLDetailsElement;
+    expect(disclosure).not.toBeNull();
+    expect(disclosure.open).toBe(true);
+    expect(disclosure.querySelector('summary')?.textContent).toContain('Proposed incident report');
+
+    disclosure.querySelector('summary')?.click();
+    expect(disclosure.open).toBe(false);
+  });
+
+  it('keepsTheEmptyReportStateExpandedWithoutADisclosure', () => {
+    const fixture = create();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="report-disclosure"]')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('A proposed report has not been generated');
+    expect(fixture.nativeElement.querySelector('[data-testid="generate-report"]')).not.toBeNull();
+  });
+
   it('loadsIndependentlyAndGeneratesWithoutClientPromptOrSources', () => {
     const fixture = create();
     fixture.detectChanges();

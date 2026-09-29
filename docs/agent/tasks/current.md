@@ -1,4 +1,4 @@
-# Task: Recover report-generation button state (U1)
+# Task: Collapse populated investigation sections (U2)
 
 Status: Completed
 Created: 2026-09-29
@@ -6,109 +6,114 @@ Owner: Christopher Guzowski
 
 ## Goal
 
-Ensure report generation leaves its loading presentation after every terminal
-outcome and does not retain obsolete generation work after the one-response API
-contract has been satisfied.
+Reduce investigation-workspace scrolling while keeping active controls, empty
+states, failures, and source provenance clear and accessible.
 
 ## User story
 
-As a payment operations analyst, I want the Generate proposed report control to
-stop appearing busy when generation finishes, so its state accurately reflects
-whether work is still running.
+As a payment operations analyst, I want populated investigation sections and
+individual approved sources to collapse, so I can move between evidence,
+knowledge, report, and audit history without losing their context.
 
 ## Chosen contract
 
-- The report-generation request consumes at most one response, matching the
-  existing HTTP endpoint contract, and unsubscribes immediately after that
-  response.
-- Every terminal report status and every HTTP error clears the generating state.
-- A button disabled because generation is active presents a busy state and wait
-  cursor; a button disabled only because generation is no longer allowed does
-  not present a busy state or wait cursor, including on hover.
-- Existing report history, terminal-status rendering, error distinctions,
-  report-available notification, API schemas, and incident lifecycle behavior
-  remain unchanged.
+- Service-error evidence, Runbooks and policy, Proposed incident report, and
+  Audit timeline use native, keyboard-accessible disclosures once they contain
+  history or timeline events.
+- Populated disclosures start open. Their visible summaries retain the existing
+  section eyebrow and title so collapsed content remains identifiable.
+- Each selected runbook or policy result is independently collapsible and starts
+  open, with its document type and title in the summary.
+- Loading, empty, not-found, and error states remain expanded so status and retry
+  controls are never hidden before content exists.
+- Collection, retrieval, generation, refresh, lifecycle, history ordering,
+  provenance, and responsive behavior remain unchanged.
 
 ## In scope
 
-- Report-panel request lifecycle and button-state presentation.
-- Angular regressions for terminal response, unsubscription, errors, and disabled
-  versus busy presentation.
-- Focused frontend and full repository verification.
+- Disclosure markup and presentation in the observed-evidence,
+  approved-knowledge, report, and audit-timeline panels.
+- Focused Angular regressions for populated versus unpopulated behavior,
+  independent source disclosures, default-open state, and preserved actions.
+- Frontend and full repository verification.
 
 ## Out of scope
 
-- Backend report-generation timing, provider cancellation, or API changes.
-- Background jobs, polling, retries, or new dependencies.
-- Other investigation-section presentation changes from U2 or identifier links
-  from U3.
+- Backend, API, persistence, and data-model changes.
+- Remembering disclosure state across navigation or browser sessions.
+- Decision-panel and investigation-summary collapsing.
+- Identifier links from U3 or unrelated workspace redesign.
 
 ## Constraints
 
 - Follow red-green-refactor for executable behavior.
-- Keep automated tests deterministic and provider-free.
-- Preserve prior attempts throughout generation and after terminal outcomes.
-- Do not make an unavailable Generate button appear actionable.
+- Use native disclosure semantics without adding a dependency.
+- Preserve every existing status, error, action, history, and provenance path.
+- Keep controls keyboard accessible and the workspace usable at 390 CSS pixels.
 
 ## Acceptance criteria
 
-- [x] `AVAILABLE`, `UNAVAILABLE`, `TIMED_OUT`, and `MALFORMED` responses clear
-      the loading label, status message, busy semantics, and wait-cursor styling
-      as soon as the terminal response is received, without requiring source
-      completion.
-- [x] The generation subscription releases obsolete upstream work immediately
-      after the single response and when the panel is destroyed.
-- [x] Conflict, not-found, and other HTTP errors continue to clear the loading
-      state and preserve their existing messages and report history.
-- [x] A workflow-disabled button remains visibly disabled but does not show the
-      generation wait cursor, including on hover.
+- [x] Populated Service-error evidence, Runbooks and policy, Proposed incident
+      report, and Audit timeline sections start open and can be independently
+      collapsed and expanded through native disclosure controls.
+- [x] Loading, empty, not-found, and error states remain visibly expanded with
+      their existing action or retry controls.
+- [x] Every selected runbook or policy result starts open and can be collapsed
+      independently without changing sibling disclosure state.
+- [x] Existing collection, retrieval, generation, refresh, history ordering,
+      boundary copy, and provenance rendering remain covered and unchanged.
 - [x] Focused frontend tests and the full repository verification gate pass with
       zero skipped tests.
 
 ## Test plan
 
-- Extend `clearsGeneratingForThe...TerminalGenerationResponse` to emit without
-  completing and assert loading/busy state clears plus upstream observers are
-  released.
-- Assert pending generation retains disabled, busy, and wait-cursor state.
-- Assert a post-`AVAILABLE` workflow-disabled button is not busy and has no
-  wait-cursor class.
-- Preserve the existing HTTP-error and previous-history regressions.
-- Run `./verify.ps1 -Scope Frontend`, then `./verify.ps1`.
+- Add panel-level tests for disclosure presence only after populated history,
+  default-open state, summary labels, and native toggle behavior.
+- Add a two-result knowledge fixture proving independent document disclosure
+  state for runbook and policy results.
+- Preserve existing loading, empty, error, retry, pending-action, history, and
+  provenance regressions.
+- Run the four focused panel specs, `./verify.ps1 -Scope Frontend`, and
+  `./verify.ps1`.
 
 ## Progress notes
 
-- 2026-09-29: Owner activated U1 from the roadmap.
-- 2026-09-29: Inspection found that the component clears `generating` in
-  `finalize`, which waits for completion/error/unsubscription after a response,
-  and that the shared disabled-button cursor always communicates waiting even
-  when generation is terminal and the workflow alone disables the control.
-- 2026-09-29: Added the one-response subscription boundary, explicit busy
-  semantics, and separate busy/workflow-disabled cursor styles. The red focused
-  run failed all four non-completing terminal-response cases and the missing
-  busy-state assertion; the implementation then passed focused and aggregate
-  verification.
+- 2026-09-29: Owner activated U2 from the ordered roadmap after U1 completion.
+- 2026-09-29: Locked the disclosure contract before implementation. Inspection
+  confirmed all four panels currently render populated content permanently
+  expanded and the knowledge panel renders every selected source as a plain
+  article.
+- 2026-09-29: Added focused regressions first. The four-panel run failed 4 of 32
+  tests for the intended reason: the evidence, knowledge, report, and timeline
+  disclosures did not yet exist.
+- 2026-09-29: Wrapped populated histories in default-open native disclosures and
+  made each selected runbook or policy its own default-open disclosure. Shared
+  styling supplies consistent indicators and keyboard focus without changing
+  loading, empty, error, action, history, or provenance paths.
+- 2026-09-29: Live browser QA confirmed keyboard toggling, independent nested
+  source state, visible focus, and no horizontal overflow at a 390 CSS-pixel
+  viewport.
 
 ## Completion evidence
 
-- Red: the focused report-panel run had 5 failures and 8 passes. Each terminal
-  status remained on `Generating…` when the source stayed open, and the active
-  button lacked its explicit busy class.
-- Green: the focused report-panel spec passed 13/13 tests, including immediate
-  upstream release, panel-destroy cancellation, busy semantics, and computed
-  `wait` versus `not-allowed` cursor behavior.
-- `./verify.ps1 -Scope Frontend` passed 79 Angular tests with zero failures or
-  skips, Prettier, and the production build.
-- `./verify.ps1` passed on 2026-09-29: 290 copilot API, 9 operations MCP, 31
-  generator, and 79 Angular tests passed with zero failures, errors, or skips;
-  formatting, builds, Compose validation, and repository diff checks also
-  passed.
+- Focused four-panel Angular run: 32 tests passed after the intentional red run
+  failed 4 tests and passed 28.
+- `./verify.ps1 -Scope Frontend`: 86 Angular tests passed with zero skips;
+  Prettier and the production build passed.
+- `./verify.ps1`: 290 copilot API, 9 operations MCP, 31 generator, and 86 Angular
+  tests passed with zero failures, errors, or skips; formatting, production
+  builds, Compose validation, and repository diff checks passed.
+- Browser QA on a populated investigation found all four section disclosures
+  and all seven approved-source disclosures open initially. Keyboard interaction
+  collapsed the evidence section and one source without changing its sibling or
+  parent disclosure; the 390-pixel viewport had no horizontal overflow.
 
 ## Remaining limitations
 
-- Frontend installation continues to report six dependency advisories (five
-  moderate, one high); the repository verification gate does not fail on npm
-  audit findings.
+- Disclosure state intentionally resets to open after navigation or reload; U2
+  did not include state persistence.
+- The frontend install still reports the six existing dependency advisories
+  (five moderate and one high); the documented gate has no failing audit step.
 
 ## Decisions needed
 

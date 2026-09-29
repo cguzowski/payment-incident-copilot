@@ -45,137 +45,145 @@
   } @else if (attempts().length === 0) {
     <p class="evidence-message">Approved knowledge has not been retrieved.</p>
   } @else {
-    <div class="knowledge-history" aria-label="Approved knowledge retrieval history">
-      @for (attempt of attempts(); track attempt.retrievalId) {
-        <article class="knowledge-attempt" data-testid="knowledge-attempt">
-          <div class="knowledge-attempt__heading">
-            <div>
-              <p class="evidence-attempt__label">Retrieval attempt</p>
-              <code>{{ attempt.retrievalId }}</code>
+    <details class="panel-disclosure" data-testid="knowledge-disclosure" open>
+      <summary>
+        <span>
+          <span class="panel-disclosure__context">Approved knowledge</span>
+          <span>Runbooks and policy history</span>
+        </span>
+      </summary>
+      <div class="knowledge-history" aria-label="Approved knowledge retrieval history">
+        @for (attempt of attempts(); track attempt.retrievalId) {
+          <article class="knowledge-attempt" data-testid="knowledge-attempt">
+            <div class="knowledge-attempt__heading">
+              <div>
+                <p class="evidence-attempt__label">Retrieval attempt</p>
+                <code>{{ attempt.retrievalId }}</code>
+              </div>
+              <span class="status status--compact">{{ attempt.status }}</span>
             </div>
-            <span class="status status--compact">{{ attempt.status }}</span>
-          </div>
 
-          @if (attempt.statusDetail) {
-            <p class="knowledge-attempt__detail">{{ attempt.statusDetail }}</p>
-          } @else if (attempt.status === 'STARTED') {
-            <p class="knowledge-attempt__detail">Retrieval did not reach a terminal status.</p>
-          } @else if (attempt.status === 'NO_MATCH') {
-            <p class="knowledge-attempt__detail">
-              No eligible approved knowledge matched this investigation.
-            </p>
-          }
+            @if (attempt.statusDetail) {
+              <p class="knowledge-attempt__detail">{{ attempt.statusDetail }}</p>
+            } @else if (attempt.status === 'STARTED') {
+              <p class="knowledge-attempt__detail">Retrieval did not reach a terminal status.</p>
+            } @else if (attempt.status === 'NO_MATCH') {
+              <p class="knowledge-attempt__detail">
+                No eligible approved knowledge matched this investigation.
+              </p>
+            }
 
-          <dl class="knowledge-provenance">
-            <div>
-              <dt>Requested</dt>
-              <dd>{{ attempt.requestedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
-            </div>
-            <div>
-              <dt>Completed</dt>
-              <dd>
-                @if (attempt.completedAt) {
-                  {{ attempt.completedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC
-                } @else {
-                  Not completed
+            <dl class="knowledge-provenance">
+              <div>
+                <dt>Requested</dt>
+                <dd>{{ attempt.requestedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+              </div>
+              <div>
+                <dt>Completed</dt>
+                <dd>
+                  @if (attempt.completedAt) {
+                    {{ attempt.completedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC
+                  } @else {
+                    Not completed
+                  }
+                </dd>
+              </div>
+              <div>
+                <dt>Embedding model</dt>
+                <dd>
+                  <code>{{ attempt.embeddingModelId }}</code>
+                </dd>
+              </div>
+              <div>
+                <dt>Retrieval rules</dt>
+                <dd>
+                  <code>{{ attempt.rankingVersion }}</code>
+                </dd>
+              </div>
+            </dl>
+
+            @if (attempt.results.length > 0) {
+              <div class="knowledge-results" aria-label="Selected approved knowledge chunks">
+                @for (result of attempt.results; track result.chunkId) {
+                  <details class="knowledge-result" data-testid="knowledge-result-disclosure" open>
+                    <summary class="knowledge-result__heading">
+                      <div>
+                        <p class="knowledge-result__type">{{ result.documentType }}</p>
+                        <h3>{{ result.documentTitle }}</h3>
+                        <p class="knowledge-result__section">
+                          Version {{ result.documentVersion }} · {{ result.sectionPath }}
+                        </p>
+                      </div>
+                      <span class="knowledge-result__position">#{{ result.selectedPosition }}</span>
+                    </summary>
+                    <blockquote>{{ result.rawContent }}</blockquote>
+                    <dl class="knowledge-result__provenance">
+                      <div>
+                        <dt>Document ID</dt>
+                        <dd>
+                          <code>{{ result.documentId }}</code>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Version ID</dt>
+                        <dd>
+                          <code>{{ result.documentVersionId }}</code>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Chunk ID</dt>
+                        <dd>
+                          <code>{{ result.chunkId }}</code>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Source file</dt>
+                        <dd>
+                          <code>{{ result.sourceName }}</code>
+                        </dd>
+                      </div>
+                      @if (result.sourceFormat === 'PDF') {
+                        <div>
+                          <dt>PDF location</dt>
+                          <dd>
+                            PDF page {{ result.sourceStartPage }}, blocks
+                            {{ result.sourceStartBlock }}–{{ result.sourceEndBlock }}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>PDF SHA-256</dt>
+                          <dd>
+                            <code>{{ result.pdfSha256 }}</code>
+                          </dd>
+                        </div>
+                      } @else {
+                        <div>
+                          <dt>Source lines</dt>
+                          <dd>{{ result.sourceStartLine }}–{{ result.sourceEndLine }}</dd>
+                        </div>
+                      }
+                      <div>
+                        <dt>Approved</dt>
+                        <dd>{{ result.approvedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+                      </div>
+                      <div>
+                        <dt>Approved by</dt>
+                        <dd>
+                          <code>{{ result.approvedBy }}</code>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Effective</dt>
+                        <dd>{{ result.effectiveAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
+                      </div>
+                    </dl>
+                  </details>
                 }
-              </dd>
-            </div>
-            <div>
-              <dt>Embedding model</dt>
-              <dd>
-                <code>{{ attempt.embeddingModelId }}</code>
-              </dd>
-            </div>
-            <div>
-              <dt>Retrieval rules</dt>
-              <dd>
-                <code>{{ attempt.rankingVersion }}</code>
-              </dd>
-            </div>
-          </dl>
-
-          @if (attempt.results.length > 0) {
-            <div class="knowledge-results" aria-label="Selected approved knowledge chunks">
-              @for (result of attempt.results; track result.chunkId) {
-                <article class="knowledge-result">
-                  <div class="knowledge-result__heading">
-                    <div>
-                      <p class="knowledge-result__type">{{ result.documentType }}</p>
-                      <h3>{{ result.documentTitle }}</h3>
-                      <p class="knowledge-result__section">
-                        Version {{ result.documentVersion }} · {{ result.sectionPath }}
-                      </p>
-                    </div>
-                    <span class="knowledge-result__position">#{{ result.selectedPosition }}</span>
-                  </div>
-                  <blockquote>{{ result.rawContent }}</blockquote>
-                  <dl class="knowledge-result__provenance">
-                    <div>
-                      <dt>Document ID</dt>
-                      <dd>
-                        <code>{{ result.documentId }}</code>
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>Version ID</dt>
-                      <dd>
-                        <code>{{ result.documentVersionId }}</code>
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>Chunk ID</dt>
-                      <dd>
-                        <code>{{ result.chunkId }}</code>
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>Source file</dt>
-                      <dd>
-                        <code>{{ result.sourceName }}</code>
-                      </dd>
-                    </div>
-                    @if (result.sourceFormat === 'PDF') {
-                      <div>
-                        <dt>PDF location</dt>
-                        <dd>
-                          PDF page {{ result.sourceStartPage }}, blocks
-                          {{ result.sourceStartBlock }}–{{ result.sourceEndBlock }}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt>PDF SHA-256</dt>
-                        <dd>
-                          <code>{{ result.pdfSha256 }}</code>
-                        </dd>
-                      </div>
-                    } @else {
-                      <div>
-                        <dt>Source lines</dt>
-                        <dd>{{ result.sourceStartLine }}–{{ result.sourceEndLine }}</dd>
-                      </div>
-                    }
-                    <div>
-                      <dt>Approved</dt>
-                      <dd>{{ result.approvedAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
-                    </div>
-                    <div>
-                      <dt>Approved by</dt>
-                      <dd>
-                        <code>{{ result.approvedBy }}</code>
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>Effective</dt>
-                      <dd>{{ result.effectiveAt | date: 'MMM d, y, HH:mm:ss' : 'UTC' }} UTC</dd>
-                    </div>
-                  </dl>
-                </article>
-              }
-            </div>
-          }
-        </article>
-      }
-    </div>
+              </div>
+            }
+          </article>
+        }
+      </div>
+    </details>
   }
 </section>

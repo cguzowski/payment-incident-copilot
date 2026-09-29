@@ -24,10 +24,24 @@ describe('AuditTimelinePanelComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('source-1');
   });
 
+  it('makesTheRecordedTimelineAVisibleNativeDisclosure', () => {
+    const fixture = createPanel();
+    const disclosure = fixture.nativeElement.querySelector(
+      '[data-testid="timeline-disclosure"]',
+    ) as HTMLDetailsElement;
+
+    expect(disclosure).not.toBeNull();
+    expect(disclosure.open).toBe(true);
+    expect(disclosure.querySelector('summary')?.textContent).toContain('Audit timeline');
+    disclosure.querySelector('summary')?.click();
+    expect(disclosure.open).toBe(false);
+  });
+
   it('supportsEmptyNotFoundAndRetryableErrorStates', () => {
     getTimeline.mockReturnValueOnce(of([]));
     const empty = createPanel();
     expect(empty.nativeElement.textContent).toContain('No timeline events');
+    expect(empty.nativeElement.querySelector('[data-testid="timeline-disclosure"]')).toBeNull();
     empty.destroy();
 
     getTimeline.mockReturnValueOnce(throwError(() => new ApiRequestError('missing', 404)));

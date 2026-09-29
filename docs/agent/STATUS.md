@@ -11,20 +11,22 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 a complete terminal decision on a newly generated live-model report remains
 unproved.
 
-The [latest task](tasks/current.md) completed U1 report-generation state
-recovery. The operator console consumes exactly one generation response,
-releases obsolete upstream work immediately, clears its loading presentation
-for every terminal status and HTTP error, and distinguishes an active wait
-cursor from a workflow-disabled control.
+The [latest task](tasks/current.md) completed U2 investigation-section
+disclosures. Populated evidence, approved knowledge, report, and audit histories
+start open and can be collapsed independently through native controls; every
+selected runbook or policy is independently collapsible. Loading, empty,
+not-found, error, action, provenance, and history behavior remains visible and
+unchanged.
 
 ## Verification evidence
 
-- U1 passed `./verify.ps1` on 2026-09-29: 290 copilot API, 9 operations MCP, 31
-  generator, and 79 Angular tests passed with zero failures, errors, or skips;
+- U2 passed `./verify.ps1` on 2026-09-29: 290 copilot API, 9 operations MCP, 31
+  generator, and 86 Angular tests passed with zero failures, errors, or skips;
   formatting, builds, Compose validation, and repository checks also passed.
-- The focused U1 report-panel suite passed 13 tests covering non-completing
-  terminal responses, upstream unsubscription, destroy cancellation, HTTP
-  failures, busy semantics, and computed cursor behavior.
+- The focused U2 panel suite passed 32 tests after an intentional red run failed
+  the four missing section disclosures. Live browser QA confirmed native
+  keyboard toggling, independent source state, visible focus, and no horizontal
+  overflow at 390 CSS pixels.
 - Q1 corpus checks passed for the exact hash-verifiable v1 archive and 30 active
   v2 source/PDF pairs. Automated validation covered 113 pages, and visual QA
   inspected every rendered page with zero layout defects.

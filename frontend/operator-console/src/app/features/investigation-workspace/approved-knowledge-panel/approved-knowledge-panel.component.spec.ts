@@ -40,6 +40,59 @@ describe('ApprovedKnowledgePanelComponent', () => {
     expect(text).toContain('not an AI conclusion or executable instruction');
   });
 
+  it('makesPopulatedKnowledgeAndEachSelectedSourceIndependentNativeDisclosures', () => {
+    const attempt = knowledge('AVAILABLE');
+    attempt.results = [
+      attempt.results[0],
+      {
+        ...attempt.results[0],
+        chunkId: 'chunk-2',
+        documentId: 'document-2',
+        documentVersionId: 'version-2',
+        selectedPosition: 2,
+        documentType: 'POLICY',
+        documentTitle: 'Authorization Escalation Policy',
+      },
+    ];
+    historyResponse = of([attempt]);
+    const fixture = create();
+    fixture.detectChanges();
+
+    const panel = fixture.nativeElement.querySelector(
+      '[data-testid="knowledge-disclosure"]',
+    ) as HTMLDetailsElement;
+    const sources = Array.from(
+      fixture.nativeElement.querySelectorAll('[data-testid="knowledge-result-disclosure"]'),
+    ) as HTMLDetailsElement[];
+    expect(panel.open).toBe(true);
+    expect(panel.querySelector('summary')?.textContent).toContain('Runbooks and policy');
+    expect(sources).toHaveLength(2);
+    expect(sources.every((source) => source.open)).toBe(true);
+    expect(sources[0].querySelector('summary')?.textContent).toContain(
+      'Authorization Decline Runbook',
+    );
+    expect(sources[1].querySelector('summary')?.textContent).toContain(
+      'Authorization Escalation Policy',
+    );
+
+    sources[0].querySelector('summary')?.click();
+    expect(sources[0].open).toBe(false);
+    expect(sources[1].open).toBe(true);
+  });
+
+  it('keepsTheEmptyKnowledgeStateExpandedWithoutADisclosure', () => {
+    const fixture = create();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="knowledge-disclosure"]')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain(
+      'Approved knowledge has not been retrieved',
+    );
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="retrieve-knowledge"]'),
+    ).not.toBeNull();
+  });
+
   it('keepsHistoricalMarkdownLineCitationsBackwardCompatible', () => {
     const attempt = knowledge('AVAILABLE');
     attempt.results = [
