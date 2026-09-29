@@ -29,18 +29,18 @@ UI. See [project limitations](../docs/agent/STATUS.md).
 
 ## Recorded retrieval results
 
-Historical K4 and K5 task records report:
+Historical K4/K5 task records and the fresh Q2 corpus-v2 baseline report:
 
-| Measure | K4 passed | K5 passed | Applicable | Required to pass |
-|---|---:|---:|---:|---:|
-| Primary runbook selected | 9 | 19 | 22 | 22 |
-| Supporting policy selected | 1 | 12 | 22 | 20 |
-| Primary outranks weak match | 16 | 16 | 21 | 19 |
+| Measure | K4 passed | K5 passed | Q2 baseline passed | Applicable | Required to pass |
+|---|---:|---:|---:|---:|---:|
+| Primary runbook selected | 9 | 19 | 19 | 22 | 22 |
+| Supporting policy selected | 1 | 12 | 12 | 22 | 20 |
+| Primary outranks weak match | 16 | 16 | 17 | 21 | 19 |
 
-**Both runs failed all three quality thresholds.** Records also report zero
-ineligible candidates and preserved partial/unavailable/superseded semantics.
-K5's S001 operator proof displayed RB-002 with PDF provenance; it does not
-establish general retrieval quality.
+**All three runs failed all three quality thresholds.** Records also report
+zero ineligible candidates and preserved partial/unavailable/superseded
+semantics. K5's S001 operator proof displayed RB-002 with PDF provenance; it
+does not establish general retrieval quality.
 
 Evidence records:
 
@@ -48,12 +48,15 @@ Evidence records:
   artifact `14588db4735841ffb5711a962e2c5119-FAIL.json`.
 - [K5 completion](../docs/agent/tasks/completed/2026-09-01-prove-live-approved-knowledge-retrieval-in-the-operator-workflow.md):
   artifact `375ebc04ba894e84b2d18aeb6bc4d3cb-FAIL.json`.
+- [Q2 active task](../docs/agent/tasks/current.md): artifact
+  `d22280e533b04578bdd4f260e0f6a6c6-FAIL.json`, SHA-256
+  `c126a45551ebeaf8774e5731e4dbe6f8711d4e3d3d3e6bcdd2620ff75974cce1`.
 
-These artifacts are absent from this checkout and untracked. Their recorded
-hashes remain in the completed tasks; counts above are historical reports, not
-independently reverified results. Restore exact files to `evaluation/results/`,
-or identify a verifiable archive, before treating them as inspectable evidence.
-A fresh run is new evidence and must have its own ID.
+The K4/K5 artifacts are absent from this checkout; their recorded hashes remain
+in completed tasks, so those counts are historical reports rather than
+independently reverified results. The Q2 artifact is retained under
+`evaluation/results/` and is current inspectable corpus-v2 evidence. It is new
+evidence and must not be presented as either missing historical run.
 
 ## Maintenance boundary
 

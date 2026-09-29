@@ -23,17 +23,17 @@ owner-activated [task contract](tasks/current.md) authorizes implementation.
 | Q1 | Oracle isolated from evaluated inputs with terminal reveal and corpus v2 |
 | U1 | Report generation releases obsolete work and recovers its button state after terminal outcomes |
 | U2 | Populated investigation histories and individual approved sources use accessible native disclosures |
+| U3 | Resolvable reviewer identifiers open exact rendered records and immutable PDFs |
 
 K4/K5 completion did not pass the benchmark. See
 [STATUS.md](STATUS.md) for current evidence limitations and
 [SynTen Inc](../../SynTen%20Inc/README.md) for recorded results.
 
-## Ordered future outcomes
+## Active and ordered future outcomes
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
-| U3 | Link resolvable evidence and resource identifiers | Applicable evidence identifiers and document hashes are links that open the exact excerpt or resource in a new tab, including latest-evidence identifiers and PDF SHA-256 values; identifiers without a meaningful resolvable target remain non-links. |
-| Q2 | Retrieval-quality disposition | Pass the unchanged benchmark or record explicit owner acceptance of the measured failure and consequences. |
+| Q2 — Active | Retrieval-quality disposition | Pass the unchanged benchmark or record explicit owner acceptance of the measured failure and consequences. |
 | Q3 | Automated report grading | Retain reproducible correctness, citation, unsupported-claim, latency, and failure metrics across the scenario oracle. |
 | Q4 | Complete live-model audit proof | Verify a new live report's explicit human decision, terminal state, and full audit timeline. |
 | Q5 | Broader live-model coverage | Exercise common, uncommon, rare, partial-evidence, and unavailable-evidence scenarios. |

@@ -1,141 +1,182 @@
-# Task: Link resolvable evidence and resource identifiers (U3)
+# Task: Resolve retrieval-quality disposition (Q2)
 
-Status: Completed
+Status: Active
 Created: 2026-09-29
 Owner: Christopher Guzowski
 
 ## Goal
 
-Turn identifiers with exact reviewer targets into clear links while preserving
-plain text for identifiers that cannot resolve to meaningful application
-content.
+Produce current, inspectable evidence for the unchanged SynTen retrieval
+benchmark and either make the general retrieval path pass it or obtain explicit
+owner acceptance of the measured failure and its consequences.
 
 ## User story
 
-As a payment operations analyst, I want evidence and approved-source references
-to open the exact persisted record, excerpt, or immutable document, so I can
-verify report conclusions without manually searching investigation history.
+As a payment operations analyst, I want approved knowledge retrieval to select
+the reviewed runbook and supporting policy reliably across the full synthetic
+scenario catalog, so report generation receives relevant, source-verifiable
+guidance rather than a result proven only for S001.
 
 ## Chosen contract
 
-- Resolvable evidence-attempt, retrieval-attempt, report-attempt, and knowledge-
-  chunk identifiers link to their exact rendered investigation record.
-- Report citations resolve within the report attempt's persisted evidence and
-  retrieval snapshots, including latest-evidence and applicable-evidence IDs.
-- Applicable audit source and related-source identifiers link only when their
-  event type identifies an exact rendered record.
-- A PDF SHA-256 links to the exact immutable synthetic PDF and opens its cited
-  physical page. The read-only resource URL is content-addressed and does not
-  expose a tenant, filesystem path, or mutable filename as authority.
-- Every resource link opens in a new tab and includes an accessible purpose;
-  external-tab behavior is communicated without relying on an icon alone.
-- Tool-call, correlation, actor, model, prompt, schema, document, version, and
-  any unresolved identifiers remain non-links.
+- Keep `synten-retrieval-eval/v1` labels, thresholds, 23 cases and 37 variants
+  unchanged and evaluate the active `synten-auth-knowledge/v2` corpus.
+- Begin with a fresh live `nomic-embed-text` baseline. Historical K4/K5 counts
+  remain context only because their raw artifacts are absent from this checkout.
+- Preserve corpus bytes and hashes, eligibility filters, tenant boundaries,
+  approval/effective-version rules, superseded exclusions, exact source
+  provenance, and the four-runbook/three-policy context allocation.
+- Diagnose misses from exact derived queries, candidate ranks, fused ranks and
+  selected chunks before changing retrieval behavior.
+- Any retrieval change must be general, versioned, auditable and justified by
+  measured diagnostics. Do not hard-code scenario IDs, labels, expected
+  document IDs, error-code mappings or benchmark-only branches.
+- Keep automated verification deterministic and independent of live Ollama.
+- Q2 completes only when the fixed benchmark passes or the owner explicitly
+  accepts a fresh measured failure and its documented product consequences.
 
 ## In scope
 
-- Content-addressed serving of manifest-listed SynTen PDF artifacts.
-- Investigation-workspace anchors and links for resolvable evidence, retrieval,
-  report, knowledge-chunk, audit, and decision references.
-- Focused backend and Angular regressions for exact targets, PDF page fragments,
-  new-tab safety, and intentionally unresolved identifiers.
-- Backend, frontend, repository, and full verification plus responsive browser
-  QA.
+- Reproducing and retaining a fresh corpus-v2 evaluation result with its hash,
+  environment, model, query, ranking and source-provenance metadata.
+- Root-cause analysis of each missed primary runbook, supporting policy and
+  primary-over-weak assertion.
+- The smallest evidence-backed query, hybrid-ranking or context-selection
+  change needed to address general failure modes.
+- Test-first backend and PostgreSQL regressions for every changed retrieval
+  behavior and its important failure paths.
+- A post-change live benchmark, focused verification and the full repository
+  verification gate.
+- Factual status, roadmap, ADR and task updates where the resulting behavior or
+  accepted disposition requires them.
 
 ## Out of scope
 
-- Authentication, authorization, expiring URLs, or general-purpose file
-  serving.
-- Linking identifiers that have no exact persisted or displayed target.
-- Changing evidence collection, retrieval, generation, decision, or audit data.
-- New source formats, corpus content, ranking behavior, or disclosure-state
-  persistence.
+- Editing corpus sources, PDFs, validation hashes, evaluation labels,
+  thresholds or expected sources to manufacture a pass.
+- Hard-coded scenario/document routing, weakening source eligibility, changing
+  tenant scope, or admitting superseded documents.
+- Report generation or grading, human-decision flow, authentication, AWS or a
+  second tenant or incident family.
+- Pulling model weights automatically or making automated tests depend on a
+  live model provider.
 
 ## Constraints
 
-- Follow red-green-refactor for every executable behavior.
-- Serve only repository-owned synthetic PDFs listed by the validated corpus
-  manifest and verify returned bytes against the requested SHA-256.
-- Do not place tenant identity, local filesystem paths, or mutable source names
-  in resource URLs.
-- Preserve loading, empty, error, retry, provenance, history, disclosure, and
-  responsive behavior.
-- Use native links with visible keyboard focus and safe new-tab attributes.
+- Follow red-green-refactor for every executable behavior change.
+- Preserve the observable/oracle separation in ADR-0014 and the immutable v1
+  corpus archive.
+- Keep model, query, ranking, retrieval and source metadata sufficient for
+  audit; never log or publish vectors, secrets, sensitive data or unrestricted
+  model payloads.
+- Do not present a fresh run as either missing historical artifact.
+- If the fresh benchmark still fails after justified general remediation, stop
+  for explicit owner acceptance rather than weakening the contract.
 
 ## Acceptance criteria
 
-- [x] Evidence references, including latest and applicable evidence IDs, link to
-      the exact evidence attempt and open in a new tab.
-- [x] Knowledge-chunk and retrieval references link to the exact persisted
-      retrieval result or attempt and open in a new tab.
-- [x] PDF SHA-256 values link to the exact hash-verified PDF at the cited page
-      and open in a new tab.
-- [x] Applicable audit and decision references link to exact displayed records;
-      identifiers without a meaningful target remain non-links.
-- [x] Existing workflow behavior, disclosure behavior, history ordering,
-      provenance, and responsive presentation remain unchanged.
-- [x] Focused backend/frontend tests and the full repository verification gate
-      pass with zero skipped tests; browser QA confirms new-tab targets and a
-      usable 390 CSS-pixel layout.
+- [x] A fresh live baseline executes all 23 cases and 37 variants against
+      corpus v2, preserves the partial/unavailable/superseded semantics, and
+      produces a complete inspectable artifact with a recorded SHA-256.
+- [x] Every baseline miss is classified from persisted query, candidate,
+      fusion and selection evidence; proposed changes cite the measured failure
+      mode they address.
+- [ ] Tests written before production changes fail for the intended retrieval
+      behavior, then pass without scenario IDs, expected-source mappings or
+      relaxed eligibility entering product code.
+- [ ] The final live run has zero ineligible candidates, preserves KQ-020,
+      KQ-022 and KQ-023 semantics, and either passes all fixed aggregate
+      thresholds or records explicit owner acceptance of the exact failure and
+      consequences.
+- [ ] Query/ranking versions and relevant architecture documentation match the
+      resulting behavior, with prior evidence and provenance retained.
+- [ ] Focused backend/PostgreSQL tests and `./verify.ps1` pass with zero skipped
+      tests; any unavailable live prerequisite is reported with its exact
+      command and remaining risk.
 
 ## Test plan
 
-- Add backend tests first for valid hash lookup, exact PDF bytes/content type,
-  malformed or unknown hashes, manifest allow-listing, and hash mismatch.
-- Add panel tests first for exact anchor IDs, report and provenance links, PDF
-  page fragments, audit event mapping, new-tab attributes, and retained plain
-  text for unresolved identifiers.
-- Run focused backend and investigation-panel tests after red and green phases.
-- Run `./verify.ps1 -Scope Backend`, `./verify.ps1 -Scope Frontend`, and
-  `./verify.ps1`, then inspect the populated workflow in a browser at desktop
-  and 390 CSS pixels.
+1. Run the existing plan-only validator and fresh live baseline before changing
+   retrieval behavior.
+2. Convert each diagnosed general failure mode into the smallest meaningful
+   unit or PostgreSQL regression and confirm the intended red result.
+3. Implement one behavior at a time, then run the focused query, search,
+   selector, persistence, grader and evaluation suites.
+4. Re-run all 37 live variants through the unchanged evaluator and compare the
+   exact aggregate and semantic results with the baseline.
+5. Run `./verify.ps1 -Scope Backend`, `./verify.ps1 -Scope Repository`, and the
+   authoritative unscoped `./verify.ps1` gate.
 
 ## Progress notes
 
-- 2026-09-29: Owner activated U3 from the ordered roadmap after U2 completion.
-- 2026-09-29: Archived the completed U2 task and locked this contract before
-  implementation. Inspection found no existing source-serving endpoint and all
-  identifiers currently render as plain code text.
-- 2026-09-29: Added exact evidence, retrieval, knowledge-chunk, report, and
-  decision anchors plus mapped links in investigation histories, report
-  citations, and audit events. Unresolvable identifiers remain plain text.
-- 2026-09-29: Added a hash-addressed, read-only PDF endpoint for active and
-  archived synthetic corpus versions. Live QA exposed and then verified the
-  fix for an archived-version hash that initially returned 404.
-- 2026-09-29: Live QA also exposed asynchronous fragment targets that retained
-  the URL without scrolling. A workspace observer now opens enclosing native
-  disclosures and scrolls the target after it renders.
+- 2026-09-29: Owner activated Q2 by asking to proceed with the next ordered
+  roadmap task after U3 completion.
+- 2026-09-29: Archived U3 before replacing the active task. The working tree was
+  clean at activation.
+- 2026-09-29: The existing runner's plan-only validation resolved all 37
+  variants and confirmed `synten-retrieval-eval/v1` against
+  `synten-auth-knowledge/v2`.
+- 2026-09-29: Created isolated database
+  `payment_copilot_k4_eval_q2_v2`, applied Flyway V1-V9, imported all 30 corpus-
+  v2 documents/705 chunks, and prepared 705 complete normalized
+  `nomic-embed-text` embeddings.
+- 2026-09-29: Fresh baseline run `d22280e533b04578bdd4f260e0f6a6c6`
+  seeded and read-back verified all 37 variants. Its 2,300,817-byte factual FAIL
+  artifact has SHA-256
+  `c126a45551ebeaf8774e5731e4dbe6f8711d4e3d3d3e6bcdd2620ff75974cce1`.
+- 2026-09-29: Baseline passed 19/22 primary-runbook cases, 12/20 required
+  supporting-policy cases, and 17/21 primary-over-weak cases. It had zero
+  ineligible candidates and preserved partial, unavailable, and superseded-
+  source semantics.
+- 2026-09-29: Exact diagnostics classify the three primary misses as RB-002
+  absent for S002, RB-003 present at fused position 43 for S003, and RB-018
+  absent for S201. The four outrank misses are KQ-001/S002, KQ-005/S006,
+  KQ-017/S110, and KQ-018/S201.
+- 2026-09-29: Required-policy misses consistently show generic PL-005, PL-001,
+  and PL-002 consuming the three policy slots. Required PL-006 or PL-003 is
+  absent or at fused positions 12-62 for KQ-001, KQ-002, KQ-005, KQ-006,
+  KQ-009, KQ-010, KQ-013, KQ-014, KQ-018, and KQ-021 variants.
+- 2026-09-29: Tested two general, non-label-aware remediations under fresh run
+  IDs. Document-diverse modality depth changed aggregates to 17/22, 13/20, and
+  16/21; compact boilerplate-free queries changed them to 18/22, 14/20, and
+  15/21. Both regressed other thresholds and were fully reverted.
+- 2026-09-29: Post-revert focused verification passed 7 query, executor, and
+  PostgreSQL API tests with zero failures or skips. Repository verification
+  passed the verification-system, knowledge-preparation, AI-prerequisite,
+  seven evaluation-runner, Compose, and diff checks.
 
 ## Completion evidence
 
-- Focused red-green evidence: the five panel specs initially failed 5 of 43
-  tests before links were implemented; the workspace fragment regression then
-  failed 1 of 6 tests before the async scroll behavior was added; the archived
-  PDF regression failed before prior corpus versions were packaged. The final
-  focused suites passed 43 panel tests, 6 workspace tests, and 4 PDF artifact
-  tests.
-- `./verify.ps1 -Scope Backend` passed: 294 copilot API, 9 operations MCP, and
-  31 generator tests passed with zero failures, errors, or skips; Spotless and
-  builds passed.
-- `./verify.ps1 -Scope Frontend` passed: 91 Angular tests passed with zero
-  failures or skips; Prettier and the production build passed.
-- `./verify.ps1` passed on 2026-09-29, including verification-system, local
-  knowledge/AI prerequisite, retrieval-evaluation runner, backend, frontend,
-  Compose, and diff checks.
-- Populated browser QA found 33 source links, all with `_blank`, `noopener
-  noreferrer`, and accessible “opens in new tab” text. Direct fragment loads
-  scrolled evidence and knowledge records into view. At 390×844 CSS pixels the
-  document width was 390, with no horizontal overflow or clipped source links.
-- Live PDF verification returned 12,898 bytes for persisted hash
-  `4132a6f7a627247c40c5caf2d57b7ca8d200840ea5dbabb9676a8d272168d940`;
-  the response hash matched exactly and headers reported `application/pdf`,
-  inline disposition, and immutable caching. The rendered link included
-  `#page=3`.
+- Plan-only validation passed for all 37 variants.
+- Fresh baseline artifact:
+  `SynTen Inc/evaluation/results/d22280e533b04578bdd4f260e0f6a6c6-FAIL.json`
+  (SHA-256
+  `c126a45551ebeaf8774e5731e4dbe6f8711d4e3d3d3e6bcdd2620ff75974cce1`).
+- Red evidence: the document-diversity PostgreSQL regression failed because
+  repeated chunks from one document consumed both modality-depth slots.
+- Green experiment evidence: the focused search/version suite passed 6 tests;
+  the compact-query focused suite passed 7 tests, all with zero skips. Neither
+  experiment met the full live-benchmark non-regression bar, so neither remains
+  in production code.
+- Post-revert command
+  `mvn.cmd -pl backend/copilot-api '-Dtest=KnowledgeRetrievalQueryBuilderTest,KnowledgeRetrievalExecutorTest,KnowledgeRetrievalApiPostgresIntegrationTest' test`
+  passed 7 tests with zero failures, errors, or skips.
+- `.\verify.ps1 -Scope Repository` passed, including all seven evaluation-
+  runner tests, Compose validation, and `git diff --check`.
 
 ## Remaining limitations
 
-None.
+- Historical K4/K5 raw JSON artifacts remain absent. The new Q2 artifact is an
+  inspectable corpus-v2 baseline, not a replacement for either historical run.
+- Fixed thresholds remain unmet. The dominant policy failure reflects generic,
+  near-duplicate policy text and a one-stage query that has no structured way
+  to follow runbook-to-policy relationships.
+- Passing without corpus or label changes now requires a consequential
+  relationship-aware retrieval design and new persisted/audited metadata, not
+  a safe local ranking-constant adjustment.
 
 ## Decisions needed
 
-None.
+- Owner decision required: explicitly accept the measured Q2 failure and its
+  report-quality consequences, or authorize a new relationship-aware retrieval
+  contract with structured document-key/related-document metadata and an ADR.

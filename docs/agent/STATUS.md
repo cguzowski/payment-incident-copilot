@@ -11,15 +11,22 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 a complete terminal decision on a newly generated live-model report remains
 unproved.
 
-The [latest task](tasks/current.md) completed U3 reviewer links. Resolvable
-evidence, retrieval, knowledge-chunk, report, audit, and decision identifiers
-open their exact rendered records in a new tab; unresolved identifiers remain
-plain text. Persisted PDF hashes open a content-addressed, hash-verified
-synthetic PDF at its cited physical page. Async fragment navigation opens
-enclosing disclosures and scrolls the exact record into view.
+The [active task](tasks/current.md) is Q2 retrieval-quality disposition. It will
+run a fresh, inspectable corpus-v2 baseline against the unchanged benchmark,
+diagnose exact misses, and either pass the fixed thresholds through
+generalizable retrieval improvements or require explicit owner acceptance of
+the measured failure. U3 reviewer links are complete: resolvable identifiers
+open exact rendered records or immutable cited PDFs, while unresolved
+identifiers remain plain text.
 
 ## Verification evidence
 
+- Q2 fresh corpus-v2 baseline run `d22280e533b04578bdd4f260e0f6a6c6`
+  seeded and verified all 37 variants, with zero ineligible candidates and all
+  special semantics preserved. It factually failed at 19/22 primary runbooks,
+  12/20 required policies, and 17/21 primary-over-weak cases. Its retained
+  2,300,817-byte artifact SHA-256 is
+  `c126a45551ebeaf8774e5731e4dbe6f8711d4e3d3d3e6bcdd2620ff75974cce1`.
 - U3 passed `./verify.ps1` on 2026-09-29: 294 copilot API, 9 operations MCP, 31
   generator, and 91 Angular tests passed with zero failures, errors, or skips;
   formatting, builds, Compose validation, and repository checks also passed.
@@ -43,11 +50,10 @@ enclosing disclosures and scrolls the exact record into view.
 
 ## Known limitations
 
-- The [recorded retrieval benchmark](../../SynTen%20Inc/README.md) fails all
-  three quality thresholds. Its two referenced raw artifacts are absent from
-  this checkout and are not tracked; historical task records retain names,
-  hashes, and reported counts. Recover exact artifacts before independent
-  result review; do not present a new run as the original.
+- The [retrieval benchmark](../../SynTen%20Inc/README.md) still fails all three
+  quality thresholds. The fresh Q2 corpus-v2 artifact is retained, while the two
+  historical K4/K5 raw artifacts remain absent. Do not present the new run as
+  either historical artifact.
 - Corpus v2 still repeats generic procedures and requests handoff records the
   UI does not capture. Its neutral signal guidance removes oracle contamination
   but does not establish retrieval or report quality.
