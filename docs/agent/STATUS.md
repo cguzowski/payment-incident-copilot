@@ -11,15 +11,21 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 a complete terminal decision on a newly generated live-model report remains
 unproved.
 
-The [latest task](tasks/current.md) completed U2 investigation-section
-disclosures. Populated evidence, approved knowledge, report, and audit histories
-start open and can be collapsed independently through native controls; every
-selected runbook or policy is independently collapsible. Loading, empty,
-not-found, error, action, provenance, and history behavior remains visible and
-unchanged.
+The [latest task](tasks/current.md) completed U3 reviewer links. Resolvable
+evidence, retrieval, knowledge-chunk, report, audit, and decision identifiers
+open their exact rendered records in a new tab; unresolved identifiers remain
+plain text. Persisted PDF hashes open a content-addressed, hash-verified
+synthetic PDF at its cited physical page. Async fragment navigation opens
+enclosing disclosures and scrolls the exact record into view.
 
 ## Verification evidence
 
+- U3 passed `./verify.ps1` on 2026-09-29: 294 copilot API, 9 operations MCP, 31
+  generator, and 91 Angular tests passed with zero failures, errors, or skips;
+  formatting, builds, Compose validation, and repository checks also passed.
+  Populated browser QA confirmed 33 safe, accessible source links, exact async
+  fragment scrolling, matching PDF response bytes, and no overflow or clipped
+  source links at 390×844 CSS pixels.
 - U2 passed `./verify.ps1` on 2026-09-29: 290 copilot API, 9 operations MCP, 31
   generator, and 86 Angular tests passed with zero failures, errors, or skips;
   formatting, builds, Compose validation, and repository checks also passed.

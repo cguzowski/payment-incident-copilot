@@ -87,6 +87,21 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../../SynTen Inc/corpus</directory>
+                <targetPath>knowledge/pdf-artifacts</targetPath>
+                <filtering>false</filtering>
+                <includes>
+                    <include>pdfs/*.pdf</include>
+                    <include>versions/*/pdfs/*.pdf</include>
+                </includes>
+            </resource>
+        </resources>
         <testResources>
             <testResource>
                 <directory>${project.basedir}/src/test/resources</directory>

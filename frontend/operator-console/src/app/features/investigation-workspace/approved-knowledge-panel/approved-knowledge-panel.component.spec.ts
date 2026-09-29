@@ -80,6 +80,31 @@ describe('ApprovedKnowledgePanelComponent', () => {
     expect(sources[1].open).toBe(true);
   });
 
+  it('linksExactRetrievalChunksEvidenceAndPdfPageInNewTabs', () => {
+    historyResponse = of([knowledge('AVAILABLE')]);
+    const fixture = create();
+    fixture.detectChanges();
+
+    const attempt = fixture.nativeElement.querySelector('#retrieval-retrieval-1');
+    expect(
+      attempt.querySelector('a[href="/investigations/investigation-1#retrieval-retrieval-1"]'),
+    ).not.toBeNull();
+    const chunk = fixture.nativeElement.querySelector('#knowledge-retrieval-1-chunk-1');
+    expect(
+      chunk.querySelector(
+        'a[href="/investigations/investigation-1#knowledge-retrieval-1-chunk-1"]',
+      ),
+    ).not.toBeNull();
+    expect(
+      attempt.querySelector('a[href="/investigations/investigation-1#evidence-evidence-1"]'),
+    ).not.toBeNull();
+    const pdf = attempt.querySelector(
+      'a[href="/api/knowledge/pdf-artifacts/' + 'd'.repeat(64) + '#page=4"]',
+    );
+    expect(pdf?.getAttribute('target')).toBe('_blank');
+    expect(pdf?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
   it('keepsTheEmptyKnowledgeStateExpandedWithoutADisclosure', () => {
     const fixture = create();
     fixture.detectChanges();
@@ -119,6 +144,9 @@ describe('ApprovedKnowledgePanelComponent', () => {
     expect(text).toContain('20–22');
     expect(text).not.toContain('PDF location');
     expect(text).not.toContain('PDF SHA-256');
+    expect(
+      fixture.nativeElement.querySelector('a[href^="/api/knowledge/pdf-artifacts/"]'),
+    ).toBeNull();
   });
 
   it('preservesDistinctTerminalAndInterruptedStatuses', () => {

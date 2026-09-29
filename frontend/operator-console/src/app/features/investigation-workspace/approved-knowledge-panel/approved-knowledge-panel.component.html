@@ -54,11 +54,24 @@
       </summary>
       <div class="knowledge-history" aria-label="Approved knowledge retrieval history">
         @for (attempt of attempts(); track attempt.retrievalId) {
-          <article class="knowledge-attempt" data-testid="knowledge-attempt">
+          <article
+            class="knowledge-attempt"
+            data-testid="knowledge-attempt"
+            [id]="'retrieval-' + attempt.retrievalId"
+          >
             <div class="knowledge-attempt__heading">
               <div>
                 <p class="evidence-attempt__label">Retrieval attempt</p>
-                <code>{{ attempt.retrievalId }}</code>
+                <a
+                  class="source-reference"
+                  [href]="
+                    '/investigations/' + investigationId() + '#retrieval-' + attempt.retrievalId
+                  "
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  ><code>{{ attempt.retrievalId }}</code
+                  ><span class="visually-hidden"> (opens in new tab)</span></a
+                >
               </div>
               <span class="status status--compact">{{ attempt.status }}</span>
             </div>
@@ -100,12 +113,34 @@
                   <code>{{ attempt.rankingVersion }}</code>
                 </dd>
               </div>
+              @if (attempt.contributingEvidenceIds.length > 0) {
+                <div>
+                  <dt>Contributing evidence</dt>
+                  <dd>
+                    @for (evidenceId of attempt.contributingEvidenceIds; track evidenceId) {
+                      <a
+                        class="source-reference"
+                        [href]="'/investigations/' + investigationId() + '#evidence-' + evidenceId"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        ><code>{{ evidenceId }}</code
+                        ><span class="visually-hidden"> (opens in new tab)</span></a
+                      >
+                    }
+                  </dd>
+                </div>
+              }
             </dl>
 
             @if (attempt.results.length > 0) {
               <div class="knowledge-results" aria-label="Selected approved knowledge chunks">
                 @for (result of attempt.results; track result.chunkId) {
-                  <details class="knowledge-result" data-testid="knowledge-result-disclosure" open>
+                  <details
+                    class="knowledge-result"
+                    data-testid="knowledge-result-disclosure"
+                    [id]="'knowledge-' + attempt.retrievalId + '-' + result.chunkId"
+                    open
+                  >
                     <summary class="knowledge-result__heading">
                       <div>
                         <p class="knowledge-result__type">{{ result.documentType }}</p>
@@ -133,7 +168,21 @@
                       <div>
                         <dt>Chunk ID</dt>
                         <dd>
-                          <code>{{ result.chunkId }}</code>
+                          <a
+                            class="source-reference"
+                            [href]="
+                              '/investigations/' +
+                              investigationId() +
+                              '#knowledge-' +
+                              attempt.retrievalId +
+                              '-' +
+                              result.chunkId
+                            "
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            ><code>{{ result.chunkId }}</code
+                            ><span class="visually-hidden"> (opens in new tab)</span></a
+                          >
                         </dd>
                       </div>
                       <div>
@@ -153,7 +202,19 @@
                         <div>
                           <dt>PDF SHA-256</dt>
                           <dd>
-                            <code>{{ result.pdfSha256 }}</code>
+                            <a
+                              class="source-reference"
+                              [href]="
+                                '/api/knowledge/pdf-artifacts/' +
+                                result.pdfSha256 +
+                                '#page=' +
+                                result.sourceStartPage
+                              "
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              ><code>{{ result.pdfSha256 }}</code
+                              ><span class="visually-hidden"> (opens in new tab)</span></a
+                            >
                           </dd>
                         </div>
                       } @else {

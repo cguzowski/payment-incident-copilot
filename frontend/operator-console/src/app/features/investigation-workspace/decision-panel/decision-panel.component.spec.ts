@@ -76,6 +76,13 @@ describe('DecisionPanelComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('APPROVED');
     expect(fixture.nativeElement.textContent).toContain('report-1');
     expect(fixture.nativeElement.querySelector('form')).toBeNull();
+    expect(fixture.nativeElement.querySelector('#decision-decision-1')).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelector(
+        'a[href="/investigations/investigation-1#report-report-1"]',
+      ),
+    ).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('a[href*="operator-1"]')).toBeNull();
   });
 
   it.each([

@@ -119,6 +119,34 @@ a {
   text-decoration-color: currentColor;
 }
 
+.source-reference {
+  color: var(--accent);
+  overflow-wrap: anywhere;
+  text-decoration-color: rgba(23, 111, 121, 0.42);
+  text-underline-offset: 0.18em;
+}
+
+.source-reference:visited {
+  color: #53559a;
+}
+
+.source-reference:hover {
+  color: #105f68;
+  text-decoration-color: currentColor;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .button {
     transition: none;

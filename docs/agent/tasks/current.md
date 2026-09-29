@@ -1,4 +1,4 @@
-# Task: Collapse populated investigation sections (U2)
+# Task: Link resolvable evidence and resource identifiers (U3)
 
 Status: Completed
 Created: 2026-09-29
@@ -6,114 +6,135 @@ Owner: Christopher Guzowski
 
 ## Goal
 
-Reduce investigation-workspace scrolling while keeping active controls, empty
-states, failures, and source provenance clear and accessible.
+Turn identifiers with exact reviewer targets into clear links while preserving
+plain text for identifiers that cannot resolve to meaningful application
+content.
 
 ## User story
 
-As a payment operations analyst, I want populated investigation sections and
-individual approved sources to collapse, so I can move between evidence,
-knowledge, report, and audit history without losing their context.
+As a payment operations analyst, I want evidence and approved-source references
+to open the exact persisted record, excerpt, or immutable document, so I can
+verify report conclusions without manually searching investigation history.
 
 ## Chosen contract
 
-- Service-error evidence, Runbooks and policy, Proposed incident report, and
-  Audit timeline use native, keyboard-accessible disclosures once they contain
-  history or timeline events.
-- Populated disclosures start open. Their visible summaries retain the existing
-  section eyebrow and title so collapsed content remains identifiable.
-- Each selected runbook or policy result is independently collapsible and starts
-  open, with its document type and title in the summary.
-- Loading, empty, not-found, and error states remain expanded so status and retry
-  controls are never hidden before content exists.
-- Collection, retrieval, generation, refresh, lifecycle, history ordering,
-  provenance, and responsive behavior remain unchanged.
+- Resolvable evidence-attempt, retrieval-attempt, report-attempt, and knowledge-
+  chunk identifiers link to their exact rendered investigation record.
+- Report citations resolve within the report attempt's persisted evidence and
+  retrieval snapshots, including latest-evidence and applicable-evidence IDs.
+- Applicable audit source and related-source identifiers link only when their
+  event type identifies an exact rendered record.
+- A PDF SHA-256 links to the exact immutable synthetic PDF and opens its cited
+  physical page. The read-only resource URL is content-addressed and does not
+  expose a tenant, filesystem path, or mutable filename as authority.
+- Every resource link opens in a new tab and includes an accessible purpose;
+  external-tab behavior is communicated without relying on an icon alone.
+- Tool-call, correlation, actor, model, prompt, schema, document, version, and
+  any unresolved identifiers remain non-links.
 
 ## In scope
 
-- Disclosure markup and presentation in the observed-evidence,
-  approved-knowledge, report, and audit-timeline panels.
-- Focused Angular regressions for populated versus unpopulated behavior,
-  independent source disclosures, default-open state, and preserved actions.
-- Frontend and full repository verification.
+- Content-addressed serving of manifest-listed SynTen PDF artifacts.
+- Investigation-workspace anchors and links for resolvable evidence, retrieval,
+  report, knowledge-chunk, audit, and decision references.
+- Focused backend and Angular regressions for exact targets, PDF page fragments,
+  new-tab safety, and intentionally unresolved identifiers.
+- Backend, frontend, repository, and full verification plus responsive browser
+  QA.
 
 ## Out of scope
 
-- Backend, API, persistence, and data-model changes.
-- Remembering disclosure state across navigation or browser sessions.
-- Decision-panel and investigation-summary collapsing.
-- Identifier links from U3 or unrelated workspace redesign.
+- Authentication, authorization, expiring URLs, or general-purpose file
+  serving.
+- Linking identifiers that have no exact persisted or displayed target.
+- Changing evidence collection, retrieval, generation, decision, or audit data.
+- New source formats, corpus content, ranking behavior, or disclosure-state
+  persistence.
 
 ## Constraints
 
-- Follow red-green-refactor for executable behavior.
-- Use native disclosure semantics without adding a dependency.
-- Preserve every existing status, error, action, history, and provenance path.
-- Keep controls keyboard accessible and the workspace usable at 390 CSS pixels.
+- Follow red-green-refactor for every executable behavior.
+- Serve only repository-owned synthetic PDFs listed by the validated corpus
+  manifest and verify returned bytes against the requested SHA-256.
+- Do not place tenant identity, local filesystem paths, or mutable source names
+  in resource URLs.
+- Preserve loading, empty, error, retry, provenance, history, disclosure, and
+  responsive behavior.
+- Use native links with visible keyboard focus and safe new-tab attributes.
 
 ## Acceptance criteria
 
-- [x] Populated Service-error evidence, Runbooks and policy, Proposed incident
-      report, and Audit timeline sections start open and can be independently
-      collapsed and expanded through native disclosure controls.
-- [x] Loading, empty, not-found, and error states remain visibly expanded with
-      their existing action or retry controls.
-- [x] Every selected runbook or policy result starts open and can be collapsed
-      independently without changing sibling disclosure state.
-- [x] Existing collection, retrieval, generation, refresh, history ordering,
-      boundary copy, and provenance rendering remain covered and unchanged.
-- [x] Focused frontend tests and the full repository verification gate pass with
-      zero skipped tests.
+- [x] Evidence references, including latest and applicable evidence IDs, link to
+      the exact evidence attempt and open in a new tab.
+- [x] Knowledge-chunk and retrieval references link to the exact persisted
+      retrieval result or attempt and open in a new tab.
+- [x] PDF SHA-256 values link to the exact hash-verified PDF at the cited page
+      and open in a new tab.
+- [x] Applicable audit and decision references link to exact displayed records;
+      identifiers without a meaningful target remain non-links.
+- [x] Existing workflow behavior, disclosure behavior, history ordering,
+      provenance, and responsive presentation remain unchanged.
+- [x] Focused backend/frontend tests and the full repository verification gate
+      pass with zero skipped tests; browser QA confirms new-tab targets and a
+      usable 390 CSS-pixel layout.
 
 ## Test plan
 
-- Add panel-level tests for disclosure presence only after populated history,
-  default-open state, summary labels, and native toggle behavior.
-- Add a two-result knowledge fixture proving independent document disclosure
-  state for runbook and policy results.
-- Preserve existing loading, empty, error, retry, pending-action, history, and
-  provenance regressions.
-- Run the four focused panel specs, `./verify.ps1 -Scope Frontend`, and
-  `./verify.ps1`.
+- Add backend tests first for valid hash lookup, exact PDF bytes/content type,
+  malformed or unknown hashes, manifest allow-listing, and hash mismatch.
+- Add panel tests first for exact anchor IDs, report and provenance links, PDF
+  page fragments, audit event mapping, new-tab attributes, and retained plain
+  text for unresolved identifiers.
+- Run focused backend and investigation-panel tests after red and green phases.
+- Run `./verify.ps1 -Scope Backend`, `./verify.ps1 -Scope Frontend`, and
+  `./verify.ps1`, then inspect the populated workflow in a browser at desktop
+  and 390 CSS pixels.
 
 ## Progress notes
 
-- 2026-09-29: Owner activated U2 from the ordered roadmap after U1 completion.
-- 2026-09-29: Locked the disclosure contract before implementation. Inspection
-  confirmed all four panels currently render populated content permanently
-  expanded and the knowledge panel renders every selected source as a plain
-  article.
-- 2026-09-29: Added focused regressions first. The four-panel run failed 4 of 32
-  tests for the intended reason: the evidence, knowledge, report, and timeline
-  disclosures did not yet exist.
-- 2026-09-29: Wrapped populated histories in default-open native disclosures and
-  made each selected runbook or policy its own default-open disclosure. Shared
-  styling supplies consistent indicators and keyboard focus without changing
-  loading, empty, error, action, history, or provenance paths.
-- 2026-09-29: Live browser QA confirmed keyboard toggling, independent nested
-  source state, visible focus, and no horizontal overflow at a 390 CSS-pixel
-  viewport.
+- 2026-09-29: Owner activated U3 from the ordered roadmap after U2 completion.
+- 2026-09-29: Archived the completed U2 task and locked this contract before
+  implementation. Inspection found no existing source-serving endpoint and all
+  identifiers currently render as plain code text.
+- 2026-09-29: Added exact evidence, retrieval, knowledge-chunk, report, and
+  decision anchors plus mapped links in investigation histories, report
+  citations, and audit events. Unresolvable identifiers remain plain text.
+- 2026-09-29: Added a hash-addressed, read-only PDF endpoint for active and
+  archived synthetic corpus versions. Live QA exposed and then verified the
+  fix for an archived-version hash that initially returned 404.
+- 2026-09-29: Live QA also exposed asynchronous fragment targets that retained
+  the URL without scrolling. A workspace observer now opens enclosing native
+  disclosures and scrolls the target after it renders.
 
 ## Completion evidence
 
-- Focused four-panel Angular run: 32 tests passed after the intentional red run
-  failed 4 tests and passed 28.
-- `./verify.ps1 -Scope Frontend`: 86 Angular tests passed with zero skips;
-  Prettier and the production build passed.
-- `./verify.ps1`: 290 copilot API, 9 operations MCP, 31 generator, and 86 Angular
-  tests passed with zero failures, errors, or skips; formatting, production
-  builds, Compose validation, and repository diff checks passed.
-- Browser QA on a populated investigation found all four section disclosures
-  and all seven approved-source disclosures open initially. Keyboard interaction
-  collapsed the evidence section and one source without changing its sibling or
-  parent disclosure; the 390-pixel viewport had no horizontal overflow.
+- Focused red-green evidence: the five panel specs initially failed 5 of 43
+  tests before links were implemented; the workspace fragment regression then
+  failed 1 of 6 tests before the async scroll behavior was added; the archived
+  PDF regression failed before prior corpus versions were packaged. The final
+  focused suites passed 43 panel tests, 6 workspace tests, and 4 PDF artifact
+  tests.
+- `./verify.ps1 -Scope Backend` passed: 294 copilot API, 9 operations MCP, and
+  31 generator tests passed with zero failures, errors, or skips; Spotless and
+  builds passed.
+- `./verify.ps1 -Scope Frontend` passed: 91 Angular tests passed with zero
+  failures or skips; Prettier and the production build passed.
+- `./verify.ps1` passed on 2026-09-29, including verification-system, local
+  knowledge/AI prerequisite, retrieval-evaluation runner, backend, frontend,
+  Compose, and diff checks.
+- Populated browser QA found 33 source links, all with `_blank`, `noopener
+  noreferrer`, and accessible “opens in new tab” text. Direct fragment loads
+  scrolled evidence and knowledge records into view. At 390×844 CSS pixels the
+  document width was 390, with no horizontal overflow or clipped source links.
+- Live PDF verification returned 12,898 bytes for persisted hash
+  `4132a6f7a627247c40c5caf2d57b7ca8d200840ea5dbabb9676a8d272168d940`;
+  the response hash matched exactly and headers reported `application/pdf`,
+  inline disposition, and immutable caching. The rendered link included
+  `#page=3`.
 
 ## Remaining limitations
 
-- Disclosure state intentionally resets to open after navigation or reload; U2
-  did not include state persistence.
-- The frontend install still reports the six existing dependency advisories
-  (five moderate and one high); the documented gate has no failing audit step.
+None.
 
 ## Decisions needed
 

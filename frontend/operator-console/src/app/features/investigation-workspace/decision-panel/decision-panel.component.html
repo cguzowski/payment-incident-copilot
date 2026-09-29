@@ -24,7 +24,11 @@
       <button class="button button--primary" type="button" (click)="load()">Try again</button>
     </div>
   } @else if (decision(); as item) {
-    <article class="decision-card" data-testid="stored-decision">
+    <article
+      class="decision-card"
+      data-testid="stored-decision"
+      [id]="'decision-' + item.decisionId"
+    >
       <div class="decision-card__heading">
         <h3>Final human decision</h3>
         <span class="status status--compact">{{ item.outcome }}</span>
@@ -44,13 +48,27 @@
         <div>
           <dt>Report attempt</dt>
           <dd>
-            <code>{{ item.reportAttemptId }}</code>
+            <a
+              class="source-reference"
+              [href]="'/investigations/' + investigationId() + '#report-' + item.reportAttemptId"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><code>{{ item.reportAttemptId }}</code
+              ><span class="visually-hidden"> (opens in new tab)</span></a
+            >
           </dd>
         </div>
         <div>
           <dt>Decision ID</dt>
           <dd>
-            <code>{{ item.decisionId }}</code>
+            <a
+              class="source-reference"
+              [href]="'/investigations/' + investigationId() + '#decision-' + item.decisionId"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><code>{{ item.decisionId }}</code
+              ><span class="visually-hidden"> (opens in new tab)</span></a
+            >
           </dd>
         </div>
       </dl>

@@ -53,11 +53,24 @@
       </summary>
       <div class="evidence-history" aria-label="Evidence collection history">
         @for (attempt of attempts(); track attempt.evidenceId) {
-          <article class="evidence-attempt" data-testid="evidence-attempt">
+          <article
+            class="evidence-attempt"
+            data-testid="evidence-attempt"
+            [id]="'evidence-' + attempt.evidenceId"
+          >
             <div class="evidence-attempt__heading">
               <div>
                 <p class="evidence-attempt__label">Collection attempt</p>
-                <code>{{ attempt.evidenceId }}</code>
+                <a
+                  class="source-reference"
+                  [href]="
+                    '/investigations/' + investigationId() + '#evidence-' + attempt.evidenceId
+                  "
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  ><code>{{ attempt.evidenceId }}</code
+                  ><span class="visually-hidden"> (opens in new tab)</span></a
+                >
               </div>
               <span class="status status--compact">{{ attempt.status }}</span>
             </div>

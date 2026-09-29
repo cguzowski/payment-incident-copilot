@@ -73,4 +73,21 @@ export class AuditTimelinePanelComponent implements OnInit, OnChanges {
     };
     return labels[type];
   }
+
+  protected sourceHref(event: AuditTimelineEvent): string | null {
+    const prefixes: Partial<Record<AuditTimelineEventType, string>> = {
+      EVIDENCE_COLLECTION: 'evidence-',
+      KNOWLEDGE_RETRIEVAL: 'retrieval-',
+      REPORT_GENERATION: 'report-',
+      HUMAN_DECISION: 'decision-',
+    };
+    const prefix = prefixes[event.eventType];
+    return prefix ? `/investigations/${this.investigationId()}#${prefix}${event.sourceId}` : null;
+  }
+
+  protected relatedSourceHref(event: AuditTimelineEvent): string | null {
+    return event.eventType === 'HUMAN_DECISION' && event.relatedSourceId
+      ? `/investigations/${this.investigationId()}#report-${event.relatedSourceId}`
+      : null;
+  }
 }

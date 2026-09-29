@@ -67,6 +67,10 @@ export class ReportPanelComponent implements OnInit {
       });
   }
 
+  protected resourceHref(fragment: string): string {
+    return `/investigations/${this.investigationId()}#${fragment}`;
+  }
+
   protected generate(): void {
     if (!this.canGenerate()) {
       return;

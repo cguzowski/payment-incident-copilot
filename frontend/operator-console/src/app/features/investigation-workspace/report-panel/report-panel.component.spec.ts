@@ -60,6 +60,29 @@ describe('ReportPanelComponent', () => {
     expect(disclosure.open).toBe(false);
   });
 
+  it('linksReportEvidenceRetrievalAndChunkReferencesToExactNewTabTargets', () => {
+    historyResponse = of([attempt('AVAILABLE')]);
+    const fixture = create();
+    fixture.detectChanges();
+
+    const report = fixture.nativeElement.querySelector('#report-attempt-AVAILABLE');
+    expect(
+      report.querySelector('a[href="/investigations/investigation-1#report-attempt-AVAILABLE"]'),
+    ).not.toBeNull();
+    expect(
+      report.querySelectorAll('a[href="/investigations/investigation-1#evidence-evidence-1"]')
+        .length,
+    ).toBeGreaterThan(1);
+    expect(
+      report.querySelector('a[href="/investigations/investigation-1#retrieval-retrieval-1"]'),
+    ).not.toBeNull();
+    const chunk = report.querySelector(
+      'a[href="/investigations/investigation-1#knowledge-retrieval-1-chunk-1"]',
+    );
+    expect(chunk?.getAttribute('target')).toBe('_blank');
+    expect(chunk?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
   it('keepsTheEmptyReportStateExpandedWithoutADisclosure', () => {
     const fixture = create();
     fixture.detectChanges();

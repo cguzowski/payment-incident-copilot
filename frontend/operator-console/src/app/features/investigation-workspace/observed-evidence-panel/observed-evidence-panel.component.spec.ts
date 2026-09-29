@@ -55,6 +55,21 @@ describe('ObservedEvidencePanelComponent', () => {
     expect(disclosure.open).toBe(false);
   });
 
+  it('exposesEachEvidenceAttemptAsAnExactNewTabTargetButLeavesSourceEventsPlain', () => {
+    historyResponse = of([evidence('AVAILABLE')]);
+    const fixture = create();
+    fixture.detectChanges();
+
+    const attempt = fixture.nativeElement.querySelector('#evidence-evidence-1');
+    const link = attempt.querySelector(
+      'a[href="/investigations/investigation-1#evidence-evidence-1"]',
+    );
+    expect(link?.getAttribute('target')).toBe('_blank');
+    expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(link?.textContent).toContain('opens in new tab');
+    expect(attempt.querySelector('a[href*="service-error-001"]')).toBeNull();
+  });
+
   it('keepsTheEmptyEvidenceStateExpandedWithoutADisclosure', () => {
     const fixture = create();
     fixture.detectChanges();

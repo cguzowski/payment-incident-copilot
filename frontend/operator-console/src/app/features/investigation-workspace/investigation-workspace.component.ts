@@ -1,5 +1,12 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { DOCUMENT, DatePipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { InvestigationApiService } from '../../core/api/investigations/investigation-api.service';
@@ -29,7 +36,11 @@ import { ReportPanelComponent } from './report-panel/report-panel.component';
 })
 export class InvestigationWorkspaceComponent {
   private readonly api = inject(InvestigationApiService);
+  private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private fragmentObserver: MutationObserver | null = null;
+  private scrollFrame: number | null = null;
   protected readonly investigationId =
     inject(ActivatedRoute).snapshot.paramMap.get('investigationId') ?? '';
   protected readonly state = signal<'loading' | 'success' | 'not-found' | 'error'>('loading');
@@ -38,7 +49,50 @@ export class InvestigationWorkspaceComponent {
   protected readonly timelineRefresh = signal(0);
 
   constructor() {
+    this.watchForFragmentTarget();
     this.load();
+    this.destroyRef.onDestroy(() => {
+      this.fragmentObserver?.disconnect();
+      if (this.scrollFrame !== null) {
+        cancelAnimationFrame(this.scrollFrame);
+      }
+    });
+  }
+
+  private watchForFragmentTarget(): void {
+    const fragmentId = this.fragmentId();
+    if (!fragmentId || this.scrollToTarget(fragmentId)) {
+      return;
+    }
+    this.fragmentObserver = new MutationObserver(() => this.scrollToTarget(fragmentId));
+    this.fragmentObserver.observe(this.host.nativeElement, { childList: true, subtree: true });
+  }
+
+  private fragmentId(): string | null {
+    try {
+      return decodeURIComponent(this.document.location.hash.slice(1)) || null;
+    } catch {
+      return null;
+    }
+  }
+
+  private scrollToTarget(fragmentId: string): boolean {
+    const target = this.document.getElementById(fragmentId);
+    if (!target || !this.host.nativeElement.contains(target)) {
+      return false;
+    }
+    for (let ancestor = target.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      if (ancestor instanceof HTMLDetailsElement) {
+        ancestor.open = true;
+      }
+      if (ancestor === this.host.nativeElement) {
+        break;
+      }
+    }
+    this.fragmentObserver?.disconnect();
+    this.fragmentObserver = null;
+    this.scrollFrame = requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+    return true;
   }
 
   protected load(): void {

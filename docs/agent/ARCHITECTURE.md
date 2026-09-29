@@ -164,6 +164,14 @@ hashes plus `pdfbox-text-pages/v1`; each `pdf-page-sections/v1` chunk has a
 1-based physical page and block range and never crosses a page. Retrieval
 snapshots copy that locator rather than resolving it from mutable files.
 
+Reviewer PDF links use the persisted PDF SHA-256 as the sole resource
+identifier. `GET /api/knowledge/pdf-artifacts/{sha256}` resolves only packaged
+synthetic PDFs from the active and archived corpus versions, rechecks the
+content hash while building the in-memory catalog, and returns the immutable
+bytes inline. The operator console appends the persisted physical page as a PDF
+fragment; tenant identity, filesystem paths, and mutable filenames are not part
+of the resource URL.
+
 The catalog can persist a PDF chunk without an embedding, allowing approved
 content into lexical retrieval before Ollama is available. Vector ranking
 ignores incomplete embedding tuples. K4 recorded embedding those stable chunks

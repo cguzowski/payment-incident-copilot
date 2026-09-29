@@ -37,6 +37,17 @@ describe('AuditTimelinePanelComponent', () => {
     expect(disclosure.open).toBe(false);
   });
 
+  it('linksOnlyTimelineIdentifiersWithExactDisplayedTargets', () => {
+    const fixture = createPanel();
+    expect(
+      fixture.nativeElement.querySelector(
+        'a[href="/investigations/investigation-1#evidence-source-1"]',
+      ),
+    ).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('a[href*="correlation-1"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('a[href*="tool-1"]')).toBeNull();
+  });
+
   it('supportsEmptyNotFoundAndRetryableErrorStates', () => {
     getTimeline.mockReturnValueOnce(of([]));
     const empty = createPanel();

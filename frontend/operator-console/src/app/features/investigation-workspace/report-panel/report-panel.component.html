@@ -68,11 +68,22 @@
       </summary>
       <div class="report-history" aria-label="Report generation history">
         @for (attempt of attempts(); track attempt.attemptId) {
-          <article class="report-attempt" data-testid="report-attempt">
+          <article
+            class="report-attempt"
+            data-testid="report-attempt"
+            [id]="'report-' + attempt.attemptId"
+          >
             <div class="report-attempt__heading">
               <div>
                 <p class="report-attempt__label">Generation attempt</p>
-                <code>{{ attempt.attemptId }}</code>
+                <a
+                  class="source-reference"
+                  [href]="resourceHref('report-' + attempt.attemptId)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  ><code>{{ attempt.attemptId }}</code
+                  ><span class="visually-hidden"> (opens in new tab)</span></a
+                >
               </div>
               <span class="status status--compact">{{ attempt.status }}</span>
             </div>
@@ -116,19 +127,44 @@
               <div>
                 <dt>Latest evidence</dt>
                 <dd>
-                  <code>{{ attempt.latestEvidenceId }}</code>
+                  <a
+                    class="source-reference"
+                    [href]="resourceHref('evidence-' + attempt.latestEvidenceId)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    ><code>{{ attempt.latestEvidenceId }}</code
+                    ><span class="visually-hidden"> (opens in new tab)</span></a
+                  >
                 </dd>
               </div>
               <div>
                 <dt>Applicable evidence</dt>
                 <dd>
-                  <code>{{ attempt.applicableEvidenceId ?? 'Unavailable' }}</code>
+                  @if (attempt.applicableEvidenceId; as evidenceId) {
+                    <a
+                      class="source-reference"
+                      [href]="resourceHref('evidence-' + evidenceId)"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      ><code>{{ evidenceId }}</code
+                      ><span class="visually-hidden"> (opens in new tab)</span></a
+                    >
+                  } @else {
+                    <code>Unavailable</code>
+                  }
                 </dd>
               </div>
               <div>
                 <dt>Knowledge retrieval</dt>
                 <dd>
-                  <code>{{ attempt.retrievalId }}</code>
+                  <a
+                    class="source-reference"
+                    [href]="resourceHref('retrieval-' + attempt.retrievalId)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    ><code>{{ attempt.retrievalId }}</code
+                    ><span class="visually-hidden"> (opens in new tab)</span></a
+                  >
                 </dd>
               </div>
             </dl>
@@ -147,7 +183,14 @@
                     <div class="claim__sources" aria-label="Summary sources">
                       <strong>Evidence</strong>
                       @for (source of report.summary.evidenceIds; track source) {
-                        <code>{{ source }}</code>
+                        <a
+                          class="source-reference"
+                          [href]="resourceHref('evidence-' + source)"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><code>{{ source }}</code
+                          ><span class="visually-hidden"> (opens in new tab)</span></a
+                        >
                       }
                     </div>
                   </article>
@@ -161,7 +204,14 @@
                       <div class="claim__sources">
                         <strong>Evidence</strong>
                         @for (source of claim.evidenceIds; track source) {
-                          <code>{{ source }}</code>
+                          <a
+                            class="source-reference"
+                            [href]="resourceHref('evidence-' + source)"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            ><code>{{ source }}</code
+                            ><span class="visually-hidden"> (opens in new tab)</span></a
+                          >
                         }
                       </div>
                     </article>
@@ -177,14 +227,30 @@
                         <div class="claim__sources">
                           <strong>Evidence</strong>
                           @for (source of claim.evidenceIds; track source) {
-                            <code>{{ source }}</code>
+                            <a
+                              class="source-reference"
+                              [href]="resourceHref('evidence-' + source)"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              ><code>{{ source }}</code
+                              ><span class="visually-hidden"> (opens in new tab)</span></a
+                            >
                           }
                         </div>
                         @if (claim.knowledgeChunkIds.length > 0) {
                           <div class="claim__sources">
                             <strong>Approved knowledge</strong>
                             @for (source of claim.knowledgeChunkIds; track source) {
-                              <code>{{ source }}</code>
+                              <a
+                                class="source-reference"
+                                [href]="
+                                  resourceHref('knowledge-' + attempt.retrievalId + '-' + source)
+                                "
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                ><code>{{ source }}</code
+                                ><span class="visually-hidden"> (opens in new tab)</span></a
+                              >
                             }
                           </div>
                         }
@@ -201,14 +267,30 @@
                       <div class="claim__sources">
                         <strong>Evidence</strong>
                         @for (source of claim.evidenceIds; track source) {
-                          <code>{{ source }}</code>
+                          <a
+                            class="source-reference"
+                            [href]="resourceHref('evidence-' + source)"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            ><code>{{ source }}</code
+                            ><span class="visually-hidden"> (opens in new tab)</span></a
+                          >
                         }
                       </div>
                       @if (claim.knowledgeChunkIds.length > 0) {
                         <div class="claim__sources">
                           <strong>Approved knowledge</strong>
                           @for (source of claim.knowledgeChunkIds; track source) {
-                            <code>{{ source }}</code>
+                            <a
+                              class="source-reference"
+                              [href]="
+                                resourceHref('knowledge-' + attempt.retrievalId + '-' + source)
+                              "
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              ><code>{{ source }}</code
+                              ><span class="visually-hidden"> (opens in new tab)</span></a
+                            >
                           }
                         </div>
                       }
@@ -232,7 +314,14 @@
                     <div class="claim__sources">
                       <strong>Evidence</strong>
                       @for (source of report.confidence.evidenceIds; track source) {
-                        <code>{{ source }}</code>
+                        <a
+                          class="source-reference"
+                          [href]="resourceHref('evidence-' + source)"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><code>{{ source }}</code
+                          ><span class="visually-hidden"> (opens in new tab)</span></a
+                        >
                       }
                     </div>
                   </article>
@@ -246,13 +335,27 @@
                       <div class="claim__sources">
                         <strong>Evidence</strong>
                         @for (source of claim.evidenceIds; track source) {
-                          <code>{{ source }}</code>
+                          <a
+                            class="source-reference"
+                            [href]="resourceHref('evidence-' + source)"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            ><code>{{ source }}</code
+                            ><span class="visually-hidden"> (opens in new tab)</span></a
+                          >
                         }
                       </div>
                       <div class="claim__sources">
                         <strong>Approved knowledge</strong>
                         @for (source of claim.knowledgeChunkIds; track source) {
-                          <code>{{ source }}</code>
+                          <a
+                            class="source-reference"
+                            [href]="resourceHref('knowledge-' + attempt.retrievalId + '-' + source)"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            ><code>{{ source }}</code
+                            ><span class="visually-hidden"> (opens in new tab)</span></a
+                          >
                         }
                       </div>
                     </article>
@@ -268,14 +371,30 @@
                         <div class="claim__sources">
                           <strong>Evidence</strong>
                           @for (source of claim.evidenceIds; track source) {
-                            <code>{{ source }}</code>
+                            <a
+                              class="source-reference"
+                              [href]="resourceHref('evidence-' + source)"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              ><code>{{ source }}</code
+                              ><span class="visually-hidden"> (opens in new tab)</span></a
+                            >
                           }
                         </div>
                         @if (claim.knowledgeChunkIds.length > 0) {
                           <div class="claim__sources">
                             <strong>Approved knowledge</strong>
                             @for (source of claim.knowledgeChunkIds; track source) {
-                              <code>{{ source }}</code>
+                              <a
+                                class="source-reference"
+                                [href]="
+                                  resourceHref('knowledge-' + attempt.retrievalId + '-' + source)
+                                "
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                ><code>{{ source }}</code
+                                ><span class="visually-hidden"> (opens in new tab)</span></a
+                              >
                             }
                           </div>
                         }

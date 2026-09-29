@@ -98,6 +98,26 @@ describe('InvestigationWorkspaceComponent', () => {
     );
   });
 
+  it('scrollsToAFragmentTargetWhenAnAsyncPanelRendersIt', async () => {
+    history.replaceState(null, '', '#evidence-late');
+    response = of(investigation());
+    const fixture = TestBed.createComponent(InvestigationWorkspaceComponent);
+    fixture.detectChanges();
+    const disclosure = document.createElement('details');
+    const target = document.createElement('article');
+    target.id = 'evidence-late';
+    const scrollIntoView = vi.fn();
+    target.scrollIntoView = scrollIntoView;
+    disclosure.append(target);
+
+    fixture.nativeElement.append(disclosure);
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+    expect(disclosure.open).toBe(true);
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+    history.replaceState(null, '', location.pathname);
+  });
+
   it('showsNotFoundAndRetryableErrorStates', () => {
     response = throwError(() => new ApiRequestError('not found', 404));
     const notFound = TestBed.createComponent(InvestigationWorkspaceComponent);
