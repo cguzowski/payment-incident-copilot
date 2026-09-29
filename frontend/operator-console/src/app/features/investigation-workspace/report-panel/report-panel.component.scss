@@ -31,6 +31,14 @@
   line-height: 1.55;
 }
 
+.report-panel__heading .button:disabled {
+  cursor: not-allowed;
+}
+
+.report-panel__heading .button.button--busy:disabled {
+  cursor: wait;
+}
+
 .report-history {
   display: grid;
   gap: 1rem;

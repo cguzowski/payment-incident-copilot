@@ -9,6 +9,8 @@
       type="button"
       data-testid="generate-report"
       [disabled]="!canGenerate()"
+      [class.button--busy]="generating()"
+      [attr.aria-busy]="generating() ? true : null"
       (click)="generate()"
     >
       {{ generating() ? 'Generating…' : 'Generate proposed report' }}

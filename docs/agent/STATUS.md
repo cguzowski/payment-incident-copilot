@@ -11,17 +11,20 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 a complete terminal decision on a newly generated live-model report remains
 unproved.
 
-The [latest task](tasks/current.md) completed Q1 evaluation integrity:
-generation and evidence use a truth-free observable catalog, only the
-post-decision reveal loads `scenario-oracle/v1`, and the retrieval contract is
-bound to oracle-independent `synten-auth-knowledge/v2`. The exact v1 corpus is
-preserved as a hash-verifiable archive.
+The [latest task](tasks/current.md) completed U1 report-generation state
+recovery. The operator console consumes exactly one generation response,
+releases obsolete upstream work immediately, clears its loading presentation
+for every terminal status and HTTP error, and distinguishes an active wait
+cursor from a workflow-disabled control.
 
 ## Verification evidence
 
-- Q1 passed `./verify.ps1` on 2026-09-29: 290 copilot API, 9 operations MCP, 31
-  generator, and 78 Angular tests passed with zero failures, errors, or skips;
+- U1 passed `./verify.ps1` on 2026-09-29: 290 copilot API, 9 operations MCP, 31
+  generator, and 79 Angular tests passed with zero failures, errors, or skips;
   formatting, builds, Compose validation, and repository checks also passed.
+- The focused U1 report-panel suite passed 13 tests covering non-completing
+  terminal responses, upstream unsubscription, destroy cancellation, HTTP
+  failures, busy semantics, and computed cursor behavior.
 - Q1 corpus checks passed for the exact hash-verifiable v1 archive and 30 active
   v2 source/PDF pairs. Automated validation covered 113 pages, and visual QA
   inspected every rendered page with zero layout defects.

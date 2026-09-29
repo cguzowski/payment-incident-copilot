@@ -1,137 +1,114 @@
-# Task: Complete Q1 evaluation integrity
+# Task: Recover report-generation button state (U1)
 
 Status: Completed
-Created: 2026-09-24
+Created: 2026-09-29
 Owner: Christopher Guzowski
 
 ## Goal
 
-Complete Q1 by removing the deterministic answer key from every evaluated
-evidence, retrieval, report, and decision input while preserving an auditable
-post-decision reveal and the immutable v1 corpus record.
+Ensure report generation leaves its loading presentation after every terminal
+outcome and does not retain obsolete generation work after the one-response API
+contract has been satisfied.
 
 ## User story
 
-As an evaluator, I want observable scenario inputs and operational knowledge to
-be independent of the sealed oracle, so retrieval and report quality are not
-measured against answers copied into their own inputs.
+As a payment operations analyst, I want the Generate proposed report control to
+stop appearing busy when generation finishes, so its state accurately reflects
+whether work is still running.
 
 ## Chosen contract
 
-- Split the scenario catalog into an observable catalog and a separately loaded
-  `scenario-oracle/v1`; only the post-decision reveal service may depend on the
-  oracle catalog.
-- Archive the exact v1 corpus sources, PDFs, manifest, inventory, authoring
-  standard, and generator/validation implementation before creating v2.
-- Create `synten-auth-knowledge/v2` with bumped document versions and neutral,
-  independently maintained signal interpretations; no corpus tool or artifact
-  may read or reproduce oracle root-cause, disposition, confidence, required
-  evidence, recommendation, or decision-rule fields.
-- Preserve document IDs, keys, approval states, coverage, and retrieval labels
-  unless a measured requirement demands a separate owner decision.
-- Keep `synten-retrieval-eval/v1` labels fixed while binding them explicitly to
-  corpus v2.
+- The report-generation request consumes at most one response, matching the
+  existing HTTP endpoint contract, and unsubscribes immediately after that
+  response.
+- Every terminal report status and every HTTP error clears the generating state.
+- A button disabled because generation is active presents a busy state and wait
+  cursor; a button disabled only because generation is no longer allowed does
+  not present a busy state or wait cursor, including on hover.
+- Existing report history, terminal-status rendering, error distinctions,
+  report-available notification, API schemas, and incident lifecycle behavior
+  remain unchanged.
 
 ## In scope
 
-- Observable/oracle scenario resource split and dependency tests.
-- Immutable v1 corpus archive with byte/hash verification.
-- Version-bumped v2 Markdown sources, PDFs, validation manifest, and ingestion
-  contract.
-- Corpus generation, extraction, rendering, automated validation, and visual
-  inspection of every regenerated PDF page.
-- Retrieval-evaluation contract and runner corpus-version updates.
-- Documentation, ADR, status, and full repository verification.
+- Report-panel request lifecycle and button-state presentation.
+- Angular regressions for terminal response, unsubscription, errors, and disabled
+  versus busy presentation.
+- Focused frontend and full repository verification.
 
 ## Out of scope
 
-- Changing retrieval ranking, labels, thresholds, or query construction.
-- Running a new live embedding/retrieval benchmark or claiming Q2 success.
-- Automated report grading, live report generation, authentication, or AWS.
-- Persisting reveal events in the copilot audit timeline.
+- Backend report-generation timing, provider cancellation, or API changes.
+- Background jobs, polling, retries, or new dependencies.
+- Other investigation-section presentation changes from U2 or identifier links
+  from U3.
 
 ## Constraints
 
-- Preserve all v1 bytes and recorded hashes.
-- Use only synthetic data and keep PDFs at 1-15 pages.
-- Never change document bytes without changing their version and filename.
-- Evidence and retrieval paths must compile without an oracle dependency.
-- Automated tests remain deterministic and require no live model provider.
+- Follow red-green-refactor for executable behavior.
+- Keep automated tests deterministic and provider-free.
+- Preserve prior attempts throughout generation and after terminal outcomes.
+- Do not make an unavailable Generate button appear actionable.
 
 ## Acceptance criteria
 
-- [x] Observable scenario resources contain no answer-key fields, and runtime
-      evidence/generation plus retrieval evaluation consume only those resources.
-- [x] Only the terminal-decision reveal service can load `scenario-oracle/v1`.
-- [x] The exact v1 corpus remains inspectable and hash-verifiable in its archive.
-- [x] Corpus v2 contains exactly 30 source/PDF pairs with bumped versions and no
-      oracle-derived prose or generator dependency on oracle fields.
-- [x] All v2 PDFs pass automated validation and complete visual inspection.
-- [x] Catalog ingestion and retrieval evaluation accept v2 while preserving
-      document keys, IDs, eligibility, labels, and thresholds.
-- [x] Focused tests and the full repository verification gate pass without skips.
+- [x] `AVAILABLE`, `UNAVAILABLE`, `TIMED_OUT`, and `MALFORMED` responses clear
+      the loading label, status message, busy semantics, and wait-cursor styling
+      as soon as the terminal response is received, without requiring source
+      completion.
+- [x] The generation subscription releases obsolete upstream work immediately
+      after the single response and when the panel is destroyed.
+- [x] Conflict, not-found, and other HTTP errors continue to clear the loading
+      state and preserve their existing messages and report history.
+- [x] A workflow-disabled button remains visibly disabled but does not show the
+      generation wait cursor, including on hover.
+- [x] Focused frontend tests and the full repository verification gate pass with
+      zero skipped tests.
 
 ## Test plan
 
-- Red tests for observable/oracle resource schemas and package dependencies.
-- Static contamination tests that reject oracle fields or phrases in the v2
-  corpus generator, sources, PDFs, and manifest.
-- Archive tests comparing v1 manifest hashes to archived source/PDF bytes.
-- Existing corpus validation, parser/chunker, catalog, and evaluation-contract
-  suites updated for v2.
-- Render every PDF page, inspect contact sheets plus required full-size pages,
-  and record page counts and defects.
-- Run focused generator/corpus/backend tests followed by `./verify.ps1`.
+- Extend `clearsGeneratingForThe...TerminalGenerationResponse` to emit without
+  completing and assert loading/busy state clears plus upstream observers are
+  released.
+- Assert pending generation retains disabled, busy, and wait-cursor state.
+- Assert a post-`AVAILABLE` workflow-disabled button is not busy and has no
+  wait-cursor class.
+- Preserve the existing HTTP-error and previous-history regressions.
+- Run `./verify.ps1 -Scope Frontend`, then `./verify.ps1`.
 
 ## Progress notes
 
-- 2026-09-24: Owner authorized completion of Q1 after the terminal-decision
-  reveal slice passed the full repository gate.
-- 2026-09-24: Inspected the remaining contamination path: the corpus generator
-  reads `truth.rootCause` for signal tables and scenario decision matrices, and
-  retrieval evaluation currently deserializes truth with observable scenarios.
-- 2026-09-24: Split the 36-scenario runtime catalog from
-  `scenario-oracle/v1`; generation, evidence, and retrieval now deserialize only
-  observable fields, while a dependency test limits oracle loading to the
-  terminal human-decision reveal path.
-- 2026-09-24: Preserved the complete v1 corpus under
-  `corpus/versions/synten-auth-knowledge-v1/` and verified every archived source
-  and PDF byte against the archived manifest hashes.
-- 2026-09-24: Generated `synten-auth-knowledge/v2` as 30 bumped-version Markdown
-  and PDF pairs. Automated validation found 113 pages (3-5 per document), and
-  visual inspection covered all 113 rendered pages with no defects.
-- 2026-09-29: Bound ingestion and fixed `synten-retrieval-eval/v1` labels to
-  corpus v2 and accepted its deterministic 30-document, 705-chunk catalog
-  fingerprint `5d704fee24f9754176f1be2e449050190e0b78ffa3fdb9ddc92b464006d198e9`.
-- 2026-09-29: The full repository verification gate passed after Docker-backed
-  integration execution, with zero skipped tests.
+- 2026-09-29: Owner activated U1 from the roadmap.
+- 2026-09-29: Inspection found that the component clears `generating` in
+  `finalize`, which waits for completion/error/unsubscription after a response,
+  and that the shared disabled-button cursor always communicates waiting even
+  when generation is terminal and the workflow alone disables the control.
+- 2026-09-29: Added the one-response subscription boundary, explicit busy
+  semantics, and separate busy/workflow-disabled cursor styles. The red focused
+  run failed all four non-completing terminal-response cases and the missing
+  busy-state assertion; the implementation then passed focused and aggregate
+  verification.
 
 ## Completion evidence
 
-- Corpus validation: 8 Python tests passed; source/PDF hashes, archive hashes,
-  metadata, page limits, exact artifact counts, and oracle-contamination checks
-  passed for all 30 active documents.
-- PDF validation and visual QA: 30 PDFs, 113 pages, 3-5 pages per PDF; every page
-  rendered and inspected, with zero clipping, overlap, unreadable-table, banner,
-  or pagination defects.
-- Focused generator verification: 31 tests passed with zero failures, errors, or
-  skips.
-- Focused catalog/retrieval verification confirmed 30 documents, 705 chunks, and
-  the accepted corpus-v2 fingerprint.
+- Red: the focused report-panel run had 5 failures and 8 passes. Each terminal
+  status remained on `Generating…` when the source stayed open, and the active
+  button lacked its explicit busy class.
+- Green: the focused report-panel spec passed 13/13 tests, including immediate
+  upstream release, panel-destroy cancellation, busy semantics, and computed
+  `wait` versus `not-allowed` cursor behavior.
+- `./verify.ps1 -Scope Frontend` passed 79 Angular tests with zero failures or
+  skips, Prettier, and the production build.
 - `./verify.ps1` passed on 2026-09-29: 290 copilot API, 9 operations MCP, 31
-  generator, and 78 Angular tests passed with zero failures, errors, or skips;
-  format, package, build, Compose, and repository diff checks also passed.
+  generator, and 79 Angular tests passed with zero failures, errors, or skips;
+  formatting, builds, Compose validation, and repository diff checks also
+  passed.
 
 ## Remaining limitations
 
-- The retrieval benchmark was not rerun; Q1 establishes input integrity, not Q2
-  retrieval or report quality.
-- Corpus v2 still contains generic procedural overlap and requests some handoff
-  records the operator console does not capture.
-- Answer-key reveal events are emitted to the generator audit sink but are not
-  persisted in the copilot audit timeline.
-- Frontend installation reported six dependency advisories (five moderate, one
-  high); the repository gate has no failing npm-audit step.
+- Frontend installation continues to report six dependency advisories (five
+  moderate, one high); the repository verification gate does not fail on npm
+  audit findings.
 
 ## Decisions needed
 

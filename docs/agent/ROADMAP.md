@@ -1,7 +1,7 @@
 # Product roadmap
 
 Status: Active
-Last reviewed: 2026-09-24
+Last reviewed: 2026-09-29
 Owner: Christopher Guzowski
 
 ## Purpose
@@ -21,6 +21,7 @@ owner-activated [task contract](tasks/current.md) authorizes implementation.
 | R1 | Generated incidents connected to their matching MCP evidence |
 | R2 | Local Qwen S001 report validated and persisted for review |
 | Q1 | Oracle isolated from evaluated inputs with terminal reveal and corpus v2 |
+| U1 | Report generation releases obsolete work and recovers its button state after terminal outcomes |
 
 K4/K5 completion did not pass the benchmark. See
 [STATUS.md](STATUS.md) for current evidence limitations and
@@ -30,6 +31,8 @@ K4/K5 completion did not pass the benchmark. See
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
+| U2 | Collapse populated investigation sections | Service-error evidence, Runbooks and Policy, and Proposed incident report become collapsible when they contain content; each runbook and policy is independently collapsible; Audit timeline is collapsible from the initial recorded incident onward. |
+| U3 | Link resolvable evidence and resource identifiers | Applicable evidence identifiers and document hashes are links that open the exact excerpt or resource in a new tab, including latest-evidence identifiers and PDF SHA-256 values; identifiers without a meaningful resolvable target remain non-links. |
 | Q2 | Retrieval-quality disposition | Pass the unchanged benchmark or record explicit owner acceptance of the measured failure and consequences. |
 | Q3 | Automated report grading | Retain reproducible correctness, citation, unsupported-claim, latency, and failure metrics across the scenario oracle. |
 | Q4 | Complete live-model audit proof | Verify a new live report's explicit human decision, terminal state, and full audit timeline. |

@@ -11,7 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { finalize, take } from 'rxjs';
 import { IncidentStatus } from '../../../core/models/incident';
 import { ApiRequestError } from '../../../core/http/api-error.interceptor';
 import { ReportApiService } from './report-api.service';
@@ -76,6 +76,7 @@ export class ReportPanelComponent implements OnInit {
     this.api
       .generate(this.investigationId())
       .pipe(
+        take(1),
         finalize(() => this.generating.set(false)),
         takeUntilDestroyed(this.destroyRef),
       )

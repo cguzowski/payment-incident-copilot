@@ -68,6 +68,9 @@ describe('ReportPanelComponent', () => {
     button.click();
     fixture.detectChanges();
     expect(button.disabled).toBe(true);
+    expect(button.classList).toContain('button--busy');
+    expect(button.getAttribute('aria-busy')).toBe('true');
+    expect(getComputedStyle(button).cursor).toBe('wait');
     expect(fixture.nativeElement.textContent).toContain('Generating proposed report');
     pending.error(new ApiRequestError('conflict', 409));
     fixture.detectChanges();
@@ -79,22 +82,45 @@ describe('ReportPanelComponent', () => {
     'clearsGeneratingForThe%sTerminalGenerationResponse',
     (status) => {
       historyResponse = of([attempt('UNAVAILABLE', false, 'previous')]);
-      generationResponse = of(attempt(status));
+      const terminalResponse = new Subject<ReportGenerationAttempt>();
+      generationResponse = terminalResponse.asObservable();
       const fixture = create();
       fixture.detectChanges();
 
       fixture.nativeElement.querySelector('[data-testid="generate-report"]').click();
+      terminalResponse.next(attempt(status));
       fixture.detectChanges();
 
       const button = fixture.nativeElement.querySelector(
         '[data-testid="generate-report"]',
       ) as HTMLButtonElement;
       expect(button.textContent).toContain('Generate proposed report');
+      expect(button.classList).not.toContain('button--busy');
+      expect(button.hasAttribute('aria-busy')).toBe(false);
       expect(fixture.nativeElement.textContent).not.toContain('Generating proposed report');
       expect(fixture.nativeElement.textContent).toContain(status);
       expect(fixture.nativeElement.textContent).toContain('attempt-UNAVAILABLE-previous');
+      expect(terminalResponse.observed).toBe(false);
+      if (status === 'AVAILABLE') {
+        expect(button.disabled).toBe(true);
+        expect(getComputedStyle(button).cursor).toBe('not-allowed');
+      }
     },
   );
+
+  it('cancelsPendingGenerationWhenThePanelIsDestroyed', () => {
+    const pending = new Subject<ReportGenerationAttempt>();
+    generationResponse = pending.asObservable();
+    const fixture = create();
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('[data-testid="generate-report"]').click();
+    expect(pending.observed).toBe(true);
+
+    fixture.destroy();
+
+    expect(pending.observed).toBe(false);
+  });
 
   it.each([
     [409, 'Report generation is not ready'],
