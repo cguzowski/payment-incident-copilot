@@ -11,15 +11,49 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 a complete terminal decision on a newly generated live-model report remains
 unproved.
 
-The [current task](tasks/current.md), Q2 retrieval-quality disposition, is
-complete. The unchanged benchmark passes with exact-signal ranking and bounded,
-source-derived policy relationships, and the full repository gate passed.
+The [current task](tasks/current.md), duplicate-citation report validity, is
+complete. Two live S013 attempts safely failed as `MALFORMED` because Qwen
+repeated the sole eligible evidence identifier despite the schema's
+`uniqueItems` constraint. `report-prompt/v4` now states the uniqueness rule and
+the per-request schema caps reference-array lengths at the count of distinct
+eligible identifiers; strict parsing and fail-closed behavior are unchanged.
+The same investigation then produced an AVAILABLE/PROPOSED report with unique
+eligible citations after the API restart.
+
+Q3 automated report grading is complete.
+`synten-report-eval/v1` now grades complete 36-scenario post-run artifacts
+against the sealed oracle with exact bounded correctness, citation,
+unsupported-claim, latency, and terminal-failure metrics. The evaluator is
+offline, fail-closed, hash-bound, and outside every runtime/model input. Its
+retained deterministic fixture proves grader behavior; it is not a live-model
+quality result. Q2 remains complete: the unchanged retrieval benchmark passes
+with exact-signal ranking and bounded, source-derived policy relationships.
 U3 reviewer links are complete: resolvable identifiers
 open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
 
+- Q3 passed `./verify.ps1` on 2026-09-30: 303 copilot API, 9 operations MCP,
+  31 generator, and 91 Angular tests passed with zero failures/errors/skips.
+  Formatting, builds, Compose validation and repository checks passed. The
+  focused eight-test evaluator suite and separate Repository scope also passed.
+- Q3 retained `q3-report-grader-fixture-v1.json` (122,566 bytes), SHA-256
+  `a023fa81eac34732a619cd76850db936dac2f48358fa55afa9263a1846e93555`.
+  It covers all 36 scenarios and deliberately exercises every terminal status
+  plus all five bounded unsupported-claim indicators. Recalculated evaluator,
+  catalog, oracle, and artifact hashes match its recorded provenance.
+- The duplicate-citation regression initially failed because one eligible
+  evidence ID retained the base `maxItems: 10`. After the v4 change, 35 focused
+  report tests passed with zero failures/errors/skips, including one-source,
+  multi-source, base-limit, and strict duplicate-rejection coverage.
+- Live S013 attempt `721d1cd4-6adb-4191-adf1-69723370872c` completed AVAILABLE
+  in 94.9 seconds with `report-prompt/v4`, `report-v1`, unique eligible
+  citations, and retained 64-character prompt and constrained-schema hashes.
+- The duplicate-citation fix passed Backend scope and authoritative
+  `./verify.ps1`: 304 copilot API, 9 operations MCP, 31 generator, and 91
+  Angular tests passed with zero failures/errors/skips. Formatting, builds,
+  Compose validation, repository checks, and diff checks passed.
 - Q2 passed `./verify.ps1` on 2026-09-30: 303 copilot API, 9 operations MCP,
   31 generator, and 91 Angular tests passed with zero failures/errors/skips.
   Formatting, builds, Compose validation and repository checks passed. The
@@ -71,6 +105,10 @@ identifiers remain plain text.
 
 ## Known limitations
 
+- Q3's deterministic unsupported-claim detector is deliberately bounded. It
+  cannot establish general natural-language entailment, and the fixture does
+  not measure live-model quality. No promotion threshold exists until broad
+  live results justify an owner-reviewed contract.
 - The benchmark PASS permits individual misses: KQ-004/S005 and KQ-019/S109
   omit PL-002, and KQ-018/S201 still ranks its weak match above its primary.
   The first two are policy regressions from baseline. Aggregate success is not

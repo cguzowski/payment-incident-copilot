@@ -1,6 +1,6 @@
 # ADR-0014: Separate evaluation inputs from the scenario oracle
 
-Status: Accepted  
+Status: Accepted; offline post-run evaluation extended by ADR-0016
 Date: 2026-09-24  
 Decision owner: Christopher Guzowski
 
@@ -26,7 +26,9 @@ Maintain `scenarios/catalog.json` as the observable fixture authority and
 `scenarios/oracle.json` as `scenario-oracle/v1`. Generation, MCP evidence,
 retrieval evaluation, and corpus generation consume only the observable
 catalog. Only `AnswerKeyRevealService`, after the terminal-decision check from
-ADR-0013, depends on the oracle catalog.
+ADR-0013, depends on the oracle catalog at runtime. ADR-0016 additionally
+permits the repository-owned offline report evaluator to load the sealed oracle
+after generation; it remains outside every application runtime and model input.
 
 Preserve `synten-auth-knowledge/v1` byte-for-byte under
 `SynTen Inc/corpus/versions/synten-auth-knowledge-v1/`. Publish

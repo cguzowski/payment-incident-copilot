@@ -12,6 +12,7 @@ All data is synthetic and belongs to the single
 | [corpus/inventory.md](corpus/inventory.md) | Exact document membership and metadata |
 | [corpus/authoring-standard.md](corpus/authoring-standard.md) | PDF authoring and validation contract |
 | [evaluation/retrieval-cases.md](evaluation/retrieval-cases.md) | Fixed retrieval labels and thresholds |
+| [evaluation/report-evaluation-v1.md](evaluation/report-evaluation-v1.md) | Offline report-grading contract and fixture evidence |
 | [corpus/validation-manifest.json](corpus/validation-manifest.json) | Source/PDF hashes and recorded validation |
 
 The active `synten-auth-knowledge/v2` corpus contains 30 maintained Markdown
@@ -43,13 +44,24 @@ partial/unavailable/superseded semantics. Two policy cases and one ordering
 case still fail individually; see [retained results and limitations](evaluation/q2-retrieval-results.md).
 Retrieval success does not establish report quality.
 
+## Recorded report-evaluation result
+
+Q3 adds the offline `synten-report-eval/v1` contract. Its retained deterministic
+fixture covers all 36 oracle scenarios and exercises every terminal result plus
+the bounded unsupported-claim indicators. The fixture proves grader behavior,
+not live-model quality, and sets no promotion threshold. See the
+[contract and reproduction steps](evaluation/report-evaluation-v1.md).
+
+Artifact: `evaluation/results/q3-report-grader-fixture-v1.json`, SHA-256
+`a023fa81eac34732a619cd76850db936dac2f48358fa55afa9263a1846e93555`.
+
 Evidence records:
 
 - [K4 completion](../docs/agent/tasks/completed/2026-09-01-embed-and-evaluate-the-synten-inc-pdf-knowledge-catalog.md):
   artifact `14588db4735841ffb5711a962e2c5119-FAIL.json`.
 - [K5 completion](../docs/agent/tasks/completed/2026-09-01-prove-live-approved-knowledge-retrieval-in-the-operator-workflow.md):
   artifact `375ebc04ba894e84b2d18aeb6bc4d3cb-FAIL.json`.
-- [Q2 active task](../docs/agent/tasks/current.md): artifact
+- [Q2 completion](../docs/agent/tasks/completed/2026-09-30-resolve-retrieval-quality-disposition-q2.md): artifact
   `d22280e533b04578bdd4f260e0f6a6c6-FAIL.json`, SHA-256
   `c126a45551ebeaf8774e5731e4dbe6f8711d4e3d3d3e6bcdd2620ff75974cce1`.
 

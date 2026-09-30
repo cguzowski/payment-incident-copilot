@@ -25,6 +25,7 @@ owner-activated [task contract](tasks/current.md) authorizes implementation.
 | U2 | Populated investigation histories and individual approved sources use accessible native disclosures |
 | U3 | Resolvable reviewer identifiers open exact rendered records and immutable PDFs |
 | Q2 | Fixed corpus-v2 retrieval benchmark passes at 22/22 primary, 20/22 policy and 20/21 ordering; full repository gate passed |
+| Q3 | Versioned offline report grader retains reproducible bounded correctness, citation, unsupported-claim, latency, and failure metrics for all 36 oracle scenarios |
 
 K4/K5 completion did not pass the benchmark. See
 [STATUS.md](STATUS.md) for current evidence limitations and
@@ -34,7 +35,6 @@ K4/K5 completion did not pass the benchmark. See
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
-| Q3 | Automated report grading | Retain reproducible correctness, citation, unsupported-claim, latency, and failure metrics across the scenario oracle. |
 | Q4 | Complete live-model audit proof | Verify a new live report's explicit human decision, terminal state, and full audit timeline. |
 | Q5 | Broader live-model coverage | Exercise common, uncommon, rare, partial-evidence, and unavailable-evidence scenarios. |
 | D1 — Deferred | AWS deployment | Select services, tooling, networking, IAM, cost, teardown, and any Bedrock profile in an ADR before implementation. |
@@ -52,7 +52,11 @@ is preserved as a hash-verifiable historical archive.
   ranking separately from policy relationships, and verified the combined
   change against the fixed benchmark and full repository gate.
   [ADR-0015](decisions/ADR-0015-source-derived-retrieval-signals-and-relationships.md)
-  records the implementation. Q3 remains pending owner activation.
+  records the implementation.
+- Q3 completed `synten-report-eval/v1` as a deterministic offline post-run
+  grader. ADR-0016 records its bounded metric semantics and oracle isolation;
+  the retained fixture proves evaluator behavior, not live-model quality. Q4
+  remains pending owner activation.
 - Treat corpus v2 and evaluation labels as fixed inputs. Corpus changes require
   an approved version task; keep source/PDF hashes and prior evidence.
 - Keep generation, ingestion, embedding, and evaluation separately verifiable.

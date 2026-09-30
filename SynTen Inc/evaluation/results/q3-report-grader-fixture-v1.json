@@ -1,0 +1,3331 @@
+{
+  "schemaVersion": "synten-report-eval-result/v1",
+  "evaluatorVersion": "synten-report-eval/v1",
+  "runId": "43000000-0000-4000-8000-000000000001",
+  "evaluatedAt": "2026-09-30T12:00:00.0000000+00:00",
+  "inputMetadata": {
+    "schemaVersion": "synten-report-eval-input/v1",
+    "createdAt": "2026-09-30T12:00:00.0000000+00:00",
+    "resultCount": 36
+  },
+  "provenance": {
+    "evaluatorVersion": "synten-report-eval/v1",
+    "evaluatorSha256": "ac0e80cae3b7ce9e5fcd8bc162b00f1c71d49a7780e83764b331f97c83e4a4ef",
+    "inputSha256": "19426f13bad71752d18852d34e639fc433babd2b64962378c3cb5a04e82d7f74",
+    "observableCatalogSha256": "dadffe9e20b0f2c5089a08c1d62aefd93273444810464988c5cc4274a3421eb8",
+    "oracleVersion": "scenario-oracle/v1",
+    "oracleSha256": "4d319d5fc3b09cada589b82bf0fd251ae2339934bea06f5f5afcee5178ba7d30"
+  },
+  "metricSemantics": {
+    "correctness": "Exact terminal, disposition, confidence, required machine-signal, and insufficient-evidence null checks; not semantic entailment.",
+    "citations": "Exact retained eligible-identifier membership and required citation presence.",
+    "unsupportedClaims": "Unknown citations, foreign machine-signal tokens, and cause/recommendation assertions for oracle insufficient-evidence scenarios; not general entailment.",
+    "latency": "Completed-at minus requested-at for every terminal attempt."
+  },
+  "aggregates": {
+    "scenarioCount": 36,
+    "terminalStatuses": {
+      "AVAILABLE": 33,
+      "UNAVAILABLE": 1,
+      "TIMED_OUT": 1,
+      "MALFORMED": 1
+    },
+    "correctness": {
+      "terminalAvailable": 33,
+      "dispositionCorrect": 32,
+      "confidenceCorrect": 33,
+      "requiredSignalsCovered": 33,
+      "insufficientNullContract": 1
+    },
+    "citations": {
+      "claimsRequiringCitations": 194,
+      "claimsWithRequiredCitations": 194,
+      "totalReferences": 288,
+      "validReferences": 286,
+      "unknownEvidenceReferences": 1,
+      "unknownKnowledgeReferences": 1,
+      "recommendationsRequiringKnowledge": 32,
+      "recommendationsWithKnowledge": 32
+    },
+    "unsupportedClaims": {
+      "unknownEvidenceReferences": 1,
+      "unknownKnowledgeReferences": 1,
+      "foreignSignalTokens": 1,
+      "insufficientCauseOrRecommendation": 2,
+      "totalIndicators": 5
+    },
+    "latency": {
+      "count": 36,
+      "minMs": 100,
+      "medianMs": 275,
+      "p95Ms": 440,
+      "maxMs": 450
+    }
+  },
+  "scenarios": [
+    {
+      "scenarioCode": "S001",
+      "attemptId": "40000000-0000-4000-8000-000000000001",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:00.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:00.1000000+00:00",
+      "latencyMs": 100,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000001"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000001"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "GATEWAY_TIMEOUT and UPSTREAM_CONNECTION_RESET both cluster inside the five-minute alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000001"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "GATEWAY_TIMEOUT and UPSTREAM_CONNECTION_RESET both cluster inside the five-minute alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000001"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The primary payment gateway became intermittently unreachable, producing a concentrated timeout and connection-reset burst during the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000001"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000001"
+          ]
+        },
+        "probableCause": {
+          "statement": "The primary payment gateway became intermittently unreachable, producing a concentrated timeout and connection-reset burst during the alert window. FOREIGN_SIGNAL_FAILURE",
+          "evidenceIds": [
+            "49000000-0000-4000-8000-000000000001"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000001"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "GATEWAY_TIMEOUT and UPSTREAM_CONNECTION_RESET both cluster inside the five-minute alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000001"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the bounded gateway-connectivity evidence for human review; do not retry, reroute, or change gateway configuration automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000001"
+          ],
+          "knowledgeChunkIds": [
+            "49000000-0000-4000-8000-000000000002"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "GATEWAY_TIMEOUT",
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "matchedRequiredSignals": [
+          "GATEWAY_TIMEOUT",
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 1,
+        "unknownKnowledgeReferences": 1
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [
+          "FOREIGN_SIGNAL_FAILURE"
+        ],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S002",
+      "attemptId": "40000000-0000-4000-8000-000000000002",
+      "status": "UNAVAILABLE",
+      "requestedAt": "2026-09-30T10:00:01.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:01.1100000+00:00",
+      "latencyMs": 110,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000002"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000002"
+      ],
+      "report": null,
+      "correctness": {
+        "terminalAvailable": false,
+        "dispositionCorrect": false,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S003",
+      "attemptId": "40000000-0000-4000-8000-000000000003",
+      "status": "TIMED_OUT",
+      "requestedAt": "2026-09-30T10:00:02.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:02.1200000+00:00",
+      "latencyMs": 120,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000003"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000003"
+      ],
+      "report": null,
+      "correctness": {
+        "terminalAvailable": false,
+        "dispositionCorrect": false,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "UPSTREAM_RATE_LIMITED"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S004",
+      "attemptId": "40000000-0000-4000-8000-000000000004",
+      "status": "MALFORMED",
+      "requestedAt": "2026-09-30T10:00:03.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:03.1300000+00:00",
+      "latencyMs": 130,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000004"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000004"
+      ],
+      "report": null,
+      "correctness": {
+        "terminalAvailable": false,
+        "dispositionCorrect": false,
+        "confidenceCorrect": false,
+        "requiredSignals": [],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S005",
+      "attemptId": "40000000-0000-4000-8000-000000000005",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:04.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:04.1400000+00:00",
+      "latencyMs": 140,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000005"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000005"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "ISSUER_DO_NOT_HONOR_SURGE is present, while no local transport error is observed.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000005"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "ISSUER_DO_NOT_HONOR_SURGE is present, while no local transport error is observed.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000005"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Issuer-originated do-not-honor responses increased across the observed issuer group.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000005"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000005"
+          ]
+        },
+        "probableCause": {
+          "statement": "Issuer-originated do-not-honor responses increased across the observed issuer group.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000005"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000005"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "ISSUER_DO_NOT_HONOR_SURGE is present, while no local transport error is observed.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000005"
+          ]
+        },
+        "recommendation": {
+          "statement": "Request issuer-response and route breakdown evidence before attributing the increase to one issuer; do not retry payments automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000005"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000005"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "ISSUER_DO_NOT_HONOR_SURGE"
+        ],
+        "matchedRequiredSignals": [
+          "ISSUER_DO_NOT_HONOR_SURGE"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S006",
+      "attemptId": "40000000-0000-4000-8000-000000000006",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:05.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:05.1500000+00:00",
+      "latencyMs": 150,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000006"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000006"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "GATEWAY_TIMEOUT precedes RETRY_BUDGET_EXHAUSTED within the same observation window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000006"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "GATEWAY_TIMEOUT precedes RETRY_BUDGET_EXHAUSTED within the same observation window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000006"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "A gateway timeout burst triggered excessive retries that exhausted the authorization retry budget and amplified load.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000006"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000006"
+          ]
+        },
+        "probableCause": {
+          "statement": "A gateway timeout burst triggered excessive retries that exhausted the authorization retry budget and amplified load.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000006"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000006"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "GATEWAY_TIMEOUT precedes RETRY_BUDGET_EXHAUSTED within the same observation window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000006"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the ordered timeout and retry evidence for human analysis; do not change retry policy automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000006"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000006"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "GATEWAY_TIMEOUT",
+          "RETRY_BUDGET_EXHAUSTED"
+        ],
+        "matchedRequiredSignals": [
+          "GATEWAY_TIMEOUT",
+          "RETRY_BUDGET_EXHAUSTED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S007",
+      "attemptId": "40000000-0000-4000-8000-000000000007",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:06.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:06.1600000+00:00",
+      "latencyMs": 160,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000007"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000007"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "AUTHORIZATION_CPU_SATURATION and REQUEST_DEADLINE_EXCEEDED overlap the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000007"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "AUTHORIZATION_CPU_SATURATION and REQUEST_DEADLINE_EXCEEDED overlap the alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000007"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "CPU saturation in the authorization service caused request deadlines to expire.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000007"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000007"
+          ]
+        },
+        "probableCause": {
+          "statement": "CPU saturation in the authorization service caused request deadlines to expire.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000007"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000007"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "AUTHORIZATION_CPU_SATURATION and REQUEST_DEADLINE_EXCEEDED overlap the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000007"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the synthetic saturation window to the service owner for workload and capacity review; do not scale or restart automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000007"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000007"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "AUTHORIZATION_CPU_SATURATION",
+          "REQUEST_DEADLINE_EXCEEDED"
+        ],
+        "matchedRequiredSignals": [
+          "AUTHORIZATION_CPU_SATURATION",
+          "REQUEST_DEADLINE_EXCEEDED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S008",
+      "attemptId": "40000000-0000-4000-8000-000000000008",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:07.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:07.1700000+00:00",
+      "latencyMs": 170,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000008"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000008"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "ROUTE_CONFIGURATION_NOT_FOUND is isolated to the bounded decline window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000008"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "ROUTE_CONFIGURATION_NOT_FOUND is isolated to the bounded decline window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000008"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The affected merchant segment had no matching authorization route configuration.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000008"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000008"
+          ]
+        },
+        "probableCause": {
+          "statement": "The affected merchant segment had no matching authorization route configuration.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000008"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000008"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "ROUTE_CONFIGURATION_NOT_FOUND is isolated to the bounded decline window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000008"
+          ]
+        },
+        "recommendation": {
+          "statement": "Request a human comparison with the approved route configuration and recent changes; do not create or modify a route automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000008"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000008"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "ROUTE_CONFIGURATION_NOT_FOUND"
+        ],
+        "matchedRequiredSignals": [
+          "ROUTE_CONFIGURATION_NOT_FOUND"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S009",
+      "attemptId": "40000000-0000-4000-8000-000000000009",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:08.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:08.1800000+00:00",
+      "latencyMs": 180,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000009"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000009"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "GATEWAY_MAINTENANCE_REJECTION accounts for the observed route-specific errors.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000009"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "GATEWAY_MAINTENANCE_REJECTION accounts for the observed route-specific errors.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000009"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The selected synthetic gateway route was rejecting authorizations during a maintenance window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000009"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000009"
+          ]
+        },
+        "probableCause": {
+          "statement": "The selected synthetic gateway route was rejecting authorizations during a maintenance window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000009"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000009"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "GATEWAY_MAINTENANCE_REJECTION accounts for the observed route-specific errors.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000009"
+          ]
+        },
+        "recommendation": {
+          "statement": "Ask the gateway owner to confirm the maintenance interval and expected recovery; do not reroute traffic automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000009"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000009"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "GATEWAY_MAINTENANCE_REJECTION"
+        ],
+        "matchedRequiredSignals": [
+          "GATEWAY_MAINTENANCE_REJECTION"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S010",
+      "attemptId": "40000000-0000-4000-8000-000000000010",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:09.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:09.1900000+00:00",
+      "latencyMs": 190,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000010"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000010"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "MERCHANT_PROFILE_INVALID is the sole service error in the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000010"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "MERCHANT_PROFILE_INVALID is the sole service error in the alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000010"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The synthetic merchant profile failed authorization configuration validation.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000010"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000010"
+          ]
+        },
+        "probableCause": {
+          "statement": "The synthetic merchant profile failed authorization configuration validation.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000010"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000010"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "MERCHANT_PROFILE_INVALID is the sole service error in the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000010"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the opaque merchant-profile reference for human configuration review; do not edit the profile automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000010"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000010"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "MERCHANT_PROFILE_INVALID"
+        ],
+        "matchedRequiredSignals": [
+          "MERCHANT_PROFILE_INVALID"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S011",
+      "attemptId": "40000000-0000-4000-8000-000000000011",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:10.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:10.2000000+00:00",
+      "latencyMs": 200,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000011"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000011"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "FRAUD_RULE_REJECTION_SURGE coincides with the cohort decline alert.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000011"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "FRAUD_RULE_REJECTION_SURGE coincides with the cohort decline alert.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000011"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "A synthetic fraud-rule evaluation surge rejected the affected test cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000011"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000011"
+          ]
+        },
+        "probableCause": {
+          "statement": "A synthetic fraud-rule evaluation surge rejected the affected test cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000011"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000011"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "FRAUD_RULE_REJECTION_SURGE coincides with the cohort decline alert.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000011"
+          ]
+        },
+        "recommendation": {
+          "statement": "Request rule-version and decision evidence from the authorized fraud owner; do not disable or modify a rule automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000011"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000011"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "FRAUD_RULE_REJECTION_SURGE"
+        ],
+        "matchedRequiredSignals": [
+          "FRAUD_RULE_REJECTION_SURGE"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S012",
+      "attemptId": "40000000-0000-4000-8000-000000000012",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:11.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:11.2100000+00:00",
+      "latencyMs": 210,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000012"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000012"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "NETWORK_PACKET_LOSS precedes UPSTREAM_CONNECTION_RESET in the same regional window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000012"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "NETWORK_PACKET_LOSS precedes UPSTREAM_CONNECTION_RESET in the same regional window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000012"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Packet loss on the regional gateway path caused upstream connections to reset.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000012"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000012"
+          ]
+        },
+        "probableCause": {
+          "statement": "Packet loss on the regional gateway path caused upstream connections to reset.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000012"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000012"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "NETWORK_PACKET_LOSS precedes UPSTREAM_CONNECTION_RESET in the same regional window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000012"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the regional path and bounded timestamps to network operations; do not change routing automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000012"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000012"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "NETWORK_PACKET_LOSS",
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "matchedRequiredSignals": [
+          "NETWORK_PACKET_LOSS",
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S013",
+      "attemptId": "40000000-0000-4000-8000-000000000013",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:12.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:12.2200000+00:00",
+      "latencyMs": 220,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000013"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000013"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "GATEWAY_CREDENTIAL_REJECTED dominates the affected connection's alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000013"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "GATEWAY_CREDENTIAL_REJECTED dominates the affected connection's alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000013"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The gateway rejected the synthetic service credential used by the affected connection.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000013"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000013"
+          ]
+        },
+        "probableCause": {
+          "statement": "The gateway rejected the synthetic service credential used by the affected connection.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000013"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000013"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "GATEWAY_CREDENTIAL_REJECTED dominates the affected connection's alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000013"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate only the opaque connection identifier to the credential owner; never expose, rotate, or replace credentials from this workflow.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000013"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000013"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "GATEWAY_CREDENTIAL_REJECTED"
+        ],
+        "matchedRequiredSignals": [
+          "GATEWAY_CREDENTIAL_REJECTED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S014",
+      "attemptId": "40000000-0000-4000-8000-000000000014",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:13.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:13.2300000+00:00",
+      "latencyMs": 230,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000014"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000014"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "CACHE_STAMPEDE precedes AUTHORIZATION_STATE_LOOKUP_TIMEOUT inside the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000014"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CACHE_STAMPEDE precedes AUTHORIZATION_STATE_LOOKUP_TIMEOUT inside the alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000014"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Concurrent cache misses created a cache stampede and overloaded authorization state lookups.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000014"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000014"
+          ]
+        },
+        "probableCause": {
+          "statement": "Concurrent cache misses created a cache stampede and overloaded authorization state lookups.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000014"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000014"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "CACHE_STAMPEDE precedes AUTHORIZATION_STATE_LOOKUP_TIMEOUT inside the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000014"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the ordered cache and lookup evidence for human review; do not flush or reconfigure caches automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000014"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000014"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CACHE_STAMPEDE",
+          "AUTHORIZATION_STATE_LOOKUP_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "CACHE_STAMPEDE",
+          "AUTHORIZATION_STATE_LOOKUP_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S101",
+      "attemptId": "40000000-0000-4000-8000-000000000015",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:14.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:14.2400000+00:00",
+      "latencyMs": 240,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000015"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000015"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "TLS_CERTIFICATE_EXPIRED and TLS_HANDSHAKE_FAILED have matching counts in the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000015"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "TLS_CERTIFICATE_EXPIRED and TLS_HANDSHAKE_FAILED have matching counts in the alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000015"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The synthetic gateway channel presented an expired TLS certificate, causing every handshake to fail.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000015"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000015"
+          ]
+        },
+        "probableCause": {
+          "statement": "The synthetic gateway channel presented an expired TLS certificate, causing every handshake to fail.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000015"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000015"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "TLS_CERTIFICATE_EXPIRED and TLS_HANDSHAKE_FAILED have matching counts in the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000015"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the opaque connection and certificate-state evidence to the certificate owner; do not install or rotate certificates automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000015"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000015"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "TLS_CERTIFICATE_EXPIRED",
+          "TLS_HANDSHAKE_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "TLS_CERTIFICATE_EXPIRED",
+          "TLS_HANDSHAKE_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S102",
+      "attemptId": "40000000-0000-4000-8000-000000000016",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:15.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:15.2500000+00:00",
+      "latencyMs": 250,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000016"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000016"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "DNS_RESOLUTION_FAILED spans the same routes and time window as the alert.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000016"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "DNS_RESOLUTION_FAILED spans the same routes and time window as the alert.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000016"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The authorization service could not resolve the synthetic upstream gateway hostname.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000016"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000016"
+          ]
+        },
+        "probableCause": {
+          "statement": "The authorization service could not resolve the synthetic upstream gateway hostname.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000016"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000016"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "DNS_RESOLUTION_FAILED spans the same routes and time window as the alert.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000016"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the bounded resolver evidence to network operations; do not edit DNS or hosts configuration automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000016"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000016"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S103",
+      "attemptId": "40000000-0000-4000-8000-000000000017",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:16.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:16.2600000+00:00",
+      "latencyMs": 260,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000017"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000017"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "CLOCK_SKEW_REJECTED and REQUEST_SIGNATURE_INVALID match exactly in the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000017"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CLOCK_SKEW_REJECTED and REQUEST_SIGNATURE_INVALID match exactly in the alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000017"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Clock skew in one synthetic authorization instance group invalidated timestamp-bound gateway signatures.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000017"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000017"
+          ]
+        },
+        "probableCause": {
+          "statement": "Clock skew in one synthetic authorization instance group invalidated timestamp-bound gateway signatures.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000017"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000017"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "CLOCK_SKEW_REJECTED and REQUEST_SIGNATURE_INVALID match exactly in the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000017"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the instance group and bounded timestamps for time-synchronization review; do not change clocks automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000017"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000017"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CLOCK_SKEW_REJECTED",
+          "REQUEST_SIGNATURE_INVALID"
+        ],
+        "matchedRequiredSignals": [
+          "CLOCK_SKEW_REJECTED",
+          "REQUEST_SIGNATURE_INVALID"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S104",
+      "attemptId": "40000000-0000-4000-8000-000000000018",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:17.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:17.2700000+00:00",
+      "latencyMs": 270,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000018"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000018"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "HSM_SIGNING_TIMEOUT precedes REQUEST_DEADLINE_EXCEEDED in the same window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000018"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "HSM_SIGNING_TIMEOUT precedes REQUEST_DEADLINE_EXCEEDED in the same window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000018"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Synthetic HSM signing latency caused authorization request deadlines to expire.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000018"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000018"
+          ]
+        },
+        "probableCause": {
+          "statement": "Synthetic HSM signing latency caused authorization request deadlines to expire.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000018"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000018"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "HSM_SIGNING_TIMEOUT precedes REQUEST_DEADLINE_EXCEEDED in the same window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000018"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the HSM partition and timing evidence to the cryptographic-service owner; do not fail over or restart HSMs automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000018"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000018"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "HSM_SIGNING_TIMEOUT",
+          "REQUEST_DEADLINE_EXCEEDED"
+        ],
+        "matchedRequiredSignals": [
+          "HSM_SIGNING_TIMEOUT",
+          "REQUEST_DEADLINE_EXCEEDED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S105",
+      "attemptId": "40000000-0000-4000-8000-000000000019",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:18.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:18.2800000+00:00",
+      "latencyMs": 280,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000019"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000019"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "FEATURE_FLAG_ROUTE_MISMATCH is isolated to the newly enabled cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000019"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "FEATURE_FLAG_ROUTE_MISMATCH is isolated to the newly enabled cohort.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000019"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "A synthetic feature-flag assignment selected a route configuration incompatible with the test cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000019"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000019"
+          ]
+        },
+        "probableCause": {
+          "statement": "A synthetic feature-flag assignment selected a route configuration incompatible with the test cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000019"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000019"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "FEATURE_FLAG_ROUTE_MISMATCH is isolated to the newly enabled cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000019"
+          ]
+        },
+        "recommendation": {
+          "statement": "Request approved flag and route history from their owners; do not toggle the feature flag automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000019"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000019"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "FEATURE_FLAG_ROUTE_MISMATCH"
+        ],
+        "matchedRequiredSignals": [
+          "FEATURE_FLAG_ROUTE_MISMATCH"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S106",
+      "attemptId": "40000000-0000-4000-8000-000000000020",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:19.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:19.2900000+00:00",
+      "latencyMs": 290,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000020"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000020"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "GATEWAY_RESPONSE_SCHEMA_MISMATCH and RESPONSE_MAPPING_FAILED have identical counts.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000020"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "GATEWAY_RESPONSE_SCHEMA_MISMATCH and RESPONSE_MAPPING_FAILED have identical counts.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000020"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The gateway response schema changed incompatibly and the authorization mapper rejected the new payload shape.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000020"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000020"
+          ]
+        },
+        "probableCause": {
+          "statement": "The gateway response schema changed incompatibly and the authorization mapper rejected the new payload shape.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000020"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000020"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "GATEWAY_RESPONSE_SCHEMA_MISMATCH and RESPONSE_MAPPING_FAILED have identical counts.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000020"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate schema-version metadata and the bounded failure counts for compatibility review; do not deploy or remap responses automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000020"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000020"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "GATEWAY_RESPONSE_SCHEMA_MISMATCH",
+          "RESPONSE_MAPPING_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "GATEWAY_RESPONSE_SCHEMA_MISMATCH",
+          "RESPONSE_MAPPING_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S107",
+      "attemptId": "40000000-0000-4000-8000-000000000021",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:20.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:20.3000000+00:00",
+      "latencyMs": 300,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000021"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000021"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "REGIONAL_FAILOVER_LOOP begins before the concentrated GATEWAY_TIMEOUT observations.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000021"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "REGIONAL_FAILOVER_LOOP begins before the concentrated GATEWAY_TIMEOUT observations.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000021"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Competing regional health decisions created a failover loop while the gateway was timing out.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000021"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000021"
+          ]
+        },
+        "probableCause": {
+          "statement": "Competing regional health decisions created a failover loop while the gateway was timing out.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000021"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000021"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "REGIONAL_FAILOVER_LOOP begins before the concentrated GATEWAY_TIMEOUT observations.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000021"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate both regions' bounded health evidence for human routing review; do not force failover automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000021"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000021"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "REGIONAL_FAILOVER_LOOP",
+          "GATEWAY_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "REGIONAL_FAILOVER_LOOP",
+          "GATEWAY_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S108",
+      "attemptId": "40000000-0000-4000-8000-000000000022",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:21.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:21.3100000+00:00",
+      "latencyMs": 310,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000022"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000022"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "DATABASE_LOCK_TIMEOUT and AUTHORIZATION_STATE_UPDATE_FAILED overlap the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000022"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "DATABASE_LOCK_TIMEOUT and AUTHORIZATION_STATE_UPDATE_FAILED overlap the alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000022"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Database lock contention caused authorization state updates to time out.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000022"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000022"
+          ]
+        },
+        "probableCause": {
+          "statement": "Database lock contention caused authorization state updates to time out.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000022"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000022"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "DATABASE_LOCK_TIMEOUT and AUTHORIZATION_STATE_UPDATE_FAILED overlap the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000022"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the synthetic lock and update counts for query and transaction review; do not terminate sessions automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000022"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000022"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "DATABASE_LOCK_TIMEOUT",
+          "AUTHORIZATION_STATE_UPDATE_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "DATABASE_LOCK_TIMEOUT",
+          "AUTHORIZATION_STATE_UPDATE_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S109",
+      "attemptId": "40000000-0000-4000-8000-000000000023",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:22.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:22.3200000+00:00",
+      "latencyMs": 320,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000023"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000023"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "BIN_ROUTE_TABLE_STALE and ISSUER_ROUTE_NOT_FOUND have matching counts for the affected range.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000023"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "BIN_ROUTE_TABLE_STALE and ISSUER_ROUTE_NOT_FOUND have matching counts for the affected range.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000023"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "A stale synthetic BIN routing table left the affected issuer range without a route.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000023"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000023"
+          ]
+        },
+        "probableCause": {
+          "statement": "A stale synthetic BIN routing table left the affected issuer range without a route.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000023"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000023"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "BIN_ROUTE_TABLE_STALE and ISSUER_ROUTE_NOT_FOUND have matching counts for the affected range.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000023"
+          ]
+        },
+        "recommendation": {
+          "statement": "Request approved reference-data version and refresh evidence; do not reload or edit routing data automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000023"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000023"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "BIN_ROUTE_TABLE_STALE",
+          "ISSUER_ROUTE_NOT_FOUND"
+        ],
+        "matchedRequiredSignals": [
+          "BIN_ROUTE_TABLE_STALE",
+          "ISSUER_ROUTE_NOT_FOUND"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S110",
+      "attemptId": "40000000-0000-4000-8000-000000000024",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:23.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:23.3300000+00:00",
+      "latencyMs": 330,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000024"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000024"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "MALFORMED_ISSUER_RESPONSE and RESPONSE_MAPPING_FAILED match within the window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000024"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "MALFORMED_ISSUER_RESPONSE and RESPONSE_MAPPING_FAILED match within the window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000024"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The issuer connection returned malformed synthetic responses that could not be mapped.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000024"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000024"
+          ]
+        },
+        "probableCause": {
+          "statement": "The issuer connection returned malformed synthetic responses that could not be mapped.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000024"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000024"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "MALFORMED_ISSUER_RESPONSE and RESPONSE_MAPPING_FAILED match within the window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000024"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate bounded response-category metadata to the issuer-integration owner; do not expose raw payloads or modify mappings automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000024"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000024"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "MALFORMED_ISSUER_RESPONSE",
+          "RESPONSE_MAPPING_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "MALFORMED_ISSUER_RESPONSE",
+          "RESPONSE_MAPPING_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S111",
+      "attemptId": "40000000-0000-4000-8000-000000000025",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:24.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:24.3400000+00:00",
+      "latencyMs": 340,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000025"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000025"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "TOKEN_VAULT_TIMEOUT is observed only in partial evidence; one partition is explicitly missing.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000025"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "TOKEN_VAULT_TIMEOUT is observed only in partial evidence; one partition is explicitly missing.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000025"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": null,
+        "probableCause": {
+          "statement": "Synthetic fixture asserts an unsupported cause.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000025"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "confidence": {
+          "level": "LOW",
+          "rationale": "TOKEN_VAULT_TIMEOUT is observed only in partial evidence; one partition is explicitly missing.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000025"
+          ]
+        },
+        "recommendation": {
+          "statement": "Synthetic fixture asserts an unsupported action.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000025"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000025"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": {
+          "description": "Preserve the partial status and collect the missing partition or independent token-vault evidence before proposing a cause."
+        }
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": false,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "TOKEN_VAULT_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "TOKEN_VAULT_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 2
+      }
+    },
+    {
+      "scenarioCode": "S201",
+      "attemptId": "40000000-0000-4000-8000-000000000026",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:25.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:25.3500000+00:00",
+      "latencyMs": 350,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000026"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000026"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "CONFIG_VERSION_SPLIT_BRAIN precedes ROUTE_DECISION_DIVERGENCE in the same window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000026"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CONFIG_VERSION_SPLIT_BRAIN precedes ROUTE_DECISION_DIVERGENCE in the same window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000026"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Two authorization instance groups simultaneously used incompatible synthetic routing configuration versions.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000026"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000026"
+          ]
+        },
+        "probableCause": {
+          "statement": "Two authorization instance groups simultaneously used incompatible synthetic routing configuration versions.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000026"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000026"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "CONFIG_VERSION_SPLIT_BRAIN precedes ROUTE_DECISION_DIVERGENCE in the same window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000026"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the opaque instance groups and configuration versions for human reconciliation; do not force configuration convergence automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000026"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000026"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CONFIG_VERSION_SPLIT_BRAIN",
+          "ROUTE_DECISION_DIVERGENCE"
+        ],
+        "matchedRequiredSignals": [
+          "CONFIG_VERSION_SPLIT_BRAIN",
+          "ROUTE_DECISION_DIVERGENCE"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S202",
+      "attemptId": "40000000-0000-4000-8000-000000000027",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:26.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:26.3600000+00:00",
+      "latencyMs": 360,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000027"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000027"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "BGP_ROUTE_UNREACHABLE precedes the GATEWAY_TIMEOUT cluster.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000027"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "BGP_ROUTE_UNREACHABLE precedes the GATEWAY_TIMEOUT cluster.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000027"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "An external route withdrawal made the synthetic gateway network path unreachable.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000027"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000027"
+          ]
+        },
+        "probableCause": {
+          "statement": "An external route withdrawal made the synthetic gateway network path unreachable.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000027"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000027"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "BGP_ROUTE_UNREACHABLE precedes the GATEWAY_TIMEOUT cluster.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000027"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate path and timestamp evidence to network operations for independent route confirmation; do not alter routing automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000027"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000027"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "BGP_ROUTE_UNREACHABLE",
+          "GATEWAY_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "BGP_ROUTE_UNREACHABLE",
+          "GATEWAY_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S203",
+      "attemptId": "40000000-0000-4000-8000-000000000028",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:27.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:27.3700000+00:00",
+      "latencyMs": 370,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000028"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000028"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "OCSP_RESPONDER_UNAVAILABLE and CERTIFICATE_STATUS_CHECK_FAILED have identical counts.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000028"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "OCSP_RESPONDER_UNAVAILABLE and CERTIFICATE_STATUS_CHECK_FAILED have identical counts.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000028"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The certificate status responder was unavailable, so the synthetic channel failed closed during certificate validation.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000028"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000028"
+          ]
+        },
+        "probableCause": {
+          "statement": "The certificate status responder was unavailable, so the synthetic channel failed closed during certificate validation.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000028"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000028"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "OCSP_RESPONDER_UNAVAILABLE and CERTIFICATE_STATUS_CHECK_FAILED have identical counts.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000028"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate validation-path evidence to the certificate owner; do not bypass status checking automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000028"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000028"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "OCSP_RESPONDER_UNAVAILABLE",
+          "CERTIFICATE_STATUS_CHECK_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "OCSP_RESPONDER_UNAVAILABLE",
+          "CERTIFICATE_STATUS_CHECK_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S204",
+      "attemptId": "40000000-0000-4000-8000-000000000029",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:28.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:28.3800000+00:00",
+      "latencyMs": 380,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000029"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000029"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "HSM_QUORUM_LOST precedes HSM_SIGNING_TIMEOUT during the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000029"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "HSM_QUORUM_LOST precedes HSM_SIGNING_TIMEOUT during the alert window.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000029"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The synthetic HSM cluster lost partition quorum and could not complete authorization signing operations.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000029"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000029"
+          ]
+        },
+        "probableCause": {
+          "statement": "The synthetic HSM cluster lost partition quorum and could not complete authorization signing operations.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000029"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000029"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "HSM_QUORUM_LOST precedes HSM_SIGNING_TIMEOUT during the alert window.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000029"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate partition identifiers and bounded counts to the HSM owner; do not fail over, restart, or alter quorum automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000029"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000029"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "HSM_QUORUM_LOST",
+          "HSM_SIGNING_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "HSM_QUORUM_LOST",
+          "HSM_SIGNING_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S205",
+      "attemptId": "40000000-0000-4000-8000-000000000030",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:29.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:29.3900000+00:00",
+      "latencyMs": 390,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000030"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000030"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "CALENDAR_RULE_EVALUATION_FAILED and RECURRING_AUTHORIZATION_REJECTED match for the cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000030"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CALENDAR_RULE_EVALUATION_FAILED and RECURRING_AUTHORIZATION_REJECTED match for the cohort.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000030"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "A date-boundary defect in the synthetic recurring-authorization rule rejected the affected cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000030"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000030"
+          ]
+        },
+        "probableCause": {
+          "statement": "A date-boundary defect in the synthetic recurring-authorization rule rejected the affected cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000030"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000030"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "CALENDAR_RULE_EVALUATION_FAILED and RECURRING_AUTHORIZATION_REJECTED match for the cohort.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000030"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the opaque cohort and bounded rule failure for human defect review; do not change rules or replay payments automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000030"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000030"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CALENDAR_RULE_EVALUATION_FAILED",
+          "RECURRING_AUTHORIZATION_REJECTED"
+        ],
+        "matchedRequiredSignals": [
+          "CALENDAR_RULE_EVALUATION_FAILED",
+          "RECURRING_AUTHORIZATION_REJECTED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S206",
+      "attemptId": "40000000-0000-4000-8000-000000000031",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:30.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:30.4000000+00:00",
+      "latencyMs": 400,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000031"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000031"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "SECURE_RANDOM_SOURCE_BLOCKED precedes REQUEST_SIGNATURE_TIMEOUT.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000031"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "SECURE_RANDOM_SOURCE_BLOCKED precedes REQUEST_SIGNATURE_TIMEOUT.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000031"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The isolated runtime group's secure random source blocked, delaying request signatures beyond their deadlines.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000031"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000031"
+          ]
+        },
+        "probableCause": {
+          "statement": "The isolated runtime group's secure random source blocked, delaying request signatures beyond their deadlines.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000031"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000031"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "SECURE_RANDOM_SOURCE_BLOCKED precedes REQUEST_SIGNATURE_TIMEOUT.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000031"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate runtime-group and timing evidence to platform security; do not weaken randomness or restart instances automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000031"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000031"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "SECURE_RANDOM_SOURCE_BLOCKED",
+          "REQUEST_SIGNATURE_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "SECURE_RANDOM_SOURCE_BLOCKED",
+          "REQUEST_SIGNATURE_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S207",
+      "attemptId": "40000000-0000-4000-8000-000000000032",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:31.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:31.4100000+00:00",
+      "latencyMs": 410,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000032"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000032"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "UNICODE_NORMALIZATION_FAILURE and MERCHANT_PROFILE_PARSE_FAILED have matching counts.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000032"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "UNICODE_NORMALIZATION_FAILURE and MERCHANT_PROFILE_PARSE_FAILED have matching counts.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000032"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "A Unicode normalization defect prevented the affected synthetic merchant profiles from being parsed consistently.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000032"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000032"
+          ]
+        },
+        "probableCause": {
+          "statement": "A Unicode normalization defect prevented the affected synthetic merchant profiles from being parsed consistently.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000032"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000032"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "UNICODE_NORMALIZATION_FAILURE and MERCHANT_PROFILE_PARSE_FAILED have matching counts.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000032"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate the opaque cohort and parser categories for defect review; do not expose profile data or alter normalization automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000032"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000032"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "UNICODE_NORMALIZATION_FAILURE",
+          "MERCHANT_PROFILE_PARSE_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "UNICODE_NORMALIZATION_FAILURE",
+          "MERCHANT_PROFILE_PARSE_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S208",
+      "attemptId": "40000000-0000-4000-8000-000000000033",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:32.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:32.4200000+00:00",
+      "latencyMs": 420,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000033"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000033"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "DNS_SECURITY_POLICY_BLOCK and DNS_RESOLUTION_FAILED match exactly on the affected path.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000033"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "DNS_SECURITY_POLICY_BLOCK and DNS_RESOLUTION_FAILED match exactly on the affected path.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000033"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The synthetic resolver's security policy blocked the gateway answer and returned resolution failures.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000033"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000033"
+          ]
+        },
+        "probableCause": {
+          "statement": "The synthetic resolver's security policy blocked the gateway answer and returned resolution failures.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000033"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000033"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "DNS_SECURITY_POLICY_BLOCK and DNS_RESOLUTION_FAILED match exactly on the affected path.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000033"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate policy and resolver metadata for security review; do not bypass validation or edit resolver policy automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000033"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000033"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "DNS_SECURITY_POLICY_BLOCK",
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "DNS_SECURITY_POLICY_BLOCK",
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S209",
+      "attemptId": "40000000-0000-4000-8000-000000000034",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:33.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:33.4300000+00:00",
+      "latencyMs": 430,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000034"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000034"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "HSM_FIRMWARE_PROTOCOL_MISMATCH precedes HSM_SIGNING_FAILED after failover.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000034"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "HSM_FIRMWARE_PROTOCOL_MISMATCH precedes HSM_SIGNING_FAILED after failover.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000034"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "The failover HSM partition used an incompatible synthetic firmware protocol and rejected signing requests.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000034"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000034"
+          ]
+        },
+        "probableCause": {
+          "statement": "The failover HSM partition used an incompatible synthetic firmware protocol and rejected signing requests.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000034"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000034"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "HSM_FIRMWARE_PROTOCOL_MISMATCH precedes HSM_SIGNING_FAILED after failover.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000034"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate partition and protocol-version evidence to the HSM owner; do not change firmware or failback automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000034"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000034"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "HSM_FIRMWARE_PROTOCOL_MISMATCH",
+          "HSM_SIGNING_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "HSM_FIRMWARE_PROTOCOL_MISMATCH",
+          "HSM_SIGNING_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S210",
+      "attemptId": "40000000-0000-4000-8000-000000000035",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:34.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:34.4400000+00:00",
+      "latencyMs": 440,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000035"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000035"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "CIRCUIT_BREAKER_SYNC_STORM precedes UPSTREAM_CALL_REJECTED during oscillation.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000035"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CIRCUIT_BREAKER_SYNC_STORM precedes UPSTREAM_CALL_REJECTED during oscillation.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000035"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": {
+          "statement": "Synchronized circuit-breaker transitions caused authorization instances to reject upstream calls in lockstep.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000035"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000035"
+          ]
+        },
+        "probableCause": {
+          "statement": "Synchronized circuit-breaker transitions caused authorization instances to reject upstream calls in lockstep.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000035"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000035"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "CIRCUIT_BREAKER_SYNC_STORM precedes UPSTREAM_CALL_REJECTED during oscillation.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000035"
+          ]
+        },
+        "recommendation": {
+          "statement": "Escalate breaker-state and timing evidence for resilience review; do not reset or retune breakers automatically.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000035"
+          ],
+          "knowledgeChunkIds": [
+            "42000000-0000-4000-8000-000000000035"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": null
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CIRCUIT_BREAKER_SYNC_STORM",
+          "UPSTREAM_CALL_REJECTED"
+        ],
+        "matchedRequiredSignals": [
+          "CIRCUIT_BREAKER_SYNC_STORM",
+          "UPSTREAM_CALL_REJECTED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S211",
+      "attemptId": "40000000-0000-4000-8000-000000000036",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T10:00:35.0000000+00:00",
+      "completedAt": "2026-09-30T10:00:35.4500000+00:00",
+      "latencyMs": 450,
+      "modelId": "synthetic-report-fixture/v1",
+      "promptVersion": "report-prompt/v3",
+      "promptHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eligibleEvidenceIds": [
+        "41000000-0000-4000-8000-000000000036"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "42000000-0000-4000-8000-000000000036"
+      ],
+      "report": {
+        "disposition": "INSUFFICIENT_EVIDENCE",
+        "summary": {
+          "statement": "The evidence result is explicitly UNAVAILABLE and contains no observations.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000036"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "The evidence result is explicitly UNAVAILABLE and contains no observations.",
+            "evidenceIds": [
+              "41000000-0000-4000-8000-000000000036"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": null,
+        "probableCause": null,
+        "confidence": {
+          "level": "LOW",
+          "rationale": "The evidence result is explicitly UNAVAILABLE and contains no observations.",
+          "evidenceIds": [
+            "41000000-0000-4000-8000-000000000036"
+          ]
+        },
+        "recommendation": null,
+        "contradictions": [],
+        "evidenceGaps": {
+          "description": "Preserve the unavailable evidence state and retry or obtain an independent approved source before proposing a cause."
+        }
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": true
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    }
+  ]
+}

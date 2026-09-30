@@ -18,7 +18,7 @@ import tools.jackson.databind.node.ObjectNode;
 @Component
 class ReportPromptFactory {
 
-    static final String PROMPT_VERSION = "report-prompt/v3";
+    static final String PROMPT_VERSION = "report-prompt/v4";
     static final String SCHEMA_VERSION = "report-v1";
 
     private final JsonMapper jsonMapper;
@@ -56,13 +56,32 @@ class ReportPromptFactory {
             evidenceIds.add(context.evidence().applicableAttemptId());
         }
         replaceIdentifierDefinition(definitions, "evidenceId", evidenceIds);
-        replaceIdentifierDefinition(
+        Set<UUID> knowledgeIds = context.knowledge().chunks().stream()
+                .map(chunk -> chunk.chunkId())
+                .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
+        replaceIdentifierDefinition(definitions, "knowledgeChunkId", knowledgeIds);
+        boundReferenceArrays(
                 definitions,
-                "knowledgeChunkId",
-                context.knowledge().chunks().stream()
-                        .map(chunk -> chunk.chunkId())
-                        .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new)));
+                "evidenceIds",
+                evidenceIds.size(),
+                "claim",
+                "evidenceOnlyClaim",
+                "knowledgeClaim",
+                "confidence");
+        boundReferenceArrays(
+                definitions, "knowledgeChunkIds", knowledgeIds.size(), "claim", "evidenceOnlyClaim", "knowledgeClaim");
         return jsonMapper.writeValueAsString(root);
+    }
+
+    private static void boundReferenceArrays(
+            ObjectNode definitions, String propertyName, int eligibleCount, String... definitionNames) {
+        for (String definitionName : definitionNames) {
+            ObjectNode definition = (ObjectNode) definitions.get(definitionName);
+            ObjectNode properties = (ObjectNode) definition.get("properties");
+            ObjectNode references = (ObjectNode) properties.get(propertyName);
+            int baseMaximum = references.get("maxItems").asInt();
+            references.put("maxItems", Math.min(baseMaximum, eligibleCount));
+        }
     }
 
     private void replaceIdentifierDefinition(ObjectNode definitions, String name, Set<UUID> identifiers) {

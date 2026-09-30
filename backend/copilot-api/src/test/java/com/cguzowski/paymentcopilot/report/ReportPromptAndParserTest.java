@@ -9,15 +9,19 @@ import com.cguzowski.paymentcopilot.incident.ReportInvestigationSnapshot;
 import com.cguzowski.paymentcopilot.knowledge.retrieval.ReportKnowledgeChunk;
 import com.cguzowski.paymentcopilot.knowledge.retrieval.ReportKnowledgeSnapshot;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
 class ReportPromptAndParserTest {
 
     private static final UUID EVIDENCE_ID = UUID.fromString("d3a12cd9-ef1d-4328-b63d-2ecea6558e2d");
+    private static final UUID SECOND_EVIDENCE_ID = UUID.fromString("a14aa5e9-35c9-4e4a-89e8-35b628c59dda");
     private static final UUID CHUNK_ID = UUID.fromString("97ec5709-147d-458a-a5b4-c95de1a7a32a");
+    private static final UUID SECOND_CHUNK_ID = UUID.fromString("6f0581d2-e8f0-4ce5-a5a2-282db58ea76a");
     private final JsonMapper jsonMapper = JsonMapper.builder().build();
     private final ReportPromptFactory prompts = new ReportPromptFactory(jsonMapper);
     private final ReportOutputParser parser = new ReportOutputParser(jsonMapper, prompts);
@@ -26,7 +30,7 @@ class ReportPromptAndParserTest {
     void buildsVersionedBoundedReportInputFromExactSnapshots() {
         ReportPrompt prompt = prompts.build(context());
 
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v3");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v4");
         assertThat(prompt.schemaVersion()).isEqualTo("report-v1");
         assertThat(prompt.promptHash()).matches("[0-9a-f]{64}");
         assertThat(prompt.schemaHash()).matches("[0-9a-f]{64}");
@@ -39,6 +43,7 @@ class ReportPromptAndParserTest {
                 .contains("Return exactly one JSON object")
                 .contains("Use PROPOSED when")
                 .contains("Use only latestAttemptId or applicableAttemptId in evidenceIds")
+                .contains("never repeat an identifier")
                 .contains("probableCause and recommendation must both be null")
                 .contains("at most 2 observations")
                 .contains("Keep every statement and rationale under 300 characters")
@@ -46,6 +51,62 @@ class ReportPromptAndParserTest {
                 .contains("\"chunkId\":\"" + CHUNK_ID + "\"")
                 .doesNotContain("\"$defs\"")
                 .doesNotContain("{{SCHEMA}}", "{{INPUT}}");
+    }
+
+    @Test
+    void narrowsCitationArrayBoundsToDistinctEligibleSources() throws Exception {
+        JsonNode oneSource = jsonMapper.readTree(prompts.build(context()).outputSchema());
+
+        assertThat(oneSource.at("/$defs/claim/properties/evidenceIds/maxItems").intValue())
+                .isEqualTo(1);
+        assertThat(oneSource
+                        .at("/$defs/evidenceOnlyClaim/properties/evidenceIds/maxItems")
+                        .intValue())
+                .isEqualTo(1);
+        assertThat(oneSource
+                        .at("/$defs/knowledgeClaim/properties/evidenceIds/maxItems")
+                        .intValue())
+                .isEqualTo(1);
+        assertThat(oneSource
+                        .at("/$defs/confidence/properties/evidenceIds/maxItems")
+                        .intValue())
+                .isEqualTo(1);
+        assertThat(oneSource
+                        .at("/$defs/claim/properties/knowledgeChunkIds/maxItems")
+                        .intValue())
+                .isEqualTo(1);
+        assertThat(oneSource
+                        .at("/$defs/knowledgeClaim/properties/knowledgeChunkIds/maxItems")
+                        .intValue())
+                .isEqualTo(1);
+        assertThat(oneSource
+                        .at("/$defs/evidenceOnlyClaim/properties/knowledgeChunkIds/maxItems")
+                        .intValue())
+                .isZero();
+
+        JsonNode twoSources =
+                jsonMapper.readTree(prompts.build(contextWithTwoSources()).outputSchema());
+        assertThat(twoSources.at("/$defs/claim/properties/evidenceIds/maxItems").intValue())
+                .isEqualTo(2);
+        assertThat(twoSources
+                        .at("/$defs/confidence/properties/evidenceIds/maxItems")
+                        .intValue())
+                .isEqualTo(2);
+        assertThat(twoSources
+                        .at("/$defs/claim/properties/knowledgeChunkIds/maxItems")
+                        .intValue())
+                .isEqualTo(2);
+        assertThat(twoSources
+                        .at("/$defs/knowledgeClaim/properties/knowledgeChunkIds/maxItems")
+                        .intValue())
+                .isEqualTo(2);
+
+        JsonNode manySources =
+                jsonMapper.readTree(prompts.build(contextWithKnowledgeCount(11)).outputSchema());
+        assertThat(manySources
+                        .at("/$defs/claim/properties/knowledgeChunkIds/maxItems")
+                        .intValue())
+                .isEqualTo(10);
     }
 
     @Test
@@ -137,6 +198,50 @@ class ReportPromptAndParserTest {
                                 "1.0",
                                 "Gateway Failures > Diagnosis",
                                 "Inspect upstream gateway timeout telemetry."))));
+    }
+
+    private static ReportGenerationContext contextWithTwoSources() {
+        ReportGenerationContext base = context();
+        return new ReportGenerationContext(
+                base.investigation(),
+                new ReportEvidenceSnapshot(
+                        EVIDENCE_ID,
+                        "PARTIAL",
+                        SECOND_EVIDENCE_ID,
+                        "authorization-gateway",
+                        base.evidence().observations()),
+                new ReportKnowledgeSnapshot(
+                        base.knowledge().retrievalId(),
+                        "AVAILABLE",
+                        List.of(
+                                base.knowledge().chunks().getFirst(),
+                                new ReportKnowledgeChunk(
+                                        SECOND_CHUNK_ID,
+                                        UUID.fromString("0f38f904-e31a-4600-b6ef-4a0556c084eb"),
+                                        "POLICY",
+                                        "Evidence Policy",
+                                        "1.0",
+                                        "Citation rules",
+                                        "Cite approved evidence."))));
+    }
+
+    private static ReportGenerationContext contextWithKnowledgeCount(int count) {
+        ReportGenerationContext base = context();
+        List<ReportKnowledgeChunk> chunks = new ArrayList<>();
+        for (int index = 0; index < count; index++) {
+            chunks.add(new ReportKnowledgeChunk(
+                    UUID.nameUUIDFromBytes(("chunk-" + index).getBytes(java.nio.charset.StandardCharsets.UTF_8)),
+                    UUID.nameUUIDFromBytes(("document-" + index).getBytes(java.nio.charset.StandardCharsets.UTF_8)),
+                    "POLICY",
+                    "Evidence Policy " + index,
+                    "1.0",
+                    "Citation rules",
+                    "Cite approved evidence."));
+        }
+        return new ReportGenerationContext(
+                base.investigation(),
+                base.evidence(),
+                new ReportKnowledgeSnapshot(base.knowledge().retrievalId(), "AVAILABLE", List.copyOf(chunks)));
     }
 
     private static ReportDocument validDocument() {

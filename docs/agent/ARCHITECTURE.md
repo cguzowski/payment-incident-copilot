@@ -198,6 +198,15 @@ output budget, and a context-constrained `report-v1` schema. Application parsing
 and citation validation remain authoritative. Model-facing tests use
 deterministic doubles and require no live AI provider.
 
+Report-quality grading is a separate offline repository workflow defined by
+ADR-0016. `synten-report-eval/v1` reads a completed 36-scenario run, the
+observable catalog, and the sealed oracle only after generation. It has no
+runtime route, persistence access, model call, or dependency from report
+generation. Its retained artifact binds evaluator, input, catalog, and oracle
+bytes by SHA-256 and reports exact correctness checks, citation membership,
+bounded unsupported-claim indicators, terminal outcomes, and latency. These
+bounded checks do not claim general natural-language entailment.
+
 ## Primary states
 
 Implemented incident lifecycle:

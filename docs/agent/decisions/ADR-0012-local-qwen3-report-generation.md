@@ -40,7 +40,15 @@ Local report generation uses Ollama `qwen3:8b-q4_K_M`. Each request uses
 temperature zero, at most 1,536 output tokens, disabled thinking, no tools, and
 the application-owned `report-v1` schema. The provider schema is narrowed per
 request to the exact persisted evidence and approved-knowledge identifiers;
-the independent parser and semantic validator remain authoritative.
+each reference array is also capped at the number of distinct identifiers that
+are eligible for that array, without exceeding the base schema maximum. The
+independent parser and semantic validator remain authoritative.
+
+`report-prompt/v4` explicitly prohibits repeated identifiers within a reference
+array. This addresses a reproduced Qwen response that repeated the sole eligible
+evidence UUID even though `report-v1` declares `uniqueItems`. The application
+does not deduplicate, repair, or retry invalid output; invalid responses still
+fail closed as `MALFORMED`.
 
 The launcher verifies Ollama plus both `qwen3:8b-q4_K_M` and
 `nomic-embed-text` before service startup and never pulls models. Automated
