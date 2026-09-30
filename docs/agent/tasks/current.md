@@ -1,132 +1,125 @@
-# Task: Prevent duplicate citations from producing malformed live reports
+# Task: Complete live-model audit proof (Q4)
 
-Status: Complete — focused, live, Backend, and full repository verification passed
+Status: Complete — live rejection and audit proof verified
 Created: 2026-09-30
 Owner: Christopher Guzowski
 
 ## Goal
 
-Make schema-constrained local report generation reliably produce a valid
-`report-v1` document when only one evidence identifier is eligible, without
-weakening validation or silently repairing model output.
+Verify one newly generated live-model report through an explicit human decision,
+terminal incident state, and complete attributable audit timeline.
 
 ## User story
 
-As an operator, I want a supported investigation with available evidence and
-approved knowledge to produce a reviewable report, so repeated duplicate
-citations from the local model do not leave the workflow stuck at MALFORMED.
-
-## Context
-
-Live S013 investigation `005ea21a-d8ee-4558-aafa-78ab4e107029` produced two
-MALFORMED attempts. A direct reproduction of the same Qwen request showed the
-only eligible evidence UUID repeated twice in `confidence.evidenceIds`.
-`report-v1` correctly requires unique reference arrays, but Ollama's native
-structured-output grammar did not enforce `uniqueItems`.
+As an operator, I want to review a live report and record my decision so that
+its evidence, knowledge, model provenance, and final disposition remain auditable.
 
 ## Chosen contract
 
-- Keep `report-v1`, strict schema validation, semantic/citation validation,
-  one model call per attempt, and fail-closed MALFORMED handling unchanged.
-- Publish `report-prompt/v4` with an explicit instruction that every evidence
-  and knowledge reference array contains unique identifiers and never repeats
-  an identifier.
-- Narrow every evidence-reference array's per-request `maxItems` to the number
-  of distinct eligible evidence IDs (bounded by the base schema maximum).
-  Apply the equivalent bound to knowledge-reference arrays where knowledge is
-  allowed. Empty observation/summary knowledge arrays remain capped at zero.
-- Preserve exact constrained-schema hashing so the changed request contract is
-  auditable per attempt.
+Use the existing synthetic generator, tenant-scoped API, Ollama model, human
+decision endpoint, and projected timeline. The owner supplies the final decision
+and reason after reviewing the exact persisted report. Preserve all attempts.
 
 ## In scope
 
-- Test-first prompt/version and constrained-schema changes.
-- Regression coverage for one-source and multi-source citation bounds.
-- Focused backend tests, full repository verification, and a live retry of the
-  same S013 investigation after restarting the API.
-- Factual task, status, and decision documentation updates.
+One fresh synthetic investigation, evidence collection, approved knowledge
+retrieval, live report generation, owner review, final decision verification,
+queue membership, and retained factual proof in documentation.
 
 ## Out of scope
 
-- Weakening or removing `uniqueItems`, accepting duplicate references, or
-  deduplicating/repairing model output after generation.
-- Automatic retries, persisting unrestricted raw model output, changing the
-  report schema version, model, retrieval results, or corpus.
-- General report-quality remediation beyond this reproduced validity defect.
+Production behavior changes, model or retrieval tuning, broader scenario
+coverage, oracle reveal, deployment, and authentication.
 
 ## Constraints
 
-- Preserve advisory-only reports and mandatory human review.
-- Do not expose raw provider payloads or sensitive diagnostics in API/UI output.
-- Automated tests remain deterministic and require no live model.
-- Follow red-green-refactor.
+Synthetic data only; no automatic report approval, recommendation execution,
+or invented human reasons. Preserve tenant scope and immutable source metadata.
 
 ## Acceptance criteria
 
-- [x] A regression test proves one eligible evidence ID constrains every
-      evidence-reference array to at most one item and initially fails.
-- [x] Multi-source evidence and knowledge arrays are bounded by their distinct
-      eligible identifier counts without exceeding base-schema limits.
-- [x] `report-prompt/v4` explicitly prohibits duplicate identifiers while
-      strict parser and validator behavior remains unchanged.
-- [x] The same live S013 investigation produces an AVAILABLE report after the
-      API restart, with unique eligible citations and retained v4/schema hashes.
-- [x] Focused backend tests and `./verify.ps1` pass with zero skipped tests.
+- [x] A fresh investigation has persisted evidence and approved knowledge attempts.
+- [x] A new live Ollama report is AVAILABLE/PROPOSED with source references and
+      model, prompt, schema, and retrieval provenance; incident is AWAITING_REVIEW.
+- [x] The owner explicitly supplies APPROVED or REJECTED and a reason; the
+      persisted decision binds the exact report and synthetic operator.
+- [x] The incident reaches the matching terminal state and appears in Completed
+      rather than Active; the proposed report remains unchanged.
+- [x] The chronological timeline includes intake, investigation, every evidence,
+      retrieval, and report attempt, and the final attributable human decision.
+- [x] Repository verification and diff checks pass; exact live proof and
+      remaining limitations are recorded.
 
 ## Test plan
 
-- `narrowsCitationArrayBoundsToDistinctEligibleSources` -> prompt/schema unit
-  regression covering one and two evidence IDs plus selected knowledge IDs.
-- Existing parser tests continue rejecting duplicate references.
-- Existing model-option and report service tests remain green.
-- Run focused report tests, `./verify.ps1 -Scope Backend`, then `./verify.ps1`.
-- Restart the local API and retry S013 once; inspect the persisted attempt and
-  report citations through the tenant-scoped API.
+Manual operational verification against existing HTTP contracts, with exact
+IDs, statuses, timestamps, source references, and provenance recorded. Compare
+report JSON before and after the human decision and verify timeline ordering
+and queue membership. No executable change is planned, so no artificial new
+tests are required. Run `./verify.ps1 -Scope Repository` and `git diff --check`.
 
 ## Progress notes
 
-- 2026-09-30: Screenshot and live API history confirmed two consecutive
-  MALFORMED attempts for S013 despite AVAILABLE evidence and knowledge.
-- 2026-09-30: Direct local Qwen reproduction completed normally in 93.8 seconds
-  but repeated the sole eligible evidence UUID in `confidence.evidenceIds`.
-  This violates `uniqueItems` and explains the safe application rejection.
-- 2026-09-30: Added `report-prompt/v4` and per-context reference-array bounds.
-  Strict parser/semantic validation, one-call generation, and MALFORMED handling
-  remain unchanged; no output repair, deduplication, or retry was introduced.
-- 2026-09-30: Restarted the API and retried the same S013 investigation once.
-  Attempt `721d1cd4-6adb-4191-adf1-69723370872c` completed AVAILABLE/PROPOSED
-  with unique evidence and knowledge citations in 94.9 seconds.
+- Owner activated the next ordered roadmap outcome by requesting the next task.
+- Existing staged documentation changes were inspected and preserved.
+- API, generator, Ollama, and operator console responded locally.
+
+
+- Fresh S012 incident: `6d34b88f-215a-481e-a181-10171fd69a47`;
+  investigation: `70e57329-2d6d-49d9-ba11-98862268ebc2`.
+- Evidence `d3fa5797-07ff-4080-bb9b-e1ac5e33a615` is AVAILABLE:
+  NETWORK_PACKET_LOSS count 48, UPSTREAM_CONNECTION_RESET count 21.
+- Retrieval `b88ffe00-8bf9-47ae-b981-0415f3a4e96f` is AVAILABLE using
+  `knowledge-query/v2`, `nomic-embed-text` (768 dimensions), and
+  `postgres-hybrid-related/v4`.
+- Local retrieval includes historical `rb-002` v2.0.0 scenario-matrix content.
+  This audit proof must not be interpreted as oracle-independent corpus-v2
+  model-quality evaluation. No catalog or retrieval tuning is in Q4 scope.
+- `./verify.ps1 -Scope Repository` passed on 2026-09-30.
+- Browser recovery: the open page retained STARTED report and INVESTIGATING
+  lifecycle snapshots after API-driven generation, despite its timeline showing
+  AVAILABLE. Reloading displayed the exact completed report, AWAITING_REVIEW,
+  and Approve/Reject/Reason controls. No executable behavior changed.
+- The owner added AVAILABLE evidence and retrieval attempts after generation;
+  the refreshed timeline retains all seven events. The report still references
+  its original evidence and retrieval snapshots.
+
 
 ## Completion evidence
 
-- Red phase: `ReportPromptAndParserTest` failed two assertions for the intended
-  reasons: the sole eligible evidence ID still allowed `maxItems: 10`, and the
-  prompt still reported `report-prompt/v3`.
-- Green phase: focused command
-  `.\mvnw.cmd -pl backend/copilot-api '-Dtest=Report*Test,SpringAiReportModelTest' test`
-  passed 35 tests with zero failures/errors/skips. Coverage includes one and two
-  eligible sources, the base maximum of ten, and unchanged duplicate rejection.
-- Live verification: attempt `721d1cd4-6adb-4191-adf1-69723370872c` persisted as
-  AVAILABLE with `report-prompt/v4`, `report-v1`, evidence
-  `a907aaf5-0ba5-49ae-9474-1ce0187a3f36`, and retrieval
-  `bfadd708-0c19-4135-980b-01775d5a85a0`. Prompt hash
-  `49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496`
-  and constrained-schema hash
-  `cfc0c6661a33fdd7540d48566c1430900f3fc8760a75608634395e425f5c9999`
-  are retained on the attempt.
-- `.\verify.ps1 -Scope Backend` passed 304 copilot API, 9 operations MCP, and
-  31 generator tests with zero failures/errors/skips. The authoritative
-  `.\verify.ps1` gate passed the same backend suites plus 91 Angular tests,
-  formatting, builds, Compose validation, repository checks, and diff checks.
+Report attempt `64b09be2-1997-438d-a47c-272899e71736` is AVAILABLE/PROPOSED,
+using `qwen3:8b-q4_K_M`, `report-prompt/v4`, and `report-v1`.
+Generation ran 12:52:25.918285 to 12:54:02.062065 UTC (96.1 seconds).
+Readback confirmed AWAITING_REVIEW, no decision, and five ordered timeline
+events with matching source IDs and synthetic operator attribution.
+The pre-decision compact JSON readback is retained in the local temporary
+directory for comparison. SHA-256: `64d3e183d0361e3acc5bad7f041ef2da2e70cbf46710a13c04b419063db05669`.
+
+The owner submitted REJECTED with the exact reason `Testing` through the console.
+Decision `44bc1c2c-2826-47b8-8573-dff5941d8023`, recorded at
+2026-09-30T13:13:29.034760Z, binds report attempt
+`64b09be2-1997-438d-a47c-272899e71736` and synthetic operator
+`7b636625-53d1-46f7-92a9-9c8c27a243d1`.
+
+Tenant-scoped HTTP readback verified:
+
+- Investigation and incident are REJECTED; the incident is absent from Active
+  and present exactly once in Completed.
+- The complete report readback is byte-for-byte identical to the pre-decision
+  compact JSON baseline, including AVAILABLE/PROPOSED disposition and provenance.
+- Eight events occur in chronological order: alert intake, investigation start,
+  two evidence attempts, two retrieval attempts, one live report, and the human
+  decision. Every operator event retains the synthetic operator ID; final event
+  source ID, exact report binding, outcome, actor, and reason match the decision.
+- `./verify.ps1 -Scope Repository` and `git diff --check` passed on 2026-09-30.
 
 ## Remaining limitations
 
-- Native provider enforcement of JSON Schema keywords varies. Application
-  validation remains authoritative and MALFORMED remains a valid safe outcome
-  for other invalid model responses.
-- One successful retry establishes the reproduced validity fix, not broad
-  report quality; offline Q3 evaluation and mandatory human review remain the
-  applicable safeguards.
+One live rejection proves workflow and provenance, not broad model quality or
+production identity. The reason `Testing` is a demonstration input, not a report-
+quality judgment. Historical scenario-matrix content was retrieved; this run
+does not prove oracle-independent corpus-v2 quality. An already open page
+required reload after report generation was triggered outside the console.
 
 ## Decisions needed
 

@@ -8,11 +8,24 @@ The owner closed the core MVP/local demo loop on 2026-09-24. The application
 implements synthetic intake, active/completed incident queues, investigations,
 MCP evidence, approved knowledge, advisory reports, human decisions, and audit
 history. Live S001 evidence, retrieval, and Qwen report generation were recorded;
-a complete terminal decision on a newly generated live-model report remains
-unproved.
+Q4 now proves a complete terminal human rejection on a newly generated live
+Qwen report.
 
-The [current task](tasks/current.md), duplicate-citation report validity, is
-complete. Two live S013 attempts safely failed as `MALFORMED` because Qwen
+The [current task](tasks/current.md), Q4 live-model audit proof, is complete.
+The owner rejected the new S012 report with reason `Testing`. Tenant-scoped
+readback verified exact report/operator binding, REJECTED state, Completed
+queue membership, eight chronological audit events, and unchanged report JSON.
+This is workflow proof, not a report-quality judgment; local retrieval included
+historical scenario-matrix content. Q5 remains the next roadmap outcome.
+
+Live evidence recovery is complete.
+Neither evidence provider was listening when collection returned UNAVAILABLE.
+Starting the generator and restarting the API explicitly against port 8082
+restored AVAILABLE evidence for S207, with two sourced error observations.
+The original API endpoint/session state was not established; no executable
+behavior changed, and historical failed attempts remain retained.
+
+Duplicate-citation report validity is complete. Two live S013 attempts safely failed as `MALFORMED` because Qwen
 repeated the sole eligible evidence identifier despite the schema's
 `uniqueItems` constraint. `report-prompt/v4` now states the uniqueness rule and
 the per-request schema caps reference-array lengths at the count of distinct
@@ -33,6 +46,12 @@ open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
+
+- Q4 passed `./verify.ps1 -Scope Repository` and diff checks on 2026-09-30.
+  Live report `64b09be2-1997-438d-a47c-272899e71736` completed in 96.1 seconds;
+  human decision `44bc1c2c-2826-47b8-8573-dff5941d8023` recorded REJECTED
+  with reason `Testing`. Exact report JSON matched its pre-decision SHA-256
+  `64d3e183d0361e3acc5bad7f041ef2da2e70cbf46710a13c04b419063db05669`.
 
 - Q3 passed `./verify.ps1` on 2026-09-30: 303 copilot API, 9 operations MCP,
   31 generator, and 91 Angular tests passed with zero failures/errors/skips.
