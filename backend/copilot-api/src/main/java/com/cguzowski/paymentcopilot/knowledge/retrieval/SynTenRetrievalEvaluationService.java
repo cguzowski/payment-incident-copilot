@@ -191,7 +191,8 @@ class SynTenRetrievalEvaluationService {
                 candidate.sourceStartPage(),
                 candidate.sourceEndPage(),
                 candidate.sourceStartBlock(),
-                candidate.sourceEndBlock());
+                candidate.sourceEndBlock(),
+                candidate.rankingEvidence());
     }
 
     private static Map<UUID, SelectedKnowledgeChunk> selectedByChunk(List<SelectedKnowledgeChunk> selected) {

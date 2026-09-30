@@ -26,7 +26,7 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
     @Override
     public List<KnowledgeSearchCandidate> search(KnowledgeSearchRequest request) {
         String vector = request.queryEmbedding() == null ? null : vectorLiteral(request.queryEmbedding());
-        return jdbcClient
+        List<KnowledgeSearchCandidate> candidates = jdbcClient
                 .sql("""
                         WITH query_terms AS (
                             SELECT CASE
@@ -41,6 +41,11 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                     )
                                 )
                             END AS query
+                        ),
+                        query_signals AS (
+                            SELECT DISTINCT token
+                            FROM REGEXP_SPLIT_TO_TABLE(:queryText, '[^A-Za-z0-9_]+') token
+                            WHERE token ~ '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$'
                         ),
                         eligible AS (
                             SELECT c.id AS chunk_id,
@@ -71,6 +76,9 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                    d.source_name,
                                    d.source_format,
                                    d.pdf_artifact_hash,
+                                   (SELECT COUNT(*) FROM query_signals s
+                                    WHERE s.token = ANY(REGEXP_SPLIT_TO_ARRAY(c.raw_content, '[^A-Za-z0-9_]+')))
+                                       AS signal_matches,
                                    SETWEIGHT(TO_TSVECTOR('english', d.title), 'A')
                                    || SETWEIGHT(TO_TSVECTOR('english', d.applies_to), 'A')
                                    || c.search_vector AS combined_search
@@ -94,7 +102,7 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                             SELECT lexical_scored.*,
                                    ROW_NUMBER() OVER (
                                        PARTITION BY document_type
-                                       ORDER BY lexical_rank DESC,
+                                       ORDER BY signal_matches DESC, lexical_rank DESC,
                                                 document_id,
                                                 document_version,
                                                 chunk_ordinal
@@ -140,7 +148,9 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                    CAST(l.lexical_position AS INTEGER) AS lexical_position,
                                    CAST(v.vector_similarity AS REAL) AS vector_similarity,
                                    CAST(v.vector_position AS INTEGER) AS vector_position,
-                                   COALESCE(1.0 / (:rrfK + l.lexical_position), 0.0)
+                                   COALESCE(l.signal_matches, v.signal_matches, 0)
+                                   + CASE WHEN l.signal_matches > 0 THEN 0.5 / l.lexical_position ELSE 0.0 END
+                                   + COALESCE(1.0 / (:rrfK + l.lexical_position), 0.0)
                                    + COALESCE(1.0 / (:rrfK + v.vector_position), 0.0)
                                        AS fused_score
                             FROM lexical_limited l
@@ -175,7 +185,8 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                                f.lexical_position,
                                f.vector_similarity,
                                f.vector_position,
-                               f.fused_score
+                               f.fused_score,
+                               e.signal_matches
                         FROM fused f
                         JOIN eligible e ON e.chunk_id = f.chunk_id
                         ORDER BY f.fused_score DESC,
@@ -199,11 +210,12 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                 .param("minimumVectorSimilarity", request.minimumVectorSimilarity())
                 .param("candidateDepth", request.candidateDepth())
                 .param("rrfK", request.rrfK())
-                .query(this::mapCandidate)
+                .query(PostgresKnowledgeSearchRepository::mapCandidate)
                 .list();
+        return new PostgresRelatedPolicySearch(jdbcClient).expand(request, candidates);
     }
 
-    private KnowledgeSearchCandidate mapCandidate(ResultSet resultSet, int rowNumber) throws SQLException {
+    static KnowledgeSearchCandidate mapCandidate(ResultSet resultSet, int rowNumber) throws SQLException {
         return new KnowledgeSearchCandidate(
                 resultSet.getObject("tenant_id", UUID.class),
                 resultSet.getObject("chunk_id", UUID.class),
@@ -234,10 +246,11 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                 nullableInteger(resultSet, "lexical_position"),
                 nullableFloat(resultSet, "vector_similarity"),
                 nullableInteger(resultSet, "vector_position"),
-                resultSet.getDouble("fused_score"));
+                resultSet.getDouble("fused_score"),
+                new KnowledgeRankingEvidence(resultSet.getInt("signal_matches"), null));
     }
 
-    private static String vectorLiteral(float[] vector) {
+    static String vectorLiteral(float[] vector) {
         StringBuilder value = new StringBuilder("[");
         for (int index = 0; index < vector.length; index++) {
             if (index > 0) {

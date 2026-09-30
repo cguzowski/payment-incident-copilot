@@ -22,7 +22,7 @@ import tools.jackson.databind.json.JsonMapper;
 @Component
 class SynTenRetrievalEvaluationArtifactWriter {
 
-    private static final int MAXIMUM_ARTIFACT_BYTES = 4_000_000;
+    private static final int MAXIMUM_ARTIFACT_BYTES = 6_000_000;
     private static final List<String> FORBIDDEN_JSON = List.of(
             "\"embeddingInput\"",
             "\"embedding_input\"",
@@ -154,7 +154,7 @@ class SynTenRetrievalEvaluationArtifactWriter {
                     || variant.result().derivedQuery() == null
                     || variant.result().derivedQuery().isBlank()
                     || variant.result().candidates().size()
-                            > (long) variant.result().candidateDepth() * 4) {
+                            > (long) variant.result().candidateDepth() * 4 + 20) {
                 throw invalid("SynTen retrieval evaluation result is not complete or deterministically ordered.");
             }
             prior = key;

@@ -50,10 +50,12 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
                             "Changed SynTen PDF catalog content requires a new document version: "
                                     + source.documentKey());
                 }
+                populateRelationships(plan);
                 skippedDocuments++;
                 continue;
             }
             insertDocument(plan, importedAt);
+            populateRelationships(plan);
             for (PdfKnowledgeChunkDraft chunk : plan.chunks()) {
                 insertChunk(plan, chunk);
             }
@@ -61,6 +63,31 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
             cataloguedChunks += plan.chunks().size();
         }
         return new PdfCatalogImportSummary(importedDocuments, skippedDocuments, cataloguedChunks);
+    }
+
+    private void populateRelationships(PdfCatalogDocumentPlan plan) {
+        SynTenPdfSourceDocument source = plan.document().source();
+        int changed = jdbcClient
+                .sql("""
+                UPDATE knowledge_document_version
+                SET document_key = :documentKey,
+                    related_document_keys = CAST(:relatedKeys AS TEXT[]),
+                    relationship_metadata_version = 'document-relationships/v1'
+                WHERE tenant_id = :tenantId AND id = :versionId
+                  AND source_artifact_hash = :sourceHash
+                  AND (document_key IS NULL OR (
+                      document_key = :documentKey AND related_document_keys = CAST(:relatedKeys AS TEXT[])
+                      AND relationship_metadata_version = 'document-relationships/v1'))
+                """)
+                .param("tenantId", source.tenantId())
+                .param("versionId", plan.documentVersionId())
+                .param("documentKey", source.documentKey())
+                .param("sourceHash", source.sourceSha256())
+                .param("relatedKeys", "{" + String.join(",", source.relatedDocumentKeys()) + "}")
+                .update();
+        if (changed != 1) {
+            throw new IllegalArgumentException("Changed document relationships require a new source version.");
+        }
     }
 
     @Override

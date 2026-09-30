@@ -29,18 +29,19 @@ UI. See [project limitations](../docs/agent/STATUS.md).
 
 ## Recorded retrieval results
 
-Historical K4/K5 task records and the fresh Q2 corpus-v2 baseline report:
+Historical K4/K5 records and Q2 corpus-v2 results:
 
-| Measure | K4 passed | K5 passed | Q2 baseline passed | Applicable | Required to pass |
-|---|---:|---:|---:|---:|---:|
-| Primary runbook selected | 9 | 19 | 19 | 22 | 22 |
-| Supporting policy selected | 1 | 12 | 12 | 22 | 20 |
-| Primary outranks weak match | 16 | 16 | 17 | 21 | 19 |
+| Measure | K4 passed | K5 passed | Q2 baseline passed | Q2 v4 passed | Applicable | Required to pass |
+|---|---:|---:|---:|---:|---:|---:|
+| Primary runbook selected | 9 | 19 | 19 | 22 | 22 | 22 |
+| Supporting policy selected | 1 | 12 | 12 | 20 | 22 | 20 |
+| Primary outranks weak match | 16 | 16 | 17 | 20 | 21 | 19 |
 
-**All three runs failed all three quality thresholds.** Records also report
-zero ineligible candidates and preserved partial/unavailable/superseded
-semantics. K5's S001 operator proof displayed RB-002 with PDF provenance; it
-does not establish general retrieval quality.
+**Q2 v4 passes all fixed aggregate thresholds.** K4, K5 and the Q2 baseline
+failed them. The retained v4 run has zero ineligible candidates and preserved
+partial/unavailable/superseded semantics. Two policy cases and one ordering
+case still fail individually; see [retained results and limitations](evaluation/q2-retrieval-results.md).
+Retrieval success does not establish report quality.
 
 Evidence records:
 
@@ -52,11 +53,18 @@ Evidence records:
   `d22280e533b04578bdd4f260e0f6a6c6-FAIL.json`, SHA-256
   `c126a45551ebeaf8774e5731e4dbe6f8711d4e3d3d3e6bcdd2620ff75974cce1`.
 
-The K4/K5 artifacts are absent from this checkout; their recorded hashes remain
-in completed tasks, so those counts are historical reports rather than
-independently reverified results. The Q2 artifact is retained under
-`evaluation/results/` and is current inspectable corpus-v2 evidence. It is new
-evidence and must not be presented as either missing historical run.
+The K4/K5 and originally recorded Q2 artifacts are absent from this checkout;
+their recorded hashes remain historical evidence references. On 2026-09-29 the
+owner reported a corpus-v2 replay using 705 existing `nomic-embed-text`
+embeddings that reproduced 19/22 primary runbooks, 12/20 required policy cases,
+17/21 primary-over-weak cases, zero ineligible candidates and preserved special
+semantics. Its timestamp-dependent artifact was removed after extracting the
+results. These aggregates do not independently reverify the original
+per-variant traces or hash. Subsequent implementation retained a new baseline
+`5847a80f655349ec8c3f9be986e52663` and passing run
+`1f66fee3cf194f268287a314651ba13f` under `evaluation/results/`, each with its
+own recorded SHA-256. See [diagnosis](evaluation/q2-baseline-diagnosis.md) and
+[artifact integrity and reproduction](evaluation/q2-retrieval-results.md).
 
 ## Maintenance boundary
 

@@ -153,7 +153,28 @@ class SynTenCorpusSourceRepository {
                 entry.pdfSha256(),
                 entry.pageCount(),
                 sourceBytes,
-                pdfBytes);
+                pdfBytes,
+                relatedKeys(metadata.get("relatedDocuments"), key));
+    }
+
+    private static List<String> relatedKeys(String value, String key) {
+        if (value == null || value.equals("None")) {
+            return List.of();
+        }
+        List<String> keys =
+                java.util.Arrays.stream(value.split(",", -1)).map(String::strip).toList();
+        if (keys.size() > 32
+                || keys.stream()
+                        .anyMatch(candidate ->
+                                !candidate.matches("[A-Za-z0-9][A-Za-z0-9_./-]{0,79}") || candidate.contains(".."))
+                || keys.stream().distinct().count() != keys.size()) {
+            throw invalid("SynTen document relationships are invalid: " + key);
+        }
+        // Source references to maintained files are retained in the immutable source,
+        // but are not document keys and must never be followed as filesystem paths.
+        return keys.stream()
+                .filter(candidate -> candidate.matches("[A-Za-z0-9][A-Za-z0-9_-]{0,79}"))
+                .toList();
     }
 
     private Path validateRelativePath(String relativeValue, String expectedDirectory, String key) {

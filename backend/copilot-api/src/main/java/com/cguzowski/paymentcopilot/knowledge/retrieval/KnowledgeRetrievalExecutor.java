@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 class KnowledgeRetrievalExecutor {
 
-    private static final String RANKING_VERSION = "postgres-hybrid-rrf/v2";
+    private static final String RANKING_VERSION = "postgres-hybrid-related/v4";
     private static final int CANDIDATE_DEPTH = 20;
     private static final int RRF_K = 60;
     private static final float MINIMUM_LEXICAL_RANK = 0.0f;

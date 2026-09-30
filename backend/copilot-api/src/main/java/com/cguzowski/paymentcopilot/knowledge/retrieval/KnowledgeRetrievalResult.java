@@ -36,7 +36,73 @@ record KnowledgeRetrievalResult(
         KnowledgeApprovalStatus approvalStatus,
         UUID approvedBy,
         Instant approvedAt,
-        Instant effectiveAt) {
+        Instant effectiveAt,
+        KnowledgeRankingEvidence rankingEvidence) {
+
+    KnowledgeRetrievalResult(
+            UUID chunkId,
+            UUID documentVersionId,
+            UUID documentId,
+            int selectedPosition,
+            Float lexicalRank,
+            Integer lexicalPosition,
+            Float vectorSimilarity,
+            Float vectorDistance,
+            Integer vectorPosition,
+            int fusedPosition,
+            double fusedScore,
+            KnowledgeDocumentType documentType,
+            String documentTitle,
+            String documentVersion,
+            String appliesTo,
+            String sectionPath,
+            String rawContent,
+            String sourceName,
+            KnowledgeSourceFormat sourceFormat,
+            String pdfSha256,
+            Integer sourceStartLine,
+            Integer sourceEndLine,
+            Integer sourceStartPage,
+            Integer sourceEndPage,
+            Integer sourceStartBlock,
+            Integer sourceEndBlock,
+            KnowledgeApprovalStatus approvalStatus,
+            UUID approvedBy,
+            Instant approvedAt,
+            Instant effectiveAt) {
+        this(
+                chunkId,
+                documentVersionId,
+                documentId,
+                selectedPosition,
+                lexicalRank,
+                lexicalPosition,
+                vectorSimilarity,
+                vectorDistance,
+                vectorPosition,
+                fusedPosition,
+                fusedScore,
+                documentType,
+                documentTitle,
+                documentVersion,
+                appliesTo,
+                sectionPath,
+                rawContent,
+                sourceName,
+                sourceFormat,
+                pdfSha256,
+                sourceStartLine,
+                sourceEndLine,
+                sourceStartPage,
+                sourceEndPage,
+                sourceStartBlock,
+                sourceEndBlock,
+                approvalStatus,
+                approvedBy,
+                approvedAt,
+                effectiveAt,
+                null);
+    }
 
     static KnowledgeRetrievalResult from(SelectedKnowledgeChunk selected) {
         KnowledgeSearchCandidate candidate = selected.candidate();
@@ -71,6 +137,7 @@ record KnowledgeRetrievalResult(
                 candidate.approvalStatus(),
                 candidate.approvedBy(),
                 candidate.approvedAt(),
-                candidate.effectiveAt());
+                candidate.effectiveAt(),
+                candidate.rankingEvidence());
     }
 }

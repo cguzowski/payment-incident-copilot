@@ -1,6 +1,6 @@
 # Task: Resolve retrieval-quality disposition (Q2)
 
-Status: Active
+Status: Complete — fixed benchmark and full repository verification passed
 Created: 2026-09-29
 Owner: Christopher Guzowski
 
@@ -81,16 +81,16 @@ guidance rather than a result proven only for S001.
 - [x] Every baseline miss is classified from persisted query, candidate,
       fusion and selection evidence; proposed changes cite the measured failure
       mode they address.
-- [ ] Tests written before production changes fail for the intended retrieval
+- [x] Tests written before production changes fail for the intended retrieval
       behavior, then pass without scenario IDs, expected-source mappings or
       relaxed eligibility entering product code.
-- [ ] The final live run has zero ineligible candidates, preserves KQ-020,
+- [x] The final live run has zero ineligible candidates, preserves KQ-020,
       KQ-022 and KQ-023 semantics, and either passes all fixed aggregate
       thresholds or records explicit owner acceptance of the exact failure and
       consequences.
-- [ ] Query/ranking versions and relevant architecture documentation match the
+- [x] Query/ranking versions and relevant architecture documentation match the
       resulting behavior, with prior evidence and provenance retained.
-- [ ] Focused backend/PostgreSQL tests and `./verify.ps1` pass with zero skipped
+- [x] Focused backend/PostgreSQL tests and `./verify.ps1` pass with zero skipped
       tests; any unavailable live prerequisite is reported with its exact
       command and remaining risk.
 
@@ -108,6 +108,108 @@ guidance rather than a result proven only for S001.
    authoritative unscoped `./verify.ps1` gate.
 
 ## Progress notes
+
+- 2026-09-30: Completed the documented sequence. Backend scope and the full
+  `./verify.ps1` gate passed with zero failures/errors/skips; the Repository
+  scope also passed. Q2 is complete under the unchanged aggregate contract.
+- 2026-09-30: Resumed final verification. The earlier Backend gate stopped on
+  the evaluation generator's open JAR; that process has exited. A resumed run
+  correctly failed the no-skips check because Docker was stopped. Started
+  Docker and reran the complete Backend scope; no skipped run is counted as
+  passing evidence.
+- 2026-09-29: Owner authorized implementation of the documented proposal.
+  [ADR-0015](../decisions/ADR-0015-source-derived-retrieval-signals-and-relationships.md)
+  records the bounded, source-derived relationship contract and ranking rules.
+- 2026-09-29: Retained baseline `5847a80f655349ec8c3f9be986e52663`
+  reproduced 19/22 primary, 12 policy cases (20 required), and 17/21 ordering.
+  All 37 variants were seeded/read-back verified; the catalog compatibility
+  check confirmed 705 same-model vectors and unchanged accepted fingerprint.
+  [Diagnosis](../../../SynTen%20Inc/evaluation/q2-baseline-diagnosis.md) records
+  every failed variant and pre-limit lexical/vector ranks.
+- 2026-09-29: Exact-token ranking alone reached 22/22 primary, 12 policy cases,
+  and 18/21 ordering. Equal complete signal matches could still lose to weaker
+  lexical matches with semantic agreement. Added a bounded lexical tie-break
+  and source-derived policy expansion through at most two edges from four
+  ranked runbooks. Both changes were preceded by failing regressions.
+- 2026-09-29: V10 stores derived document keys/relationships and immutable
+  selected-result ranking evidence. Reimport populated metadata for 30 existing
+  source versions without adding chunks or rewriting corpus/embedding inputs.
+  `knowledge-query/v2` remains unchanged; ranking is
+  `postgres-hybrid-related/v4`. No scenario or expected-source routing was added.
+- 2026-09-29: Combined live run `1f66fee3cf194f268287a314651ba13f`
+  passed at 22/22 primary, 20/22 applicable policy cases (20 required), and
+  20/21 ordering (19 required), with zero ineligible candidates and all special
+  semantics preserved. Retained baseline, intermediate and passing artifacts
+  with hashes are listed in [results](../../../SynTen%20Inc/evaluation/q2-retrieval-results.md).
+- 2026-09-29: Focused `mvn.cmd -pl backend/copilot-api '-Dtest=Knowledge*Test,SynTen*Test' test`
+  passed 136 tests with zero failures/errors/skips. Final gates remain pending.
+
+- 2026-09-29: Owner reported a replay using the existing 705
+  `nomic-embed-text` embeddings: 19/22 primary runbooks, 12/20 required
+  policies, 17/21 primary-over-weak cases, zero ineligible candidates, and
+  preserved partial/unavailable/superseded semantics. The evaluator exited
+  nonzero as expected. Owner also reported 32 focused retrieval tests passing
+  with zero failures/errors/skips, seven evaluator-runner tests passing, and
+  all 37 plan variants resolving against corpus v2.
+- 2026-09-29: Planning review confirmed the originally recorded Q2 artifact
+  is absent. Owner removed the timestamp-dependent replay artifact after
+  extracting results; it must not be assigned the original run's hash.
+  Reopened the first two checkboxes pending retained evidence and renewed
+  per-variant diagnosis. Earlier run details and diagnoses below remain
+  historical records, not independently reverified candidate traces.
+- 2026-09-29: Owner requested documentation of the recommended sequence below.
+  This records a proposal, not authorization to implement a new retrieval
+  contract or acceptance of the benchmark failure.
+
+### Recommended sequence (planning proposal)
+
+1. Restore inspectable evidence: retain a new corpus-v2 baseline under its own
+   run ID and SHA-256, with environment, model, query, ranking and provenance
+   metadata. Preserve prior recorded hashes as history; do not recreate or
+   relabel an absent artifact. Reuse existing embeddings only after verifying
+   their model and source/index compatibility.
+2. Rebuild a per-variant diagnosis from that artifact. Distinguish relevance
+   threshold exclusion, modality-depth truncation, fusion ordering and final
+   selection loss. Where bounded candidate traces cannot explain absence,
+   inspect eligible pre-limit ranks and scores. Equal aggregate counts do not
+   establish identical misses. Map each proposed change to measured evidence.
+3. Address runbook ranking separately. Current lexical search ORs query terms;
+   test the hypothesis that generic terms compete with distinguishing observed
+   signals. Evaluate exact observed-code coverage derived from approved source
+   content, without hand-written code-to-document mappings, scenario IDs or
+   evaluator labels in product code. Do not assume relationships alone fix
+   missing or poorly ranked primary runbooks, and do not repeat the reverted
+   diversity/compact-query experiments without new evidence.
+4. Propose relationship-aware policy retrieval for owner authorization and an
+   ADR before implementation. Existing source metadata contains `documentKey`
+   and `relatedDocuments`; the ingestion record does not expose relationships.
+   The proposed design persists source-derived, versioned links, resolves
+   eligible policies from ranked runbooks, and combines them with direct policy
+   matches inside the existing three-policy allocation. Specify traversal
+   bounds, target-version resolution, ranking/ties and fallback behavior in the
+   proposed contract. Retain relationship origin, source version, ranking and
+   selection reasons in immutable audit metadata. Incorrect runbook selection
+   can propagate to policies; this remains an unproved design hypothesis.
+5. After required authorization, verify changes independently and together.
+   Map changed behaviors to named tests before production edits and record the
+   intended red results. Cover ranking, relationship parsing/resolution,
+   missing/ambiguous links, tenant/approval/effective-version/superseded
+   exclusions, bounded traversal, provider failure/fallback and immutable
+   snapshots using deterministic unit and PostgreSQL tests. Version changed
+   query/ranking/metadata behavior and use Flyway for schema changes. Replay
+   all 37 variants after each justified change and compare per-variant results
+   as well as aggregates; finish with the focused suites, Backend and Repository
+   scopes, and the full `./verify.ps1` gate.
+
+The unchanged success boundary is 22/22 primary runbooks, 20 of 22 applicable
+policy cases, at least 19/21 primary-over-weak cases, zero ineligible candidates,
+and preserved KQ-020/KQ-022/KQ-023 semantics. Neither hypothesis guarantees a
+pass. Preserve corpus bytes/hashes, labels, thresholds, eligibility and the
+four-runbook/three-policy allocation. If justified remediation still fails,
+seek explicit owner acceptance of the fresh measured failure and its product
+consequences. This proposal does not amend the locked contract or Test plan.
+
+### Earlier execution history
 
 - 2026-09-29: Owner activated Q2 by asking to proceed with the next ordered
   roadmap task after U3 completion.
@@ -147,8 +249,51 @@ guidance rather than a result proven only for S001.
 
 ## Completion evidence
 
+- 2026-09-30: `./verify.ps1 -Scope Backend` and authoritative `./verify.ps1`
+  passed: 303 copilot API, 9 operations MCP, 31 generator and (full gate)
+  91 Angular tests, zero failures/errors/skips. Formatting, all builds,
+  repository/runner tests, Compose validation and diff checks passed.
+  Earlier infrastructure failures were resolved; no skipped run counts as
+  completion evidence. No frontend behavior changed, so new visual QA was
+  not required.
+- Static review confirmed locked task sections/acceptance wording, corpus
+  sources/PDFs/manifest and evaluation labels are unchanged. Local Markdown
+  targets resolve, artifact hashes match, and retained payloads contain none
+  of the prohibited vector/input/connection fields. All 176 recorded
+  relationship paths in the passing artifact resolve to approved manifest
+  source hashes with retained anchors and valid traversal/candidate bounds.
+- Current inspectable baseline: `5847a80f655349ec8c3f9be986e52663-FAIL.json`,
+  SHA-256 `cd072e1b9407f5713813292f6c2a1bb0797c2bc80d94e5c8d53b9eff8830ad7a`.
+- Passing live artifact: `1f66fee3cf194f268287a314651ba13f-PASS.json`,
+  SHA-256 `7d904e6ec557acca8f79cb30a3eb09dc56c838c7e6739f5d6aad2a0509ae64bf`.
+  Both are retained under `SynTen Inc/evaluation/results/`; all 37 variant
+  queries, independent/fused ranks, selection and source locators are present.
+- Test-first evidence: `preservesExactMachineSignalsBeforeDepthLimitingAndFusion`
+  failed with `generic-12` instead of `specific`; the focused search suite then
+  passed four tests. `retrievesRelatedPolicyThroughOneIntermediateRunbookBeyondDirectDepth`
+  failed with `generic-2` instead of `target` before expansion was implemented.
+- Catalog red evidence: `retainsSourceDerivedRelationshipsOnIdempotentImportWithoutChangingChunks`
+  failed on the missing metadata column; `rejectsMalformedAndDuplicateRelationships`
+  failed because malformed links were accepted. The initial parser test also
+  exposed a sandbox fixture-copy restriction and was rerun outside the sandbox
+  before accepting its behavioral red result.
+- Audit/tie red evidence: `favorsStrongerLexicalEvidenceWhenExactSignalsTieDespiteSemanticOnlyAgreement`
+  selected `weak`; `persistsCompleteRetrievalSnapshotAndEveryRetryNewestFirst`
+  and `executesAll37VariantsThroughTheSharedExecutorAndResolvesManifestProvenance`
+  returned null ranking evidence; `acceptsBoundedRelationshipExpansionWithTwentyAdditionalCandidates`
+  rejected the expanded union. The combined focused suite then passed 30 tests.
+- Failure-path coverage includes `rejectsIneligibleAnchorsIntermediatesAndTargetsWithoutCrossTenantResolution`,
+  `doesNotTraverseAmbiguousMissingOrRecursiveLinks`, and
+  `resolvesDirectLinksWithLexicalFallbackAndPreservesTheirSourceProvenance`.
+  Existing executor tests cover embedding unavailability, timeout and malformed
+  responses; existing PostgreSQL tests preserve tenant and source exclusions.
+- 2026-09-29 documentation update: `.\verify.ps1 -Scope Repository` passed,
+  including verification-system, knowledge-preparation, AI-prerequisite,
+  seven evaluation-runner tests, Compose validation and `git diff --check`.
+  This verifies the documentation change, not retrieval quality; no live
+  benchmark or full application gate was rerun for this documentation-only work.
 - Plan-only validation passed for all 37 variants.
-- Fresh baseline artifact:
+- Originally recorded baseline artifact (currently absent from checkout):
   `SynTen Inc/evaluation/results/d22280e533b04578bdd4f260e0f6a6c6-FAIL.json`
   (SHA-256
   `c126a45551ebeaf8774e5731e4dbe6f8711d4e3d3d3e6bcdd2620ff75974cce1`).
@@ -166,17 +311,20 @@ guidance rather than a result proven only for S001.
 
 ## Remaining limitations
 
-- Historical K4/K5 raw JSON artifacts remain absent. The new Q2 artifact is an
-  inspectable corpus-v2 baseline, not a replacement for either historical run.
-- Fixed thresholds remain unmet. The dominant policy failure reflects generic,
-  near-duplicate policy text and a one-stage query that has no structured way
-  to follow runbook-to-policy relationships.
-- Passing without corpus or label changes now requires a consequential
-  relationship-aware retrieval design and new persisted/audited metadata, not
-  a safe local ranking-constant adjustment.
+- K4/K5 and originally recorded Q2 artifacts remain absent. Newly retained runs
+  have distinct identities/hashes and do not replace them.
+- Passing aggregate thresholds allow individual misses: KQ-004/S005 and
+  KQ-019/S109 omit PL-002 (both policy assertions passed in the baseline), and
+  KQ-018/S201 still ranks RB-008 ahead of RB-018. All primary runbooks are now
+  selected. This is not universal source coverage or proof of report quality.
+- Relationships can propagate an incorrect anchor. Human review remains
+  mandatory; no report-generation or operational authority changed.
+- Existing installations must explicitly reimport the unchanged corpus to
+  populate relationship metadata after V10. Migration alone does not derive
+  links, and documents without metadata retain direct retrieval.
 
 ## Decisions needed
 
-- Owner decision required: explicitly accept the measured Q2 failure and its
-  report-quality consequences, or authorize a new relationship-aware retrieval
-  contract with structured document-key/related-document metadata and an ADR.
+- Resolved on 2026-09-29: owner authorized the documented relationship-aware
+  retrieval implementation. The fixed live benchmark now passes; no acceptance
+  of a failed aggregate is required. Completion still requires final gates.

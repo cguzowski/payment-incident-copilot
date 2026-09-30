@@ -58,6 +58,31 @@ class SynTenPdfCatalogPostgresIntegrationTest {
     }
 
     @Test
+    void retainsSourceDerivedRelationshipsOnIdempotentImportWithoutChangingChunks() {
+        importService.importCorpus();
+        List<Map<String, Object>> before = catalogIdentity();
+        jdbcClient
+                .sql(
+                        "UPDATE knowledge_document_version SET document_key=NULL, related_document_keys='{}', relationship_metadata_version=NULL")
+                .update();
+        assertThat(importService.importCorpus()).isEqualTo(new PdfCatalogImportSummary(0, 30, 0));
+        assertThat(jdbcClient
+                        .sql("SELECT document_key FROM knowledge_document_version WHERE document_key IS NOT NULL")
+                        .query(String.class)
+                        .list())
+                .hasSize(30)
+                .contains("RB-002", "PL-006");
+        assertThat(jdbcClient
+                        .sql(
+                                "SELECT related_document_keys FROM knowledge_document_version WHERE document_key = 'RB-002'")
+                        .query((rs, n) -> List.of((String[]) rs.getArray(1).getArray()))
+                        .single())
+                .contains("PL-006");
+        importService.importCorpus();
+        assertThat(catalogIdentity()).isEqualTo(before);
+    }
+
+    @Test
     void catalogsThirtyVersionsWithStablePdfLocators() {
         PdfCatalogImportSummary first = importService.importCorpus();
 

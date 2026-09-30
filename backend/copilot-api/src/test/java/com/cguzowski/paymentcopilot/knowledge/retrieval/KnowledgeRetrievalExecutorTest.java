@@ -83,7 +83,7 @@ class KnowledgeRetrievalExecutorTest {
                         KnowledgeDocumentType.RUNBOOK);
         assertThat(execution.status()).isEqualTo(KnowledgeRetrievalStatus.AVAILABLE);
         assertThat(execution.statusDetail()).isNull();
-        assertThat(execution.rankingVersion()).isEqualTo("postgres-hybrid-rrf/v2");
+        assertThat(execution.rankingVersion()).isEqualTo("postgres-hybrid-related/v4");
     }
 
     @Test

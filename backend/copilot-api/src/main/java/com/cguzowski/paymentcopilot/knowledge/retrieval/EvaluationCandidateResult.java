@@ -24,7 +24,57 @@ record EvaluationCandidateResult(
         Integer sourceStartPage,
         Integer sourceEndPage,
         Integer sourceStartBlock,
-        Integer sourceEndBlock) {
+        Integer sourceEndBlock,
+        KnowledgeRankingEvidence rankingEvidence) {
+
+    EvaluationCandidateResult(
+            String documentKey,
+            UUID documentId,
+            String documentVersion,
+            UUID documentVersionId,
+            UUID chunkId,
+            int chunkOrdinal,
+            String documentType,
+            boolean eligible,
+            Float lexicalRank,
+            Integer lexicalPosition,
+            Float vectorSimilarity,
+            Integer vectorPosition,
+            int fusedPosition,
+            double fusedScore,
+            Integer selectedPosition,
+            String sourceName,
+            String sourceFormat,
+            String pdfSha256,
+            Integer sourceStartPage,
+            Integer sourceEndPage,
+            Integer sourceStartBlock,
+            Integer sourceEndBlock) {
+        this(
+                documentKey,
+                documentId,
+                documentVersion,
+                documentVersionId,
+                chunkId,
+                chunkOrdinal,
+                documentType,
+                eligible,
+                lexicalRank,
+                lexicalPosition,
+                vectorSimilarity,
+                vectorPosition,
+                fusedPosition,
+                fusedScore,
+                selectedPosition,
+                sourceName,
+                sourceFormat,
+                pdfSha256,
+                sourceStartPage,
+                sourceEndPage,
+                sourceStartBlock,
+                sourceEndBlock,
+                null);
+    }
 
     EvaluationCandidateResult withRanks(Float lexicalRank, Float vectorSimilarity) {
         return copy(
@@ -82,6 +132,7 @@ record EvaluationCandidateResult(
                 sourceStartPage,
                 sourceEndPage,
                 sourceStartBlock,
-                sourceEndBlock);
+                sourceEndBlock,
+                rankingEvidence);
     }
 }

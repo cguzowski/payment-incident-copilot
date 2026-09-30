@@ -1,6 +1,6 @@
 # Architecture
 
-Last reviewed: 2026-09-24
+Last reviewed: 2026-09-30
 
 ## System boundaries
 
@@ -175,8 +175,20 @@ of the resource URL.
 The catalog can persist a PDF chunk without an embedding, allowing approved
 content into lexical retrieval before Ollama is available. Vector ranking
 ignores incomplete embedding tuples. K4 recorded embedding those stable chunks
-with `nomic-embed-text`. ADR-0011 defines the current query/ranking behavior;
-K5 recorded eligible cited guidance in the operator workflow. See
+with `nomic-embed-text`. ADR-0011 defines `knowledge-query/v2` and the original
+type-balanced search; [ADR-0015](decisions/ADR-0015-source-derived-retrieval-signals-and-relationships.md)
+defines current `postgres-hybrid-related/v4` ranking. Exact machine-token
+matches precede generic prose, with a bounded lexical preference and RRF.
+V10 persists source-derived document keys/relationships; explicit corpus
+reimport populates them on hash-matching existing versions without changing
+chunks or embeddings. Up to four ranked runbooks anchor at most two relationship
+edges to eligible policies. Missing/ambiguous keys are not traversed, and all
+existing tenant, approval, effective-time, family and relevance filters apply.
+The union permits up to 80 direct plus 20 related candidates while the final
+context remains four runbooks and three policies. Selected-result JSONB and
+evaluation candidates retain exact-signal counts and the chosen relationship
+path with immutable source-version/hash provenance. Historical snapshots keep
+null relationship evidence. K5 recorded eligible cited guidance in the operator workflow. See
 [corpus results and evidence availability](../../SynTen%20Inc/README.md).
 
 Live local-model evaluation is an explicit smoke/evaluation workflow over

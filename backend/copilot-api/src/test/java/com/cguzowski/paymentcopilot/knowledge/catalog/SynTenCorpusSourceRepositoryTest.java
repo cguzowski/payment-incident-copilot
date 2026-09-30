@@ -175,6 +175,23 @@ class SynTenCorpusSourceRepositoryTest {
                 .hasMessage("SynTen manifest contains a duplicate tenant/document/version: PL-008");
     }
 
+    @Test
+    void rejectsMalformedAndDuplicateRelationships() throws IOException {
+        int index = 0;
+        for (String invalid : List.of("../policy", "PL-002, PL-002", "PL-002,")) {
+            Path copied = copyCorpusTo("relationships-" + index++);
+            String relative = "sources/rb-001-authorization-decline-incident-triage-v2.1.0.md";
+            String old = Files.readAllLines(copied.resolve(relative)).stream()
+                    .filter(line -> line.startsWith("relatedDocuments:"))
+                    .findFirst()
+                    .orElseThrow();
+            updateSourceAndManifestHash(copied, relative, old, "relatedDocuments: " + invalid);
+            assertThatThrownBy(() -> repository(copied).findAll())
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("relationships");
+        }
+    }
+
     private SynTenCorpusSourceRepository repository(Path root) {
         return new SynTenCorpusSourceRepository(root, JsonMapper.builder().build());
     }

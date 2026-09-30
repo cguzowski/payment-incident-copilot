@@ -252,6 +252,199 @@ class KnowledgeHybridSearchPostgresIntegrationTest {
                 .containsOnly(1, 2);
     }
 
+    @Test
+    void preservesExactMachineSignalsBeforeDepthLimitingAndFusion() {
+        clearCorpus();
+        for (int index = 0; index < 25; index++) {
+            insertBalancedCandidate(
+                    KnowledgeDocumentType.RUNBOOK,
+                    "generic-" + index,
+                    "authorization incident review ".repeat(30) + "ALPHA_FAILURE_EXTRA",
+                    unitVector(0));
+        }
+        insertBalancedCandidate(
+                KnowledgeDocumentType.RUNBOOK, "specific", "Inspect ALPHA_FAILURE and BETA_REJECTION.", unitVector(1));
+        KnowledgeSearchRequest request = new KnowledgeSearchRequest(
+                TENANT_ID,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                Instant.parse("2026-08-28T10:00:00Z"),
+                "authorization incident review ALPHA_FAILURE BETA_REJECTION",
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
+                unitVectorArray(0),
+                20,
+                60,
+                0.0f,
+                0.55f);
+
+        List<KnowledgeSearchCandidate> candidates = repository.search(request);
+
+        assertThat(candidates.getFirst().sectionPath()).isEqualTo("specific");
+        assertThat(candidates.getFirst().lexicalPosition()).isEqualTo(1);
+        assertThat(candidates.getFirst().vectorPosition()).isNull();
+    }
+
+    @Test
+    void retrievesRelatedPolicyThroughOneIntermediateRunbookBeyondDirectDepth() {
+        clearCorpus();
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "anchor", "incident ALPHA_FAILURE", unitVector(0));
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "intermediate", "unrelated", unitVector(1));
+        insertBalancedCandidate(KnowledgeDocumentType.POLICY, "target", "incident handoff approval", unitVector(1));
+        for (int i = 0; i < 5; i++) {
+            insertBalancedCandidate(
+                    KnowledgeDocumentType.POLICY, "generic-" + i, "incident ".repeat(30), unitVector(0));
+        }
+        metadata("anchor", "BOOK-A", "BOOK-B");
+        metadata("intermediate", "BOOK-B", "POLICY-C");
+        metadata("target", "POLICY-C", "");
+        KnowledgeSearchRequest request = new KnowledgeSearchRequest(
+                TENANT_ID,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                Instant.parse("2026-08-28T10:00:00Z"),
+                "incident ALPHA_FAILURE",
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
+                unitVectorArray(0),
+                2,
+                60,
+                0.0f,
+                0.55f);
+
+        List<KnowledgeSearchCandidate> candidates = repository.search(request);
+
+        assertThat(candidates.stream()
+                        .filter(c -> c.documentType() == KnowledgeDocumentType.POLICY)
+                        .findFirst()
+                        .orElseThrow()
+                        .sectionPath())
+                .isEqualTo("target");
+    }
+
+    @Test
+    void favorsStrongerLexicalEvidenceWhenExactSignalsTieDespiteSemanticOnlyAgreement() {
+        clearCorpus();
+        insertBalancedCandidate(
+                KnowledgeDocumentType.RUNBOOK, "specific", "ALPHA_FAILURE BETA_REJECTION ".repeat(8), unitVector(1));
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "weak", "ALPHA_FAILURE BETA_REJECTION", unitVector(0));
+        List<KnowledgeSearchCandidate> candidates = repository.search(new KnowledgeSearchRequest(
+                TENANT_ID,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                Instant.parse("2026-08-28T10:00:00Z"),
+                "ALPHA_FAILURE BETA_REJECTION",
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
+                unitVectorArray(0),
+                20,
+                60,
+                0.0f,
+                0.55f));
+        assertThat(candidates.getFirst().sectionPath()).isEqualTo("specific");
+    }
+
+    private void metadata(String fixtureKey, String documentKey, String relatedKeys) {
+        jdbcClient
+                .sql(
+                        "UPDATE knowledge_document_version SET document_key=:key, related_document_keys=CAST(:keys AS TEXT[]), relationship_metadata_version='document-relationships/v1' WHERE id=:id")
+                .param("key", documentKey)
+                .param("keys", "{" + relatedKeys + "}")
+                .param("id", UUID.nameUUIDFromBytes((fixtureKey + "-version").getBytes()))
+                .update();
+    }
+
+    @Test
+    void resolvesDirectLinksWithLexicalFallbackAndPreservesTheirSourceProvenance() {
+        relationshipFixture();
+        metadata("anchor", "BOOK-A", "POLICY-C");
+        KnowledgeSearchCandidate policy = relationshipCandidates().stream()
+                .filter(c -> c.sectionPath().equals("target"))
+                .findFirst()
+                .orElseThrow();
+        assertThat(policy.rankingEvidence().relationship().hops()).isEqualTo(1);
+        assertThat(policy.rankingEvidence().relationship().anchorDocumentKey()).isEqualTo("BOOK-A");
+        assertThat(policy.rankingEvidence().relationship().anchorSourceSha256()).isEqualTo("a".repeat(64));
+        assertThat(policy.rankingEvidence().relationship().intermediateVersionId())
+                .isNull();
+        assertThat(policy.vectorPosition()).isNull();
+    }
+
+    @Test
+    void rejectsIneligibleAnchorsIntermediatesAndTargetsWithoutCrossTenantResolution() {
+        for (String key : List.of("anchor", "intermediate", "target")) {
+            for (String change : List.of(
+                    "approval_status='DRAFT'",
+                    "approval_status='SUPERSEDED'",
+                    "effective_at=TIMESTAMPTZ '2099-01-01 00:00:00Z'",
+                    "incident_family='UNRELATED'")) {
+                relationshipFixture();
+                jdbcClient
+                        .sql("UPDATE knowledge_document_version SET " + change + " WHERE id=:id")
+                        .param("id", UUID.nameUUIDFromBytes((key + "-version").getBytes()))
+                        .update();
+                assertThat(relationshipCandidates())
+                        .noneMatch(c -> c.rankingEvidence().relationship() != null);
+            }
+        }
+        relationshipFixture();
+        metadata("target", "LOCAL-POLICY", "");
+        insertDocumentAndChunk(
+                OTHER_TENANT_ID,
+                "93333333-3333-4333-8333-333333333333",
+                "94333333-3333-4333-8333-333333333333",
+                KnowledgeDocumentType.POLICY,
+                KnowledgeApprovalStatus.APPROVED,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                "foreign",
+                "incident",
+                unitVector(0));
+        jdbcClient
+                .sql(
+                        "UPDATE knowledge_document_version SET document_key='POLICY-C', relationship_metadata_version='document-relationships/v1' WHERE tenant_id=:tenant")
+                .param("tenant", OTHER_TENANT_ID)
+                .update();
+        assertThat(relationshipCandidates()).noneMatch(c -> c.rankingEvidence().relationship() != null);
+    }
+
+    @Test
+    void doesNotTraverseAmbiguousMissingOrRecursiveLinks() {
+        relationshipFixture();
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "duplicate", "unrelated", unitVector(1));
+        metadata("duplicate", "BOOK-B", "POLICY-C");
+        assertThat(relationshipCandidates()).noneMatch(c -> c.rankingEvidence().relationship() != null);
+        relationshipFixture();
+        metadata("anchor", "BOOK-A", "MISSING");
+        assertThat(relationshipCandidates()).noneMatch(c -> c.rankingEvidence().relationship() != null);
+        relationshipFixture();
+        metadata("intermediate", "BOOK-B", "BOOK-A,BOOK-D");
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "third", "unrelated", unitVector(1));
+        metadata("third", "BOOK-D", "POLICY-C");
+        assertThat(relationshipCandidates()).noneMatch(c -> c.rankingEvidence().relationship() != null);
+    }
+
+    private void relationshipFixture() {
+        clearCorpus();
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "anchor", "incident ALPHA_FAILURE", unitVector(0));
+        insertBalancedCandidate(KnowledgeDocumentType.RUNBOOK, "intermediate", "unrelated", unitVector(1));
+        insertBalancedCandidate(KnowledgeDocumentType.POLICY, "target", "incident handoff approval", unitVector(1));
+        metadata("anchor", "BOOK-A", "BOOK-B");
+        metadata("intermediate", "BOOK-B", "POLICY-C");
+        metadata("target", "POLICY-C", "");
+    }
+
+    private List<KnowledgeSearchCandidate> relationshipCandidates() {
+        return repository.search(new KnowledgeSearchRequest(
+                TENANT_ID,
+                "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                Instant.parse("2026-08-28T10:00:00Z"),
+                "incident ALPHA_FAILURE",
+                KnowledgeEmbeddingClient.MODEL_ID,
+                KnowledgeEmbeddingClient.DIMENSIONS,
+                null,
+                2,
+                60,
+                0.0f,
+                0.55f));
+    }
+
     private void clearCorpus() {
         jdbcClient.sql("DELETE FROM knowledge_retrieval_result").update();
         jdbcClient.sql("DELETE FROM knowledge_retrieval_attempt").update();

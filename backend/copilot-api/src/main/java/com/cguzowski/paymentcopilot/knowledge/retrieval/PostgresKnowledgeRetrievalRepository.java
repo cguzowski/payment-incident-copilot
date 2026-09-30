@@ -211,7 +211,7 @@ class PostgresKnowledgeRetrievalRepository
                                source_start_page, source_end_page,
                                source_start_block, source_end_block,
                                approval_status, approved_by,
-                               approved_at, effective_at
+                               approved_at, effective_at, ranking_evidence
                         FROM knowledge_retrieval_result
                         WHERE tenant_id = :tenantId
                           AND retrieval_id = :retrievalId
@@ -277,7 +277,8 @@ class PostgresKnowledgeRetrievalRepository
                 KnowledgeApprovalStatus.valueOf(resultSet.getString("approval_status")),
                 resultSet.getObject("approved_by", UUID.class),
                 resultSet.getTimestamp("approved_at").toInstant(),
-                resultSet.getTimestamp("effective_at").toInstant());
+                resultSet.getTimestamp("effective_at").toInstant(),
+                readRankingEvidence(resultSet.getString("ranking_evidence")));
     }
 
     private void insertResult(KnowledgeRetrievalAttempt attempt, KnowledgeRetrievalResult result) {
@@ -293,7 +294,7 @@ class PostgresKnowledgeRetrievalRepository
                             source_start_line, source_end_line,
                             source_start_page, source_end_page,
                             source_start_block, source_end_block,
-                            approval_status, approved_by, approved_at, effective_at
+                            approval_status, approved_by, approved_at, effective_at, ranking_evidence
                         ) VALUES (
                             :retrievalId, :tenantId, :chunkId, :documentVersionId,
                             :documentId, :selectedPosition, :lexicalRank,
@@ -304,7 +305,7 @@ class PostgresKnowledgeRetrievalRepository
                             :sourceStartLine, :sourceEndLine,
                             :sourceStartPage, :sourceEndPage,
                             :sourceStartBlock, :sourceEndBlock,
-                            :approvalStatus, :approvedBy, :approvedAt, :effectiveAt
+                            :approvalStatus, :approvedBy, :approvedAt, :effectiveAt, CAST(:rankingEvidence AS JSONB)
                         )
                         """)
                 .param("retrievalId", attempt.retrievalId())
@@ -339,7 +340,16 @@ class PostgresKnowledgeRetrievalRepository
                 .param("approvedBy", result.approvedBy())
                 .param("approvedAt", utc(result.approvedAt()))
                 .param("effectiveAt", utc(result.effectiveAt()))
+                .param("rankingEvidence", nullable(Types.VARCHAR, writeRankingEvidence(result.rankingEvidence())))
                 .update();
+    }
+
+    private String writeRankingEvidence(KnowledgeRankingEvidence evidence) {
+        return evidence == null ? null : jsonMapper.writeValueAsString(evidence);
+    }
+
+    private KnowledgeRankingEvidence readRankingEvidence(String json) {
+        return json == null ? null : jsonMapper.readValue(json, KnowledgeRankingEvidence.class);
     }
 
     private static KnowledgeRetrievalAttempt withResults(

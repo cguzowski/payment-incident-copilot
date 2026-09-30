@@ -124,20 +124,28 @@ class SynTenRetrievalEvaluationArtifactWriterTest {
     }
 
     @Test
+    void acceptsBoundedRelationshipExpansionWithTwentyAdditionalCandidates() {
+        SynTenRetrievalEvaluationRun run = runWithFirstVariantCandidateCount(100);
+        Path written = new SynTenRetrievalEvaluationArtifactWriter(temporaryDirectory.resolve("related-union"), JSON)
+                .write(run);
+        assertThat(written).exists();
+    }
+
+    @Test
     void acceptsACompleteEvaluationWhenEveryVariantUsesTheFullCandidateUnion() throws Exception {
-        SynTenRetrievalEvaluationRun run = runWithEveryVariantCandidateCount(80);
+        SynTenRetrievalEvaluationRun run = runWithEveryVariantCandidateCount(100);
 
         Path written = new SynTenRetrievalEvaluationArtifactWriter(
                         temporaryDirectory.resolve("full-evaluation-union"), JSON)
                 .write(run);
 
         assertThat(written).exists();
-        assertThat(Files.size(written)).isGreaterThan(2_000_000L).isLessThanOrEqualTo(4_000_000L);
+        assertThat(Files.size(written)).isGreaterThan(2_000_000L).isLessThanOrEqualTo(6_000_000L);
     }
 
     @Test
     void rejectsACandidateUnionLargerThanAllPerTypeRankedLists() {
-        SynTenRetrievalEvaluationRun run = runWithFirstVariantCandidateCount(81);
+        SynTenRetrievalEvaluationRun run = runWithFirstVariantCandidateCount(101);
         Path output = temporaryDirectory.resolve("oversized-union");
 
         assertThatThrownBy(() -> new SynTenRetrievalEvaluationArtifactWriter(output, JSON).write(run))

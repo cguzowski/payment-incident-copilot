@@ -46,6 +46,8 @@ class SynTenRetrievalEvaluationServiceTest {
 
         assertThat(run.schemaVersion()).isEqualTo("synten-retrieval-eval-result/v1");
         assertThat(run.variants()).hasSize(37);
+        assertThat(run.variants().getFirst().result().candidates().getFirst().rankingEvidence())
+                .isEqualTo(new KnowledgeRankingEvidence(2, null));
         assertThat(run.grade().passed()).isTrue();
         assertThat(run.variants()).allSatisfy(variant -> {
             assertThat(variant.result().candidates()).isNotEmpty().allMatch(EvaluationCandidateResult::eligible);
@@ -129,36 +131,37 @@ class SynTenRetrievalEvaluationServiceTest {
         EvaluationDocument document = CONTRACT.documents().get(key);
         String fileName = Path.of(document.pdf()).getFileName().toString();
         return new KnowledgeSearchCandidate(
-                SynTenRetrievalEvaluationContractRepository.TENANT_ID,
-                UUID.nameUUIDFromBytes((key + "-chunk").getBytes(java.nio.charset.StandardCharsets.UTF_8)),
-                rank,
-                UUID.nameUUIDFromBytes((key + "-version").getBytes(java.nio.charset.StandardCharsets.UTF_8)),
-                document.documentId(),
-                KnowledgeDocumentType.valueOf(document.type()),
-                "untrusted title not used for resolution",
-                document.version(),
-                document.incidentFamily(),
-                "payment authorization",
-                "section",
-                "raw content must never enter the evaluation artifact",
-                fileName,
-                KnowledgeSourceFormat.PDF,
-                document.pdfSha256(),
-                null,
-                null,
-                2,
-                2,
-                1,
-                3,
-                KnowledgeApprovalStatus.APPROVED,
-                UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"),
-                document.approvedAt(),
-                document.effectiveAt(),
-                0.5f,
-                rank,
-                0.9f,
-                rank,
-                2.0d / (60 + rank));
+                        SynTenRetrievalEvaluationContractRepository.TENANT_ID,
+                        UUID.nameUUIDFromBytes((key + "-chunk").getBytes(java.nio.charset.StandardCharsets.UTF_8)),
+                        rank,
+                        UUID.nameUUIDFromBytes((key + "-version").getBytes(java.nio.charset.StandardCharsets.UTF_8)),
+                        document.documentId(),
+                        KnowledgeDocumentType.valueOf(document.type()),
+                        "untrusted title not used for resolution",
+                        document.version(),
+                        document.incidentFamily(),
+                        "payment authorization",
+                        "section",
+                        "raw content must never enter the evaluation artifact",
+                        fileName,
+                        KnowledgeSourceFormat.PDF,
+                        document.pdfSha256(),
+                        null,
+                        null,
+                        2,
+                        2,
+                        1,
+                        3,
+                        KnowledgeApprovalStatus.APPROVED,
+                        UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"),
+                        document.approvedAt(),
+                        document.effectiveAt(),
+                        0.5f,
+                        rank,
+                        0.9f,
+                        rank,
+                        2.0d / (60 + rank))
+                .withRanking(2.0d / (60 + rank), new KnowledgeRankingEvidence(2, null));
     }
 
     private static KnowledgeRetrievalContext context(SynTenRetrievalEvaluationSeedMapping mapping) {

@@ -1,7 +1,7 @@
 # Product roadmap
 
 Status: Active
-Last reviewed: 2026-09-29
+Last reviewed: 2026-09-30
 Owner: Christopher Guzowski
 
 ## Purpose
@@ -24,6 +24,7 @@ owner-activated [task contract](tasks/current.md) authorizes implementation.
 | U1 | Report generation releases obsolete work and recovers its button state after terminal outcomes |
 | U2 | Populated investigation histories and individual approved sources use accessible native disclosures |
 | U3 | Resolvable reviewer identifiers open exact rendered records and immutable PDFs |
+| Q2 | Fixed corpus-v2 retrieval benchmark passes at 22/22 primary, 20/22 policy and 20/21 ordering; full repository gate passed |
 
 K4/K5 completion did not pass the benchmark. See
 [STATUS.md](STATUS.md) for current evidence limitations and
@@ -33,7 +34,6 @@ K4/K5 completion did not pass the benchmark. See
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
-| Q2 — Active | Retrieval-quality disposition | Pass the unchanged benchmark or record explicit owner acceptance of the measured failure and consequences. |
 | Q3 | Automated report grading | Retain reproducible correctness, citation, unsupported-claim, latency, and failure metrics across the scenario oracle. |
 | Q4 | Complete live-model audit proof | Verify a new live report's explicit human decision, terminal state, and full audit timeline. |
 | Q5 | Broader live-model coverage | Exercise common, uncommon, rare, partial-evidence, and unavailable-evidence scenarios. |
@@ -47,6 +47,12 @@ is preserved as a hash-verifiable historical archive.
 
 ## Sequencing rules
 
+- Q2 completed the [documented sequence](tasks/current.md#recommended-sequence-planning-proposal):
+  retained a new baseline, diagnosed per-variant losses, evaluated runbook
+  ranking separately from policy relationships, and verified the combined
+  change against the fixed benchmark and full repository gate.
+  [ADR-0015](decisions/ADR-0015-source-derived-retrieval-signals-and-relationships.md)
+  records the implementation. Q3 remains pending owner activation.
 - Treat corpus v2 and evaluation labels as fixed inputs. Corpus changes require
   an approved version task; keep source/PDF hashes and prior evidence.
 - Keep generation, ingestion, embedding, and evaluation separately verifiable.

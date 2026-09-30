@@ -88,6 +88,14 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
         assertThat(persistence.complete(completed)).isTrue();
         assertThat(persistence.complete(completed)).isFalse();
 
+        jdbcClient
+                .sql("UPDATE knowledge_chunk SET raw_content='Changed catalog text after retrieval'")
+                .update();
+        jdbcClient
+                .sql(
+                        "UPDATE knowledge_document_version SET document_key='CHANGED', related_document_keys='{}', relationship_metadata_version='document-relationships/v1'")
+                .update();
+
         UUID retryId = UUID.fromString("d84b2fb0-3436-4c61-afdf-a673535fc6cc");
         KnowledgeRetrievalAttempt retry = started(retryId, context, Instant.parse("2026-08-28T10:01:00Z"));
         persistence.insertStarted(retry);
@@ -102,6 +110,7 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
         assertThat(result.documentId()).isEqualTo(candidate().documentId());
         assertThat(result.documentVersionId()).isEqualTo(candidate().documentVersionId());
         assertThat(result.chunkId()).isEqualTo(candidate().chunkId());
+        assertThat(result.rankingEvidence()).isEqualTo(candidate().rankingEvidence());
         assertThat(result.rawContent()).isEqualTo("Inspect GATEWAY_TIMEOUT observations.");
         assertThat(result.sourceName()).isEqualTo("rb-002-gateway-connectivity.pdf");
         assertThat(result.sourceFormat()).isEqualTo(KnowledgeSourceFormat.PDF);
@@ -334,35 +343,50 @@ class KnowledgeRetrievalPersistencePostgresIntegrationTest {
 
     private static KnowledgeSearchCandidate candidate() {
         return new KnowledgeSearchCandidate(
-                TENANT_ID,
-                UUID.fromString("21111111-1111-4111-8111-111111111111"),
-                UUID.fromString("11111111-1111-4111-8111-111111111111"),
-                UUID.fromString("31111111-1111-4111-8111-111111111111"),
-                KnowledgeDocumentType.RUNBOOK,
-                "Authorization Decline Runbook",
-                "1.0.0",
-                "AUTHORIZATION_DECLINE_RATE_SPIKE",
-                "Card authorization",
-                "Gateway Failures > Diagnosis",
-                "Inspect GATEWAY_TIMEOUT observations.",
-                "rb-002-gateway-connectivity.pdf",
-                KnowledgeSourceFormat.PDF,
-                "d".repeat(64),
-                null,
-                null,
-                3,
-                3,
-                4,
-                8,
-                KnowledgeApprovalStatus.APPROVED,
-                UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"),
-                Instant.parse("2026-08-20T10:00:00Z"),
-                Instant.parse("2026-08-21T00:00:00Z"),
-                0.5f,
-                1,
-                1.0f,
-                1,
-                2.0 / 61.0);
+                        TENANT_ID,
+                        UUID.fromString("21111111-1111-4111-8111-111111111111"),
+                        UUID.fromString("11111111-1111-4111-8111-111111111111"),
+                        UUID.fromString("31111111-1111-4111-8111-111111111111"),
+                        KnowledgeDocumentType.RUNBOOK,
+                        "Authorization Decline Runbook",
+                        "1.0.0",
+                        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                        "Card authorization",
+                        "Gateway Failures > Diagnosis",
+                        "Inspect GATEWAY_TIMEOUT observations.",
+                        "rb-002-gateway-connectivity.pdf",
+                        KnowledgeSourceFormat.PDF,
+                        "d".repeat(64),
+                        null,
+                        null,
+                        3,
+                        3,
+                        4,
+                        8,
+                        KnowledgeApprovalStatus.APPROVED,
+                        UUID.fromString("7b636625-53d1-46f7-92a9-9c8c27a243d1"),
+                        Instant.parse("2026-08-20T10:00:00Z"),
+                        Instant.parse("2026-08-21T00:00:00Z"),
+                        0.5f,
+                        1,
+                        1.0f,
+                        1,
+                        2.0 / 61.0)
+                .withRanking(
+                        2.0 / 61.0,
+                        new KnowledgeRankingEvidence(
+                                1,
+                                new KnowledgeRelationshipEvidence(
+                                        UUID.fromString("41111111-1111-4111-8111-111111111111"),
+                                        "BOOK-A",
+                                        "e".repeat(64),
+                                        null,
+                                        null,
+                                        null,
+                                        "POLICY-B",
+                                        1,
+                                        1,
+                                        "document-relationships/v1")));
     }
 
     private static float[] unitVector() {
