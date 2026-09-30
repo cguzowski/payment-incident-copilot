@@ -150,6 +150,13 @@ Both paths are implemented. Report generation uses the application-owned
 persistence. Tests disable chat and embedding provider auto-configuration and
 replace model responses with mocks or deterministic doubles.
 
+Under [ADR-0017](decisions/ADR-0017-degraded-evidence-report-constraints.md), a
+latest evidence status other than AVAILABLE or an empty observation snapshot
+requires INSUFFICIENT_EVIDENCE, LOW confidence, null cause/recommendation and an
+explicit gap. report-prompt/v5 and the provider's per-context schema constrain
+generation; independent parsing rejects violations as MALFORMED. Earlier applicable
+observations remain cited history and cannot restore current sufficiency.
+
 ## Knowledge-source evolution
 
 The catalog supports two legacy repository-owned Markdown sources and the

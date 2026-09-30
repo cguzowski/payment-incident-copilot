@@ -1,126 +1,125 @@
-# Task: Complete live-model audit proof (Q4)
+# Task: Insufficient-evidence report safety (Q6)
 
-Status: Complete — live rejection and audit proof verified
+Status: Complete — deterministic/full verification and both live regressions passed
 Created: 2026-09-30
 Owner: Christopher Guzowski
 
 ## Goal
 
-Verify one newly generated live-model report through an explicit human decision,
-terminal incident state, and complete attributable audit timeline.
+Correct generation and validation for the partial/unavailable evidence failures
+measured in Q5 while preserving the completed review workflow.
 
 ## User story
 
-As an operator, I want to review a live report and record my decision so that
-its evidence, knowledge, model provenance, and final disposition remain auditable.
+As an operator, I want degraded evidence to produce an explicit low-confidence
+inability to conclude so that cited guidance is not mistaken for observed proof.
 
 ## Chosen contract
 
-Use the existing synthetic generator, tenant-scoped API, Ollama model, human
-decision endpoint, and projected timeline. The owner supplies the final decision
-and reason after reviewing the exact persisted report. Preserve all attempts.
+The owner activated the proposed Q6 remediation with `proceed to implement`.
+When the latest evidence status is not AVAILABLE, or its snapshot contains no
+observations, generation must require INSUFFICIENT_EVIDENCE, LOW confidence,
+null probableCause and recommendation, and at least one evidence gap. Independently
+reject model output violating this contract as MALFORMED; never repair or retry
+it automatically. Preserve exact latest/applicable evidence bindings, including
+earlier observations after a degraded retry. AVAILABLE snapshots with observations
+retain the existing proposed-report behavior. Version prompt/schema constraints
+explicitly; preserve historical reports and Q5 artifacts.
 
 ## In scope
 
-One fresh synthetic investigation, evidence collection, approved knowledge
-retrieval, live report generation, owner review, final decision verification,
-queue membership, and retained factual proof in documentation.
+Context-dependent provider schema and prompt, independent application validation,
+deterministic regression and HTTP/persistence tests, focused/full verification,
+fresh live S111/S211 checks against unchanged corpus/oracle/grader, retained results,
+and matching documentation/decision record.
 
 ## Out of scope
 
-Production behavior changes, model or retrieval tuning, broader scenario
-coverage, oracle reveal, deployment, and authentication.
+Token-metadata and grading-CLI fixes, confidence tuning for sufficient evidence,
+model changes, retrieval/corpus/oracle/grader changes, automated human decisions,
+deployment and authentication.
 
 ## Constraints
 
-Synthetic data only; no automatic report approval, recommendation execution,
-or invented human reasons. Preserve tenant scope and immutable source metadata.
+Synthetic data only; no scenario IDs or oracle dependencies in runtime. One model
+call per attempt. Preserve missing evidence and immutable provenance. Automated
+tests require no live model. No general semantic-entailment claim.
 
 ## Acceptance criteria
 
-- [x] A fresh investigation has persisted evidence and approved knowledge attempts.
-- [x] A new live Ollama report is AVAILABLE/PROPOSED with source references and
-      model, prompt, schema, and retrieval provenance; incident is AWAITING_REVIEW.
-- [x] The owner explicitly supplies APPROVED or REJECTED and a reason; the
-      persisted decision binds the exact report and synthetic operator.
-- [x] The incident reaches the matching terminal state and appears in Completed
-      rather than Active; the proposed report remains unchanged.
-- [x] The chronological timeline includes intake, investigation, every evidence,
-      retrieval, and report attempt, and the final attributable human decision.
-- [x] Repository verification and diff checks pass; exact live proof and
-      remaining limitations are recorded.
+- [x] Provider schema/prompt require the insufficient-evidence contract for partial,
+      unavailable and empty observations; sufficient AVAILABLE evidence is unchanged.
+- [x] Independent parsing rejects unsupported PROPOSED responses, non-LOW confidence,
+      non-null conclusions and missing gap descriptions for degraded evidence.
+- [x] HTTP/persistence tests prove compliant degraded reports reach AWAITING_REVIEW,
+      and invalid reports remain MALFORMED without a lifecycle transition or retry.
+- [x] Exact source bindings and historical applicable observations remain preserved.
+- [x] Focused report tests and authoritative ./verify.ps1 pass.
+- [x] Fresh live S111/S211 attempts retain model/prompt/schema/source metadata and
+      demonstrate insufficient-evidence/LOW/null outcomes with fixed evaluation inputs.
 
 ## Test plan
 
-Manual operational verification against existing HTTP contracts, with exact
-IDs, statuses, timestamps, source references, and provenance recorded. Compare
-report JSON before and after the human decision and verify timeline ordering
-and queue membership. No executable change is planned, so no artificial new
-tests are required. Run `./verify.ps1 -Scope Repository` and `git diff --check`.
+ReportPromptAndParserTest: parameterized degraded-status/empty-input schema and
+parser regression tests, acceptance of compliant reports, rejection of each invalid
+field, citation integrity and sufficient-evidence compatibility. ReportApiPostgresIntegrationTest:
+degraded compliant report persistence and invalid model-output fail-closed history.
+Run focused Maven report tests, then ./verify.ps1. Live manual HTTP/history checks
+for S111/S211 use the dedicated corpus-v2 evaluation database and retain inputs,
+output, hashes and exact citations. The fixed Q3 grader requires 36 results; any
+comparison using 34 retained Q5 results plus two fresh results must be explicitly
+labeled a mixed-run diagnostic rather than a new 36-scenario live run.
 
 ## Progress notes
 
-- Owner activated the next ordered roadmap outcome by requesting the next task.
-- Existing staged documentation changes were inspected and preserved.
-- API, generator, Ollama, and operator console responded locally.
-
-
-- Fresh S012 incident: `6d34b88f-215a-481e-a181-10171fd69a47`;
-  investigation: `70e57329-2d6d-49d9-ba11-98862268ebc2`.
-- Evidence `d3fa5797-07ff-4080-bb9b-e1ac5e33a615` is AVAILABLE:
-  NETWORK_PACKET_LOSS count 48, UPSTREAM_CONNECTION_RESET count 21.
-- Retrieval `b88ffe00-8bf9-47ae-b981-0415f3a4e96f` is AVAILABLE using
-  `knowledge-query/v2`, `nomic-embed-text` (768 dimensions), and
-  `postgres-hybrid-related/v4`.
-- Local retrieval includes historical `rb-002` v2.0.0 scenario-matrix content.
-  This audit proof must not be interpreted as oracle-independent corpus-v2
-  model-quality evaluation. No catalog or retrieval tuning is in Q4 scope.
-- `./verify.ps1 -Scope Repository` passed on 2026-09-30.
-- Browser recovery: the open page retained STARTED report and INVESTIGATING
-  lifecycle snapshots after API-driven generation, despite its timeline showing
-  AVAILABLE. Reloading displayed the exact completed report, AWAITING_REVIEW,
-  and Approve/Reject/Reason controls. No executable behavior changed.
-- The owner added AVAILABLE evidence and retrieval attempts after generation;
-  the refreshed timeline retains all seven events. The report still references
-  its original evidence and retrieval snapshots.
-
+- Preserved completed Q5 task before replacing current.md. Existing Q5 documentation
+  and retained artifacts are pre-existing user-owned changes.
+- Inspected report validation: conditional LOW/null rules currently depend only on
+  model-selected disposition and therefore accept PROPOSED for degraded evidence.
 
 ## Completion evidence
 
-Report attempt `64b09be2-1997-438d-a47c-272899e71736` is AVAILABLE/PROPOSED,
-using `qwen3:8b-q4_K_M`, `report-prompt/v4`, and `report-v1`.
-Generation ran 12:52:25.918285 to 12:54:02.062065 UTC (96.1 seconds).
-Readback confirmed AWAITING_REVIEW, no decision, and five ordered timeline
-events with matching source IDs and synthetic operator attribution.
-The pre-decision compact JSON readback is retained in the local temporary
-directory for comparison. SHA-256: `64d3e183d0361e3acc5bad7f041ef2da2e70cbf46710a13c04b419063db05669`.
-
-The owner submitted REJECTED with the exact reason `Testing` through the console.
-Decision `44bc1c2c-2826-47b8-8573-dff5941d8023`, recorded at
-2026-09-30T13:13:29.034760Z, binds report attempt
-`64b09be2-1997-438d-a47c-272899e71736` and synthetic operator
-`7b636625-53d1-46f7-92a9-9c8c27a243d1`.
-
-Tenant-scoped HTTP readback verified:
-
-- Investigation and incident are REJECTED; the incident is absent from Active
-  and present exactly once in Completed.
-- The complete report readback is byte-for-byte identical to the pre-decision
-  compact JSON baseline, including AVAILABLE/PROPOSED disposition and provenance.
-- Eight events occur in chronological order: alert intake, investigation start,
-  two evidence attempts, two retrieval attempts, one live report, and the human
-  decision. Every operator event retains the synthetic operator ID; final event
-  source ID, exact report binding, outcome, actor, and reason match the decision.
-- `./verify.ps1 -Scope Repository` and `git diff --check` passed on 2026-09-30.
+- Red: ReportPromptAndParserTest failed seven checks before production changes:
+  missing context constraints and acceptance of gap-free insufficient reports.
+  A separate PROPOSED parser regression failed for the intended reason. HTTP tests
+  reproduced AVAILABLE output for missing gaps. An initially invalid UNAVAILABLE
+  test fixture was corrected to remove content; rerun confirmed both HTTP regressions
+  failed as expected before implementation.
+- Green: .\mvnw.cmd -pl backend/copilot-api spotless:apply
+  '-Dtest=ReportPromptAndParserTest,ReportApiPostgresIntegrationTest,ReportGenerationServiceTest,ReportDocumentValidatorTest'
+  test passed 29 tests. Broader focused command .\mvnw.cmd -pl backend/copilot-api
+  spotless:apply '-Dtest=Report*Test,SpringAiReportModelTest' test passed 48 tests,
+  zero failures/errors/skips, including earlier-observation preservation.
+- Fresh S111/S211 checks passed LOW/null/gap contracts on the first attempts, with
+  exact tenant-scoped persisted bindings, ten audit events and zero decisions.
+  Fixed grader diagnostic passed both insufficient-evidence checks. All 34 reused
+  Q5 result objects are unchanged and regrade is byte-identical. See
+  [retained Q6 results](../../../SynTen%20Inc/evaluation/q6-live-results.md).
+- First ./verify.ps1 attempt passed backend but failed generator clean because the
+  temporary generator held its target jar open on Windows. Restarted only the two
+  task-owned Java processes from temporary jar copies. The second attempt passed
+  backend and generator but npm ci failed with EPERM because the existing project
+  Angular dev server held esbuild.exe. Identified and temporarily stopped that server.
+  The third ./verify.ps1 run passed on 2026-09-30: 317 API, 9 MCP, 31 generator,
+  and 91 Angular tests, zero failures/errors/skips; formatting, production builds,
+  Compose validation, verification-system tests and repository diff checks passed.
+- All 60 corpus source/PDF hashes and all three Q5 artifact hashes were checked.
+  git diff --check passes. No corpus, oracle, retrieval, evaluator, frontend or
+  dependency-lock bytes changed. No generated build output is in the diff.
+- Final ./verify.ps1 -Scope Repository passed after completion documentation.
+  Temporary evaluation API/generator stopped. Restored the existing Angular dev
+  server at 127.0.0.1:4200 and verified HTTP 200; its sandboxed launch required an
+  escalated retry because esbuild spawn was rejected with EPERM.
 
 ## Remaining limitations
 
-One live rejection proves workflow and provenance, not broad model quality or
-production identity. The reason `Testing` is a demonstration input, not a report-
-quality judgment. Historical scenario-matrix content was retrieved; this run
-does not prove oracle-independent corpus-v2 quality. An already open page
-required reload after report generation was triggered outside the console.
+General natural-language entailment remains outside deterministic validation.
+Token-metadata and PowerShell grading-CLI defects remain separate follow-ups.
+All partial evidence is handled conservatively. Only S111/S211 were rerun live;
+the mixed diagnostic does not establish v5 quality across all 36 scenarios.
+The unchanged frontend lockfile's npm ci reported seven dependency advisories
+(four moderate, three high); npm audit is not a failing gate step.
 
 ## Decisions needed
 
-None.
+None; conservative degraded-evidence handling implements the owner-activated scope.

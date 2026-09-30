@@ -11,12 +11,29 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md), Q4 live-model audit proof, is complete.
-The owner rejected the new S012 report with reason `Testing`. Tenant-scoped
-readback verified exact report/operator binding, REJECTED state, Completed
-queue membership, eight chronological audit events, and unchanged report JSON.
-This is workflow proof, not a report-quality judgment; local retrieval included
-historical scenario-matrix content. Q5 remains the next roadmap outcome.
+The [current task](tasks/current.md), Q6 insufficient-evidence report safety, is
+complete. All 48 focused report tests pass. report-prompt/v5, context-dependent
+provider constraints and independent parsing require insufficient-evidence/LOW/null
+reports for degraded or empty observations. Fresh S111/S211 live checks both pass,
+with ten audit events and zero decisions; fixed-grader regrade matches bytes.
+[Q6 results](../../SynTen%20Inc/evaluation/q6-live-results.md) retain the two fresh
+attempts and an explicitly mixed diagnostic with 34 unchanged Q5 results.
+The full verification gate passed after Windows jar/esbuild file locks were resolved.
+
+Q5 broader live-model coverage is complete.
+Live execution, reproducible grading and the documentation verification gate passed.
+All 36 corpus-v2 scenarios produced AVAILABLE reports, with 34 AVAILABLE,
+1 PARTIAL and 1 UNAVAILABLE evidence result. Reports remain AWAITING_REVIEW
+with zero human decisions. Q4's live S012 rejection and audit proof remain complete.
+
+Live grading measured 34/36 exact dispositions, 9/36 exact confidence levels,
+26/36 exact-signal coverage checks and 374/374 valid citation identifiers.
+S111/S211 both asserted a cause and recommendation despite insufficient evidence:
+0/2 null-contract passes and four bounded unsupported-claim indicators.
+Median report latency was 90.764 seconds, p95 109.187 seconds; no terminal model
+failures occurred. These are measured quality gaps, not a promotion judgment.
+[Retained Q5 results](../../SynTen%20Inc/evaluation/q5-live-results.md) contain
+all inputs, grades, observations, provenance and reproduction steps.
 
 Live evidence recovery is complete.
 Neither evidence provider was listening when collection returned UNAVAILABLE.
@@ -46,6 +63,24 @@ open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
+
+- Q6 passed ./verify.ps1 on 2026-09-30: 317 API, 9 operations MCP, 31 generator
+  and 91 Angular tests with zero failures/errors/skips, formatting, builds,
+  Compose validation and repository checks. All 48 focused report tests passed.
+  Fresh S111/S211 first attempts passed INSUFFICIENT_EVIDENCE/LOW/null/gap checks
+  in 64.080393/44.985532 seconds, with ten audit events and zero human decisions.
+  Mixed diagnostic regrade was byte-identical:
+  `30dfb8aa354c5e5cb53e11bd9882131ad764081402993a2948300ae34bca09e9`.
+  All 60 corpus file hashes and Q5 artifact hashes matched; 34 reused Q5 result
+  objects were unchanged. The diagnostic is not a new complete v5 live benchmark.
+
+- Q5 passed `./verify.ps1 -Scope Repository`, its eight focused offline evaluator
+  tests and diff checks on 2026-09-30. Live histories verified 36 unique cases,
+  exact report/evidence/retrieval binding, 180 chronological audit events,
+  unchanged report content and zero decisions. All 60 corpus-v2 source/PDF hashes
+  matched the manifest. Regrade was byte-identical:
+  `efb290272dfb073e701ef75e495fd91f446ffe188eef4e9b4c56e9196b7a14fb`.
+  Exact artifacts and interpretation are linked in the Q5 results above.
 
 - Q4 passed `./verify.ps1 -Scope Repository` and diff checks on 2026-09-30.
   Live report `64b09be2-1997-438d-a47c-272899e71736` completed in 96.1 seconds;
@@ -124,10 +159,23 @@ identifiers remain plain text.
 
 ## Known limitations
 
+- Q5 reports for partial S111 and unavailable S211 assert causes/recommendations
+  at MEDIUM confidence instead of the required insufficient-evidence/LOW posture.
+  These historical reports remain immutable. Q6's fresh attempts pass the corrected
+  contract. Valid source IDs and schema do not establish supported conclusions;
+  all PARTIAL evidence is now conservatively treated as insufficient, and a full
+  new 36-scenario v5 live run has not been performed.
+- Report attempt metadata records 4,096 output tokens although the running adapter
+  sets 1,536; exact jar bytecode and persisted values confirm the discrepancy.
+- The report-grading CLI input path fails under PowerShell 7.6.5 because default
+  JSON date coercion violates its string timestamp contract. Direct invocation of
+  the unchanged module with `ConvertFrom-Json -DateKind String` reproduces Q5
+  byte-for-byte. Existing tests do not execute that CLI input path.
+
 - Q3's deterministic unsupported-claim detector is deliberately bounded. It
   cannot establish general natural-language entailment, and the fixture does
-  not measure live-model quality. No promotion threshold exists until broad
-  live results justify an owner-reviewed contract.
+  not measure live-model quality. Q5 separately records broad live results with
+  explicit confidence and insufficient-evidence failures; no promotion threshold exists.
 - The benchmark PASS permits individual misses: KQ-004/S005 and KQ-019/S109
   omit PL-002, and KQ-018/S201 still ranks its weak match above its primary.
   The first two are policy regressions from baseline. Aggregate success is not
@@ -144,6 +192,7 @@ identifiers remain plain text.
 - Only `getRecentServiceErrors` is implemented. Evidence sufficiency and broad
   live-model quality are not established by one successful S001 demonstration.
 - The Q1 install recorded six dependency advisories (five moderate, one high).
+  Q6 npm ci reported seven (four moderate, three high), with unchanged lockfile.
   The verification gate has no failing npm-audit step. [QUALITY.md](QUALITY.md)
   defines what the gate actually checks.
 - Knowledge preparation is explicit; normal startup does not populate a new

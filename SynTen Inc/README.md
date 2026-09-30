@@ -55,6 +55,22 @@ not live-model quality, and sets no promotion threshold. See the
 Artifact: `evaluation/results/q3-report-grader-fixture-v1.json`, SHA-256
 `a023fa81eac34732a619cd76850db936dac2f48358fa55afa9263a1846e93555`.
 
+Q5 completed all 36 live corpus-v2 scenarios: 36 AVAILABLE reports, 374/374
+valid citation identifiers, 34/36 exact dispositions and 9/36 exact confidence
+matches. Partial S111 and unavailable S211 both failed the insufficient-evidence
+contract, producing four bounded unsupported-claim indicators. Median latency
+was 90.764 seconds, p95 109.187 seconds. Reports remain undecided.
+[Live results, retained artifacts and reproduction](evaluation/q5-live-results.md)
+record these quality gaps and the provenance/tooling limitations. No quality
+promotion threshold was introduced.
+
+Q6's fresh S111/S211 attempts both satisfy INSUFFICIENT_EVIDENCE/LOW with null
+cause/recommendation and explicit evidence gaps under report-prompt/v5. The fixed
+grader confirms both corrections; its retained comparison combines those two
+fresh results with 34 unchanged Q5 results, rather than rerunning all scenarios.
+[Q6 live proof and mixed diagnostic](evaluation/q6-live-results.md) preserve the
+historical Q5 failures and the limits of this focused remediation.
+
 Evidence records:
 
 - [K4 completion](../docs/agent/tasks/completed/2026-09-01-embed-and-evaluate-the-synten-inc-pdf-knowledge-catalog.md):

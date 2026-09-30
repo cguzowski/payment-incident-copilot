@@ -18,7 +18,7 @@ import tools.jackson.databind.node.ObjectNode;
 @Component
 class ReportPromptFactory {
 
-    static final String PROMPT_VERSION = "report-prompt/v4";
+    static final String PROMPT_VERSION = "report-prompt/v5";
     static final String SCHEMA_VERSION = "report-v1";
 
     private final JsonMapper jsonMapper;
@@ -70,6 +70,14 @@ class ReportPromptFactory {
                 "confidence");
         boundReferenceArrays(
                 definitions, "knowledgeChunkIds", knowledgeIds.size(), "claim", "evidenceOnlyClaim", "knowledgeClaim");
+        if (context.requiresInsufficientEvidence()) {
+            ObjectNode properties = (ObjectNode) root.get("properties");
+            ((ObjectNode) properties.get("disposition")).put("const", "INSUFFICIENT_EVIDENCE");
+            properties.set("probableCause", jsonMapper.createObjectNode().put("type", "null"));
+            properties.set("recommendation", jsonMapper.createObjectNode().put("type", "null"));
+            ((ObjectNode) definitions.get("confidence").get("properties").get("level")).put("const", "LOW");
+            ((ObjectNode) properties.get("evidenceGaps")).put("minItems", 1);
+        }
         return jsonMapper.writeValueAsString(root);
     }
 

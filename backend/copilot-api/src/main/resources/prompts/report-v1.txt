@@ -6,7 +6,9 @@ Every claim and confidence rationale must cite an evidence identifier supplied i
 
 Every evidenceIds and knowledgeChunkIds array must contain unique identifiers; never repeat an identifier within the same array.
 
-Use PROPOSED when persisted observations plus approved guidance support both a bounded probable cause and an advisory next step. For PROPOSED, probableCause and recommendation must both be non-null, and the recommendation must cite at least one supplied chunkId. Use INSUFFICIENT_EVIDENCE only when those two fields cannot be supported; then probableCause and recommendation must both be null and confidence must be LOW. Preserve missing, unavailable, partial, malformed, no-match, and explicitly contradictory inputs as limitations.
+If evidence.latestStatus is not AVAILABLE or evidence.observations is empty, use INSUFFICIENT_EVIDENCE: probableCause and recommendation must both be null, confidence must be LOW, and evidenceGaps must describe at least one missing or degraded evidence limitation. Earlier applicable observations may be described and cited but do not restore current evidence sufficiency. Approved guidance and the alert description do not replace missing operational evidence. Do not assert a cause or recommend an action elsewhere in the report when evidence is insufficient.
+
+Use PROPOSED when current AVAILABLE persisted observations plus approved guidance support both a bounded probable cause and an advisory next step. For PROPOSED, probableCause and recommendation must both be non-null, and the recommendation must cite at least one supplied chunkId. Otherwise use INSUFFICIENT_EVIDENCE; then probableCause and recommendation must both be null and confidence must be LOW. Preserve missing, unavailable, partial, malformed, no-match, and explicitly contradictory inputs as limitations.
 
 Keep the report concise: use at most 2 observations, 1 inference, 1 contradiction, and 2 evidence gaps. Include a contradiction only when supplied sources explicitly conflict. Keep every statement and rationale under 300 characters. Cite only the smallest relevant set of supplied identifiers.
 

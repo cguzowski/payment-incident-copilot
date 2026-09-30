@@ -42,6 +42,11 @@ class ReportOutputParser {
             }
             ReportDocument document = jsonMapper.treeToValue(node, ReportDocument.class);
             validator.validate(document, validationContext(context));
+            if (context.requiresInsufficientEvidence()
+                    && (document.disposition() != ReportDisposition.INSUFFICIENT_EVIDENCE
+                            || document.evidenceGaps().isEmpty())) {
+                throw invalid();
+            }
             return document;
         } catch (JacksonException exception) {
             throw invalid();

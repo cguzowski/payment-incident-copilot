@@ -5,6 +5,10 @@ import com.cguzowski.paymentcopilot.incident.ReportInvestigationSnapshot;
 import com.cguzowski.paymentcopilot.knowledge.retrieval.ReportKnowledgeSnapshot;
 
 public record ReportGenerationContext(
-        ReportInvestigationSnapshot investigation,
-        ReportEvidenceSnapshot evidence,
-        ReportKnowledgeSnapshot knowledge) {}
+        ReportInvestigationSnapshot investigation, ReportEvidenceSnapshot evidence, ReportKnowledgeSnapshot knowledge) {
+
+    boolean requiresInsufficientEvidence() {
+        return !"AVAILABLE".equals(evidence.latestStatus())
+                || evidence.observations().isEmpty();
+    }
+}

@@ -1,0 +1,4234 @@
+{
+  "schemaVersion": "synten-report-eval-result/v1",
+  "evaluatorVersion": "synten-report-eval/v1",
+  "runId": "1d9996ed-eeae-4295-a925-6d46709bb943",
+  "evaluatedAt": "2026-09-30T14:22:24.8689323+00:00",
+  "inputMetadata": {
+    "schemaVersion": "synten-report-eval-input/v1",
+    "createdAt": "2026-09-30T14:22:24.8689323+00:00",
+    "resultCount": 36
+  },
+  "provenance": {
+    "evaluatorVersion": "synten-report-eval/v1",
+    "evaluatorSha256": "ac0e80cae3b7ce9e5fcd8bc162b00f1c71d49a7780e83764b331f97c83e4a4ef",
+    "inputSha256": "f9a5c5dbf3a7e9227c966a43e2d779e13cf4c5c82cda6fcbbf5afed9bf752614",
+    "observableCatalogSha256": "dadffe9e20b0f2c5089a08c1d62aefd93273444810464988c5cc4274a3421eb8",
+    "oracleVersion": "scenario-oracle/v1",
+    "oracleSha256": "4d319d5fc3b09cada589b82bf0fd251ae2339934bea06f5f5afcee5178ba7d30"
+  },
+  "metricSemantics": {
+    "correctness": "Exact terminal, disposition, confidence, required machine-signal, and insufficient-evidence null checks; not semantic entailment.",
+    "citations": "Exact retained eligible-identifier membership and required citation presence.",
+    "unsupportedClaims": "Unknown citations, foreign machine-signal tokens, and cause/recommendation assertions for oracle insufficient-evidence scenarios; not general entailment.",
+    "latency": "Completed-at minus requested-at for every terminal attempt."
+  },
+  "aggregates": {
+    "scenarioCount": 36,
+    "terminalStatuses": {
+      "AVAILABLE": 36,
+      "UNAVAILABLE": 0,
+      "TIMED_OUT": 0,
+      "MALFORMED": 0
+    },
+    "correctness": {
+      "terminalAvailable": 36,
+      "dispositionCorrect": 34,
+      "confidenceCorrect": 9,
+      "requiredSignalsCovered": 26,
+      "insufficientNullContract": 0
+    },
+    "citations": {
+      "claimsRequiringCitations": 241,
+      "claimsWithRequiredCitations": 241,
+      "totalReferences": 374,
+      "validReferences": 374,
+      "unknownEvidenceReferences": 0,
+      "unknownKnowledgeReferences": 0,
+      "recommendationsRequiringKnowledge": 36,
+      "recommendationsWithKnowledge": 36
+    },
+    "unsupportedClaims": {
+      "unknownEvidenceReferences": 0,
+      "unknownKnowledgeReferences": 0,
+      "foreignSignalTokens": 0,
+      "insufficientCauseOrRecommendation": 4,
+      "totalIndicators": 4
+    },
+    "latency": {
+      "count": 36,
+      "minMs": 75096,
+      "medianMs": 90764,
+      "p95Ms": 109187,
+      "maxMs": 113636
+    }
+  },
+  "scenarios": [
+    {
+      "scenarioCode": "S001",
+      "attemptId": "5d6e7ac0-c466-4e6e-8d89-b3824839acc5",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:22:30.9717760+00:00",
+      "completedAt": "2026-09-30T14:24:12.1624020+00:00",
+      "latencyMs": 101191,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "cf31249a528d833ea9ee3d667b2df2f1173aadce5f6c17f1b77afb249b1d5027",
+      "eligibleEvidenceIds": [
+        "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "bd16d850-f010-3a9c-9d21-9df347c59826",
+        "1f1adb63-bb10-3987-aba8-8687437f2233",
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "2fb106a3-57ea-31fd-acff-e205df3e6264",
+        "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate exceeded threshold due to gateway timeouts and upstream resets.",
+          "evidenceIds": [
+            "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Gateway timeout errors observed with 47 incidents.",
+            "evidenceIds": [
+              "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Upstream connection resets observed with 19 incidents.",
+            "evidenceIds": [
+              "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Gateway connectivity issues may be causing authorization declines.",
+            "evidenceIds": [
+              "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+            ],
+            "knowledgeChunkIds": [
+              "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Gateway connectivity issues may be causing authorization declines.",
+          "evidenceIds": [
+            "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with known signal interpretations for gateway timeouts and upstream resets.",
+          "evidenceIds": [
+            "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate gateway connectivity and upstream dependencies.",
+          "evidenceIds": [
+            "dd4fbbc9-43a0-4e3f-beb7-34b67dc7179c"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "Missing information on upstream service status."
+          },
+          {
+            "description": "No data on regional failover or configuration consistency."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "GATEWAY_TIMEOUT",
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S002",
+      "attemptId": "987eb68f-b6ec-4549-ae1f-9b824edf989c",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:25:55.4792970+00:00",
+      "completedAt": "2026-09-30T14:27:10.5750900+00:00",
+      "latencyMs": 75096,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "722d0aa54a0d53e6523ed347f455f74c4a61a4f1867475f4caccd78b405b99b4",
+      "eligibleEvidenceIds": [
+        "e0502b9d-e153-4af0-9a74-4a294bd48f1e"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "1d016299-5ca4-39c2-9adc-2a5c54a898e2",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "1f1adb63-bb10-3987-aba8-8687437f2233",
+        "5d693225-f6cc-34f9-bdbb-c899a5e84fb5",
+        "d5502aea-3ade-39f4-912d-da63f655fabd"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate exceeded threshold due to upstream connection resets.",
+          "evidenceIds": [
+            "e0502b9d-e153-4af0-9a74-4a294bd48f1e"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "UPSTREAM_CONNECTION_RESET observed with count 58.",
+            "evidenceIds": [
+              "e0502b9d-e153-4af0-9a74-4a294bd48f1e"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "UPSTREAM_CONNECTION_RESET may indicate network or service disruption.",
+            "evidenceIds": [
+              "e0502b9d-e153-4af0-9a74-4a294bd48f1e"
+            ],
+            "knowledgeChunkIds": [
+              "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Network or service disruption caused upstream connection resets.",
+          "evidenceIds": [
+            "e0502b9d-e153-4af0-9a74-4a294bd48f1e"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observation of UPSTREAM_CONNECTION_RESET with count 58, but no independent confirmation of root cause.",
+          "evidenceIds": [
+            "e0502b9d-e153-4af0-9a74-4a294bd48f1e"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate network and service dependencies for disruption.",
+          "evidenceIds": [
+            "e0502b9d-e153-4af0-9a74-4a294bd48f1e"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent service or dependency evidence to confirm root cause."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "matchedRequiredSignals": [
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S003",
+      "attemptId": "28397a55-48aa-4223-bf88-3aab9f5dacea",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:27:11.7264940+00:00",
+      "completedAt": "2026-09-30T14:28:32.2436540+00:00",
+      "latencyMs": 80517,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "4e7cfc94e5d42d3327cfe838c801dd8d9a8ea114d23695d1b6005753c4811336",
+      "eligibleEvidenceIds": [
+        "98a27870-8797-4fd8-8c74-d359f962951b"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "1d016299-5ca4-39c2-9adc-2a5c54a898e2",
+        "5bac833f-7bc4-36f4-89e1-153b71d2aa83",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "e941c980-f28e-300d-91c5-b9846ce67ab5",
+        "3341b620-5520-3ae7-9394-a119545ed54f"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed.",
+          "evidenceIds": [
+            "98a27870-8797-4fd8-8c74-d359f962951b"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "UPSTREAM_RATE_LIMITED signal detected with 83 occurrences.",
+            "evidenceIds": [
+              "98a27870-8797-4fd8-8c74-d359f962951b"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "UPSTREAM_RATE_LIMITED may contribute to the decline rate spike.",
+            "evidenceIds": [
+              "98a27870-8797-4fd8-8c74-d359f962951b"
+            ],
+            "knowledgeChunkIds": [
+              "5bac833f-7bc4-36f4-89e1-153b71d2aa83"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "UPSTREAM_RATE_LIMITED may be a contributing factor to the synthetic authorization decline rate spike.",
+          "evidenceIds": [
+            "98a27870-8797-4fd8-8c74-d359f962951b"
+          ],
+          "knowledgeChunkIds": [
+            "5bac833f-7bc4-36f4-89e1-153b71d2aa83"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Signal detected but no independent confirmation available.",
+          "evidenceIds": [
+            "98a27870-8797-4fd8-8c74-d359f962951b"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate UPSTREAM_RATE_LIMITED root cause using independent confirmation.",
+          "evidenceIds": [
+            "98a27870-8797-4fd8-8c74-d359f962951b"
+          ],
+          "knowledgeChunkIds": [
+            "5bac833f-7bc4-36f4-89e1-153b71d2aa83"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of UPSTREAM_RATE_LIMITED root cause."
+          },
+          {
+            "description": "No evidence of synthetic baseline return to normal."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "UPSTREAM_RATE_LIMITED"
+        ],
+        "matchedRequiredSignals": [
+          "UPSTREAM_RATE_LIMITED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S004",
+      "attemptId": "cba86f1c-13a9-4df0-a9f4-3246635b7296",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:28:33.7187770+00:00",
+      "completedAt": "2026-09-30T14:30:09.3156010+00:00",
+      "latencyMs": 95597,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "aa856627c7e9726a4f883d869d43a114f55bbc61d4dcc8b5f98f626758b0dfd8",
+      "eligibleEvidenceIds": [
+        "f834297c-6afd-4f18-9313-9099b4b388fa"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "8e668a42-5c14-321b-8ee1-f9a1b2ca6807",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "b4f0b416-3087-3c66-a872-8e92c7ea5369",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "e941c980-f28e-300d-91c5-b9846ce67ab5"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed with database connection pool exhaustion and state lookup timeouts.",
+          "evidenceIds": [
+            "f834297c-6afd-4f18-9313-9099b4b388fa"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Database connection pool exhausted with 42 incidents.",
+            "evidenceIds": [
+              "f834297c-6afd-4f18-9313-9099b4b388fa"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Authorization state lookup timeout with 37 incidents.",
+            "evidenceIds": [
+              "f834297c-6afd-4f18-9313-9099b4b388fa"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Database connection pool exhaustion and state lookup timeouts likely contributed to the authorization decline rate spike.",
+            "evidenceIds": [
+              "f834297c-6afd-4f18-9313-9099b4b388fa"
+            ],
+            "knowledgeChunkIds": [
+              "8e668a42-5c14-321b-8ee1-f9a1b2ca6807",
+              "b4f0b416-3087-3c66-a872-8e92c7ea5369"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Database connection pool exhaustion and state lookup timeouts caused the authorization decline rate spike.",
+          "evidenceIds": [
+            "f834297c-6afd-4f18-9313-9099b4b388fa"
+          ],
+          "knowledgeChunkIds": [
+            "8e668a42-5c14-321b-8ee1-f9a1b2ca6807",
+            "b4f0b416-3087-3c66-a872-8e92c7ea5369"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with known error codes in runbooks, but no confirmation of baseline return.",
+          "evidenceIds": [
+            "f834297c-6afd-4f18-9313-9099b4b388fa"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate database connection pool and state lookup processes for capacity and timeout resolution.",
+          "evidenceIds": [
+            "f834297c-6afd-4f18-9313-9099b4b388fa"
+          ],
+          "knowledgeChunkIds": [
+            "e941c980-f28e-300d-91c5-b9846ce67ab5"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No evidence confirming return to synthetic baseline for decline rate and error categories."
+          },
+          {
+            "description": "No evidence of human review or operational action authority applied."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S005",
+      "attemptId": "9896db0a-f279-4cd7-a6ed-d810d91b803a",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:30:10.5594200+00:00",
+      "completedAt": "2026-09-30T14:31:32.8655900+00:00",
+      "latencyMs": 82306,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "0d635edd5fb2a1c5e9e57fbd4fc8c0c8f0c2d4c2ad82e73e2f9767e2334bdd8e",
+      "eligibleEvidenceIds": [
+        "a18e9721-56f1-4f16-89ce-07202c3fcff1"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "bd16d850-f010-3a9c-9d21-9df347c59826",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "e0005feb-1cc4-327d-b88e-e5cc8d58fae9",
+        "c8252c0e-bf5f-3b72-ba2b-b378d5959207",
+        "5d693225-f6cc-34f9-bdbb-c899a5e84fb5",
+        "3118b873-947d-39a4-8162-0b3f3eaa1410",
+        "f6bd5940-d6e1-32a4-8ffe-9ead818bb1a5"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold",
+          "evidenceIds": [
+            "a18e9721-56f1-4f16-89ce-07202c3fcff1"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Issuer surge signal detected with 126 occurrences",
+            "evidenceIds": [
+              "a18e9721-56f1-4f16-89ce-07202c3fcff1"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Issuer surge may indicate synthetic data anomaly",
+            "evidenceIds": [
+              "a18e9721-56f1-4f16-89ce-07202c3fcff1"
+            ],
+            "knowledgeChunkIds": [
+              "c8252c0e-bf5f-3b72-ba2b-b378d5959207"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Synthetic data anomaly triggered issuer surge signal",
+          "evidenceIds": [
+            "a18e9721-56f1-4f16-89ce-07202c3fcff1"
+          ],
+          "knowledgeChunkIds": [
+            "c8252c0e-bf5f-3b72-ba2b-b378d5959207"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Signal aligns with synthetic data handling policy and requires independent confirmation",
+          "evidenceIds": [
+            "a18e9721-56f1-4f16-89ce-07202c3fcff1"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate synthetic data generation and issuer response mapping",
+          "evidenceIds": [
+            "a18e9721-56f1-4f16-89ce-07202c3fcff1"
+          ],
+          "knowledgeChunkIds": [
+            "3118b873-947d-39a4-8162-0b3f3eaa1410"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of issuer surge signal"
+          },
+          {
+            "description": "No alert context provided for comparison window"
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "ISSUER_DO_NOT_HONOR_SURGE"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S006",
+      "attemptId": "7b0b78fc-22f5-47f9-b082-4806e23f3e9c",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:31:34.0483950+00:00",
+      "completedAt": "2026-09-30T14:33:23.2352260+00:00",
+      "latencyMs": 109187,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "35895d2cfeb59f2d76305128ecfea11da5198ac65683efc19a9fd289131d1f70",
+      "eligibleEvidenceIds": [
+        "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "9e4c7ad2-936c-314d-96e6-7b4c0d50477f",
+        "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01",
+        "74d7239a-1ee8-3daa-b7e6-494592b1a56a",
+        "bd16d850-f010-3a9c-9d21-9df347c59826",
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "2fb106a3-57ea-31fd-acff-e205df3e6264",
+        "2c259c27-c873-3b19-bf95-ae650d855095"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed with retry budget exhausted and gateway timeout errors.",
+          "evidenceIds": [
+            "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Retry budget exhausted with 69 attempts recorded.",
+            "evidenceIds": [
+              "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Gateway timeout with 23 attempts recorded.",
+            "evidenceIds": [
+              "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Retry budget exhausted and gateway timeout may indicate upstream connectivity issues.",
+            "evidenceIds": [
+              "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+            ],
+            "knowledgeChunkIds": [
+              "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01",
+              "74d7239a-1ee8-3daa-b7e6-494592b1a56a"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Upstream connectivity issues causing retry budget exhaustion and gateway timeouts.",
+          "evidenceIds": [
+            "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+          ],
+          "knowledgeChunkIds": [
+            "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01",
+            "74d7239a-1ee8-3daa-b7e6-494592b1a56a"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with known signal interpretations for retry budget and gateway timeout, but root cause not confirmed.",
+          "evidenceIds": [
+            "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate upstream connectivity and retry budget configuration.",
+          "evidenceIds": [
+            "47e7b7a1-d629-4e7a-99b2-13e8a15ff273"
+          ],
+          "knowledgeChunkIds": [
+            "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01",
+            "74d7239a-1ee8-3daa-b7e6-494592b1a56a"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No information on upstream service status or network latency."
+          },
+          {
+            "description": "No details on retry budget thresholds or configuration."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "GATEWAY_TIMEOUT",
+          "RETRY_BUDGET_EXHAUSTED"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S007",
+      "attemptId": "22e20b96-a243-4090-ab97-1533e85b4b1a",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:33:24.3978170+00:00",
+      "completedAt": "2026-09-30T14:34:57.0432080+00:00",
+      "latencyMs": 92645,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "51ab2074a8331796c19bbdd05c351564a85d899bd0f588153f8bf03fd4b5759a",
+      "eligibleEvidenceIds": [
+        "58e9c259-5dfc-42ef-9723-74a36969bae3"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "51c84caf-d0fb-3801-8866-e80ae2a051cf",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "d9578857-23cc-35fa-96ae-e8a8ce48e80f",
+        "3341b620-5520-3ae7-9394-a119545ed54f",
+        "16ed9e40-f30b-3ee3-ad42-b693148db4bd",
+        "337325b9-ae66-3a0b-be02-b96ac2562762"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate exceeded threshold due to observed signals.",
+          "evidenceIds": [
+            "58e9c259-5dfc-42ef-9723-74a36969bae3"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CPU saturation and deadline exceeded errors observed in payment authorization.",
+            "evidenceIds": [
+              "58e9c259-5dfc-42ef-9723-74a36969bae3"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Signals require bounded interpretation within observation window.",
+            "evidenceIds": [
+              "58e9c259-5dfc-42ef-9723-74a36969bae3"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "CPU saturation and deadline exceeded may indicate service capacity issues.",
+            "evidenceIds": [
+              "58e9c259-5dfc-42ef-9723-74a36969bae3"
+            ],
+            "knowledgeChunkIds": [
+              "51c84caf-d0fb-3801-8866-e80ae2a051cf",
+              "337325b9-ae66-3a0b-be02-b96ac2562762"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Service capacity constraints may have caused authorization decline rate to spike.",
+          "evidenceIds": [
+            "58e9c259-5dfc-42ef-9723-74a36969bae3"
+          ],
+          "knowledgeChunkIds": [
+            "51c84caf-d0fb-3801-8866-e80ae2a051cf",
+            "16ed9e40-f30b-3ee3-ad42-b693148db4bd"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Signals suggest capacity issues but require independent confirmation.",
+          "evidenceIds": [
+            "58e9c259-5dfc-42ef-9723-74a36969bae3"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate service capacity and dependency health.",
+          "evidenceIds": [
+            "58e9c259-5dfc-42ef-9723-74a36969bae3"
+          ],
+          "knowledgeChunkIds": [
+            "16ed9e40-f30b-3ee3-ad42-b693148db4bd"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "Missing independent service health data for correlation."
+          },
+          {
+            "description": "No real-world impact data available due to synthetic nature."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "AUTHORIZATION_CPU_SATURATION",
+          "REQUEST_DEADLINE_EXCEEDED"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S008",
+      "attemptId": "df031926-3ace-4b89-9969-fcb782c586df",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:34:58.1422110+00:00",
+      "completedAt": "2026-09-30T14:36:17.1609820+00:00",
+      "latencyMs": 79019,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "a5e8fb793d7f6bc59571dbd7318a79ca15766b5a3358f6b25e9b54e4575d2ae4",
+      "eligibleEvidenceIds": [
+        "a1c79a8d-4b9c-4454-9a41-84b37fb68d97"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "e0005feb-1cc4-327d-b88e-e5cc8d58fae9",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "0ab98c62-f49d-3426-9234-195f087f7e8d",
+        "658d8bcd-2914-3ca9-a496-75280e2baa32"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed in synthetic data.",
+          "evidenceIds": [
+            "a1c79a8d-4b9c-4454-9a41-84b37fb68d97"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "74 synthetic declines recorded under ROUTE_CONFIGURATION_NOT_FOUND.",
+            "evidenceIds": [
+              "a1c79a8d-4b9c-4454-9a41-84b37fb68d97"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Potential route configuration issue affecting synthetic declines.",
+            "evidenceIds": [
+              "a1c79a8d-4b9c-4454-9a41-84b37fb68d97"
+            ],
+            "knowledgeChunkIds": [
+              "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Route configuration not found causing synthetic declines.",
+          "evidenceIds": [
+            "a1c79a8d-4b9c-4454-9a41-84b37fb68d97"
+          ],
+          "knowledgeChunkIds": [
+            "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observation supports probable cause but lacks independent confirmation.",
+          "evidenceIds": [
+            "a1c79a8d-4b9c-4454-9a41-84b37fb68d97"
+          ]
+        },
+        "recommendation": {
+          "statement": "Verify route configuration and check for independent confirmation.",
+          "evidenceIds": [
+            "a1c79a8d-4b9c-4454-9a41-84b37fb68d97"
+          ],
+          "knowledgeChunkIds": [
+            "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of route configuration issue."
+          },
+          {
+            "description": "No additional error codes or timestamps provided for context."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "ROUTE_CONFIGURATION_NOT_FOUND"
+        ],
+        "matchedRequiredSignals": [
+          "ROUTE_CONFIGURATION_NOT_FOUND"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S009",
+      "attemptId": "02d70bfd-20e7-4ae4-9787-ff2954bf5b5e",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:36:18.3225690+00:00",
+      "completedAt": "2026-09-30T14:37:39.0662970+00:00",
+      "latencyMs": 80744,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "fe00d5b45fabf4cefeb3a7c2fe484bf670e95a396a954a2267afbdc59e445ec8",
+      "eligibleEvidenceIds": [
+        "0572d0ae-5808-4dd7-a79e-a72768519d1c"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "bd16d850-f010-3a9c-9d21-9df347c59826",
+        "5bac833f-7bc4-36f4-89e1-153b71d2aa83",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "fc1cf77f-e879-3b31-899f-458b75addb8e",
+        "d5502aea-3ade-39f4-912d-da63f655fabd"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed on gateway route with GATEWAY_MAINTENANCE_REJECTION code.",
+          "evidenceIds": [
+            "0572d0ae-5808-4dd7-a79e-a72768519d1c"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Synthetic decline count of 61 recorded within six-minute interval.",
+            "evidenceIds": [
+              "0572d0ae-5808-4dd7-a79e-a72768519d1c"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "GATEWAY_MAINTENANCE_REJECTION may indicate maintenance impacting synthetic declines.",
+            "evidenceIds": [
+              "0572d0ae-5808-4dd7-a79e-a72768519d1c"
+            ],
+            "knowledgeChunkIds": [
+              "5bac833f-7bc4-36f4-89e1-153b71d2aa83"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Gateway maintenance triggered synthetic decline rate spike on specific route.",
+          "evidenceIds": [
+            "0572d0ae-5808-4dd7-a79e-a72768519d1c"
+          ],
+          "knowledgeChunkIds": [
+            "5bac833f-7bc4-36f4-89e1-153b71d2aa83"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observation aligns with maintenance signal, but no independent confirmation available.",
+          "evidenceIds": [
+            "0572d0ae-5808-4dd7-a79e-a72768519d1c"
+          ]
+        },
+        "recommendation": {
+          "statement": "Verify gateway maintenance logs for confirmation.",
+          "evidenceIds": [
+            "0572d0ae-5808-4dd7-a79e-a72768519d1c"
+          ],
+          "knowledgeChunkIds": [
+            "5bac833f-7bc4-36f4-89e1-153b71d2aa83"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause from other sources."
+          },
+          {
+            "description": "No additional data on affected route or cohort."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "GATEWAY_MAINTENANCE_REJECTION"
+        ],
+        "matchedRequiredSignals": [
+          "GATEWAY_MAINTENANCE_REJECTION"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S010",
+      "attemptId": "f8a8c2ae-822d-4892-84d4-2de7bdb0ab56",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:37:41.9781590+00:00",
+      "completedAt": "2026-09-30T14:39:03.9842960+00:00",
+      "latencyMs": 82006,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "0876223e3212968e89b263839d769ece8c3cd3d1bb6495fe19d3c42b577e4adb",
+      "eligibleEvidenceIds": [
+        "0f5ef110-327b-4cfe-9ece-51a73401e018"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "0ab98c62-f49d-3426-9234-195f087f7e8d",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "d583dce6-7166-38c8-aaf9-c10dd5d614d7",
+        "3341b620-5520-3ae7-9394-a119545ed54f"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Merchant profile invalid errors observed in synthetic payment data.",
+          "evidenceIds": [
+            "0f5ef110-327b-4cfe-9ece-51a73401e018"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Synthetic payment data shows 39 MERCHANT_PROFILE_INVALID errors.",
+            "evidenceIds": [
+              "0f5ef110-327b-4cfe-9ece-51a73401e018"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "MERCHANT_PROFILE_INVALID may indicate invalid merchant data.",
+            "evidenceIds": [
+              "0f5ef110-327b-4cfe-9ece-51a73401e018"
+            ],
+            "knowledgeChunkIds": [
+              "0ab98c62-f49d-3426-9234-195f087f7e8d"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Invalid merchant profile data may have caused synthetic payment declines.",
+          "evidenceIds": [
+            "0f5ef110-327b-4cfe-9ece-51a73401e018"
+          ],
+          "knowledgeChunkIds": [
+            "0ab98c62-f49d-3426-9234-195f087f7e8d"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observation supports probable cause but lacks independent confirmation.",
+          "evidenceIds": [
+            "0f5ef110-327b-4cfe-9ece-51a73401e018"
+          ]
+        },
+        "recommendation": {
+          "statement": "Validate merchant profile data and check for configuration issues.",
+          "evidenceIds": [
+            "0f5ef110-327b-4cfe-9ece-51a73401e018"
+          ],
+          "knowledgeChunkIds": [
+            "0ab98c62-f49d-3426-9234-195f087f7e8d"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No additional evidence to confirm root cause of MERCHANT_PROFILE_INVALID errors."
+          },
+          {
+            "description": "No data on merchant profile validation process or configuration."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "MERCHANT_PROFILE_INVALID"
+        ],
+        "matchedRequiredSignals": [
+          "MERCHANT_PROFILE_INVALID"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S011",
+      "attemptId": "8c13b286-3816-4676-80b6-ae74b5a211a4",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:39:05.2588460+00:00",
+      "completedAt": "2026-09-30T14:40:27.9911400+00:00",
+      "latencyMs": 82732,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "ae147efb24a13b69d778b098a1730b808b6f3764c05d30e6ea194e4c0f6471ad",
+      "eligibleEvidenceIds": [
+        "ac3ff5e3-7f63-4b58-987f-41ca812de7a2"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "329a54fa-fa95-3d33-afbc-bb565fdb9089",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "739c4147-8a2f-335f-98b2-e4eb5df4175f",
+        "0aa954df-71df-3f77-8cb1-ed6c5de0f3a6",
+        "66d24684-1538-3f37-9556-03f9d4ec091a"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed in synthetic test cohort.",
+          "evidenceIds": [
+            "ac3ff5e3-7f63-4b58-987f-41ca812de7a2"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "FRAUD_RULE_REJECTION_SURGE signal detected with 92 instances.",
+            "evidenceIds": [
+              "ac3ff5e3-7f63-4b58-987f-41ca812de7a2"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Signal aligns with synthetic data handling policy.",
+            "evidenceIds": [
+              "ac3ff5e3-7f63-4b58-987f-41ca812de7a2"
+            ],
+            "knowledgeChunkIds": [
+              "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+              "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Synthetic data testing triggered fraud rule rejections.",
+          "evidenceIds": [
+            "ac3ff5e3-7f63-4b58-987f-41ca812de7a2"
+          ],
+          "knowledgeChunkIds": [
+            "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+            "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "Signal matches synthetic data handling policy and runbook guidance.",
+          "evidenceIds": [
+            "ac3ff5e3-7f63-4b58-987f-41ca812de7a2"
+          ]
+        },
+        "recommendation": {
+          "statement": "Review synthetic test parameters and confirm no real data impact.",
+          "evidenceIds": [
+            "ac3ff5e3-7f63-4b58-987f-41ca812de7a2"
+          ],
+          "knowledgeChunkIds": [
+            "0aa954df-71df-3f77-8cb1-ed6c5de0f3a6"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No real payment data confirmation available."
+          },
+          {
+            "description": "No independent service or dependency evidence provided."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "FRAUD_RULE_REJECTION_SURGE"
+        ],
+        "matchedRequiredSignals": [
+          "FRAUD_RULE_REJECTION_SURGE"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S012",
+      "attemptId": "431b5c4f-4ea6-4709-a3dc-3f5542d9b95d",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:40:29.2212670+00:00",
+      "completedAt": "2026-09-30T14:41:56.6526950+00:00",
+      "latencyMs": 87431,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "82aaf88365568850d37d0b0dd900dd76538d8559364c53617cd8156f043d991d",
+      "eligibleEvidenceIds": [
+        "0a9622ca-e4b6-4400-add4-433d917b9382"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "bb39cd5e-129e-37eb-998f-c0581e7ed27f",
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "1f1adb63-bb10-3987-aba8-8687437f2233",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "2fb106a3-57ea-31fd-acff-e205df3e6264"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold",
+          "evidenceIds": [
+            "0a9622ca-e4b6-4400-add4-433d917b9382"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "48 NETWORK_PACKET_LOSS events observed",
+            "evidenceIds": [
+              "0a9622ca-e4b6-4400-add4-433d917b9382"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "21 UPSTREAM_CONNECTION_RESET events observed",
+            "evidenceIds": [
+              "0a9622ca-e4b6-4400-add4-433d917b9382"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Network issues may contribute to synthetic decline rate",
+            "evidenceIds": [
+              "0a9622ca-e4b6-4400-add4-433d917b9382"
+            ],
+            "knowledgeChunkIds": [
+              "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Network packet loss and upstream connection resets may be causing synthetic declines",
+          "evidenceIds": [
+            "0a9622ca-e4b6-4400-add4-433d917b9382"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Events align with known signal categories but lack independent confirmation",
+          "evidenceIds": [
+            "0a9622ca-e4b6-4400-add4-433d917b9382"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate network and upstream dependencies",
+          "evidenceIds": [
+            "0a9622ca-e4b6-4400-add4-433d917b9382"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent service or dependency evidence provided"
+          },
+          {
+            "description": "No confirmation of root cause or alternative explanations"
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "NETWORK_PACKET_LOSS",
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "matchedRequiredSignals": [
+          "NETWORK_PACKET_LOSS",
+          "UPSTREAM_CONNECTION_RESET"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S013",
+      "attemptId": "169edf36-c4a9-4066-ad90-e914ad45faa5",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:41:57.7208730+00:00",
+      "completedAt": "2026-09-30T14:43:20.1489820+00:00",
+      "latencyMs": 82428,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "4856b85f568aa15d340d922a4cb29e79550a46c4be6be09c0705f6fd01b6c18e",
+      "eligibleEvidenceIds": [
+        "7954a241-7a9a-4596-b42e-71901b3a5243"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "7a5a5cdc-3b84-32f0-b81a-8830f94e6639",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "59fe41ec-e12b-3ed8-aaa2-b550c0ac2637",
+        "c18d2cc6-1892-388f-a3e2-b95e9d1d8f54",
+        "fc1cf77f-e879-3b31-899f-458b75addb8e"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed on payment-authorization service.",
+          "evidenceIds": [
+            "7954a241-7a9a-4596-b42e-71901b3a5243"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "GATEWAY_CREDENTIAL_REJECTED error recorded with count 117.",
+            "evidenceIds": [
+              "7954a241-7a9a-4596-b42e-71901b3a5243"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Error may indicate gateway credential misconfiguration.",
+            "evidenceIds": [
+              "7954a241-7a9a-4596-b42e-71901b3a5243"
+            ],
+            "knowledgeChunkIds": [
+              "7a5a5cdc-3b84-32f0-b81a-8830f94e6639"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Misconfigured gateway credentials causing synthetic authorization failures.",
+          "evidenceIds": [
+            "7954a241-7a9a-4596-b42e-71901b3a5243"
+          ],
+          "knowledgeChunkIds": [
+            "7a5a5cdc-3b84-32f0-b81a-8830f94e6639"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observation aligns with guidance on bounded interpretation of GATEWAY_CREDENTIAL_REJECTED signals.",
+          "evidenceIds": [
+            "7954a241-7a9a-4596-b42e-71901b3a5243"
+          ]
+        },
+        "recommendation": {
+          "statement": "Verify gateway credentials and check for misconfigurations.",
+          "evidenceIds": [
+            "7954a241-7a9a-4596-b42e-71901b3a5243"
+          ],
+          "knowledgeChunkIds": [
+            "7a5a5cdc-3b84-32f0-b81a-8830f94e6639"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause for GATEWAY_CREDENTIAL_REJECTED signal."
+          },
+          {
+            "description": "No additional observations to validate or contradict the observed error count."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "GATEWAY_CREDENTIAL_REJECTED"
+        ],
+        "matchedRequiredSignals": [
+          "GATEWAY_CREDENTIAL_REJECTED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S014",
+      "attemptId": "a2781965-b976-4a1b-a2da-496463b9474b",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:43:21.3471550+00:00",
+      "completedAt": "2026-09-30T14:44:51.1320470+00:00",
+      "latencyMs": 89785,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "6cbc6ab75c5aeacd4684fa4c9c6ac28cf8abede8932fc02a70a5d5e4f164d5ce",
+      "eligibleEvidenceIds": [
+        "0ec08a49-d95b-4054-ab11-936602840d4f"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "b4f0b416-3087-3c66-a872-8e92c7ea5369",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8e668a42-5c14-321b-8ee1-f9a1b2ca6807",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "51c84caf-d0fb-3801-8866-e80ae2a051cf",
+        "59fe41ec-e12b-3ed8-aaa2-b550c0ac2637"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike likely due to cache stampede and state lookup timeout.",
+          "evidenceIds": [
+            "0ec08a49-d95b-4054-ab11-936602840d4f"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CACHE_STAMPEDE error with 55 occurrences observed.",
+            "evidenceIds": [
+              "0ec08a49-d95b-4054-ab11-936602840d4f"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "AUTHORIZATION_STATE_LOOKUP_TIMEOUT with 32 occurrences observed.",
+            "evidenceIds": [
+              "0ec08a49-d95b-4054-ab11-936602840d4f"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Cache stampede and state lookup timeout likely caused the authorization decline rate spike.",
+            "evidenceIds": [
+              "0ec08a49-d95b-4054-ab11-936602840d4f"
+            ],
+            "knowledgeChunkIds": [
+              "b4f0b416-3087-3c66-a872-8e92c7ea5369"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Cache stampede and state lookup timeout caused the authorization decline rate spike.",
+          "evidenceIds": [
+            "0ec08a49-d95b-4054-ab11-936602840d4f"
+          ],
+          "knowledgeChunkIds": [
+            "b4f0b416-3087-3c66-a872-8e92c7ea5369"
+          ]
+        },
+        "confidence": {
+          "level": "HIGH",
+          "rationale": "Observations align with known signal interpretation guidance for cache and state-lookup issues.",
+          "evidenceIds": [
+            "0ec08a49-d95b-4054-ab11-936602840d4f"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate cache configuration and state-lookup database performance.",
+          "evidenceIds": [
+            "0ec08a49-d95b-4054-ab11-936602840d4f"
+          ],
+          "knowledgeChunkIds": [
+            "b4f0b416-3087-3c66-a872-8e92c7ea5369"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No evidence of database connection pool exhaustion or lock timeout."
+          },
+          {
+            "description": "No evidence of CPU saturation or deadline exceeded errors."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "CACHE_STAMPEDE",
+          "AUTHORIZATION_STATE_LOOKUP_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "CACHE_STAMPEDE",
+          "AUTHORIZATION_STATE_LOOKUP_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S101",
+      "attemptId": "b2c14d9a-3325-4f25-b892-79a4c0a88e55",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:44:52.3230330+00:00",
+      "completedAt": "2026-09-30T14:46:30.1316480+00:00",
+      "latencyMs": 97809,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "4b4679eb8636a47ac8e0506cac899f9625ff44ad06157dd9f5d8eaa37e8fea0d",
+      "eligibleEvidenceIds": [
+        "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "251adc0b-6d28-3d74-8bd1-c61d44553403",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "b8f4285f-fa6d-395b-8058-7a22d5cbe93e",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "00ce32c1-1166-354f-a9d2-1031bc7db9c1"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "TLS errors observed in synthetic payment authorization attempts.",
+          "evidenceIds": [
+            "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "TLS_CERTIFICATE_EXPIRED error recorded with 96 occurrences.",
+            "evidenceIds": [
+              "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "TLS_HANDSHAKE_FAILED error recorded with 96 occurrences.",
+            "evidenceIds": [
+              "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "TLS errors may indicate certificate or handshake issues.",
+            "evidenceIds": [
+              "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+            ],
+            "knowledgeChunkIds": [
+              "251adc0b-6d28-3d74-8bd1-c61d44553403"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Potential TLS certificate or handshake failure in synthetic authorization attempts.",
+          "evidenceIds": [
+            "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+          ],
+          "knowledgeChunkIds": [
+            "251adc0b-6d28-3d74-8bd1-c61d44553403"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "TLS errors observed but no independent confirmation available.",
+          "evidenceIds": [
+            "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate TLS configuration and certificate validity.",
+          "evidenceIds": [
+            "c233639d-8878-46e5-93d6-2f8f6f089fc6"
+          ],
+          "knowledgeChunkIds": [
+            "251adc0b-6d28-3d74-8bd1-c61d44553403"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent evidence to confirm TLS root cause."
+          },
+          {
+            "description": "No synthetic payment data handling policy reference in evidence."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "TLS_CERTIFICATE_EXPIRED",
+          "TLS_HANDSHAKE_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "TLS_CERTIFICATE_EXPIRED",
+          "TLS_HANDSHAKE_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S102",
+      "attemptId": "e6d4e057-1c3e-4823-bc9a-34628c5e9265",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:46:31.1248990+00:00",
+      "completedAt": "2026-09-30T14:47:52.9144260+00:00",
+      "latencyMs": 81790,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "cb57c2c3d742652aff31ba8e06251d915df4b2bb787b535cfb7c114566af7112",
+      "eligibleEvidenceIds": [
+        "70c7a887-2f2f-483f-8e0c-df50e3ee2d63"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "b8f4285f-fa6d-395b-8058-7a22d5cbe93e",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "ef7a66e5-648d-3ff6-a6f0-bfc9bdb55075",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "00ce32c1-1166-354f-a9d2-1031bc7db9c1",
+        "d5502aea-3ade-39f4-912d-da63f655fabd"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed with DNS resolution failures.",
+          "evidenceIds": [
+            "70c7a887-2f2f-483f-8e0c-df50e3ee2d63"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "DNS_RESOLUTION_FAILED with count 103 observed in the latest attempt.",
+            "evidenceIds": [
+              "70c7a887-2f2f-483f-8e0c-df50e3ee2d63"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "DNS resolution failure may indicate upstream hostname connectivity issues.",
+            "evidenceIds": [
+              "70c7a887-2f2f-483f-8e0c-df50e3ee2d63"
+            ],
+            "knowledgeChunkIds": [
+              "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Upstream hostname connectivity issues causing DNS resolution failures.",
+          "evidenceIds": [
+            "70c7a887-2f2f-483f-8e0c-df50e3ee2d63"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "DNS resolution failure count observed, but root cause not confirmed without further investigation.",
+          "evidenceIds": [
+            "70c7a887-2f2f-483f-8e0c-df50e3ee2d63"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate upstream hostname connectivity and DNS configuration.",
+          "evidenceIds": [
+            "70c7a887-2f2f-483f-8e0c-df50e3ee2d63"
+          ],
+          "knowledgeChunkIds": [
+            "97e0c6d6-59d4-3576-96a8-9aadef524a1d"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No additional evidence provided to confirm root cause of DNS resolution failures."
+          },
+          {
+            "description": "No independent confirmation of DNS resolution failure impact on authorization rate."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S103",
+      "attemptId": "42ba6373-20fe-4a6d-a234-4afd7d26dab0",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:47:53.9838820+00:00",
+      "completedAt": "2026-09-30T14:49:24.9009160+00:00",
+      "latencyMs": 90917,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "c2fcf907542ca7691493601628092eca31b13aac9ca974d7b68dd7919602e2a3",
+      "eligibleEvidenceIds": [
+        "3652e82f-0e02-4c53-b60a-578fb50f9650"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "43af97de-0b98-3b07-bf7f-ab9d7b120905",
+        "65ad0671-e091-32fd-822c-52dafda66bf6",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "59fe41ec-e12b-3ed8-aaa2-b550c0ac2637",
+        "5b9382f0-1497-378d-b2b7-e50b97692235"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold",
+          "evidenceIds": [
+            "3652e82f-0e02-4c53-b60a-578fb50f9650"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CLOCK_SKEW_REJECTED errors observed in service group",
+            "evidenceIds": [
+              "3652e82f-0e02-4c53-b60a-578fb50f9650"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "REQUEST_SIGNATURE_INVALID errors observed in service group",
+            "evidenceIds": [
+              "3652e82f-0e02-4c53-b60a-578fb50f9650"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Errors may indicate misconfigured clock sync or signature validation",
+            "evidenceIds": [
+              "3652e82f-0e02-4c53-b60a-578fb50f9650"
+            ],
+            "knowledgeChunkIds": [
+              "43af97de-0b98-3b07-bf7f-ab9d7b120905"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Misconfigured clock sync or signature validation in service group",
+          "evidenceIds": [
+            "3652e82f-0e02-4c53-b60a-578fb50f9650"
+          ],
+          "knowledgeChunkIds": [
+            "43af97de-0b98-3b07-bf7f-ab9d7b120905"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Errors observed within observation window, but no independent confirmation available",
+          "evidenceIds": [
+            "3652e82f-0e02-4c53-b60a-578fb50f9650"
+          ]
+        },
+        "recommendation": {
+          "statement": "Validate clock sync and signature validation configurations for service group",
+          "evidenceIds": [
+            "3652e82f-0e02-4c53-b60a-578fb50f9650"
+          ],
+          "knowledgeChunkIds": [
+            "43af97de-0b98-3b07-bf7f-ab9d7b120905"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause"
+          },
+          {
+            "description": "No additional error types or timestamps provided"
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "CLOCK_SKEW_REJECTED",
+          "REQUEST_SIGNATURE_INVALID"
+        ],
+        "matchedRequiredSignals": [
+          "CLOCK_SKEW_REJECTED",
+          "REQUEST_SIGNATURE_INVALID"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S104",
+      "attemptId": "443709a9-23b9-4dec-be59-7cfb7bfdfd5f",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:49:26.2188280+00:00",
+      "completedAt": "2026-09-30T14:51:10.3924390+00:00",
+      "latencyMs": 104174,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "abb72d35bc27414d33d88e792b9ed49f3902110e9526bbe71290e6c2a2e81acd",
+      "eligibleEvidenceIds": [
+        "e674ef87-b463-477f-baa9-e83474fedb34"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "3341b620-5520-3ae7-9394-a119545ed54f",
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "51c84caf-d0fb-3801-8866-e80ae2a051cf",
+        "3a198cdd-ec31-3f44-b780-a4f122ed6f4b",
+        "121b7608-5459-3311-8cd5-6e5a6cbbfb6e"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed with HSM_SIGNING_TIMEOUT and REQUEST_DEADLINE_EXCEEDED.",
+          "evidenceIds": [
+            "e674ef87-b463-477f-baa9-e83474fedb34"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "HSM_SIGNING_TIMEOUT with 52 occurrences detected.",
+            "evidenceIds": [
+              "e674ef87-b463-477f-baa9-e83474fedb34"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "REQUEST_DEADLINE_EXCEEDED with 45 occurrences detected.",
+            "evidenceIds": [
+              "e674ef87-b463-477f-baa9-e83474fedb34"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Potential HSM or service latency issues affecting synthetic authorization.",
+            "evidenceIds": [
+              "e674ef87-b463-477f-baa9-e83474fedb34"
+            ],
+            "knowledgeChunkIds": [
+              "3341b620-5520-3ae7-9394-a119545ed54f",
+              "51c84caf-d0fb-3801-8866-e80ae2a051cf"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "HSM or service latency impacting synthetic authorization requests.",
+          "evidenceIds": [
+            "e674ef87-b463-477f-baa9-e83474fedb34"
+          ],
+          "knowledgeChunkIds": [
+            "3341b620-5520-3ae7-9394-a119545ed54f",
+            "51c84caf-d0fb-3801-8866-e80ae2a051cf"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with known signal interpretations but require independent confirmation.",
+          "evidenceIds": [
+            "e674ef87-b463-477f-baa9-e83474fedb34"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate HSM and service dependencies for latency or configuration issues.",
+          "evidenceIds": [
+            "e674ef87-b463-477f-baa9-e83474fedb34"
+          ],
+          "knowledgeChunkIds": [
+            "3341b620-5520-3ae7-9394-a119545ed54f",
+            "51c84caf-d0fb-3801-8866-e80ae2a051cf"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent service or dependency evidence provided for signal correlation."
+          },
+          {
+            "description": "No missing or contradictory signals recorded for scenario decision matrix."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "HSM_SIGNING_TIMEOUT",
+          "REQUEST_DEADLINE_EXCEEDED"
+        ],
+        "matchedRequiredSignals": [
+          "HSM_SIGNING_TIMEOUT",
+          "REQUEST_DEADLINE_EXCEEDED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S105",
+      "attemptId": "c3c6f12f-45f4-4774-884c-632239bfd643",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:51:11.7576210+00:00",
+      "completedAt": "2026-09-30T14:52:28.3916570+00:00",
+      "latencyMs": 76634,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "2a0355c05b7807edeaa9424fb7da189e18ca3b19a8aeee65234f199b85ea5352",
+      "eligibleEvidenceIds": [
+        "860bd76f-e8eb-4eca-a366-2c255cd1c6e8"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "e0005feb-1cc4-327d-b88e-e5cc8d58fae9",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "5b9382f0-1497-378d-b2b7-e50b97692235",
+        "ce91d947-dc0f-3926-9f9a-fb9066e03e4f"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed in synthetic test cohort.",
+          "evidenceIds": [
+            "860bd76f-e8eb-4eca-a366-2c255cd1c6e8"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Feature flag route mismatch error recorded in payment-authorization service.",
+            "evidenceIds": [
+              "860bd76f-e8eb-4eca-a366-2c255cd1c6e8"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Potential misconfiguration in feature flag routing affecting synthetic cohort.",
+            "evidenceIds": [
+              "860bd76f-e8eb-4eca-a366-2c255cd1c6e8"
+            ],
+            "knowledgeChunkIds": [
+              "8df677df-7af1-37a3-9d7c-14706135f460"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Misconfigured feature flag routing causing synthetic declines in test cohort.",
+          "evidenceIds": [
+            "860bd76f-e8eb-4eca-a366-2c255cd1c6e8"
+          ],
+          "knowledgeChunkIds": [
+            "8df677df-7af1-37a3-9d7c-14706135f460"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observation aligns with known signal interpretation guidance but lacks independent confirmation.",
+          "evidenceIds": [
+            "860bd76f-e8eb-4eca-a366-2c255cd1c6e8"
+          ]
+        },
+        "recommendation": {
+          "statement": "Validate feature flag routing configuration for synthetic cohort.",
+          "evidenceIds": [
+            "860bd76f-e8eb-4eca-a366-2c255cd1c6e8"
+          ],
+          "knowledgeChunkIds": [
+            "8df677df-7af1-37a3-9d7c-14706135f460"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause from other sources."
+          },
+          {
+            "description": "No evidence of decline rate returning to synthetic baseline."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "FEATURE_FLAG_ROUTE_MISMATCH"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S106",
+      "attemptId": "80bc5529-c985-497a-a9a1-749c53a9ddeb",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:52:29.5337830+00:00",
+      "completedAt": "2026-09-30T14:53:57.9948460+00:00",
+      "latencyMs": 88461,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "e05675d5cf1f3e9c380f4c6220b000e1bd8becfd2c7c295ce61879f2d9f9c0ca",
+      "eligibleEvidenceIds": [
+        "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "cd64781c-2359-3038-b03e-9edeb6eb37f4",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "5f624f4a-063a-3bf8-8a6b-146c28576634",
+        "e0005feb-1cc4-327d-b88e-e5cc8d58fae9",
+        "c8252c0e-bf5f-3b72-ba2b-b378d5959207",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "b8d85870-ff26-3251-ab26-9a85b461f6c7"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike linked to gateway response schema mismatch and response mapping failure.",
+          "evidenceIds": [
+            "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Gateway response schema mismatch observed with 88 instances.",
+            "evidenceIds": [
+              "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Response mapping failure observed with 88 instances.",
+            "evidenceIds": [
+              "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Gateway route change likely caused schema mismatch and mapping failure.",
+            "evidenceIds": [
+              "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+            ],
+            "knowledgeChunkIds": [
+              "cd64781c-2359-3038-b03e-9edeb6eb37f4"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Gateway route change introduced schema mismatch and mapping failure.",
+          "evidenceIds": [
+            "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+          ],
+          "knowledgeChunkIds": [
+            "cd64781c-2359-3038-b03e-9edeb6eb37f4"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with runbook guidance on signal interpretation and evidence status matrix.",
+          "evidenceIds": [
+            "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+          ]
+        },
+        "recommendation": {
+          "statement": "Validate gateway route configuration and response schema compatibility.",
+          "evidenceIds": [
+            "6d75b716-c5d9-45f8-99e8-0e3c2d4fe35a"
+          ],
+          "knowledgeChunkIds": [
+            "cd64781c-2359-3038-b03e-9edeb6eb37f4"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No evidence on root cause of schema mismatch or mapping failure."
+          },
+          {
+            "description": "No independent confirmation of gateway route change impact."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "GATEWAY_RESPONSE_SCHEMA_MISMATCH",
+          "RESPONSE_MAPPING_FAILED"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S107",
+      "attemptId": "c8f32295-9ab9-44b1-941f-12559cf0630f",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:53:59.9836010+00:00",
+      "completedAt": "2026-09-30T14:55:31.9682350+00:00",
+      "latencyMs": 91985,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bc2d6703e7c645f50fbd9fe178f5be510cf9b8763e8b70726a54e27a2a7f0cc2",
+      "eligibleEvidenceIds": [
+        "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "2fb106a3-57ea-31fd-acff-e205df3e6264",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "bd16d850-f010-3a9c-9d21-9df347c59826",
+        "e0005feb-1cc4-327d-b88e-e5cc8d58fae9",
+        "74d7239a-1ee8-3daa-b7e6-494592b1a56a",
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed with regional failover loop and gateway timeout signals.",
+          "evidenceIds": [
+            "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Regional failover loop signal with 34 occurrences detected.",
+            "evidenceIds": [
+              "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Gateway timeout signal with 29 occurrences detected.",
+            "evidenceIds": [
+              "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Regional failover loop and gateway timeout may indicate regional gateway impairment.",
+            "evidenceIds": [
+              "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+            ],
+            "knowledgeChunkIds": [
+              "2fb106a3-57ea-31fd-acff-e205df3e6264"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Regional gateway impairment causing oscillation between regions.",
+          "evidenceIds": [
+            "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+          ],
+          "knowledgeChunkIds": [
+            "2fb106a3-57ea-31fd-acff-e205df3e6264"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Signals align with regional gateway impairment guidance but require independent confirmation.",
+          "evidenceIds": [
+            "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate regional gateway health and failover configuration.",
+          "evidenceIds": [
+            "85d61c8b-d071-49fb-9cda-2d67c2ac4381"
+          ],
+          "knowledgeChunkIds": [
+            "2fb106a3-57ea-31fd-acff-e205df3e6264"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No external validation of regional gateway impairment."
+          },
+          {
+            "description": "No correlation with third-party systems or network routing."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "REGIONAL_FAILOVER_LOOP",
+          "GATEWAY_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S108",
+      "attemptId": "d314e5dd-785e-41b1-9a7a-c02eeef6be06",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:55:33.0575150+00:00",
+      "completedAt": "2026-09-30T14:57:02.0697900+00:00",
+      "latencyMs": 89012,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "b8ced1e654dd861affdd5177f4d8e95acb9a794ed571639f1817356128027aa0",
+      "eligibleEvidenceIds": [
+        "397bce71-84ef-4230-ac01-093acba0f513"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "8e668a42-5c14-321b-8ee1-f9a1b2ca6807",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "9c957886-6533-3062-9b35-6c489b421e6f"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed during concurrent updates.",
+          "evidenceIds": [
+            "397bce71-84ef-4230-ac01-093acba0f513"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "DATABASE_LOCK_TIMEOUT occurred 46 times.",
+            "evidenceIds": [
+              "397bce71-84ef-4230-ac01-093acba0f513"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "AUTHORIZATION_STATE_UPDATE_FAILED occurred 41 times.",
+            "evidenceIds": [
+              "397bce71-84ef-4230-ac01-093acba0f513"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Concurrent authorization updates likely caused database lock timeouts and state update failures.",
+            "evidenceIds": [
+              "397bce71-84ef-4230-ac01-093acba0f513"
+            ],
+            "knowledgeChunkIds": [
+              "8e668a42-5c14-321b-8ee1-f9a1b2ca6807"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Concurrent authorization updates caused database lock timeouts and state update failures.",
+          "evidenceIds": [
+            "397bce71-84ef-4230-ac01-093acba0f513"
+          ],
+          "knowledgeChunkIds": [
+            "8e668a42-5c14-321b-8ee1-f9a1b2ca6807"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Multiple errors observed in the same time window, supported by runbook definitions.",
+          "evidenceIds": [
+            "397bce71-84ef-4230-ac01-093acba0f513"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate database connection pool and concurrency settings.",
+          "evidenceIds": [
+            "397bce71-84ef-4230-ac01-093acba0f513"
+          ],
+          "knowledgeChunkIds": [
+            "4f2116b0-9cfc-3028-92af-54e46ca05de9"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No evidence of other error types during the same time window."
+          },
+          {
+            "description": "No independent source confirming the cause."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "DATABASE_LOCK_TIMEOUT",
+          "AUTHORIZATION_STATE_UPDATE_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "DATABASE_LOCK_TIMEOUT",
+          "AUTHORIZATION_STATE_UPDATE_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S109",
+      "attemptId": "f9b27daa-8f30-4f36-aae8-e6f0be05f3bb",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:57:03.2311050+00:00",
+      "completedAt": "2026-09-30T14:58:28.9142640+00:00",
+      "latencyMs": 85683,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "b60f1667c1c74a35a7a6260aa70ee985cccd693a980e72b39e8402501d819499",
+      "eligibleEvidenceIds": [
+        "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "bf29127d-31df-3651-82b7-e6d7847c730f",
+        "1d5176de-16b2-3963-874e-afa8266efaa4",
+        "5f624f4a-063a-3bf8-8a6b-146c28576634",
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "ee8de84e-ab81-3bc8-b431-871ffb23b467",
+        "59fe41ec-e12b-3ed8-aaa2-b550c0ac2637",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate increased post-reference data refresh.",
+          "evidenceIds": [
+            "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "BIN_ROUTE_TABLE_STALE signal observed with 63 instances.",
+            "evidenceIds": [
+              "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "ISSUER_ROUTE_NOT_FOUND signal observed with 63 instances.",
+            "evidenceIds": [
+              "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Stale BIN route table may have caused issuer route not found errors.",
+            "evidenceIds": [
+              "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+            ],
+            "knowledgeChunkIds": [
+              "bf29127d-31df-3651-82b7-e6d7847c730f"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Stale BIN route table may have caused issuer route not found errors.",
+          "evidenceIds": [
+            "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+          ],
+          "knowledgeChunkIds": [
+            "bf29127d-31df-3651-82b7-e6d7847c730f"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Signals align with known patterns but require independent confirmation.",
+          "evidenceIds": [
+            "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+          ]
+        },
+        "recommendation": {
+          "statement": "Validate BIN route table freshness and issuer route availability.",
+          "evidenceIds": [
+            "0d3d70f9-2ad3-49b8-9021-219f254d0c87"
+          ],
+          "knowledgeChunkIds": [
+            "ee8de84e-ab81-3bc8-b431-871ffb23b467"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent source to confirm root cause."
+          },
+          {
+            "description": "No evidence of resolution or baseline return."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "BIN_ROUTE_TABLE_STALE",
+          "ISSUER_ROUTE_NOT_FOUND"
+        ],
+        "matchedRequiredSignals": [
+          "BIN_ROUTE_TABLE_STALE",
+          "ISSUER_ROUTE_NOT_FOUND"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S110",
+      "attemptId": "ea3916a6-fc52-4c4b-a713-7d14185b1314",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T14:58:30.4483410+00:00",
+      "completedAt": "2026-09-30T15:00:13.2084780+00:00",
+      "latencyMs": 102760,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "cf6c41aa4c5626571064780f0459735966a34f0e83073c066518ccf985658e6b",
+      "eligibleEvidenceIds": [
+        "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "56af88c9-8c20-320d-b599-5be4a0c55bef",
+        "c8252c0e-bf5f-3b72-ba2b-b378d5959207",
+        "1d016299-5ca4-39c2-9adc-2a5c54a898e2",
+        "e0005feb-1cc4-327d-b88e-e5cc8d58fae9",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed with specific error codes.",
+          "evidenceIds": [
+            "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Malformed issuer response errors recorded.",
+            "evidenceIds": [
+              "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Response mapping failed errors recorded.",
+            "evidenceIds": [
+              "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Errors suggest potential issuer response mapping or malformed data issues.",
+            "evidenceIds": [
+              "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+            ],
+            "knowledgeChunkIds": [
+              "56af88c9-8c20-320d-b599-5be4a0c55bef",
+              "c8252c0e-bf5f-3b72-ba2b-b378d5959207"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Issuer response mapping or malformed data issues may have caused synthetic declines.",
+          "evidenceIds": [
+            "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+          ],
+          "knowledgeChunkIds": [
+            "56af88c9-8c20-320d-b599-5be4a0c55bef",
+            "c8252c0e-bf5f-3b72-ba2b-b378d5959207"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Errors align with known signal categories but require independent confirmation per runbook guidance.",
+          "evidenceIds": [
+            "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate issuer response mapping and malformed data issues.",
+          "evidenceIds": [
+            "26938823-2b2f-4aec-9ffe-a9320ca87d8f"
+          ],
+          "knowledgeChunkIds": [
+            "56af88c9-8c20-320d-b599-5be4a0c55bef",
+            "c8252c0e-bf5f-3b72-ba2b-b378d5959207"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause available."
+          },
+          {
+            "description": "No additional data on issuer-side processing or network health."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "MALFORMED_ISSUER_RESPONSE",
+          "RESPONSE_MAPPING_FAILED"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S111",
+      "attemptId": "b67f40e3-a5f3-4be2-baa2-643c739c81eb",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:00:14.1556370+00:00",
+      "completedAt": "2026-09-30T15:01:33.3530240+00:00",
+      "latencyMs": 79197,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "8f3d51542f116f852b254c414c0654797c48cef4971f3b4c514618ccfa8a4dd8",
+      "eligibleEvidenceIds": [
+        "834056df-35f1-4e4d-8e61-c6a268a20da0"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "ada1f712-360d-3d00-babe-f8637b208733",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "59fe41ec-e12b-3ed8-aaa2-b550c0ac2637",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "7b20d70e-e416-3b74-bcb8-f7dbe80a6bc8"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed with partial observability.",
+          "evidenceIds": [
+            "834056df-35f1-4e4d-8e61-c6a268a20da0"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "TOKEN_VAULT_TIMEOUT observed in synthetic payment authorization.",
+            "evidenceIds": [
+              "834056df-35f1-4e4d-8e61-c6a268a20da0"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Partial observability may affect root cause determination.",
+            "evidenceIds": [
+              "834056df-35f1-4e4d-8e61-c6a268a20da0"
+            ],
+            "knowledgeChunkIds": [
+              "59fe41ec-e12b-3ed8-aaa2-b550c0ac2637"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Potential token vault timeout affecting synthetic authorization.",
+          "evidenceIds": [
+            "834056df-35f1-4e4d-8e61-c6a268a20da0"
+          ],
+          "knowledgeChunkIds": [
+            "ada1f712-360d-3d00-babe-f8637b208733"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observation within bounded window, but partial observability limits confirmation.",
+          "evidenceIds": [
+            "834056df-35f1-4e4d-8e61-c6a268a20da0"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate token vault and dependency health with independent evidence.",
+          "evidenceIds": [
+            "834056df-35f1-4e4d-8e61-c6a268a20da0"
+          ],
+          "knowledgeChunkIds": [
+            "7b20d70e-e416-3b74-bcb8-f7dbe80a6bc8"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "Missing observability partition data for full analysis."
+          },
+          {
+            "description": "No independent confirmation of root cause."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": false,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "TOKEN_VAULT_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "TOKEN_VAULT_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 2
+      }
+    },
+    {
+      "scenarioCode": "S201",
+      "attemptId": "42354be9-667a-45d5-9c67-212531647f3e",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:01:34.5993310+00:00",
+      "completedAt": "2026-09-30T15:03:14.4818570+00:00",
+      "latencyMs": 99883,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "a7af4b0c890576bf436c49c65b47d986779d6e9df0a7d5760e0c5e204623224f",
+      "eligibleEvidenceIds": [
+        "df56aa80-3e85-42ba-a598-950426b6e7b4"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "1b96cb6e-cb13-3b79-ba98-262d854deea6",
+        "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12",
+        "2fb106a3-57ea-31fd-acff-e205df3e6264",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "56edcef6-389e-34af-adf7-dbce754a1c89",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "5b9382f0-1497-378d-b2b7-e50b97692235"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike detected in payment-authorization service.",
+          "evidenceIds": [
+            "df56aa80-3e85-42ba-a598-950426b6e7b4"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CONFIG_VERSION_SPLIT_BRAIN error observed with 49 instances.",
+            "evidenceIds": [
+              "df56aa80-3e85-42ba-a598-950426b6e7b4"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "ROUTE_DECISION_DIVERGENCE error observed with 44 instances.",
+            "evidenceIds": [
+              "df56aa80-3e85-42ba-a598-950426b6e7b4"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Potential configuration split-brain or route decision divergence causing authorization decline.",
+            "evidenceIds": [
+              "df56aa80-3e85-42ba-a598-950426b6e7b4"
+            ],
+            "knowledgeChunkIds": [
+              "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12",
+              "2fb106a3-57ea-31fd-acff-e205df3e6264"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Configuration split-brain or route decision divergence in payment-authorization service.",
+          "evidenceIds": [
+            "df56aa80-3e85-42ba-a598-950426b6e7b4"
+          ],
+          "knowledgeChunkIds": [
+            "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12",
+            "2fb106a3-57ea-31fd-acff-e205df3e6264"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Errors observed within the persisted observation window, but root cause not established.",
+          "evidenceIds": [
+            "df56aa80-3e85-42ba-a598-950426b6e7b4"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate configuration split-brain and route decision divergence.",
+          "evidenceIds": [
+            "df56aa80-3e85-42ba-a598-950426b6e7b4"
+          ],
+          "knowledgeChunkIds": [
+            "8dbcd43b-fb77-3ba0-bb7a-dea201e9cb12",
+            "2fb106a3-57ea-31fd-acff-e205df3e6264"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause for observed errors."
+          },
+          {
+            "description": "No external data to validate configuration or route decision issues."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CONFIG_VERSION_SPLIT_BRAIN",
+          "ROUTE_DECISION_DIVERGENCE"
+        ],
+        "matchedRequiredSignals": [
+          "CONFIG_VERSION_SPLIT_BRAIN",
+          "ROUTE_DECISION_DIVERGENCE"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S202",
+      "attemptId": "84248aea-b38a-4942-9070-db94713cd67c",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:03:15.8017530+00:00",
+      "completedAt": "2026-09-30T15:05:09.4373960+00:00",
+      "latencyMs": 113636,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "691aa397946221527d049643554474c0d1e927671097b788e6ee640cf7db2521",
+      "eligibleEvidenceIds": [
+        "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "25660417-5448-3bd7-aaec-4c251fc0ed71",
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "74d7239a-1ee8-3daa-b7e6-494592b1a56a",
+        "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01",
+        "2fb106a3-57ea-31fd-acff-e205df3e6264"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed due to BGP_ROUTE_UNREACHABLE and GATEWAY_TIMEOUT signals.",
+          "evidenceIds": [
+            "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "BGP_ROUTE_UNREACHABLE signal with 81 occurrences detected.",
+            "evidenceIds": [
+              "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "GATEWAY_TIMEOUT signal with 75 occurrences detected.",
+            "evidenceIds": [
+              "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "BGP_ROUTE_UNREACHABLE and GATEWAY_TIMEOUT may indicate network routing or gateway issues.",
+            "evidenceIds": [
+              "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+            ],
+            "knowledgeChunkIds": [
+              "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+              "74d7239a-1ee8-3daa-b7e6-494592b1a56a"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Network routing or gateway failure affecting synthetic authorization attempts.",
+          "evidenceIds": [
+            "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+            "74d7239a-1ee8-3daa-b7e6-494592b1a56a"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Signals align with known network and gateway issues, but root cause requires further confirmation.",
+          "evidenceIds": [
+            "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate network routing and gateway health for the affected path.",
+          "evidenceIds": [
+            "eeb690d3-ca4c-48e8-bfd4-1341d7d991f5"
+          ],
+          "knowledgeChunkIds": [
+            "74d7239a-1ee8-3daa-b7e6-494592b1a56a"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No external confirmation of root cause for BGP_ROUTE_UNREACHABLE or GATEWAY_TIMEOUT."
+          },
+          {
+            "description": "No detailed network path analysis provided for affected service."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "BGP_ROUTE_UNREACHABLE",
+          "GATEWAY_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "BGP_ROUTE_UNREACHABLE",
+          "GATEWAY_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S203",
+      "attemptId": "aaca50bb-f13b-41b0-b581-589d2fcc098f",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:05:11.3602700+00:00",
+      "completedAt": "2026-09-30T15:06:45.9678040+00:00",
+      "latencyMs": 94608,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "477f16cb721e59a16fe392a48592c4f6113d1bd8c828af95fc296388911c9133",
+      "eligibleEvidenceIds": [
+        "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "1090ffeb-015f-3059-9b05-4e50af7e8e1e",
+        "251adc0b-6d28-3d74-8bd1-c61d44553403",
+        "1c064355-78f6-3bfd-ae37-414d6f5c77ee",
+        "ef7a66e5-648d-3ff6-a6f0-bfc9bdb55075",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "b8d85870-ff26-3251-ab26-9a85b461f6c7"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold due to certificate validation errors.",
+          "evidenceIds": [
+            "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Certificate status check failed with 64 occurrences.",
+            "evidenceIds": [
+              "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "OCSP responder unavailable with 64 occurrences.",
+            "evidenceIds": [
+              "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Certificate validation errors may be causing synthetic authorizations to fail.",
+            "evidenceIds": [
+              "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+            ],
+            "knowledgeChunkIds": [
+              "251adc0b-6d28-3d74-8bd1-c61d44553403"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Certificate validation errors are likely causing synthetic authorizations to fail.",
+          "evidenceIds": [
+            "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+          ],
+          "knowledgeChunkIds": [
+            "251adc0b-6d28-3d74-8bd1-c61d44553403"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations indicate certificate validation errors, but no independent confirmation is available.",
+          "evidenceIds": [
+            "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate OCSP responder availability and certificate status checks.",
+          "evidenceIds": [
+            "38fb34a4-ba0c-4a5e-b4f4-ebeba43a7bf2"
+          ],
+          "knowledgeChunkIds": [
+            "251adc0b-6d28-3d74-8bd1-c61d44553403"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause for certificate validation errors."
+          },
+          {
+            "description": "No evidence of alternative causes for the authorization decline rate."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "OCSP_RESPONDER_UNAVAILABLE",
+          "CERTIFICATE_STATUS_CHECK_FAILED"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S204",
+      "attemptId": "ba66ebc6-c7bc-46e6-9083-518c0fd6e4fd",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:06:47.6252080+00:00",
+      "completedAt": "2026-09-30T15:08:29.3015750+00:00",
+      "latencyMs": 101676,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "7c1156d16fa0fe7ef5f168f40b63bd7cfe9a0b86cdedc32a61086c32054a0c6e",
+      "eligibleEvidenceIds": [
+        "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "3341b620-5520-3ae7-9394-a119545ed54f",
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "59fe41ec-e12b-3ed8-aaa2-b550c0ac2637",
+        "5b9382f0-1497-378d-b2b7-e50b97692235"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold",
+          "evidenceIds": [
+            "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "HSM_QUORUM_LOST with 38 failures",
+            "evidenceIds": [
+              "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "HSM_SIGNING_TIMEOUT with 35 failures",
+            "evidenceIds": [
+              "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "HSM issues may be causing authorization declines",
+            "evidenceIds": [
+              "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+            ],
+            "knowledgeChunkIds": [
+              "3341b620-5520-3ae7-9394-a119545ed54f"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "HSM quorum or signing timeout issues",
+          "evidenceIds": [
+            "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+          ],
+          "knowledgeChunkIds": [
+            "3341b620-5520-3ae7-9394-a119545ed54f"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations cite HSM errors, but no root cause is established in guidance",
+          "evidenceIds": [
+            "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate HSM quorum and signing timeout root causes",
+          "evidenceIds": [
+            "f68dbe11-ea54-4d33-a873-2a3a627b1aea"
+          ],
+          "knowledgeChunkIds": [
+            "3341b620-5520-3ae7-9394-a119545ed54f"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent source to confirm HSM issues"
+          },
+          {
+            "description": "No details on affected service instances"
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "HSM_QUORUM_LOST",
+          "HSM_SIGNING_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "HSM_QUORUM_LOST",
+          "HSM_SIGNING_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S205",
+      "attemptId": "2ca8a4c2-c4dc-4d46-b1ab-77a0c57112ed",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:08:30.6585510+00:00",
+      "completedAt": "2026-09-30T15:10:06.0099980+00:00",
+      "latencyMs": 95351,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "a6e4fc591316c947b710d2e36b623603ba88d68efc98d21b1ce6a26072d44be7",
+      "eligibleEvidenceIds": [
+        "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "2c259c27-c873-3b19-bf95-ae650d855095",
+        "71ac86aa-fe0b-3e92-8831-7c75c64da66d",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "ef7a66e5-648d-3ff6-a6f0-bfc9bdb55075",
+        "51bc3b71-b426-37ca-9730-f2eeb5efcec3",
+        "321cac9e-e84a-38ee-af7c-08dc5f71b5c8",
+        "b9bd8e08-a382-3b7c-8b23-e6b842b5fcb2"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold",
+          "evidenceIds": [
+            "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CALENDAR_RULE_EVALUATION_FAILED with 43 occurrences",
+            "evidenceIds": [
+              "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "RECURRING_AUTHORIZATION_REJECTED with 43 occurrences",
+            "evidenceIds": [
+              "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Both signals suggest calendar rule evaluation and recurring authorization issues",
+            "evidenceIds": [
+              "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+            ],
+            "knowledgeChunkIds": [
+              "71ac86aa-fe0b-3e92-8831-7c75c64da66d",
+              "321cac9e-e84a-38ee-af7c-08dc5f71b5c8"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Calendar rule evaluation failure and recurring authorization rejection",
+          "evidenceIds": [
+            "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+          ],
+          "knowledgeChunkIds": [
+            "71ac86aa-fe0b-3e92-8831-7c75c64da66d",
+            "321cac9e-e84a-38ee-af7c-08dc5f71b5c8"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Signals align with known categories but require independent confirmation",
+          "evidenceIds": [
+            "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate calendar rule and recurring authorization configurations",
+          "evidenceIds": [
+            "4ecc2832-ef78-4714-a8cf-e5c8f13698c9"
+          ],
+          "knowledgeChunkIds": [
+            "321cac9e-e84a-38ee-af7c-08dc5f71b5c8"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "Missing independent service or dependency evidence"
+          },
+          {
+            "description": "No contradictory signals identified"
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CALENDAR_RULE_EVALUATION_FAILED",
+          "RECURRING_AUTHORIZATION_REJECTED"
+        ],
+        "matchedRequiredSignals": [
+          "CALENDAR_RULE_EVALUATION_FAILED",
+          "RECURRING_AUTHORIZATION_REJECTED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S206",
+      "attemptId": "8ae30ae0-3e46-47ae-aaf3-c8cffb8e851d",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:10:07.2414700+00:00",
+      "completedAt": "2026-09-30T15:11:37.8513590+00:00",
+      "latencyMs": 90610,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "fc1ec452f7ab3af2b3f24bfcc08229d286c91150555c1abe3d002d3690ed20b8",
+      "eligibleEvidenceIds": [
+        "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "1090ffeb-015f-3059-9b05-4e50af7e8e1e",
+        "43af97de-0b98-3b07-bf7f-ab9d7b120905",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "4b8229bd-491d-3738-944d-500c9fa0486b",
+        "5b9382f0-1497-378d-b2b7-e50b97692235",
+        "3341b620-5520-3ae7-9394-a119545ed54f"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed in synthetic payment group.",
+          "evidenceIds": [
+            "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "SECURE_RANDOM_SOURCE_BLOCKED with 31 occurrences.",
+            "evidenceIds": [
+              "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "REQUEST_SIGNATURE_TIMEOUT with 29 occurrences.",
+            "evidenceIds": [
+              "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Potential entropy or signing resource constraints affecting synthetic payments.",
+            "evidenceIds": [
+              "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+            ],
+            "knowledgeChunkIds": [
+              "43af97de-0b98-3b07-bf7f-ab9d7b120905"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Entropy or signing resource constraints impacting synthetic payment authorization.",
+          "evidenceIds": [
+            "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+          ],
+          "knowledgeChunkIds": [
+            "43af97de-0b98-3b07-bf7f-ab9d7b120905"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with known signal interpretation guidance but lack root cause confirmation.",
+          "evidenceIds": [
+            "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate entropy and signing resource constraints in synthetic payment group.",
+          "evidenceIds": [
+            "b6110d27-1307-4b5e-9bf0-fe854c4dea13"
+          ],
+          "knowledgeChunkIds": [
+            "43af97de-0b98-3b07-bf7f-ab9d7b120905"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No root cause confirmation for signal categories."
+          },
+          {
+            "description": "No human review or operational action confirmation."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "SECURE_RANDOM_SOURCE_BLOCKED",
+          "REQUEST_SIGNATURE_TIMEOUT"
+        ],
+        "matchedRequiredSignals": [
+          "SECURE_RANDOM_SOURCE_BLOCKED",
+          "REQUEST_SIGNATURE_TIMEOUT"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S207",
+      "attemptId": "60c43c6a-ff32-4acb-b5ad-7f9f46f8a8d4",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:11:39.1931190+00:00",
+      "completedAt": "2026-09-30T15:13:12.1941090+00:00",
+      "latencyMs": 93001,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "bbc8ec5454b071808003f5fc789914387337b84a9709a0f31641eeba45ecd3e8",
+      "eligibleEvidenceIds": [
+        "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "0ab98c62-f49d-3426-9234-195f087f7e8d",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "251adc0b-6d28-3d74-8bd1-c61d44553403",
+        "5b9382f0-1497-378d-b2b7-e50b97692235"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed in synthetic test cohort.",
+          "evidenceIds": [
+            "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Unicode normalization failure recorded with 36 occurrences.",
+            "evidenceIds": [
+              "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "Merchant profile parse failure recorded with 36 occurrences.",
+            "evidenceIds": [
+              "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Both errors may indicate data parsing or encoding issues in synthetic test data.",
+            "evidenceIds": [
+              "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+            ],
+            "knowledgeChunkIds": [
+              "0ab98c62-f49d-3426-9234-195f087f7e8d"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Potential data parsing or encoding issue in synthetic test data.",
+          "evidenceIds": [
+            "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+          ],
+          "knowledgeChunkIds": [
+            "0ab98c62-f49d-3426-9234-195f087f7e8d"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Errors are consistent with synthetic data parsing issues, but root cause not confirmed.",
+          "evidenceIds": [
+            "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate synthetic data encoding and parsing rules for inconsistencies.",
+          "evidenceIds": [
+            "2db5bd08-74a7-4ed8-96d0-9ad8c2ed0c57"
+          ],
+          "knowledgeChunkIds": [
+            "97e0c6d6-59d4-3576-96a8-9aadef524a1d"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No sourceEventId provided for synthetic data generation or validation rules."
+          },
+          {
+            "description": "No chunkId provided for synthetic data encoding or parsing rules."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "UNICODE_NORMALIZATION_FAILURE",
+          "MERCHANT_PROFILE_PARSE_FAILED"
+        ],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": false,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S208",
+      "attemptId": "24a8c772-a211-4bd1-a64b-a71d8794dbfa",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:13:13.5542440+00:00",
+      "completedAt": "2026-09-30T15:14:42.8937490+00:00",
+      "latencyMs": 89340,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "214c2432a70dca54bb9c4a8fad4c40fb87227fc747b967a1ec18520da43ff8a3",
+      "eligibleEvidenceIds": [
+        "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "c33dabd7-0675-300a-82e0-19f4e1bfda08",
+        "bd16d850-f010-3a9c-9d21-9df347c59826",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "74d7239a-1ee8-3daa-b7e6-494592b1a56a",
+        "b8d85870-ff26-3251-ab26-9a85b461f6c7",
+        "cfb27523-d2f5-3ea1-879d-cefa815b75dd"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed through resolver policy path.",
+          "evidenceIds": [
+            "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "DNS_SECURITY_POLICY_BLOCK with 72 occurrences.",
+            "evidenceIds": [
+              "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "DNS_RESOLUTION_FAILED with 72 occurrences.",
+            "evidenceIds": [
+              "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Resolver policy path may be causing DNS-related issues.",
+            "evidenceIds": [
+              "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+            ],
+            "knowledgeChunkIds": [
+              "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Resolver policy path may be causing DNS-related issues.",
+          "evidenceIds": [
+            "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "DNS-related signals observed but no root cause confirmed; guidance suggests independent confirmation needed.",
+          "evidenceIds": [
+            "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate DNS configuration and resolver policy path for conflicts.",
+          "evidenceIds": [
+            "1942ec31-f6ea-4c8c-a20b-ca7a8544b76f"
+          ],
+          "knowledgeChunkIds": [
+            "c33dabd7-0675-300a-82e0-19f4e1bfda08"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent source confirming DNS-related root cause."
+          },
+          {
+            "description": "No details on resolver policy path configuration."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "DNS_SECURITY_POLICY_BLOCK",
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "DNS_SECURITY_POLICY_BLOCK",
+          "DNS_RESOLUTION_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S209",
+      "attemptId": "7e945d80-dcd2-411d-8cc6-c49e6acbaf3d",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:14:44.0641220+00:00",
+      "completedAt": "2026-09-30T15:16:20.8349280+00:00",
+      "latencyMs": 96771,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "42764a53cf6c51fc0c63568881654ccef26e9009a699a790bfbbef84ae46aab9",
+      "eligibleEvidenceIds": [
+        "041cb56c-a30e-4e60-a067-700587ef60f0"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "3341b620-5520-3ae7-9394-a119545ed54f",
+        "8a037c43-d594-3d32-b38a-12cf8dc2e224",
+        "ef7a66e5-648d-3ff6-a6f0-bfc9bdb55075",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "00ce32c1-1166-354f-a9d2-1031bc7db9c1"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate spike observed post-cryptographic partition failover.",
+          "evidenceIds": [
+            "041cb56c-a30e-4e60-a067-700587ef60f0"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "HSM_FIRMWARE_PROTOCOL_MISMATCH with 41 occurrences.",
+            "evidenceIds": [
+              "041cb56c-a30e-4e60-a067-700587ef60f0"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "HSM_SIGNING_FAILED with 39 occurrences.",
+            "evidenceIds": [
+              "041cb56c-a30e-4e60-a067-700587ef60f0"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "HSM protocol mismatch and signing failures likely linked to cryptographic partition failover.",
+            "evidenceIds": [
+              "041cb56c-a30e-4e60-a067-700587ef60f0"
+            ],
+            "knowledgeChunkIds": [
+              "3341b620-5520-3ae7-9394-a119545ed54f"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Cryptographic partition failover caused HSM firmware protocol mismatch and signing failures.",
+          "evidenceIds": [
+            "041cb56c-a30e-4e60-a067-700587ef60f0"
+          ],
+          "knowledgeChunkIds": [
+            "3341b620-5520-3ae7-9394-a119545ed54f"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with HSM failure patterns in runbook guidance, but root cause not independently confirmed.",
+          "evidenceIds": [
+            "041cb56c-a30e-4e60-a067-700587ef60f0"
+          ]
+        },
+        "recommendation": {
+          "statement": "Validate HSM firmware compatibility and quorum status.",
+          "evidenceIds": [
+            "041cb56c-a30e-4e60-a067-700587ef60f0"
+          ],
+          "knowledgeChunkIds": [
+            "3341b620-5520-3ae7-9394-a119545ed54f"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent evidence to confirm HSM root cause."
+          },
+          {
+            "description": "No data on pre-failover HSM status."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": false,
+        "requiredSignals": [
+          "HSM_FIRMWARE_PROTOCOL_MISMATCH",
+          "HSM_SIGNING_FAILED"
+        ],
+        "matchedRequiredSignals": [
+          "HSM_FIRMWARE_PROTOCOL_MISMATCH",
+          "HSM_SIGNING_FAILED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S210",
+      "attemptId": "32434a76-c882-42ba-b5d4-1a266e9408a8",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:16:22.3954800+00:00",
+      "completedAt": "2026-09-30T15:17:54.0385030+00:00",
+      "latencyMs": 91643,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "ab8781a7796c9eb01acf4371286eb1f6ce68948a95048814277104d37592ab01",
+      "eligibleEvidenceIds": [
+        "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "56edcef6-389e-34af-adf7-dbce754a1c89",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "2e2b5ff1-6161-3a1b-a389-cde24580d96c"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold",
+          "evidenceIds": [
+            "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "CIRCUIT_BREAKER_SYNC_STORM observed with count 53",
+            "evidenceIds": [
+              "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "UPSTREAM_CALL_REJECTED observed with count 49",
+            "evidenceIds": [
+              "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "Potential upstream service instability affecting authorization",
+            "evidenceIds": [
+              "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+            ],
+            "knowledgeChunkIds": [
+              "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Upstream service instability causing authorization decline",
+          "evidenceIds": [
+            "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+          ],
+          "knowledgeChunkIds": [
+            "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "Observations align with known signal categories but lack independent confirmation",
+          "evidenceIds": [
+            "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate upstream service stability and retry mechanisms",
+          "evidenceIds": [
+            "67d6716d-f5b4-41c6-a51c-f50d10e0b40f"
+          ],
+          "knowledgeChunkIds": [
+            "e69e70e7-bc02-3c6a-94e9-c37e64ef0a01"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No independent confirmation of root cause"
+          },
+          {
+            "description": "No upstream service logs or metrics"
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": true,
+        "confidenceCorrect": true,
+        "requiredSignals": [
+          "CIRCUIT_BREAKER_SYNC_STORM",
+          "UPSTREAM_CALL_REJECTED"
+        ],
+        "matchedRequiredSignals": [
+          "CIRCUIT_BREAKER_SYNC_STORM",
+          "UPSTREAM_CALL_REJECTED"
+        ],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 0
+      }
+    },
+    {
+      "scenarioCode": "S211",
+      "attemptId": "5eb5f7cb-5bec-4497-a221-b6eeb6afd453",
+      "status": "AVAILABLE",
+      "requestedAt": "2026-09-30T15:17:55.0550810+00:00",
+      "completedAt": "2026-09-30T15:19:39.7479750+00:00",
+      "latencyMs": 104693,
+      "modelId": "qwen3:8b-q4_K_M",
+      "promptVersion": "report-prompt/v4",
+      "promptHash": "49abd2a7eaf4f185b7099662fab8aae3e2739f96b7ce89369de84367f5b58496",
+      "reportSchemaVersion": "report-v1",
+      "reportSchemaHash": "6beec702cff773a38f0510afc7e7984a0848ac1b251ff5f4c5db51b0b2fdc432",
+      "eligibleEvidenceIds": [
+        "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+      ],
+      "eligibleKnowledgeChunkIds": [
+        "8df677df-7af1-37a3-9d7c-14706135f460",
+        "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+        "32c6f879-24bf-3e62-94fa-4edd63bb2de4",
+        "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+        "9c957886-6533-3062-9b35-6c489b421e6f",
+        "4f2116b0-9cfc-3028-92af-54e46ca05de9",
+        "3a198cdd-ec31-3f44-b780-a4f122ed6f4b"
+      ],
+      "report": {
+        "disposition": "PROPOSED",
+        "summary": {
+          "statement": "Authorization decline rate above threshold with no observable source.",
+          "evidenceIds": [
+            "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+          ],
+          "knowledgeChunkIds": []
+        },
+        "observations": [
+          {
+            "statement": "Observability source unavailable, no data retrieved.",
+            "evidenceIds": [
+              "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+            ],
+            "knowledgeChunkIds": []
+          },
+          {
+            "statement": "All knowledge documents are synthetic and non-operational.",
+            "evidenceIds": [
+              "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+            ],
+            "knowledgeChunkIds": []
+          }
+        ],
+        "inferences": [
+          {
+            "statement": "No real payment data available for analysis.",
+            "evidenceIds": [
+              "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+            ],
+            "knowledgeChunkIds": [
+              "8df677df-7af1-37a3-9d7c-14706135f460",
+              "c93eb6f1-ba6c-3a5f-8703-a3df64ce8da6",
+              "32c6f879-24bf-3e62-94fa-4edd63bb2de4"
+            ]
+          }
+        ],
+        "probableCause": {
+          "statement": "Synthetic data unavailable for analysis.",
+          "evidenceIds": [
+            "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+          ],
+          "knowledgeChunkIds": [
+            "97e0c6d6-59d4-3576-96a8-9aadef524a1d",
+            "4f2116b0-9cfc-3028-92af-54e46ca05de9"
+          ]
+        },
+        "confidence": {
+          "level": "MEDIUM",
+          "rationale": "No real data available, but synthetic policies confirm no operational impact.",
+          "evidenceIds": [
+            "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+          ]
+        },
+        "recommendation": {
+          "statement": "Investigate synthetic data source availability.",
+          "evidenceIds": [
+            "248131cc-597f-4c7b-9a7e-5de0b3ea9fe0"
+          ],
+          "knowledgeChunkIds": [
+            "97e0c6d6-59d4-3576-96a8-9aadef524a1d"
+          ]
+        },
+        "contradictions": [],
+        "evidenceGaps": [
+          {
+            "description": "No data retrieved from observability source."
+          },
+          {
+            "description": "No real payment data available for analysis."
+          }
+        ]
+      },
+      "correctness": {
+        "terminalAvailable": true,
+        "dispositionCorrect": false,
+        "confidenceCorrect": false,
+        "requiredSignals": [],
+        "matchedRequiredSignals": [],
+        "requiredSignalsCovered": true,
+        "insufficientNullContract": false
+      },
+      "citations": {
+        "unknownEvidenceReferences": 0,
+        "unknownKnowledgeReferences": 0
+      },
+      "unsupportedClaimIndicators": {
+        "foreignSignalTokens": [],
+        "insufficientCauseOrRecommendation": 2
+      }
+    }
+  ]
+}

@@ -3,6 +3,8 @@ package com.cguzowski.paymentcopilot.report;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,6 +16,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -145,6 +149,79 @@ class ReportApiPostgresIntegrationTest {
                         .query(Integer.class)
                         .single())
                 .isZero();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"PARTIAL", "UNAVAILABLE"})
+    void persistsCompliantDegradedReportAndRequiresHumanReview(String evidenceStatus) throws Exception {
+        degradeEvidence(evidenceStatus);
+        when(model.generate(any(), any()))
+                .thenReturn(new ReportModelResponse(validInsufficientReportJson(), "degraded-request"));
+
+        mockMvc.perform(post("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("AVAILABLE"))
+                .andExpect(jsonPath("$.report.disposition").value("INSUFFICIENT_EVIDENCE"))
+                .andExpect(jsonPath("$.report.confidence.level").value("LOW"))
+                .andExpect(jsonPath("$.latestEvidenceId").value(EVIDENCE_ID.toString()))
+                .andExpect(jsonPath("$.report.probableCause").isEmpty())
+                .andExpect(jsonPath("$.report.recommendation").isEmpty());
+        assertThat(jdbcClient
+                        .sql("SELECT status FROM incident WHERE id = :id")
+                        .param("id", INCIDENT_ID)
+                        .query(String.class)
+                        .single())
+                .isEqualTo("AWAITING_REVIEW");
+        assertThat(jdbcClient
+                        .sql("SELECT prompt_version FROM report_generation_attempt")
+                        .query(String.class)
+                        .single())
+                .isEqualTo("report-prompt/v5");
+        verify(model, times(1)).generate(any(), any());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"PARTIAL", "UNAVAILABLE"})
+    void rejectsMissingDegradedEvidenceGapWithoutTransitionOrAutomaticRetry(String evidenceStatus) throws Exception {
+        degradeEvidence(evidenceStatus);
+        String invalid =
+                validInsufficientReportJson().replace("[{\"description\":\"No approved knowledge matched.\"}]", "[]");
+        when(model.generate(any(), any())).thenReturn(new ReportModelResponse(invalid, "invalid-request"));
+
+        mockMvc.perform(post("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("MALFORMED"))
+                .andExpect(jsonPath("$.report").isEmpty());
+        mockMvc.perform(get("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].status").value("MALFORMED"));
+        assertThat(jdbcClient
+                        .sql("SELECT status FROM incident WHERE id = :id")
+                        .param("id", INCIDENT_ID)
+                        .query(String.class)
+                        .single())
+                .isEqualTo("INVESTIGATING");
+        assertThat(jdbcClient
+                        .sql("SELECT COUNT(*) FROM report_claim")
+                        .query(Integer.class)
+                        .single())
+                .isZero();
+        verify(model, times(1)).generate(any(), any());
+    }
+
+    private void degradeEvidence(String status) {
+        jdbcClient
+                .sql(
+                        "UPDATE evidence_collection_attempt SET status = :status, content = CASE WHEN :status = 'PARTIAL' THEN content ELSE NULL END WHERE id = :id")
+                .param("status", status)
+                .param("id", EVIDENCE_ID)
+                .update();
     }
 
     private void insertInvestigation() {

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -30,7 +32,7 @@ class ReportPromptAndParserTest {
     void buildsVersionedBoundedReportInputFromExactSnapshots() {
         ReportPrompt prompt = prompts.build(context());
 
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v4");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v5");
         assertThat(prompt.schemaVersion()).isEqualTo("report-v1");
         assertThat(prompt.promptHash()).matches("[0-9a-f]{64}");
         assertThat(prompt.schemaHash()).matches("[0-9a-f]{64}");
@@ -123,6 +125,114 @@ class ReportPromptAndParserTest {
         assertThatThrownBy(() -> parser.parse(
                         json.replace("\"observations\":[", "\"unsupported\":true,\"observations\":["), context()))
                 .isInstanceOf(InvalidReportDocumentException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"PARTIAL", "UNAVAILABLE", "TIMED_OUT", "MALFORMED", "NOT_FOUND", "AVAILABLE_EMPTY"})
+    void constrainsDegradedEvidenceAndRejectsProposedOutputIndependently(String status) throws Exception {
+        ReportGenerationContext degraded = degradedContext(status);
+        ReportPrompt prompt = prompts.build(degraded);
+        JsonNode schema = jsonMapper.readTree(prompt.outputSchema());
+
+        assertThat(schema.at("/properties/disposition/const").asText()).isEqualTo("INSUFFICIENT_EVIDENCE");
+        assertThat(schema.at("/properties/probableCause/type").asText()).isEqualTo("null");
+        assertThat(schema.at("/properties/recommendation/type").asText()).isEqualTo("null");
+        assertThat(schema.at("/$defs/confidence/properties/level/const").asText())
+                .isEqualTo("LOW");
+        assertThat(schema.at("/properties/evidenceGaps/minItems").intValue()).isEqualTo(1);
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v5");
+        assertThat(prompt.text()).contains("latestStatus is not AVAILABLE", "observations is empty");
+        assertThatThrownBy(() -> parser.parse(jsonMapper.writeValueAsString(validDocument()), degraded))
+                .isInstanceOf(InvalidReportDocumentException.class);
+        assertThat(parser.parse(jsonMapper.writeValueAsString(insufficientDocument()), degraded))
+                .isEqualTo(insufficientDocument());
+    }
+
+    @Test
+    void retainsEarlierApplicableObservationsWithoutRestoringCurrentSufficiency() throws Exception {
+        var degraded = degradedContext("UNAVAILABLE");
+        var report = insufficientDocument();
+        var historical =
+                new ReportClaim("Earlier telemetry recorded GATEWAY_TIMEOUT.", List.of(SECOND_EVIDENCE_ID), List.of());
+        var withHistory = new ReportDocument(
+                report.disposition(),
+                report.summary(),
+                List.of(historical),
+                report.inferences(),
+                null,
+                report.confidence(),
+                null,
+                report.contradictions(),
+                report.evidenceGaps());
+
+        assertThat(parser.parse(jsonMapper.writeValueAsString(withHistory), degraded))
+                .isEqualTo(withHistory);
+        assertThat(prompts.build(degraded).text())
+                .contains(EVIDENCE_ID.toString(), SECOND_EVIDENCE_ID.toString(), "GATEWAY_TIMEOUT");
+        JsonNode sufficient = jsonMapper.readTree(prompts.build(context()).outputSchema());
+        assertThat(sufficient.at("/properties/disposition/const").isMissingNode())
+                .isTrue();
+        assertThat(parser.parse(jsonMapper.writeValueAsString(validDocument()), context()))
+                .isEqualTo(validDocument());
+    }
+
+    @Test
+    void rejectsProposedOutputForDegradedEvidenceWithoutTrustingProviderSchema() throws Exception {
+        String proposed = jsonMapper.writeValueAsString(validDocument());
+        assertThatThrownBy(() -> parser.parse(proposed, degradedContext("PARTIAL")))
+                .isInstanceOf(InvalidReportDocumentException.class);
+        assertThatThrownBy(() -> parser.parse(proposed, degradedContext("UNAVAILABLE")))
+                .isInstanceOf(InvalidReportDocumentException.class);
+    }
+
+    @Test
+    void rejectsEveryInsufficientContractViolationAndUnknownCitations() throws Exception {
+        var degraded = degradedContext("PARTIAL");
+        String valid = jsonMapper.writeValueAsString(insufficientDocument());
+        for (String invalid : List.of(
+                valid.replace("LOW", "MEDIUM"),
+                valid.replace(
+                        "\"probableCause\":null",
+                        "\"probableCause\":"
+                                + jsonMapper.writeValueAsString(validDocument().probableCause())),
+                valid.replace(
+                        "\"recommendation\":null",
+                        "\"recommendation\":"
+                                + jsonMapper.writeValueAsString(validDocument().recommendation())),
+                valid.replace(
+                        "\"evidenceGaps\":[{\"description\":\"Evidence is incomplete.\"}]", "\"evidenceGaps\":[]"),
+                valid.replace(EVIDENCE_ID.toString(), UUID.randomUUID().toString()))) {
+            assertThat(invalid).isNotEqualTo(valid);
+            assertThatThrownBy(() -> parser.parse(invalid, degraded))
+                    .isInstanceOf(InvalidReportDocumentException.class);
+        }
+    }
+
+    private static ReportGenerationContext degradedContext(String status) {
+        var base = context();
+        boolean empty = status.equals("AVAILABLE_EMPTY");
+        return new ReportGenerationContext(
+                base.investigation(),
+                new ReportEvidenceSnapshot(
+                        EVIDENCE_ID,
+                        empty ? "AVAILABLE" : status,
+                        SECOND_EVIDENCE_ID,
+                        "authorization-gateway",
+                        empty ? List.of() : base.evidence().observations()),
+                base.knowledge());
+    }
+
+    private static ReportDocument insufficientDocument() {
+        return new ReportDocument(
+                ReportDisposition.INSUFFICIENT_EVIDENCE,
+                new ReportClaim("Evidence is incomplete.", List.of(EVIDENCE_ID), List.of()),
+                List.of(),
+                List.of(),
+                null,
+                new ReportConfidence(ReportConfidenceLevel.LOW, "Evidence is incomplete.", List.of(EVIDENCE_ID)),
+                null,
+                List.of(),
+                List.of(new ReportGap("Evidence is incomplete.")));
     }
 
     @Test

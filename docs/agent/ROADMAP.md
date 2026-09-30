@@ -27,6 +27,8 @@ owner-activated [task contract](tasks/current.md) authorizes implementation.
 | Q2 | Fixed corpus-v2 retrieval benchmark passes at 22/22 primary, 20/22 policy and 20/21 ordering; full repository gate passed |
 | Q3 | Versioned offline report grader retains reproducible bounded correctness, citation, unsupported-claim, latency, and failure metrics for all 36 oracle scenarios |
 | Q4 | Live S012 Qwen report explicitly rejected by the owner; exact report binding, terminal queue state, unchanged report, and eight-event audit timeline verified |
+| Q5 | All 36 corpus-v2 live reports and reproducible grades retained; citation IDs valid, but insufficient-evidence and confidence gaps remain |
+| Q6 | Degraded/empty evidence requires insufficient-evidence/LOW/null reports; independent validation, full gate and fresh S111/S211 live proof pass |
 
 K4/K5 completion did not pass the benchmark. See
 [STATUS.md](STATUS.md) for current evidence limitations and
@@ -36,7 +38,6 @@ K4/K5 completion did not pass the benchmark. See
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
-| Q5 | Broader live-model coverage | Exercise common, uncommon, rare, partial-evidence, and unavailable-evidence scenarios. |
 | D1 — Deferred | AWS deployment | Select services, tooling, networking, IAM, cost, teardown, and any Bedrock profile in an ADR before implementation. |
 | D2 — Deferred | Authentication | Select identity and authorization and enforce tenant/operator access at every public boundary. |
 
@@ -56,7 +57,11 @@ is preserved as a hash-verifiable historical archive.
 - Q3 completed `synten-report-eval/v1` as a deterministic offline post-run
   grader. ADR-0016 records its bounded metric semantics and oracle isolation;
   the retained fixture proves evaluator behavior, not live-model quality. Q4
-  completed one live human-decision and audit proof; Q5 remains pending activation.
+  completed one live human-decision and audit proof. Q5 now retains all 36 live
+  reports and reproducible grades. Confidence and insufficient-evidence failures
+  led to Q6's completed degraded-evidence remediation. Fresh S111/S211 reports
+  pass the LOW/null contract; confidence gaps on sufficient evidence remain.
+  No quality threshold was added and the other 34 scenarios were not rerun under v5.
 - Treat corpus v2 and evaluation labels as fixed inputs. Corpus changes require
   an approved version task; keep source/PDF hashes and prior evidence.
 - Keep generation, ingestion, embedding, and evaluation separately verifiable.

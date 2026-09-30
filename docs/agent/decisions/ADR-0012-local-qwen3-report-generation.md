@@ -44,11 +44,16 @@ each reference array is also capped at the number of distinct identifiers that
 are eligible for that array, without exceeding the base schema maximum. The
 independent parser and semantic validator remain authoritative.
 
-`report-prompt/v4` explicitly prohibits repeated identifiers within a reference
+`report-prompt/v4` introduced explicit prohibition of repeated identifiers within a reference
 array. This addresses a reproduced Qwen response that repeated the sole eligible
 evidence UUID even though `report-v1` declares `uniqueItems`. The application
 does not deduplicate, repair, or retry invalid output; invalid responses still
 fail closed as `MALFORMED`.
+
+Current `report-prompt/v5` additionally constrains degraded or empty evidence to
+INSUFFICIENT_EVIDENCE/LOW/null with explicit gaps, independently validated under
+[ADR-0017](ADR-0017-degraded-evidence-report-constraints.md). The provider, base
+report-v1 shape, one-call limit and citation rules remain unchanged.
 
 The launcher verifies Ollama plus both `qwen3:8b-q4_K_M` and
 `nomic-embed-text` before service startup and never pulls models. Automated
