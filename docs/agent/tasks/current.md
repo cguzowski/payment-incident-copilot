@@ -1,138 +1,150 @@
-# Task: Automatic post-reveal investigation comparison
+# Task: Thorough behavior-preserving demo cleanup
 
-Status: Complete — full gate, browser QA and live comparison passed
+Status: Implementation prepared — awaiting Docker-verification authorization
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Goal
 
-Automatically compare the frozen investigation with its revealed answer key.
+Remove inactive authoring tools and unused code/dependencies without changing
+application functionality, while retaining useful history and maintenance tools.
 
 ## User story
 
-As a demo evaluator, I want simple scored comparisons beneath the answer key,
-with separate colored report and human-decision cards, without manual grading.
+As the demo owner, I want only necessary application code and useful supporting
+assets in the active tree, including retirement of completed PDF-authoring tools.
 
 ## Chosen contract
 
-Only root-cause and recommendation prose is scored by a separately prompted
-local Ollama evaluator. All other scores, aggregation, decision expectations and
-colors are deterministic. Disposition and confidence match exactly (0/100).
-The report score is the rounded equal-weight mean of the four metrics; Good is
-80-100, OK is 50-79, Bad is 0-49. The expected human outcome is APPROVED only
-when disposition/confidence match and both text scores are at least 80;
-otherwise REJECTED. Its match is 0/100, separate from report quality.
-Correct null cause/recommendation for INSUFFICIENT_EVIDENCE scores 100 in code;
-forbidden assertions score 0. Missing comparison inputs or failed evaluation
-are Not scored, never silently zero. A model failure retries once automatically.
-Comparisons are advisory and cannot change reports or human decisions.
-Retain immutable local comparison artifacts with inputs, outputs, IDs, hashes,
-prompt/rubric/model versions and timestamps. Answer keys remain sealed until a
-terminal human decision; compare its exact bound report, never an unrelated retry.
+Preserve every public workflow, failure path, tenant/evidence/audit boundary,
+local startup/preparation command and independently runnable service. Retire
+PDF-generation/render/validation Python files into one hash-verified historical
+archive with original paths and restore instructions; retain exact frozen PDF,
+source, inventory, manifest and authoring-record bytes. Remove unused internal
+helpers and the unused ORM layer, preserving existing JDBC transaction behavior.
+Keep tests, CI, startup/preparation tools and offline evaluators useful for
+verification and reproducing recorded results.
 
 ## In scope
 
-Generator-only evaluation endpoint, tenant-scoped read-only API integration,
-versioned prompt/rubric, local artifacts, two accessible cards and diamond gauges.
+Reference/dependency review across all services, frontend and scripts; inactive
+PDF-authoring source archival; proven unused internal code and ORM dependencies;
+related documentation, package-size checks, focused and full verification.
 
 ## Out of scope
 
-Report generation changes, oracle/corpus changes, automatic operational actions,
-new model downloads, manual grading, offline benchmark reinterpretation.
+Feature/API/data/model changes, corpus reauthoring, evaluation reinterpretation,
+dependency upgrades, removal of public maintenance commands or historical data,
+commits/pushes, destructive database operations.
 
 ## Constraints
 
-Synthetic data only. No oracle or evaluator input enters report generation,
-retrieval, evidence or operator decisions. Tests require no live model provider.
-Use the existing local model by default with an independently configurable judge.
+Preserve prior cleanup changes. Archive the completed task before replacement.
+Do not modify frozen hashes to accommodate cleanup. Compare archive contents to
+original bytes before deletion. Keep active demo JARs/configuration/artifacts.
+Scope recursive deletion to checked absolute workspace paths. No new behavior
+is intended; existing tests characterize functionality before/after refactoring.
 
 ## Acceptance criteria
 
-- [x] Comparison occurs automatically after reveal, below the answer key.
-- [x] Only root-cause/recommendation prose is LLM-scored; other scoring is deterministic.
-- [x] Terminal gate, tenant/incident/investigation/report/decision bindings are enforced.
-- [x] Separate report and decision cards display labels, colored borders and black diamond gauges.
-- [x] Failures, missing inputs, insufficient evidence and stale UI requests are handled safely.
-- [x] Artifacts retain reproducible input/prompt/output/provenance metadata.
-- [x] Focused and full verification pass; desktop/mobile visual behavior is checked.
+- [x] No active Python PDF-authoring source remains; all original tools are recoverable by exact path/hash.
+- [x] Frozen sources/PDFs/manifests and historical records remain byte-identical.
+- [ ] Remove proven unused runtime helpers and ORM layer; preserve JDBC atomicity/rollback and all public behavior.
+- [x] Review remaining code/dependencies/tooling and document why useful items remain.
+- [ ] Focused characterization tests, full gate and final repository/static checks pass.
+- [ ] Tested demo services are running and healthy after verification.
 
 ## Test plan
 
-Write tests before production behavior. Comparison rubric tests cover exact
-matches/misses, thresholds, correct rejection of a bad report, null semantics,
-judge isolation and failures. HTTP tests cover tenant-scoped exact report selection,
-mismatches, provider timeout/malformed/out-of-range JSON and successful requests.
-Artifact tests cover immutable retained inputs/results. UI behavior tests cover
-automatic sequencing, loading/failure/retry, reset and stale responses, and
-endpoint-safe rendering. Run focused generator tests, full ./verify.ps1 and
-browser QA at desktop/mobile widths. Live evaluation is an explicit smoke check,
-not a deterministic test or proof of judge accuracy.
+Map preservation of transactions to existing named regressions:
+AlertApiPostgresIntegrationTest.rollsBackInvestigationWhenIncidentTransitionFails,
+HumanDecisionPersistencePostgresIntegrationTest.rollsBackDecisionWhenLifecycleTransitionFails,
+ReportPersistencePostgresIntegrationTest.rollsBackAvailableReportWhenLifecycleTransitionCannotCommit,
+and SynTenPdfCatalogPostgresIntegrationTest.rollsBackEveryEarlierInsertWhenTheFinalVersionConflicts.
+Run these before dependency edits and after refactoring. Existing full suites
+cover all remaining workflows and invalid inputs. Because removal is a refactor
+with no new behavior, use passing characterization tests rather than artificial
+red tests for removed implementation details.
+
+Verify archival integrity entry-by-entry with SHA-256, package/input hash checks,
+and restoration into an ignored scratch checkout. Confirm no Python reference
+from startup/build/CI, no JPA usage, no unused TS locals/parameters, package library
+reduction, Markdown links, git diff --check and the unscoped ./verify.ps1 gate.
+A temporary copied-database API smoke check validates the newly packaged runtime
+without modifying the demo database. Console may pause for npm ci and is restored.
 
 ## Progress notes
 
-- Read repository/product/quality/architecture context and oracle separation ADRs.
-- Owner chose an LLM for text portions only; everything else uses code/rubric.
-- Clean checkout before work. Previous completed CI task archived unchanged.
-- Rubric, service and HTTP tests were added before their implementation; initial
-  focused runs failed for missing comparison types. UI tests failed all seven
-  cases before the UI behavior was added, then passed. Duplicate/trailing JSON
-  and system/user separation assertions failed for their intended reasons before
-  the stricter parser and prompt separation fixes.
-- The first full gate passed backend checks but stopped at an existing UI
-  string assertion after formatting changed quote style. Preserved existing
-  JavaScript single-quote style; made HTML copy assertions whitespace-insensitive
-  while adding both comparison-card assertions. Focused UI tests then passed,
-  followed by the complete gate. No checks were skipped or weakened.
-- Stopped only verified Angular preview PID 4336 for the npm ci/esbuild lock.
-  Restored console PID 12664; restarted only generator PID 38000 as tested
-  packaged snapshot PID 28812. Generator and console return HTTP 200.
+- Separate owner-requested investigation diagnostic on 2026-10-01 completed five
+  fresh decision/reveal/comparison workflows using the existing tested demo and
+  unchanged rubric. Reconciliation's two timeouts are retained. Results and
+  optimization candidates are in
+  [the diagnostic report](../../../SynTen%20Inc/evaluation/2026-10-01-investigation-diagnostic.md).
+  No production changes or cleanup acceptance claims result from this work;
+  the locked cleanup contract and pending verification remain unchanged.
+
+- Read required context, service instructions, corpus standards and relevant ADRs.
+- Previous cleanup changes remain uncommitted and preserved; archived that
+  completed task unchanged before starting this successor.
+- No application/startup/CI reference invokes PDF Python tools. Frozen package
+  metadata pins authoring tools, so preserve them as recoverable historical bytes.
+- All production persistence uses JdbcClient; there are no JPA entities,
+  repositories or EntityManager usages. JPA currently adds an unused ORM stack.
+- Reference scan found an uncalled package-private report evidenceSnapshotIds
+  helper. Framework bean/exception-handler methods remain required.
+- Retired all 13 authoring scripts (3,082 lines / 151,326 bytes) into a
+  49,538-byte historical ZIP, preserving exact original paths and hashes.
+  Frozen package/control records retain their original historical commands;
+  the tenant README explains restoring the archive before using those commands.
+- Removed unused evidenceSnapshotIds and its List import. Replaced JPA with the
+  existing JDBC starter and removed eight dormant Hibernate configuration lines.
+- Retained direct runtime dependencies used by HTTP validation, MCP, Spring AI,
+  schema validation, PDF parsing, PostgreSQL and JDBC; frontend dependencies are
+  required by Angular/runtime/build/test tooling. Hibernate Validator remains.
+- Retained independently runnable legacy MCP service, startup/readiness/import/
+  backfill/smoke commands, offline evaluators and test/CI tooling because they
+  support compatibility, repeatable preparation, diagnosis and historical checks.
+- Post-change Docker rollback command was rejected by the permission prompt.
+  No post-change Docker/full-gate execution is claimed. Owner was asked whether
+  to authorize the complete verification gate or revert the JDBC dependency change.
+  Read-only/static and non-Docker checks continued; the demo was not restarted.
 
 ## Completion evidence
 
-- Focused ComparisonRubricTest passed six initial cases; focused comparison
-  rubric/service/input-client/judge/controller suite passed 19 cases. Later
-  duplicate/trailing JSON and system/user separation checks passed, bringing the
-  comparison Java coverage to 21 cases. Focused StaticUiContractTest and
-  ComparisonUiBehaviorTest passed after formatting correction.
-- Full ./verify.ps1 passed on 2026-10-01: 362 API, 9 MCP, 74 generator and
-  103 console tests, zero failures/errors/skips; all repository scripts,
-  Java/Prettier formatting, builds, Compose and diff checks passed. The generator
-  UI harness additionally ran seven deterministic Node behavior cases.
-- Browser QA used a clearly labeled synthetic fixture on temporary port 8093;
-  no live incident or human decision was created. Confirmed red/yellow/green
-  report borders and independent green decision card; 0/100 diamond placement,
-  accessible meter labels/numeric values, keyboard Enter reveal, preserved key
-  and no fake zero gauges during outage. At 390x844, document scrollWidth 375
-  (scrollbar) <= innerWidth 390; desktop width 914 also had no overflow. Temporary
-  viewport override was reset.
-- Live existing S303 incident 50726425-26de-4756-966d-2fbdcdfb80d3 / investigation
-  1edc942f-c32c-47f7-9fc4-8e3332e946c0: comparison
-  689ead6c-1936-4a5c-b5dd-f184dc4ce9cf AVAILABLE in 24.802 seconds, one local
-  qwen3:8b-q4_K_M call. Exact report
-  2d33467b-213c-4ab5-ad09-853ef00b6a3e and decision
-  bdf93b2d-647f-42db-bb6b-e701760708b1 retained. Disposition 100, confidence 0,
-  cause 40, recommendation 40 => report 45/BAD; REJECTED matched rubric =>
-  decision 100/GOOD. Both API histories remained byte-identical before/after.
-- Retained local artifact:
-  syntheticIncidentGenerator/tmp/comparisons/8b860d80-d17f-4e6b-8c48-af35f26a4d61/689ead6c-1936-4a5c-b5dd-f184dc4ce9cf.json.
-  Independently recomputed input, prompt and response SHA-256 hashes all matched.
-  Full gate log: tmp/comparison-full-verify.log. No report generation or human
-  decision was performed during verification.
-- Final Repository scope, generator JavaScript syntax, explicit generator
-  Prettier checks and focused static/UI behavior tests passed after documentation
-  and CSS formatting. Reviewed the final diff for scope and generated/secret
-  content. Temporary preview process/tab were closed; actual demo services remain
-  running. No commit or push was performed.
+- Before dependency edits, the four named rollback characterization tests passed
+  with zero failures/errors/skips. Log: tmp/deep-cleanup-transactions-before.log.
+- After cleanup, ReportGenerationServiceTest, ReportPromptAndParserTest and
+  FeatureArchitectureTest passed 33 tests with zero failures/errors/skips.
+  Log: tmp/deep-cleanup-unit-checks.log.
+- ./mvnw.cmd -pl backend/copilot-api -DskipTests package passed Java formatting,
+  compilation and packaging only; it intentionally did not execute tests.
+  Packaged libraries fell from 155 to 133; JAR bytes from 89,910,066 to 61,627,328.
+  ORM libraries are absent and HTTP Hibernate Validator remains. Removal also
+  resolves the existing ANTLR runtime to 4.13.1 instead of ORM's 4.13.2 override.
+  Package log and library comparison are retained under ignored tmp/deep-cleanup-*.
+- Verified ZIP SHA-256 and every restored entry's path/length/SHA-256. A scratch
+  reproduction checkout matched all 13 original tools and frozen generator/
+  package-file hashes; 226 protected asset/contract/prompt hashes are unchanged.
+  Removed that scratch checkout and empty retired tool directories afterwards.
+- TypeScript --noEmit --noUnusedLocals --noUnusedParameters, changed Markdown
+  link resolution, tracked diff scope review, git diff --check and
+  ./verify.ps1 -Scope Repository passed. Original comparison task archive still
+  matches HEAD. No startup/build/CI references invoke retired Python tools.
+- Existing console, API health and generator root return HTTP 200. Active runtime
+  JARs are untouched; these checks cover the existing demo, not the new JDBC-only
+  package. No live models, incident/report/decision mutations, commits or pushes.
 
 ## Remaining limitations
 
-LLM text scores remain advisory and may vary or be wrong. Same-model judging is
-the default for local compatibility; another model can be configured independently.
-The four-field comparison rubric does not establish general semantic entailment
-or complete evidence support. Artifacts are local ignored files requiring backup,
-not new copilot database/audit-timeline records. GitHub verification was not run
-for these uncommitted changes. Existing npm advisories remain unchanged.
+Existing model/security/deployment limitations remain in STATUS.md. Archival
+requires restoration and compatible Python packages for historical PDF reproduction.
+The rejected command was ./mvnw.cmd -pl backend/copilot-api with -Dtest selecting
+the four rollback methods listed above, followed by test. It required Docker
+access outside the sandbox. Post-change transaction regressions, the unscoped
+./verify.ps1 gate and a runtime smoke check of the new package remain unrun.
+The existing demo still runs its previous tested API JAR; the new package must
+not replace it until verification is authorized and passes.
 
 ## Decisions needed
 
-None; owner authorized automatic text judging with deterministic remaining metrics.
+None; owner authorized thorough cleanup preserving functionality and useful history.

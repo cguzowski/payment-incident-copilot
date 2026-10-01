@@ -1,7 +1,6 @@
 package com.cguzowski.paymentcopilot.report;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 record ReportGenerationAttempt(
@@ -71,13 +70,6 @@ record ReportGenerationAttempt(
             throw new IllegalArgumentException("A report failure requires a terminal failure status.");
         }
         return terminal(terminalStatus, completedAt, providerRequestId, statusDetail, null);
-    }
-
-    List<UUID> evidenceSnapshotIds() {
-        if (applicableEvidenceId == null || latestEvidenceId.equals(applicableEvidenceId)) {
-            return List.of(latestEvidenceId);
-        }
-        return List.of(latestEvidenceId, applicableEvidenceId);
     }
 
     private ReportGenerationAttempt terminal(

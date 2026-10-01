@@ -155,7 +155,6 @@
     text-transform: uppercase;
   }
 
-  .panel-boundary,
   .evidence-panel__boundary,
   .knowledge-panel__boundary {
     margin: 0.75rem 0 1.25rem;
@@ -164,7 +163,6 @@
     line-height: 1.55;
   }
 
-  .panel-message,
   .evidence-message {
     margin: 0;
     padding: 1rem;
@@ -175,7 +173,6 @@
     line-height: 1.55;
   }
 
-  .panel-message--error,
   .evidence-message--error {
     display: flex;
     align-items: center;

@@ -32,8 +32,9 @@ sources and 30 PDFs: 22 runbooks and 8 policies, comprising 27 approved and 3
 superseded versions. Its manifest reports 113 pages, 3-5 per document; all pages
 passed automated validation and visual inspection. The hard maximum is 15. The
 inventory covers the original 36 authorization-decline observable scenarios. The exact v1 sources,
-PDFs, contract, tooling, and manifest remain under
+PDFs, contract, and manifest remain under
 `corpus/versions/synten-auth-knowledge-v1/` and are hash-verifiable there.
+Original tooling is retained in the historical archive linked below.
 
 Original page targets are advisory budgets; shorter complete documents are
 allowed by the inventory. Repeated source procedures and unsupported
@@ -108,6 +109,12 @@ own recorded SHA-256. See [diagnosis](evaluation/q2-baseline-diagnosis.md) and
 
 ## Maintenance boundary
 
+PDF authoring is retired from the active source tree. The
+[historical tooling archive](history/pdf-authoring-tools/README.md) preserves all
+original scripts and hashes for restoration into a reproduction checkout.
+Original package authoring commands require that restoration. Python is not an
+application or demo prerequisite; Java still validates and consumes frozen PDFs.
+
 The v2 inventory, profile and authoring standard describe the existing baseline.
 Their scenario-derived coverage is historical, not a rule for future authoring.
 For the next version, define risks from the payment domain without consuming
@@ -123,7 +130,7 @@ chunking contracts. Corpus changes require explicit versioning, regeneration,
 validation, and evaluation. Superseded documents are deliberate exclusion
 fixtures; retain them for audit while excluding them from retrieval.
 
-The v2 generator consumes only observable scenario evidence. Its signal tables
+The archived v2 generator consumes only observable scenario evidence. Its signal tables
 state neutral operational semantics and do not load or reproduce the sealed
 oracle. The fixed `synten-retrieval-eval/v1` labels now bind to corpus v2; the
 historical K4/K5 measurements remain v1 evidence and were not rerun.

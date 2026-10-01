@@ -139,7 +139,9 @@ provider outages still appear as failed evidence attempts.
 
 Use the generator's red button to create an incident. Its sealed answer key
 can be revealed only after the exact incident has an explicit terminal human
-decision. See [evaluation limitations](docs/agent/STATUS.md).
+decision. Revealing it automatically compares the report and human decision in
+separate scored cards. These advisory scores do not change either outcome.
+See [evaluation limitations](docs/agent/STATUS.md).
 
 ## Independent development and verification
 

@@ -33,6 +33,10 @@ Architecture tests enforce the allowed package directions and keep persistence
 adapters within their owning features. There is no global common package or
 compiled DTO shared across deployables.
 
+Persistence uses JdbcClient, Hikari and Spring JDBC transactions; Flyway owns
+schema evolution. The unused JPA/Hibernate ORM dependency was removed under
+[ADR-0022](decisions/ADR-0022-retire-unused-authoring-and-orm.md).
+
 Knowledge retrieval composes an incident-owned `InvestigationSnapshot` with an
 evidence-owned normalized snapshot before persisting a retrieval attempt. The
 incident snapshot exposes only investigation and correlation identifiers,
