@@ -11,12 +11,24 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md) implements expansion E1: the
+The [current task](tasks/current.md) completes expansion E2. The
+[independent payment library](../../SynTen%20Inc/payment-knowledge/v1/README.md)
+is frozen as synten-payment-knowledge/v1: 11 runbooks and 5 policies, 16 PDFs / 48
+pages, each three pages. All 24 domain risks have editorial coverage. All rendered
+pages passed visual review; metadata/substantive text extraction and byte-identical
+rebuilds passed. Exact source/PDF/tool/font/domain-input hashes are retained. The
+historical 30-PDF baseline remains separate and unchanged; no new incident fixtures,
+oracle, labels or report outputs were authoring inputs. Full repository verification
+passed after starting Docker to prevent skipped database tests. E3 is next: accepted
+catalogs, explicit preparation and PDF-only/shared-policy retrieval. This asset task
+does not import the PDFs or add item-level evidence to the application.
+
+Completed E1's
 [successor payment domain](../../SynTen%20Inc/domain/v2/README.md) defines conceptual
 lifecycle transitions, synthetic amount/timing rules, source authority, 24 independent
 risks and 11 evidence requirements. Only aggregate service errors are currently
 exposed through MCP; payment/event/refund records and PDF-only retrieval remain
-future work. E2 is next: author and freeze risk-derived PDFs before new incidents.
+future work. The independent library is frozen before new incident creation.
 E1 changes documentation only and preserves Q6, seven-family behavior and historical
 corpus/scenario/evaluation inputs.
 
@@ -92,6 +104,14 @@ open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
+
+- E2 passed ./verify.ps1 on 2026-10-01: 337 API, 9 MCP, 50 generator and
+  103 Angular tests with no failures/errors/skips; builds/format/Compose checks passed.
+  Eight focused PDF tooling tests passed. All 16 PDFs / 48 pages passed extraction,
+  visual/editorial review and two byte-identical rebuilds matching viewed PDF bytes.
+  Freeze manifest SHA-256: a1fe13333de61f51a9406827a577f880ca7d88b1bcd2e0a4def438f6b134b421.
+  Initial gate correctly rejected skipped database tests while Docker was stopped;
+  the repeated full gate passed after Docker startup. Runtime adoption is unperformed.
 
 - Expansion E1 passed ./verify.ps1 -Scope Repository on 2026-10-01. Changed/new
   Markdown links, 24 unique risk IDs, 11 evidence IDs and cross-references passed

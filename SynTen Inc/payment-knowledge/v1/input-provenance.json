@@ -1,0 +1,31 @@
+{
+  "authoringInputVersion": "synten-payment-domain/v2",
+  "independence": "No scenario, oracle, labels or report-output inputs",
+  "inputs": [
+    {
+      "path": "SynTen Inc/domain/v2/README.md",
+      "sha256": "e6c1bbea0c0605147d7e456a3774b64e2bba6b9396b81548123132262acd8d26",
+      "role": "independent-authoring-input"
+    },
+    {
+      "path": "SynTen Inc/domain/v2/lifecycle.md",
+      "sha256": "88026e7db8dd4447d5b447d0243e9cb26a199960d8af89f0ef7d0c7f662971ab",
+      "role": "independent-authoring-input"
+    },
+    {
+      "path": "SynTen Inc/domain/v2/risk-inventory.md",
+      "sha256": "a767db4f1bde7ef9a5c3e4c7585cc3b49ce09d83d5011aa6caa29e181af454cf",
+      "role": "independent-authoring-input"
+    },
+    {
+      "path": "SynTen Inc/domain/v2/evidence-requirements.md",
+      "sha256": "d90cebf32085ad20c72c2db5b74c0e678f307241b7b0fdcff47529e1ca6b0afc",
+      "role": "independent-authoring-input"
+    },
+    {
+      "path": "SynTen Inc/corpus/validation-manifest.json",
+      "sha256": "dc2ee7a0b188ecc9277ac6ff1efde085f4c5a6aa2997738f000239f24e41fffc",
+      "role": "historical-baseline"
+    }
+  ]
+}

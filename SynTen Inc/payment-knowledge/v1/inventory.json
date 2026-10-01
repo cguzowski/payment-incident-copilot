@@ -1,0 +1,712 @@
+{
+  "corpusVersion": "synten-payment-knowledge/v1",
+  "documents": [
+    {
+      "key": "RB-101",
+      "title": "Authorization rejection: establish the source",
+      "owner": "Authorization Owner",
+      "stages": [
+        "authorization"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE"
+      ],
+      "risks": [
+        "R01",
+        "R18",
+        "R20"
+      ],
+      "sources": [
+        "E01",
+        "E02",
+        "E03",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "PL-101",
+        "RB-102",
+        "RB-110"
+      ],
+      "documentId": "9abe0787-effc-433a-992c-a28cf64c27ad",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-101-authorization-rejection-establish-the-source.pdf"
+    },
+    {
+      "key": "RB-102",
+      "title": "Uncertain authorization outcomes",
+      "owner": "Gateway Owner",
+      "stages": [
+        "authorization",
+        "release"
+      ],
+      "families": [
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "AUTHORIZATION_DECLINE_RATE_SPIKE"
+      ],
+      "risks": [
+        "R02",
+        "R03",
+        "R09",
+        "R19"
+      ],
+      "sources": [
+        "E02",
+        "E03",
+        "E05",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "RB-103",
+        "RB-105",
+        "PL-102",
+        "PL-103"
+      ],
+      "documentId": "837bf69f-1ea7-4cc6-8d51-2e5ef19cfabd",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-102-uncertain-authorization-outcomes.pdf"
+    },
+    {
+      "key": "RB-103",
+      "title": "Suspected duplicates and replayed events",
+      "owner": "Payment Lifecycle Owner",
+      "stages": [
+        "authorization",
+        "capture",
+        "refund",
+        "delivery"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R03",
+        "R04",
+        "R11",
+        "R14"
+      ],
+      "sources": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E08"
+      ],
+      "related": [
+        "PL-101",
+        "PL-102",
+        "RB-105",
+        "RB-108"
+      ],
+      "documentId": "ace233b4-5dd8-4ae6-89de-c39be100c5ce",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-103-suspected-duplicates-and-replayed-events.pdf"
+    },
+    {
+      "key": "RB-104",
+      "title": "Capture acknowledgement and amount checks",
+      "owner": "Capture Owner",
+      "stages": [
+        "authorization",
+        "capture"
+      ],
+      "families": [
+        "CAPTURE_FAILURE_SPIKE"
+      ],
+      "risks": [
+        "R05",
+        "R06",
+        "R07",
+        "R17"
+      ],
+      "sources": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E09",
+        "E10"
+      ],
+      "related": [
+        "PL-102",
+        "RB-103",
+        "RB-109"
+      ],
+      "documentId": "56f911d1-ca67-46db-87d6-d46cf163e20e",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-104-capture-acknowledgement-and-amount-checks.pdf"
+    },
+    {
+      "key": "RB-105",
+      "title": "Authorization holds, release and reversal",
+      "owner": "Gateway Owner",
+      "stages": [
+        "authorization",
+        "release",
+        "capture"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE"
+      ],
+      "risks": [
+        "R04",
+        "R08",
+        "R09",
+        "R19"
+      ],
+      "sources": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "RB-102",
+        "RB-106",
+        "PL-102",
+        "PL-103"
+      ],
+      "documentId": "6bceca26-e563-4c49-b953-e7f114d3e4fa",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-105-authorization-holds-release-and-reversal.pdf"
+    },
+    {
+      "key": "RB-106",
+      "title": "Refund progress and partial amount exposure",
+      "owner": "Refund Owner",
+      "stages": [
+        "capture",
+        "refund"
+      ],
+      "families": [
+        "REFUND_FAILURE_SPIKE"
+      ],
+      "risks": [
+        "R10",
+        "R11",
+        "R03",
+        "R17"
+      ],
+      "sources": [
+        "E02",
+        "E04",
+        "E06",
+        "E09",
+        "E10"
+      ],
+      "related": [
+        "PL-102",
+        "PL-103",
+        "RB-103",
+        "RB-109"
+      ],
+      "documentId": "2dd8bb43-0597-46b2-9705-8ee715035771",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-106-refund-progress-and-partial-amount-exposure.pdf"
+    },
+    {
+      "key": "RB-107",
+      "title": "Settlement checkpoints and receipt gaps",
+      "owner": "Settlement Owner",
+      "stages": [
+        "capture",
+        "refund",
+        "settlement",
+        "reconciliation"
+      ],
+      "families": [
+        "SETTLEMENT_DELAY",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R12",
+        "R13",
+        "R16",
+        "R19"
+      ],
+      "sources": [
+        "E04",
+        "E06",
+        "E07",
+        "E09",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "PL-103",
+        "RB-109",
+        "RB-111"
+      ],
+      "documentId": "7178d74f-541e-41b2-935a-76237cdf70b1",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-107-settlement-checkpoints-and-receipt-gaps.pdf"
+    },
+    {
+      "key": "RB-108",
+      "title": "Webhook delivery and recipient acknowledgement",
+      "owner": "Delivery Owner",
+      "stages": [
+        "delivery",
+        "cross-stage"
+      ],
+      "families": [
+        "WEBHOOK_DELIVERY_FAILURE"
+      ],
+      "risks": [
+        "R14",
+        "R15",
+        "R03",
+        "R19"
+      ],
+      "sources": [
+        "E02",
+        "E08",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "PL-102",
+        "PL-103",
+        "RB-103",
+        "RB-110"
+      ],
+      "documentId": "ba3ad5a3-452c-4e5b-b9ee-715e03368af1",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-108-webhook-delivery-and-recipient-acknowledgement.pdf"
+    },
+    {
+      "key": "RB-109",
+      "title": "Reconciliation without invented corrections",
+      "owner": "Reconciliation Owner",
+      "stages": [
+        "capture",
+        "refund",
+        "settlement",
+        "reconciliation"
+      ],
+      "families": [
+        "RECONCILIATION_MISMATCH",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY"
+      ],
+      "risks": [
+        "R07",
+        "R11",
+        "R13",
+        "R16",
+        "R17",
+        "R21"
+      ],
+      "sources": [
+        "E02",
+        "E04",
+        "E06",
+        "E07",
+        "E09",
+        "E10"
+      ],
+      "related": [
+        "PL-101",
+        "PL-102",
+        "PL-103",
+        "RB-111"
+      ],
+      "documentId": "4f536824-87bf-4bd0-bad3-04bcbacff40f",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-109-reconciliation-without-invented-corrections.pdf"
+    },
+    {
+      "key": "RB-110",
+      "title": "Dependency, configuration and event-order investigation",
+      "owner": "Platform Owner",
+      "stages": [
+        "cross-stage"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R18",
+        "R19",
+        "R23",
+        "R02",
+        "R14"
+      ],
+      "sources": [
+        "E01",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "PL-101",
+        "PL-103",
+        "PL-104",
+        "PL-105"
+      ],
+      "documentId": "b770eb7d-538d-4c17-8529-1c9490e93c5e",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-110-dependency-configuration-and-event-order-investigation.pdf"
+    },
+    {
+      "key": "RB-111",
+      "title": "Incomplete evidence and conflicting final records",
+      "owner": "Payment Lifecycle Owner",
+      "stages": [
+        "cross-stage"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R20",
+        "R21",
+        "R22",
+        "R01",
+        "R17"
+      ],
+      "sources": [
+        "E01",
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E07",
+        "E08",
+        "E09",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "PL-101",
+        "PL-104",
+        "PL-105"
+      ],
+      "documentId": "1e657081-25f3-41d1-a3e9-7b16b50a91e0",
+      "version": "1.0.0",
+      "type": "RUNBOOK",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "rb-111-incomplete-evidence-and-conflicting-final-records.pdf"
+    },
+    {
+      "key": "PL-101",
+      "title": "Evidence sufficiency and conflicting-source policy",
+      "owner": "Knowledge Approver",
+      "stages": [
+        "cross-stage"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R01",
+        "R20",
+        "R21",
+        "R22"
+      ],
+      "sources": [
+        "E01",
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E07",
+        "E08",
+        "E09",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "RB-111",
+        "PL-103",
+        "PL-104",
+        "PL-105"
+      ],
+      "documentId": "09815930-f605-4daf-bc33-2625abb3da25",
+      "version": "1.0.0",
+      "type": "POLICY",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "pl-101-evidence-sufficiency-and-conflicting-source-policy.pdf"
+    },
+    {
+      "key": "PL-102",
+      "title": "Idempotency, retry and amount safety policy",
+      "owner": "Payment Lifecycle Owner",
+      "stages": [
+        "authorization",
+        "capture",
+        "release",
+        "refund",
+        "delivery"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R10",
+        "R11",
+        "R15"
+      ],
+      "sources": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E08",
+        "E10"
+      ],
+      "related": [
+        "RB-103",
+        "RB-104",
+        "RB-105",
+        "RB-106",
+        "RB-108",
+        "PL-105"
+      ],
+      "documentId": "b19b3e78-27e9-488d-9f77-d3f6b5598b63",
+      "version": "1.0.0",
+      "type": "POLICY",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "pl-102-idempotency-retry-and-amount-safety-policy.pdf"
+    },
+    {
+      "key": "PL-103",
+      "title": "Time, freshness and comparable-cutoff policy",
+      "owner": "Platform Owner",
+      "stages": [
+        "cross-stage"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R09",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R19",
+        "R20"
+      ],
+      "sources": [
+        "E07",
+        "E08",
+        "E09",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "RB-107",
+        "RB-109",
+        "RB-110",
+        "PL-101"
+      ],
+      "documentId": "c5e24c02-071c-44de-95b4-e4e1f3eefd47",
+      "version": "1.0.0",
+      "type": "POLICY",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "pl-103-time-freshness-and-comparable-cutoff-policy.pdf"
+    },
+    {
+      "key": "PL-104",
+      "title": "Tenant isolation and safe operational records",
+      "owner": "Platform Security",
+      "stages": [
+        "cross-stage"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R22",
+        "R23",
+        "R20"
+      ],
+      "sources": [
+        "E01",
+        "E02",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "PL-101",
+        "PL-105",
+        "RB-110",
+        "RB-111"
+      ],
+      "documentId": "9fe80dac-c724-4d63-a1fc-77a0ff993ea3",
+      "version": "1.0.0",
+      "type": "POLICY",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "pl-104-tenant-isolation-and-safe-operational-records.pdf"
+    },
+    {
+      "key": "PL-105",
+      "title": "Human authority, escalation and controlled recovery",
+      "owner": "Incident Commander",
+      "stages": [
+        "cross-stage"
+      ],
+      "families": [
+        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+        "AUTHORIZATION_TIMEOUT_SPIKE",
+        "CAPTURE_FAILURE_SPIKE",
+        "REFUND_FAILURE_SPIKE",
+        "SETTLEMENT_DELAY",
+        "WEBHOOK_DELIVERY_FAILURE",
+        "RECONCILIATION_MISMATCH"
+      ],
+      "risks": [
+        "R24",
+        "R18",
+        "R21",
+        "R23"
+      ],
+      "sources": [
+        "E01",
+        "E10",
+        "E11"
+      ],
+      "related": [
+        "PL-101",
+        "PL-102",
+        "PL-104",
+        "RB-110",
+        "RB-111"
+      ],
+      "documentId": "3bb18135-be1c-4a38-8737-72a24b1eab50",
+      "version": "1.0.0",
+      "type": "POLICY",
+      "status": "APPROVED",
+      "effectiveDate": "2026-10-01",
+      "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+      "classification": "Internal - Synthetic Demo",
+      "filename": "pl-105-human-authority-escalation-and-controlled-recovery.pdf"
+    }
+  ],
+  "inputProvenance": "input-provenance.json"
+}

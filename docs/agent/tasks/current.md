@@ -1,99 +1,115 @@
-# Task: E1 independent payment domain and risks
+# Task: E2 independent operational PDF library
 
-Status: Complete - E1 editorial/static review and Repository verification passed
+Status: Complete - independent library frozen; full verification passed
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Goal
 
-Define the synthetic payment domain, lifecycle risks and evidence requirements
-before independent PDF authoring and later independent incident creation.
+Author, validate and freeze a risk-derived synthetic PDF library before independent
+incident creation, preserving the existing authorization corpus.
 
 ## User story
 
-As the owner, I want a coherent operational domain and risk inventory independent
-of incident answers so the next PDF library supports useful investigation,
-including ambiguous and unresolved outcomes.
+As an operator, I want varied approved operational guidance that helps distinguish
+causes, effects and safe next evidence requests without containing incident answers.
 
 ## Chosen contract
 
-The owner activated E1 after approving the independent-corpus plan. Add a versioned
-successor SynTen profile, lifecycle, risk inventory and evidence requirements
-under SynTen Inc/domain/v2. Define conceptual synthetic states, source authority,
-ownership, timing and amount semantics, and family/shared-policy applicability.
-These are authoring contracts, not runtime schemas or new API enums. Reconcile
-the plan with the seven-family ADR-0018 baseline. Archive completed retrieval
-recovery unchanged. Preserve historical profiles, sources/PDFs, manifests,
-scenarios, oracles and evaluations.
+The owner's proceed activates E2 from PAYMENT_EXPANSION_PLAN.md. Create a separate
+synten-payment-knowledge/v1 package under SynTen Inc/payment-knowledge/v1 with
+16 new documents: 11 diagnostic runbooks and 5 shared policies. Derive topics and
+coverage solely from domain/v2's 24 risks and 11 evidence requirements. Use stable
+opaque document IDs, version 1.0.0, synthetic APPROVED metadata, owner roles,
+effective date 2026-10-01 and explicit stage/family/shared applicability. Preserve
+30 original PDFs and their manifests as a separately identified historical baseline;
+do not relabel it independent. Freeze exact editable sources, PDFs, inventory,
+authoring/generator provenance and review evidence. No runtime import is activated.
 
 ## In scope
 
-Domain documentation, risk coverage matrix, evidence requirements, navigation,
-status/roadmap updates and static verification.
+Successor authoring standard/inventory, source/PDF generation, deterministic asset
+validation, extraction, all-page visual/editorial QA, hashes/freeze and navigation.
 
 ## Out of scope
 
-PDF/scenario creation, model tuning, executable changes, new MCP/API schemas,
-migrations, deployment, report sufficiency changes and production payments.
+Incident/oracle/evaluation creation, application API/MCP/database/retrieval changes,
+live embeddings/model runs, PDF-only runtime enforcement or report-safety changes.
 
 ## Constraints
 
-Synthetic only; no new deployables or operational actions. Do not consume scenario
-fixtures, labels, expected reports or oracle answers as authoring inputs. Current
-aggregate errors cannot establish individual payment outcomes. Keep Q6 LOW/null
-rules and human review. Domain concepts do not claim implemented evidence tools.
+No authoring from scenarios, labels, report outputs or oracle. Every PDF <=15 pages
+including control/revision material. Only synthetic records and units; guidance is
+not proof. E02-E11 remain unavailable current sources. Shared policies do not imply
+implemented cross-family retrieval. Preserve Q6 LOW/null and human-only actions.
 
 ## Acceptance criteria
 
-- [x] Successor profile defines scope, conceptual categories, owners and authority
-      while preserving seven implemented families and the historical profile.
-- [x] Lifecycle defines transitions, uncertainty, duplicates, reversal versus
-      refund, amounts/timing and disagreement without inventing final outcomes.
-- [x] Independent risk inventory maps lifecycle/dependency/control risks to
-      distinguishing evidence and shared/family guidance without target incidents.
-- [x] Evidence requirements define provenance, source authority, missing/stale/
-      conflicting semantics and current versus future capabilities.
-- [x] Links, preservation and consistency checks and Repository gate pass; status
-      and roadmap identify E2 next without claiming PDFs/runtime work complete.
+- [x] Versioned authoring standard and exact 16-document inventory map every R01-R24
+      to useful diagnostic or policy content with scope, sources and related items.
+- [x] Editable, independently risk-derived sources and text PDFs contain controlled
+      metadata, distinguishing/negative checks, uncertainty and conditional recovery;
+      policies define durable controls without copying runbook procedures.
+- [x] Deterministic generation and validators verify exact membership/metadata/hashes,
+      extraction, 1-15 pages, related references and invalid input rejection.
+- [x] Every rendered page passes visual review; all documents pass editorial review
+      with source-capability limits and no unresolved layout defects.
+- [x] Frozen package retains exact provenance/hashes and review evidence; historical
+      assets unchanged; required focused and repository verification pass.
 
 ## Test plan
 
-Documentation-only: editorial review of profile, lifecycle, risk and evidence
-tables maps to criteria 1-4. Local Markdown links, risk/evidence ID cross-references,
-historical-file diff checks and ./verify.ps1 -Scope Repository map to criterion 5.
-No artificial production tests or live-model run is needed.
+Before tooling implementation, write focused Python tests for missing/extra files,
+duplicate metadata, missing risk coverage, unsafe source paths, source mismatch,
+PDF limits/text/encryption and altered freeze hashes. Confirm intended red failure,
+then focused green. Generate twice and compare PDF bytes. Validate/extract all PDFs
+and render every page with Poppler; inspect every cover, procedure/control page and
+revision page. Review every source for operational relevance and independence.
+Run ./verify.ps1 and static links/diff/preservation checks; live providers not needed.
 
 ## Progress notes
 
-- Reviewed required repository/tenant context and architecture. Previous planning
-  changes committed and integrated while preserving newer completed-family facts.
-- Initial working tree clean. Owner authorization covers E1; later phases remain
-  separate tasks.
+- Required context and PDF skill read; clean initial working tree.
+- Archived completed E1 unchanged. Existing authoring contract remains historical;
+  successor intentionally uses independent risks rather than scenario-code coverage.
 
 ## Completion evidence
 
-- ./verify.ps1 -Scope Repository passed on 2026-10-01, including verification,
-  preparation/evaluation runner checks, Compose validation and diff checks.
-- Static link check passed for every changed/new Markdown file. All 24 unique
-  risk IDs and 11 source IDs resolve; each referenced evidence ID is defined.
-- Editorial review mapped criteria 1-4 to the profile, transition table, risk
-  matrix and source/uncertainty tables. Covered unknown outcomes, explicit issuer
-  reasons, partial amounts, duplicate messages versus operations, reversal/refund,
-  source disagreement, time/configuration gaps, owners and policy applicability.
-- git diff aa4ccef --name-only over historical sources/PDFs/versions/manifest,
-  evaluation, multi-incidents and runtime source paths returned no changes.
-  Recovery archive text matches 2f74d81:docs/agent/tasks/current.md exactly.
-- No production behavior changed; documentation-only static/editorial checks
-  satisfy this phase without artificial red/green tests or a live-provider run.
-- Planning changes retained as 817578f and integrated as 2f74d81, resolving stale
-  single-family facts in favor of the completed seven-family baseline.
+- Red: focused unittest discovery failed with ModuleNotFoundError for missing
+  library builder/validator before implementation. Green: all eight focused tests
+  passed, including deterministic build, invalid membership/identity/risk/source/
+  references/path/metadata, encrypted/empty/malformed/over-limit PDFs and tampering.
+- Validated 16 PDFs / 48 pages with full metadata/substantive text extraction;
+  each document is three pages (min/max/median 3). Two rebuilds were byte-identical
+  and matched the exact PDFs used for the final visual inspection.
+- Poppler rendered all 48 pages at 96 dpi. Inspected every cover, procedure/control
+  and final revision page at readable resolution. Corrected merged numbered steps
+  and added visible tenant metadata before final all-page reinspection. No remaining
+  layout defects. Editorial review of all sources and coverage is in review.md.
+- Full ./verify.ps1 passed on 2026-10-01: 337 API, 9 MCP, 50 generator and 103
+  Angular tests, zero failures/errors/skips; format/build/Compose/repository checks.
+  Initial full run correctly rejected skipped PostgreSQL tests while Docker was
+  unavailable. Started Docker and reran with Docker access; the complete gate passed.
+- Focused commands (bundled Python): -m unittest discover -s
+  "SynTen Inc/payment-knowledge/v1/tools" -v; tools/library.py build/validate/verify;
+  tools/render_library.py. Actual freeze command ran once after review; a second
+  freeze attempt was rejected and left the manifest byte-identical.
+- Freeze SHA-256: a1fe13333de61f51a9406827a577f880ca7d88b1bcd2e0a4def438f6b134b421.
+  Manifest retains exact source/PDF/package/generator/font/domain-input hashes,
+  ReportLab 4.4.9 and UTC freeze timestamp. Input allowlist excludes scenario/
+  oracle/evaluation/report artifacts; historical manifest is a hash-only reference.
+- Changed/new Markdown links, label/credential pattern checks and git diff --check
+  passed. Historical corpus/evaluation/multi-incident/domain/runtime paths have
+  no diff against 4d6effd. Completed E1 archive text matches exactly.
+- npm ci reported eight existing advisories (four moderate, four high) with no
+  lockfile change; the gate has no failing npm-audit step.
 
 ## Remaining limitations
 
-The successor domain is an authoring authority only. Payment records, independent
-PDF library, PDF-only retrieval and held-out incidents remain future work.
+E3 must select accepted catalogs, PDF-only eligibility and shared-policy retrieval.
+E4 must implement richer read-only evidence. No held-out quality claim is made.
 
 ## Decisions needed
 
-None for E1 documentation. Runtime schemas, corpus membership/approval metadata,
-PDF eligibility and evaluation thresholds remain later phase decisions.
+None for E2 assets; existing baseline kept separate, new metadata explicitly scoped
+for later catalog design. Fictional knowledge approval is not a human report decision.

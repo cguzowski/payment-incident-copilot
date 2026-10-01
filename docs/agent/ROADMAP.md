@@ -33,6 +33,7 @@ owner-activated [task contract](tasks/current.md) authorizes implementation.
 | Q6 | Degraded/empty evidence requires insufficient-evidence/LOW/null reports; independent validation, full gate and fresh S111/S211 live proof pass |
 | ADR-0018 expansion | Six additional families have deterministic triage, guidance, human decision and audit coverage; live report quality is unmeasured |
 | Expansion E1 | Versioned payment domain, lifecycle, 24 independent risks and source requirements; documentation/static gate |
+| Expansion E2 | Independent library frozen: 16 PDFs / 48 pages, 24-risk coverage, exact hashes, all-page visual/editorial review, focused tooling and full gate |
 
 K4/K5 completion did not pass the benchmark. See
 [STATUS.md](STATUS.md) for current evidence limitations and
@@ -42,8 +43,7 @@ K4/K5 completion did not pass the benchmark. See
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
-| E2 — Next | Independent PDF library | Risk-derived guidance, validated PDFs and frozen hashes before incident creation. |
-| E3 | Catalog and retrieval | Versioned accepted catalog, PDF-only eligibility and applicable shared/family policies. |
+| E3 — Next | Catalog and retrieval | Versioned accepted catalog, PDF-only eligibility and applicable shared/family policies. |
 | E4 | Multi-family evidence and workflow | Synthetic payment/refund records and timeline; independent builds and regressions. |
 | E5 | Independent demo incidents | Cases from system behavior after corpus freeze, without target runbooks. |
 | E6 | Held-out evaluation | Grounded conclusions and useful direction measured with retained provenance. |

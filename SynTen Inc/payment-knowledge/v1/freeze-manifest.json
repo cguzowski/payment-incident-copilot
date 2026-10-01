@@ -1,0 +1,338 @@
+{
+  "corpusVersion": "synten-payment-knowledge/v1",
+  "generatorVersion": "synten-independent-pdf/v1",
+  "reportlabVersion": "4.4.9",
+  "inventorySha256": "161e282d44802b46c515f641ecb0230301f05b81c95eab69f2533b1b9538398f",
+  "generatorSha256": "4e24aad2e16925f09a252f4c3f5ff3f4859006f50a7292672909d5f64530b834",
+  "fontSha256": {
+    "Vera.ttf": "c4c45690b345435b2cba52ecabe275f05e49b389b39fe68ad03afbb551288d3d",
+    "VeraBd.ttf": "cc037385e4d55bfde89b13e03091ee93bf40c0c52ddd391ff031ab276f13b8e9"
+  },
+  "documents": [
+    {
+      "key": "RB-101",
+      "documentId": "9abe0787-effc-433a-992c-a28cf64c27ad",
+      "version": "1.0.0",
+      "source": "sources/rb-101-authorization-rejection-establish-the-source.md",
+      "pdf": "pdfs/rb-101-authorization-rejection-establish-the-source.pdf",
+      "sourceSha256": "b1bd33cbd68c00eae6fca2c143587db92d12543704859bc8d4c6a1c0e7149465",
+      "risks": [
+        "R01",
+        "R18",
+        "R20"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4739,
+      "pdfSha256": "f4cc3d2f22bcf130dd399bf8ec08763428ddc72bc63d9438d69eae5736f46359"
+    },
+    {
+      "key": "RB-102",
+      "documentId": "837bf69f-1ea7-4cc6-8d51-2e5ef19cfabd",
+      "version": "1.0.0",
+      "source": "sources/rb-102-uncertain-authorization-outcomes.md",
+      "pdf": "pdfs/rb-102-uncertain-authorization-outcomes.pdf",
+      "sourceSha256": "0e41bf3169296915da2f4cc9499c7e7549e2569516bbd64fc070370480b684db",
+      "risks": [
+        "R02",
+        "R03",
+        "R09",
+        "R19"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4565,
+      "pdfSha256": "56b769b7ced9ba6123e2876222980e069643384341ff0d6be7903f92c17b5bc3"
+    },
+    {
+      "key": "RB-103",
+      "documentId": "ace233b4-5dd8-4ae6-89de-c39be100c5ce",
+      "version": "1.0.0",
+      "source": "sources/rb-103-suspected-duplicates-and-replayed-events.md",
+      "pdf": "pdfs/rb-103-suspected-duplicates-and-replayed-events.pdf",
+      "sourceSha256": "662e77eb576cf9edab20ba8add5bd92b7dcaa5762c2ea0203efa2ca3bcc80831",
+      "risks": [
+        "R03",
+        "R04",
+        "R11",
+        "R14"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4765,
+      "pdfSha256": "199c2df2a578328767fa4c4fd300b7c5a39b2a6e5ffd3fdb5181f98ab3b052e5"
+    },
+    {
+      "key": "RB-104",
+      "documentId": "56f911d1-ca67-46db-87d6-d46cf163e20e",
+      "version": "1.0.0",
+      "source": "sources/rb-104-capture-acknowledgement-and-amount-checks.md",
+      "pdf": "pdfs/rb-104-capture-acknowledgement-and-amount-checks.pdf",
+      "sourceSha256": "3dd9fb8954db33c69b585b80f3d20eb99aa17d181c24bdc65e6cadaaeebe8468",
+      "risks": [
+        "R05",
+        "R06",
+        "R07",
+        "R17"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4613,
+      "pdfSha256": "1181169c1d05dbd705acb36c86f002bb51ab13e81d96e191f8230166670c34ed"
+    },
+    {
+      "key": "RB-105",
+      "documentId": "6bceca26-e563-4c49-b953-e7f114d3e4fa",
+      "version": "1.0.0",
+      "source": "sources/rb-105-authorization-holds-release-and-reversal.md",
+      "pdf": "pdfs/rb-105-authorization-holds-release-and-reversal.pdf",
+      "sourceSha256": "1f07d148d1aef3fa6f0ee05d4e7c1bdab1af7590f5213e0f6ce1615c23f3506e",
+      "risks": [
+        "R04",
+        "R08",
+        "R09",
+        "R19"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4612,
+      "pdfSha256": "477f4bf4fb46e9cf9866d53c0540edc5142e422bcf2b8e4d5c52aa92edd822ba"
+    },
+    {
+      "key": "RB-106",
+      "documentId": "2dd8bb43-0597-46b2-9705-8ee715035771",
+      "version": "1.0.0",
+      "source": "sources/rb-106-refund-progress-and-partial-amount-exposure.md",
+      "pdf": "pdfs/rb-106-refund-progress-and-partial-amount-exposure.pdf",
+      "sourceSha256": "db79f4eb5144babddbd547dbf853e5f54326b6b8f2268d8b2f4adf6b8178057e",
+      "risks": [
+        "R10",
+        "R11",
+        "R03",
+        "R17"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4540,
+      "pdfSha256": "ff3eda83018d7f1c46bce85395c50730441d95a18370166aad2d856a80337ca3"
+    },
+    {
+      "key": "RB-107",
+      "documentId": "7178d74f-541e-41b2-935a-76237cdf70b1",
+      "version": "1.0.0",
+      "source": "sources/rb-107-settlement-checkpoints-and-receipt-gaps.md",
+      "pdf": "pdfs/rb-107-settlement-checkpoints-and-receipt-gaps.pdf",
+      "sourceSha256": "71ec1bec04772128aa2ed4c0d74036c87ae38ccd87540e433b025211b1fc2c65",
+      "risks": [
+        "R12",
+        "R13",
+        "R16",
+        "R19"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4541,
+      "pdfSha256": "6c646631d1cca2d4e2f26336c417e159ee9175445f4a05767bedece4bc75a39b"
+    },
+    {
+      "key": "RB-108",
+      "documentId": "ba3ad5a3-452c-4e5b-b9ee-715e03368af1",
+      "version": "1.0.0",
+      "source": "sources/rb-108-webhook-delivery-and-recipient-acknowledgement.md",
+      "pdf": "pdfs/rb-108-webhook-delivery-and-recipient-acknowledgement.pdf",
+      "sourceSha256": "4eb03ee161419582912adfa0f3b012d180b987c26a5758cd1057c3cb4adacc8c",
+      "risks": [
+        "R14",
+        "R15",
+        "R03",
+        "R19"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4499,
+      "pdfSha256": "12d1ac8abcb010be71d728d53a4cd1058eb758e30fb7431f6b171fc7790db63b"
+    },
+    {
+      "key": "RB-109",
+      "documentId": "4f536824-87bf-4bd0-bad3-04bcbacff40f",
+      "version": "1.0.0",
+      "source": "sources/rb-109-reconciliation-without-invented-corrections.md",
+      "pdf": "pdfs/rb-109-reconciliation-without-invented-corrections.pdf",
+      "sourceSha256": "318d14114f1f1b6a044625ae6ca35395a5c409d212a64b5ae5e767706365e048",
+      "risks": [
+        "R07",
+        "R11",
+        "R13",
+        "R16",
+        "R17",
+        "R21"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4757,
+      "pdfSha256": "5076dd163bcb2281f206759168fa040f4ed300780cfa1ccefcbdb2a15633c9ee"
+    },
+    {
+      "key": "RB-110",
+      "documentId": "b770eb7d-538d-4c17-8529-1c9490e93c5e",
+      "version": "1.0.0",
+      "source": "sources/rb-110-dependency-configuration-and-event-order-investigation.md",
+      "pdf": "pdfs/rb-110-dependency-configuration-and-event-order-investigation.pdf",
+      "sourceSha256": "855999ea43b485ccdae883cb75ef0c0ff6395c7a49234b59f8299e9e121c3d57",
+      "risks": [
+        "R18",
+        "R19",
+        "R23",
+        "R02",
+        "R14"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4538,
+      "pdfSha256": "87ad33847b440f3779aff336ad7c8e3940735974c9afd0ff6dc4f393a533a0cf"
+    },
+    {
+      "key": "RB-111",
+      "documentId": "1e657081-25f3-41d1-a3e9-7b16b50a91e0",
+      "version": "1.0.0",
+      "source": "sources/rb-111-incomplete-evidence-and-conflicting-final-records.md",
+      "pdf": "pdfs/rb-111-incomplete-evidence-and-conflicting-final-records.pdf",
+      "sourceSha256": "8555f94896fe79ec07c6b02907f6d7be4eb127f6e45d37e303fe006333958508",
+      "risks": [
+        "R20",
+        "R21",
+        "R22",
+        "R01",
+        "R17"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4590,
+      "pdfSha256": "b929f2fba33052f44a86cda52eadbfb051e92a41588353175b5ec0d786dd9730"
+    },
+    {
+      "key": "PL-101",
+      "documentId": "09815930-f605-4daf-bc33-2625abb3da25",
+      "version": "1.0.0",
+      "source": "sources/pl-101-evidence-sufficiency-and-conflicting-source-policy.md",
+      "pdf": "pdfs/pl-101-evidence-sufficiency-and-conflicting-source-policy.pdf",
+      "sourceSha256": "672efc200c3349538e4ee3dcfef9605e6a6a4fe5c56ba26a53bd29e6d0074b80",
+      "risks": [
+        "R01",
+        "R20",
+        "R21",
+        "R22"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4990,
+      "pdfSha256": "423ae484b19b443a67ff5664a52b74128da8a77ecac26430636083db898e4107"
+    },
+    {
+      "key": "PL-102",
+      "documentId": "b19b3e78-27e9-488d-9f77-d3f6b5598b63",
+      "version": "1.0.0",
+      "source": "sources/pl-102-idempotency-retry-and-amount-safety-policy.md",
+      "pdf": "pdfs/pl-102-idempotency-retry-and-amount-safety-policy.pdf",
+      "sourceSha256": "132c3845c47c640ff84ec8c2f3a3fe11e8510d4a3476af69a14c3da2ede71ef7",
+      "risks": [
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R10",
+        "R11",
+        "R15"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4948,
+      "pdfSha256": "1b3ffa13088a6e3c4cdf943eaf5791b8bdf26e0ef1d842de22048057c1c2731f"
+    },
+    {
+      "key": "PL-103",
+      "documentId": "c5e24c02-071c-44de-95b4-e4e1f3eefd47",
+      "version": "1.0.0",
+      "source": "sources/pl-103-time-freshness-and-comparable-cutoff-policy.md",
+      "pdf": "pdfs/pl-103-time-freshness-and-comparable-cutoff-policy.pdf",
+      "sourceSha256": "c51c39f37de2d23287bcdd4d10ff8ca988de461683ab07082c0389b8940ef035",
+      "risks": [
+        "R09",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R19",
+        "R20"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4743,
+      "pdfSha256": "5038ae29dacc09b81c5e524b9fbe873faff4bdadc30be847221f7679ab6d324a"
+    },
+    {
+      "key": "PL-104",
+      "documentId": "9fe80dac-c724-4d63-a1fc-77a0ff993ea3",
+      "version": "1.0.0",
+      "source": "sources/pl-104-tenant-isolation-and-safe-operational-records.md",
+      "pdf": "pdfs/pl-104-tenant-isolation-and-safe-operational-records.pdf",
+      "sourceSha256": "461190245b49dcef28f3b9eab5b0e7d7f8a6c0706a45a0cb6e2eae7c898160e9",
+      "risks": [
+        "R22",
+        "R23",
+        "R20"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4753,
+      "pdfSha256": "01644a5d554d5bb3b20c6c858a9fb8db073fe1b9d3c980b5c0bdf7bd22c7a14b"
+    },
+    {
+      "key": "PL-105",
+      "documentId": "3bb18135-be1c-4a38-8737-72a24b1eab50",
+      "version": "1.0.0",
+      "source": "sources/pl-105-human-authority-escalation-and-controlled-recovery.md",
+      "pdf": "pdfs/pl-105-human-authority-escalation-and-controlled-recovery.pdf",
+      "sourceSha256": "a85570ccd4a3cf239a8796886e689f04323a16c8c70fcc075bca207e68edf84a",
+      "risks": [
+        "R24",
+        "R18",
+        "R21",
+        "R23"
+      ],
+      "pageCount": 3,
+      "extractedCharacters": 4792,
+      "pdfSha256": "06c932f12bef13ea57a7ff80594ecc632248ec184ec3ba563883558a0c09e137"
+    }
+  ],
+  "packageFilesSha256": {
+    "README.md": "918918bcff86f92ebc1303bc32758c3fbcbf98582b6b3b98cd4d3d6d3b1fe421",
+    "inventory.md": "ccab97b8a935954e90bc8ed452475defb77c492dd0f845fbb38fadd897277633",
+    "authoring-standard.md": "b549b77826fe44c6867610adfb6d62c6cd5493aa8885b234055b0a6b2d3a1137",
+    "review.md": "018ddf8db75bb073ba4df6ef624ade42e7fe3fc112cfe2c852c5877a82be9eac",
+    "input-provenance.json": "ab981e4480e456d5d4b1259b02cd8d93427710cb20253695db37ee845ee6b244",
+    "tools/render_library.py": "acd684c1e0fdf0fc9cdd759003ff25a569a91e189dfa847e25bb38261dada60e",
+    "tools/test_library.py": "f04607dabef988e7d2619f2ae631eac245a8a1119894611445542a4ed00ccb45"
+  },
+  "inputProvenance": {
+    "authoringInputVersion": "synten-payment-domain/v2",
+    "independence": "No scenario, oracle, labels or report-output inputs",
+    "inputs": [
+      {
+        "path": "SynTen Inc/domain/v2/README.md",
+        "sha256": "e6c1bbea0c0605147d7e456a3774b64e2bba6b9396b81548123132262acd8d26",
+        "role": "independent-authoring-input"
+      },
+      {
+        "path": "SynTen Inc/domain/v2/lifecycle.md",
+        "sha256": "88026e7db8dd4447d5b447d0243e9cb26a199960d8af89f0ef7d0c7f662971ab",
+        "role": "independent-authoring-input"
+      },
+      {
+        "path": "SynTen Inc/domain/v2/risk-inventory.md",
+        "sha256": "a767db4f1bde7ef9a5c3e4c7585cc3b49ce09d83d5011aa6caa29e181af454cf",
+        "role": "independent-authoring-input"
+      },
+      {
+        "path": "SynTen Inc/domain/v2/evidence-requirements.md",
+        "sha256": "d90cebf32085ad20c72c2db5b74c0e678f307241b7b0fdcff47529e1ca6b0afc",
+        "role": "independent-authoring-input"
+      },
+      {
+        "path": "SynTen Inc/corpus/validation-manifest.json",
+        "sha256": "dc2ee7a0b188ecc9277ac6ff1efde085f4c5a6aa2997738f000239f24e41fffc",
+        "role": "historical-baseline"
+      }
+    ]
+  },
+  "frozenAt": "2026-10-01T09:39:45.900170+00:00"
+}

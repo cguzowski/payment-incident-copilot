@@ -12,6 +12,11 @@ The [successor payment domain](domain/v2/README.md) defines lifecycle, independe
 risks and evidence requirements for the next PDF library. The original profile
 and corpus remain historical authoring authorities. E1 adds no PDFs or runtime tools.
 
+E2's [independent payment library](payment-knowledge/v1/README.md) is frozen:
+16 new PDFs / 48 pages with editable sources, risk coverage and review/hash evidence.
+It is separate from the historical authorization corpus and is not yet imported
+by the application. E3 owns catalog/PDF-only retrieval adoption.
+
 | File | Owns |
 |---|---|
 | [profile.md](profile.md) | Fictional systems, vocabulary, roles, and authority |

@@ -1,6 +1,6 @@
 # Independent knowledge and familiar payment incidents
 
-Status: E1 implemented; E2 is next
+Status: E1/E2 complete; E3 is next
 Last reviewed: 2026-10-01
 Owner: Christopher Guzowski
 
@@ -54,13 +54,13 @@ accounts are inspected and no payment, refund or reversal is executed.
 | Phase | Deliverable | Exit evidence |
 |---|---|---|
 | E1 — Complete: domain and risks | [Successor domain](../../SynTen%20Inc/domain/v2/README.md), lifecycle, 24 independent risks and 11 source requirements | Static/editorial review and Repository verification; no incident fixtures |
-| E2 — Next: independent PDF library | Successor authoring contract and inventory, existing baseline plus varied risk-derived guidance | Editorial review, reproducible sources, hashes, extraction, all-page visual QA, 15-page bounds and frozen corpus identity |
-| E3 — Catalog and retrieval | PDF-only eligibility, versioned accepted catalogs, applicable shared/family policies, embeddings and readiness | Test-first isolation, idempotency, missing-PDF behavior, relationship eligibility and historical provenance |
+| E2 — Complete: independent PDF library | [Frozen independent library](../../SynTen%20Inc/payment-knowledge/v1/README.md): 11 runbooks / 5 policies; historical baseline retained separately | 16 PDFs / 48 pages, extraction, all-page editorial/visual QA, byte-identical builds, hashes and full gate |
+| E3 — Next: catalog and retrieval | PDF-only eligibility, versioned accepted catalogs, applicable shared/family policies, embeddings and readiness | Test-first isolation, idempotency, missing-PDF behavior, relationship eligibility and historical provenance |
 | E4 — Evidence and workflow | Read-only synthetic payment/event/refund evidence, multi-family intake and understandable timeline | Versioned MCP contracts, failure-path/persistence tests, independent builds, visual QA and authorization regressions |
 | E5 — Independent incidents | Cases derived from system behavior after corpus freeze | Recorded inputs exclude PDF text, target document identities, mapping labels and oracle answers; observed records separated from sealed truth |
 | E6 — Held-out evaluation | Fixed post-run rubric, live runs and review examples | Grounding, relevance, effects/causes, conditional resolution, uncertainty, citations, policy compliance, latency and failures with exact provenance |
 
-E2 is the next implementation objective. E2 must finish before E5 starts. E3/E4
+E3 is the next implementation objective. E2 is frozen before E5 starts. E3/E4
 consume agreed domain contracts, not desired incident answers. Use one active
 objective and one writing agent per worktree.
 
@@ -117,7 +117,9 @@ regressions. Never overwrite historical benchmark evidence.
   timing/reason semantics in domain/v2. Existing family enum values remain intact;
   new categories are not API values. Source-specific duration values and runtime
   schemas remain E4 decisions; absent timing configuration stays unknown.
-- E2: Successor document membership, approval metadata and independent vocabulary.
+- E2 resolved successor membership/metadata under payment-knowledge/v1. Fictional
+  approval is a knowledge control; shared stage/family metadata is not yet runtime
+  eligibility. Historical scenario-informed PDFs remain a separate baseline.
 - E3: Shared-policy applicability, accepted catalog version rules and explicit
   missing-PDF readiness behavior.
 - E4: MCP tools/schemas, timeline fields and any report-schema/sufficiency change.
