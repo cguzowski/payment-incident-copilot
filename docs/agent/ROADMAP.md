@@ -31,6 +31,8 @@ owner-activated [task contract](tasks/current.md) authorizes implementation.
 | Q4 | Live S012 Qwen report explicitly rejected by the owner; exact report binding, terminal queue state, unchanged report, and eight-event audit timeline verified |
 | Q5 | All 36 corpus-v2 live reports and reproducible grades retained; citation IDs valid, but insufficient-evidence and confidence gaps remain |
 | Q6 | Degraded/empty evidence requires insufficient-evidence/LOW/null reports; independent validation, full gate and fresh S111/S211 live proof pass |
+| ADR-0018 expansion | Six additional families have deterministic triage, guidance, human decision and audit coverage; live report quality is unmeasured |
+| Expansion E1 | Versioned payment domain, lifecycle, 24 independent risks and source requirements; documentation/static gate |
 
 K4/K5 completion did not pass the benchmark. See
 [STATUS.md](STATUS.md) for current evidence limitations and
@@ -40,8 +42,7 @@ K4/K5 completion did not pass the benchmark. See
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
-| E1 — Next | Payment domain and risks | Reviewed lifecycle, independent risk inventory and evidence requirements. |
-| E2 | Independent PDF library | Risk-derived guidance, validated PDFs and frozen hashes before incident creation. |
+| E2 — Next | Independent PDF library | Risk-derived guidance, validated PDFs and frozen hashes before incident creation. |
 | E3 | Catalog and retrieval | Versioned accepted catalog, PDF-only eligibility and applicable shared/family policies. |
 | E4 | Multi-family evidence and workflow | Synthetic payment/refund records and timeline; independent builds and regressions. |
 | E5 | Independent demo incidents | Cases from system behavior after corpus freeze, without target runbooks. |

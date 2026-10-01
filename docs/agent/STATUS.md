@@ -11,8 +11,17 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md) recovers approved-knowledge retrieval for
-the additional incident families. The configured local database originally had
+The [current task](tasks/current.md) implements expansion E1: the
+[successor payment domain](../../SynTen%20Inc/domain/v2/README.md) defines conceptual
+lifecycle transitions, synthetic amount/timing rules, source authority, 24 independent
+risks and 11 evidence requirements. Only aggregate service errors are currently
+exposed through MCP; payment/event/refund records and PDF-only retrieval remain
+future work. E2 is next: author and freeze risk-derived PDFs before new incidents.
+E1 changes documentation only and preserves Q6, seven-family behavior and historical
+corpus/scenario/evaluation inputs.
+
+The completed [retrieval recovery](tasks/completed/2026-10-01-restore-additional-family-knowledge.md)
+restored guidance for additional families. The configured local database originally had
 only the 30 authorization-decline PDF documents / 705 chunks. Webhook and
 reconciliation investigations returned NO_MATCH because their approved sources
 had not been imported. Explicit Markdown preparation added fourteen documents /
@@ -83,6 +92,13 @@ open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
+
+- Expansion E1 passed ./verify.ps1 -Scope Repository on 2026-10-01. Changed/new
+  Markdown links, 24 unique risk IDs, 11 evidence IDs and cross-references passed
+  static review; lifecycle/source/uncertainty tables passed editorial review.
+  Historical sources, PDFs, manifests, scenario/oracle/evaluation and runtime
+  inputs have no diff against aa4ccef. Completed recovery archive matches exactly.
+  No new live-model, PDF or runtime capability is claimed.
 
 - Local retrieval recovery on 2026-10-01 imported 14 Markdown documents / 87
   embeddings, preserving 30 PDF documents / 705 embeddings. Webhook retry

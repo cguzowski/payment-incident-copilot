@@ -8,6 +8,10 @@ families with twelve scenarios and twelve approved Markdown sources.
 
 ## Corpus authorities
 
+The [successor payment domain](domain/v2/README.md) defines lifecycle, independent
+risks and evidence requirements for the next PDF library. The original profile
+and corpus remain historical authoring authorities. E1 adds no PDFs or runtime tools.
+
 | File | Owns |
 |---|---|
 | [profile.md](profile.md) | Fictional systems, vocabulary, roles, and authority |

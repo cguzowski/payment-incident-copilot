@@ -106,6 +106,10 @@ ADR-0009 defines the implemented extraction and locator contract.
 
 ## Vocabulary rule
 
+The [successor SynTen domain](../../SynTen%20Inc/domain/v2/README.md) owns the
+conceptual payment lifecycle and source authority for new knowledge authoring.
+Its states are distinct from incident workflow states and do not introduce API enums.
+
 The [expansion plan](PAYMENT_EXPANSION_PLAN.md) uses these conceptual terms;
 they do not establish persisted states or API values:
 

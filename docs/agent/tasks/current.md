@@ -1,116 +1,99 @@
-# Task: Restore approved knowledge for additional incident families
+# Task: E1 independent payment domain and risks
 
-Status: Complete - live retrieval recovery and Repository verification passed
+Status: Complete - E1 editorial/static review and Repository verification passed
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Goal
 
-Fix the reported NO_MATCH retrievals in the configured local application.
+Define the synthetic payment domain, lifecycle risks and evidence requirements
+before independent PDF authoring and later independent incident creation.
 
 ## User story
 
-As an operator, I want approved guidance for the new incident families available
-in my current database so I can continue triaging existing investigations.
+As the owner, I want a coherent operational domain and risk inventory independent
+of incident answers so the next PDF library supports useful investigation,
+including ambiguous and unresolved outcomes.
 
 ## Chosen contract
 
-The owner requested recovery of approved-knowledge retrieval. Read-only diagnosis
-found only 30 authorization-decline PDF documents / 705 chunks, with no additional
-family guidance. Existing webhook investigation 9b5daa6f-fed5-4bff-8f38-604ae86d676e
-and reconciliation investigation 94deb248-9dea-44e6-bcbb-d22ca6dce5d0 have persisted
-NO_MATCH attempts. Explicitly prepare the unchanged approved Markdown sources
-using the configured local database and Ollama embedding model, then start the
-existing API/generator and retry retrieval through product HTTP boundaries.
-Preserve prior attempts, incidents, reports and human decisions.
+The owner activated E1 after approving the independent-corpus plan. Add a versioned
+successor SynTen profile, lifecycle, risk inventory and evidence requirements
+under SynTen Inc/domain/v2. Define conceptual synthetic states, source authority,
+ownership, timing and amount semantics, and family/shared-policy applicability.
+These are authoring contracts, not runtime schemas or new API enums. Reconcile
+the plan with the seven-family ADR-0018 baseline. Archive completed retrieval
+recovery unchanged. Preserve historical profiles, sources/PDFs, manifests,
+scenarios, oracles and evaluations.
 
 ## In scope
 
-Local index preparation, restarting stopped local API/evidence services, retries
-of the two affected investigations, provenance/coverage verification, documentation.
+Domain documentation, risk coverage matrix, evidence requirements, navigation,
+status/roadmap updates and static verification.
 
 ## Out of scope
 
-Retrieval ranking/filter changes, source/version changes, automatic startup imports,
-model tuning, report generation or human decisions, new infrastructure.
+PDF/scenario creation, model tuning, executable changes, new MCP/API schemas,
+migrations, deployment, report sufficiency changes and production payments.
 
 ## Constraints
 
-Synthetic data only. Keep tenant/family/approval/effective-time filters intact.
-Do not delete failed attempts or fabricate results. Never print local credentials.
-Use existing explicit knowledge preparation; no production behavior change is
-needed if the prepared index restores retrieval.
+Synthetic only; no new deployables or operational actions. Do not consume scenario
+fixtures, labels, expected reports or oracle answers as authoring inputs. Current
+aggregate errors cannot establish individual payment outcomes. Keep Q6 LOW/null
+rules and human review. Domain concepts do not claim implemented evidence tools.
 
 ## Acceptance criteria
 
-- [x] Persisted NO_MATCH reproduced and missing family index coverage established.
-- [x] Existing approved sources import successfully with complete embeddings and
-      two approved documents per additional family; original PDF catalog unchanged.
-- [x] Both affected investigations retrieve nonempty matching approved knowledge
-      through the running API, with immutable prior NO_MATCH history retained.
-- [x] Source/model metadata and unchanged source hashes verified; API and generator
-      healthy; Repository documentation/static checks pass.
+- [x] Successor profile defines scope, conceptual categories, owners and authority
+      while preserving seven implemented families and the historical profile.
+- [x] Lifecycle defines transitions, uncertainty, duplicates, reversal versus
+      refund, amounts/timing and disagreement without inventing final outcomes.
+- [x] Independent risk inventory maps lifecycle/dependency/control risks to
+      distinguishing evidence and shared/family guidance without target incidents.
+- [x] Evidence requirements define provenance, source authority, missing/stale/
+      conflicting semantics and current versus future capabilities.
+- [x] Links, preservation and consistency checks and Repository gate pass; status
+      and roadmap identify E2 next without claiming PDFs/runtime work complete.
 
 ## Test plan
 
-Read-only SQL proves current family coverage and failed attempts. Invoke existing
-KnowledgeIngestionCommand with chat disabled, web application disabled and the
-configured local nomic embedding provider. Verify family document/chunk counts,
-embedding metadata and original 30 PDF documents/705 chunks. Retry the two existing
-investigations with synthetic tenant/operator HTTP headers, inspect source families,
-versions, line/hash provenance, retained histories and unchanged incident/decision
-state. No executable behavior changes or artificial new tests; run Repository gate.
+Documentation-only: editorial review of profile, lifecycle, risk and evidence
+tables maps to criteria 1-4. Local Markdown links, risk/evidence ID cross-references,
+historical-file diff checks and ./verify.ps1 -Scope Repository map to criterion 5.
+No artificial production tests or live-model run is needed.
 
 ## Progress notes
 
-- Preserved prior completed task and all pre-existing working-tree changes.
-- API and generator were not listening; native PostgreSQL and Ollama were running.
-- Installed PostgreSQL 18 client readback confirmed only authorization-decline
-  knowledge. Both recent new-family attempts have NO_MATCH.
+- Reviewed required repository/tenant context and architecture. Previous planning
+  changes committed and integrated while preserving newer completed-family facts.
+- Initial working tree clean. Owner authorization covers E1; later phases remain
+  separate tasks.
 
 ## Completion evidence
 
-- Diagnosis: only AUTHORIZATION_DECLINE_RATE_SPIKE had indexed knowledge:
-  30 PDF documents / 705 chunks. Webhook had two NO_MATCH attempts and
-  reconciliation one; no new-family guidance existed.
-- Existing explicit import command succeeded on 2026-10-01 with the configured
-  local database, SPRING_MAIN_WEB_APPLICATION_TYPE=none,
-  SPRING_AI_MODEL_CHAT=none, SPRING_AI_MODEL_EMBEDDING=ollama,
-  APP_KNOWLEDGE_INGESTION_ENABLED=true and PDF import/backfill disabled:
-  ./mvnw.cmd -pl backend/copilot-api spring-boot:run. It imported 14 documents
-  and embedded 87 chunks. Credentials were loaded from ignored .env without output.
-- PostgreSQL verification: original 30 PDF documents / 705 embeddings retained;
-  each additional family has two Markdown documents and 13 embedded chunks.
-  Two legacy Markdown documents add nine chunks. All use nomic-embed-text,
-  768 dimensions. All fourteen package source hashes still match the manifest.
-- Started the already-built generator and API from temporary jar copies to
-  avoid locking target output. API uses generator MCP at localhost:8082.
-  Both health endpoints are UP. Angular remains available at localhost:4200.
-- Live webhook retry: investigation 9b5daa6f-fed5-4bff-8f38-604ae86d676e,
-  retrieval 6febe78b-4c46-4b81-b1ed-ea920987f7dc, AVAILABLE with seven chunks,
-  version 1.0.0 runbook/policy, exact Markdown line locators. Three retained
-  attempts: AVAILABLE, NO_MATCH, NO_MATCH.
-- Live reconciliation retry: investigation 94deb248-9dea-44e6-bcbb-d22ca6dce5d0,
-  retrieval 8046adbf-3a00-4673-a602-b96fca3e6d2b, AVAILABLE with seven chunks,
-  version 1.0.0 runbook/policy, exact Markdown line locators. Two retained
-  attempts: AVAILABLE, NO_MATCH.
-- Both use nomic-embed-text query embeddings and postgres-hybrid-related/v4.
-  Exact evidence bindings retained: webhook 5fe0685a-eded-45fe-b2a2-31c3eebcf718;
-  reconciliation 3196aa52-669e-42e6-a243-c8c3fbc239da. Both remain INVESTIGATING
-  with zero human decisions. No reports or operational actions were requested.
-- No production code, ranking, filters, corpus/source versions or dependencies
-  changed in this recovery. Live before/after verification covers this local
-  preparation failure; no artificial automated tests or new full gate required.
-  Final ./verify.ps1 -Scope Repository passed, including preparation/evaluator
-  tests, Compose validation and git diff --check.
+- ./verify.ps1 -Scope Repository passed on 2026-10-01, including verification,
+  preparation/evaluation runner checks, Compose validation and diff checks.
+- Static link check passed for every changed/new Markdown file. All 24 unique
+  risk IDs and 11 source IDs resolve; each referenced evidence ID is defined.
+- Editorial review mapped criteria 1-4 to the profile, transition table, risk
+  matrix and source/uncertainty tables. Covered unknown outcomes, explicit issuer
+  reasons, partial amounts, duplicate messages versus operations, reversal/refund,
+  source disagreement, time/configuration gaps, owners and policy applicability.
+- git diff aa4ccef --name-only over historical sources/PDFs/versions/manifest,
+  evaluation, multi-incidents and runtime source paths returned no changes.
+  Recovery archive text matches 2f74d81:docs/agent/tasks/current.md exactly.
+- No production behavior changed; documentation-only static/editorial checks
+  satisfy this phase without artificial red/green tests or a live-provider run.
+- Planning changes retained as 817578f and integrated as 2f74d81, resolving stale
+  single-family facts in favor of the completed seven-family baseline.
 
 ## Remaining limitations
 
-Live report quality is outside this retrieval recovery. New/reset databases and
-future source additions still require explicit knowledge preparation. The API and
-generator are left running locally. Existing dependency/model limitations from
-prior completed tasks are unchanged.
+The successor domain is an authoring authority only. Payment records, independent
+PDF library, PDF-only retrieval and held-out incidents remain future work.
 
 ## Decisions needed
 
-None; the owner request explicitly authorizes preparing knowledge to fix retrieval.
+None for E1 documentation. Runtime schemas, corpus membership/approval metadata,
+PDF eligibility and evaluation thresholds remain later phase decisions.

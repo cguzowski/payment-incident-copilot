@@ -1,15 +1,15 @@
 # Independent knowledge and familiar payment incidents
 
-Status: Owner-approved direction; implementation not started
+Status: E1 implemented; E2 is next
 Last reviewed: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Outcome and authorization
 
 The owner approved familiar payment problems beyond authorization-decline spikes
-and required independent PDF and incident design. This request authorizes Markdown
-cleanup and planning only. Activate a narrow task contract before each implementation
-phase. Preserve the completed authorization workflow and historical evidence.
+and required independent PDF and incident design. The owner activated E1 on
+2026-10-01 after the planning refresh. Activate a narrow task contract before each
+implementation phase. Preserve all seven completed workflows and historical evidence.
 
 Reports should explain observed effects, supported potential causes, and advisory
 recovery or diagnostic steps. Some cases have clear paths; others require several
@@ -53,14 +53,14 @@ accounts are inspected and no payment, refund or reversal is executed.
 
 | Phase | Deliverable | Exit evidence |
 |---|---|---|
-| E1 — Next: domain and risks | Successor SynTen profile, lifecycle, independent risk inventory and evidence requirements | Reviewed states, transitions, owners, source authority, unknowns and family/shared-policy applicability; no incident fixtures |
-| E2 — Independent PDF library | Successor authoring contract and inventory, existing baseline plus varied risk-derived guidance | Editorial review, reproducible sources, hashes, extraction, all-page visual QA, 15-page bounds and frozen corpus identity |
+| E1 — Complete: domain and risks | [Successor domain](../../SynTen%20Inc/domain/v2/README.md), lifecycle, 24 independent risks and 11 source requirements | Static/editorial review and Repository verification; no incident fixtures |
+| E2 — Next: independent PDF library | Successor authoring contract and inventory, existing baseline plus varied risk-derived guidance | Editorial review, reproducible sources, hashes, extraction, all-page visual QA, 15-page bounds and frozen corpus identity |
 | E3 — Catalog and retrieval | PDF-only eligibility, versioned accepted catalogs, applicable shared/family policies, embeddings and readiness | Test-first isolation, idempotency, missing-PDF behavior, relationship eligibility and historical provenance |
 | E4 — Evidence and workflow | Read-only synthetic payment/event/refund evidence, multi-family intake and understandable timeline | Versioned MCP contracts, failure-path/persistence tests, independent builds, visual QA and authorization regressions |
 | E5 — Independent incidents | Cases derived from system behavior after corpus freeze | Recorded inputs exclude PDF text, target document identities, mapping labels and oracle answers; observed records separated from sealed truth |
 | E6 — Held-out evaluation | Fixed post-run rubric, live runs and review examples | Grounding, relevance, effects/causes, conditional resolution, uncertainty, citations, policy compliance, latency and failures with exact provenance |
 
-E1 is the next implementation objective. E2 must finish before E5 starts. E3/E4
+E2 is the next implementation objective. E2 must finish before E5 starts. E3/E4
 consume agreed domain contracts, not desired incident answers. Use one active
 objective and one writing agent per worktree.
 
@@ -113,8 +113,10 @@ regressions. Never overwrite historical benchmark evidence.
 
 ## Decisions at phase boundaries
 
-- E1: Exact synthetic payment states, event/source authority, family names,
-  timing/amount semantics and issuer-reason specificity.
+- E1 resolved conceptual states, source authority, synthetic amount units and
+  timing/reason semantics in domain/v2. Existing family enum values remain intact;
+  new categories are not API values. Source-specific duration values and runtime
+  schemas remain E4 decisions; absent timing configuration stays unknown.
 - E2: Successor document membership, approval metadata and independent vocabulary.
 - E3: Shared-policy applicability, accepted catalog version rules and explicit
   missing-PDF readiness behavior.
