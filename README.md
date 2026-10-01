@@ -6,10 +6,14 @@ An auditable copilot for investigating synthetic payment incidents:
 → human decision → audit timeline**
 
 The core MVP is implemented, and a live local S001 report has been demonstrated.
-The retrieval benchmark still fails all three quality thresholds; one complete
-live-model terminal-decision proof and broader evaluation remain outstanding.
+The corpus-v2 retrieval benchmark passes its aggregate thresholds; live human
+review and the 36-scenario evaluation are complete. Confidence and grounding
+limitations remain. The next planned phase expands familiar payment problems
+using an independent PDF library before creating new incident scenarios.
 See [current status](docs/agent/STATUS.md) and the
 [roadmap](docs/agent/ROADMAP.md).
+See the [expansion plan](docs/agent/PAYMENT_EXPANSION_PLAN.md) for sequencing
+and the distinction between approved direction and implemented behavior.
 
 ## What it does
 
@@ -115,7 +119,7 @@ generator's MCP endpoint explicitly.
 | Generator UI and MCP evidence | http://localhost:8082 |
 
 Use the generator's red button to create an incident. Its answer key is
-collapsed in the browser, not isolated from the reviewer; see
+available only after a terminal human approval or rejection; see
 [evaluation limitations](docs/agent/STATUS.md).
 
 ## Independent development and verification

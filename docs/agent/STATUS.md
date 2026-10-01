@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 ## Current state
 
@@ -11,7 +11,16 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md), Q6 insufficient-evidence report safety, is
+The current documentation task records the owner-approved
+[multi-family, independent-corpus expansion plan](PAYMENT_EXPANSION_PLAN.md).
+Implementation remains authorization-decline-only, with service-error evidence
+and mixed Markdown/PDF retrieval eligibility. No new PDFs, incident families,
+evidence tools, database contracts, or runtime behavior were added. Corpus v2
+excluded the sealed oracle but used observable scenarios; it is not an
+independent held-out benchmark. New corpus and scenarios must be designed
+independently, with the corpus frozen first.
+
+[Q6 insufficient-evidence report safety](tasks/completed/2026-09-30-insufficient-evidence-report-safety-q6.md) is
 complete. All 48 focused report tests pass. report-prompt/v5, context-dependent
 provider constraints and independent parsing require insufficient-evidence/LOW/null
 reports for degraded or empty observations. Fresh S111/S211 live checks both pass,
@@ -63,6 +72,11 @@ open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
+
+- 2026-10-01 documentation refresh passed ./verify.ps1 -Scope Repository,
+  local Markdown link checks and git diff --check. Completed Q6 was archived
+  with only its relocated results link corrected. The expansion plan is recorded;
+  no new runtime or corpus capability was verified or claimed.
 
 - Q6 passed ./verify.ps1 on 2026-09-30: 317 API, 9 operations MCP, 31 generator
   and 91 Angular tests with zero failures/errors/skips, formatting, builds,

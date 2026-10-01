@@ -1,6 +1,6 @@
 # Project definition
 
-Last reviewed: 2026-09-24
+Last reviewed: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Goal
@@ -27,7 +27,7 @@ AI inference as verified fact.
 6. Approve or reject the report with an attributable reason.
 7. Retain the attempt history and final decision in the audit timeline.
 
-## Scope
+## Implemented scope
 
 - One fictional tenant, SynTen Inc, and the authorization-decline incident family.
 - Synthetic alert intake, tenant-scoped queue, and operator-triggered investigation.
@@ -40,12 +40,28 @@ AI inference as verified fact.
 - Local development with PostgreSQL infrastructure through Docker or native
   installation; AWS deployment remains a later milestone.
 
+## Approved next scope
+
+Expand the single synthetic tenant to familiar card rejections (including locked
+cards and insufficient funds), uncertain payment outcomes, suspected duplicate
+payments, refund problems, and reversal/remaining-hold problems. These are
+investigation categories, not yet API enum values or implemented capabilities.
+Preserve the authorization-decline workflow as a regression baseline.
+
+Build and freeze a broad operational PDF library from payment lifecycle risks
+before creating new incidents. Neither corpus authors nor scenario authors
+may tailor their outputs to the other side's fixtures or expected answers.
+Guidance should support clear recovery paths, competing hypotheses, and useful
+next diagnostic steps when a cause cannot be established. Coverage is bounded
+by the supported domain; universal scenario coverage is not a completion claim.
+See [the expansion plan](PAYMENT_EXPANSION_PLAN.md).
+
 ## Non-goals
 
 - Processing or moving money, or using real customer/card/bank/transaction data.
 - Production fraud scoring or complete payment-platform simulation.
 - Autonomous remediation, external communication, or report approval.
-- Multiple tenants or incident families in the first demonstration.
+- Multiple tenants; the completed first demonstration used one incident family.
 - Infrastructure added for hypothetical scale, including Kafka, Redis, or Kubernetes.
 - Training or fine-tuning a foundation model.
 

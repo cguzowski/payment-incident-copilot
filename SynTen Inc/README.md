@@ -1,8 +1,11 @@
 # SynTen Inc
 
 SynTen Inc is the fictional tenant `8b860d80-d17f-4e6b-8c48-af35f26a4d61`.
-All data is synthetic and belongs to the single
-`AUTHORIZATION_DECLINE_RATE_SPIKE` incident family.
+All data is synthetic. The implemented corpus and scenarios belong to
+`AUTHORIZATION_DECLINE_RATE_SPIKE`. The owner-approved
+[expansion plan](../docs/agent/PAYMENT_EXPANSION_PLAN.md) adds familiar payment
+problems through an independently authored PDF library and later independent
+scenarios; those capabilities are not implemented yet.
 
 ## Corpus authorities
 
@@ -95,6 +98,12 @@ own recorded SHA-256. See [diagnosis](evaluation/q2-baseline-diagnosis.md) and
 [artifact integrity and reproduction](evaluation/q2-retrieval-results.md).
 
 ## Maintenance boundary
+
+The v2 inventory, profile and authoring standard describe the existing baseline.
+Their scenario-derived coverage is historical, not a rule for future authoring.
+For the next version, define risks from the payment domain without consuming
+scenario inputs, freeze the reviewed PDF corpus, then create incidents without
+target document mappings. Preserve v2 source/PDF bytes, hashes and evaluations.
 
 Keep new tenant-specific assets here. The two legacy API Markdown knowledge
 resources remain under `backend/copilot-api/src/main/resources/knowledge/`

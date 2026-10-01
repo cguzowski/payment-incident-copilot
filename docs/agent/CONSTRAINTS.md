@@ -1,12 +1,21 @@
 # Constraints and guardrails
 
-Last reviewed: 2026-09-24
+Last reviewed: 2026-10-01
 
 ## Product constraints
 
-- Build one convincing vertical slice before adding additional incident types.
-- Preserve the completed authorization-decline vertical slice while expanding
-  knowledge depth; do not use the corpus phase to add another incident family.
+- Preserve the completed authorization-decline vertical slice while planning
+  the owner-approved multi-family expansion in PAYMENT_EXPANSION_PLAN.md.
+- Author new knowledge from lifecycle risks and operational controls without
+  reading incident catalogs, fixtures, scenario labels, or oracle answers.
+  Freeze and hash the PDF corpus before creating new incident scenarios.
+- Create new scenarios from independently defined synthetic system behavior;
+  do not choose a target runbook or construct incidents to fit document steps.
+- New operational retrieval is planned to use PDF-extracted content only.
+  Editable Markdown and historical Markdown citations remain maintainable;
+  PDF-only eligibility is not implemented by this documentation change.
+- Measure general risk coverage and useful investigation direction, not a
+  promise that every possible incident has a documented answer.
 - Use synthetic scenarios and synthetic operational records only.
 - The platform investigates; it does not process payments.
 - The model assists; the operator makes the final decision.
