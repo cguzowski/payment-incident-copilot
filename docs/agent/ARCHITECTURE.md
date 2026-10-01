@@ -95,6 +95,11 @@ to reconstruct its matching evidence. The fixture-based port-8081 provider
 remains independently buildable and runnable, but it is not the evidence source
 for generator-created alerts.
 
+ADR-0019 verifies the effective API MCP endpoint through sanitized actuator info
+before local startup succeeds. The launcher starts the selected provider and
+rejects mismatched or unverifiable API reuse. Normal random generation selects
+only AVAILABLE scenarios while preserving explicit degraded evaluation fixtures.
+
 ## End-to-end scenario
 
 ```mermaid

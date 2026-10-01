@@ -1,11 +1,52 @@
 package com.cguzowski.syntheticincidentgenerator.scenario;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class WeightedScenarioSelectorTest {
+
+    @Test
+    void normalGenerationOnlySelectsAvailableEvidenceAcrossEveryBucketAndFamily() {
+        ScenarioCatalog catalog = new ClasspathScenarioCatalog(
+                tools.jackson.databind.json.JsonMapper.builder().build());
+        WeightedScenarioSelector selector = new WeightedScenarioSelector(catalog);
+        java.util.Set<String> selectedCodes = new java.util.HashSet<>();
+        for (int rarityRoll : new int[] {0, 70, 95}) {
+            for (int itemRoll = 0; itemRoll < catalog.all().size(); itemRoll++) {
+                ScenarioDefinition selected = selector.selectForRolls(rarityRoll, itemRoll);
+                assertThat(selected.evidence().availability()).isEqualTo(EvidenceAvailability.AVAILABLE);
+                selectedCodes.add(selected.code());
+            }
+        }
+        assertThat(selectedCodes).contains("S001", "S301", "S302", "S303", "S304", "S305", "S306");
+        assertThat(selectedCodes)
+                .containsExactlyInAnyOrderElementsOf(catalog.all().stream()
+                        .filter(scenario -> scenario.evidence().availability() == EvidenceAvailability.AVAILABLE)
+                        .map(ScenarioDefinition::code)
+                        .toList());
+    }
+
+    @Test
+    void failsClosedWhenARarityHasOnlyUnavailableEvidence() {
+        ScenarioDefinition rare = scenario("S211", ScenarioRarity.RARE);
+        ScenarioDefinition unavailable = new ScenarioDefinition(
+                rare.code(),
+                rare.rarity(),
+                rare.severity(),
+                rare.title(),
+                rare.description(),
+                new ScenarioEvidence(
+                        EvidenceAvailability.UNAVAILABLE, "Synthetic source unavailable", null, List.of()));
+        assertThatThrownBy(() -> new WeightedScenarioSelector(catalog(
+                        scenario("S001", ScenarioRarity.COMMON),
+                        scenario("S101", ScenarioRarity.UNCOMMON),
+                        unavailable)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("RARE");
+    }
 
     @Test
     void mapsRarityRollsToDocumentedSeventyTwentyFiveFiveDistribution() {

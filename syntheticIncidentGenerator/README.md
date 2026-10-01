@@ -6,8 +6,11 @@ with the payment incident copilot.
 
 ## Behavioral contract
 
-- A deliberately red button selects one weighted scenario from a reviewed
-  catalog of 48 common, uncommon and rare scenarios across seven incident families.
+- A deliberately red button selects one weighted AVAILABLE-evidence scenario
+  from the reviewed catalog across seven incident families, preserving the
+  70/25/5 common/uncommon/rare distribution. The complete 48-scenario catalog
+  retains explicit degraded fixtures for tests and evaluations; normal generation
+  excludes them. Real transport outages still fail evidence collection.
 - The generator sends only the existing alert-system payload to the copilot
   intake API: opaque external alert ID, explicit incidentType, severity, detected time,
   title and description. Tenant context is carried in the existing synthetic header.
@@ -71,7 +74,8 @@ Double-click `start-local.bat` in the repository root. The launcher:
 1. reuses the generator if it is already healthy;
 2. otherwise starts it in a separate PowerShell window;
 3. waits up to 60 seconds for the health endpoint;
-4. configures and starts the copilot API against the generator MCP endpoint;
+4. configures and starts the copilot API against the generator MCP endpoint,
+   verifying the endpoint before reusing an already-running API;
 5. starts the operator console; and
 6. opens `http://localhost:8082` in the default browser.
 

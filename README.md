@@ -117,6 +117,13 @@ prerequisites before starting the API and console. A failed preflight may
 leave the generator running. The launcher loads `.env` and selects the
 generator's MCP endpoint explicitly.
 
+Startup verifies the running API's evidence endpoint through `/actuator/info`.
+If an existing API uses another provider, or predates this metadata, stop that
+API and rerun the launcher. A healthy HTTP endpoint alone is insufficient for reuse.
+Normal red-button generation selects only scenarios with AVAILABLE evidence;
+explicit degraded scenarios remain available to tests and evaluations. Real
+provider outages still appear as failed evidence attempts.
+
 | Surface | URL |
 |---|---|
 | Operator console | http://localhost:4200 |

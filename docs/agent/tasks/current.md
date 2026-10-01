@@ -1,116 +1,110 @@
-# Task: Restore approved knowledge for additional incident families
+# Task: Prevent accidental local evidence unavailability
 
-Status: Complete - live retrieval recovery and Repository verification passed
+Status: Complete - full verification and live startup/evidence collection passed
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Goal
 
-Fix the reported NO_MATCH retrievals in the configured local application.
+Keep normal demo evidence available whenever its provider is healthy.
 
 ## User story
 
-As an operator, I want approved guidance for the new incident families available
-in my current database so I can continue triaging existing investigations.
+As an operator, I want generated incidents to have service-error evidence and
+startup to detect configuration failures instead of silently reusing a wrong API.
 
 ## Chosen contract
 
-The owner requested recovery of approved-knowledge retrieval. Read-only diagnosis
-found only 30 authorization-decline PDF documents / 705 chunks, with no additional
-family guidance. Existing webhook investigation 9b5daa6f-fed5-4bff-8f38-604ae86d676e
-and reconciliation investigation 94deb248-9dea-44e6-bcbb-d22ca6dce5d0 have persisted
-NO_MATCH attempts. Explicitly prepare the unchanged approved Markdown sources
-using the configured local database and Ollama embedding model, then start the
-existing API/generator and retry retrieval through product HTTP boundaries.
-Preserve prior attempts, incidents, reports and human decisions.
+The owner explicitly selected always-available evidence for generated demo
+incidents. Random generation selects only AVAILABLE scenarios, retaining the
+70/25/5 rarity distribution. Explicit degraded fixtures remain usable for tests
+and evaluations. Start the selected MCP provider before the API. Reuse an API
+only if its reported provider matches; mismatched or unverifiable APIs fail with
+an actionable restart message. Never kill unrelated processes. Report only
+sanitized endpoint metadata through actuator info.
 
 ## In scope
 
-Local index preparation, restarting stopped local API/evidence services, retries
-of the two affected investigations, provenance/coverage verification, documentation.
+Demo scenario selection, provider startup selection, API reuse verification,
+regression tests, documentation and verification.
 
 ## Out of scope
 
-Retrieval ranking/filter changes, source/version changes, automatic startup imports,
-model tuning, report generation or human decisions, new infrastructure.
+Changing immutable scenario/oracle bytes, rewriting historical evidence,
+fabricating observations, human decisions or model behavior.
 
 ## Constraints
 
-Synthetic data only. Keep tenant/family/approval/effective-time filters intact.
-Do not delete failed attempts or fabricate results. Never print local credentials.
-Use existing explicit knowledge preparation; no production behavior change is
-needed if the prepared index restores retrieval.
+Preserve provenance, real transport failures and explicit outage tests.
+Never expose endpoint credentials/query strings. One writing agent.
 
 ## Acceptance criteria
 
-- [x] Persisted NO_MATCH reproduced and missing family index coverage established.
-- [x] Existing approved sources import successfully with complete embeddings and
-      two approved documents per additional family; original PDF catalog unchanged.
-- [x] Both affected investigations retrieve nonempty matching approved knowledge
-      through the running API, with immutable prior NO_MATCH history retained.
-- [x] Source/model metadata and unchanged source hashes verified; API and generator
-      healthy; Repository documentation/static checks pass.
+- [x] Normal generation selects only AVAILABLE evidence across all rarity buckets, retaining all seven incident families and 70/25/5 weights.
+- [x] Generator mode starts/reuses the generator; legacy mode starts/reuses the legacy provider.
+- [x] API reuse requires matching MCP configuration; mismatch, missing metadata and failed inspection give actionable errors.
+- [x] Actuator info reports the effective endpoint without user info, query or fragment.
+- [x] Focused regressions and full verification pass; runtime limitations are recorded.
 
 ## Test plan
 
-Read-only SQL proves current family coverage and failed attempts. Invoke existing
-KnowledgeIngestionCommand with chat disabled, web application disabled and the
-configured local nomic embedding provider. Verify family document/chunk counts,
-embedding metadata and original 30 PDF documents/705 chunks. Retry the two existing
-investigations with synthetic tenant/operator HTTP headers, inspect source families,
-versions, line/hash provenance, retained histories and unchanged incident/decision
-state. No executable behavior changes or artificial new tests; run Repository gate.
+Deterministic selector tests cover each candidate in every rarity bucket, family
+coverage and fail-closed empty eligible buckets. PowerShell tests exercise actual
+startup helpers with HTTP/process doubles. Java tests verify endpoint reporting
+and sanitization. Confirm regression failures before implementation, then focused
+passes and ./verify.ps1. Live retry requires a configured .env/database.
 
 ## Progress notes
 
-- Preserved prior completed task and all pre-existing working-tree changes.
-- API and generator were not listening; native PostgreSQL and Ollama were running.
-- Installed PostgreSQL 18 client readback confirmed only authorization-decline
-  knowledge. Both recent new-family attempts have NO_MATCH.
+- Initial Git status clean. This checkout has no .env or build output. HTTP probes
+  to 8080/8081/8082/4200 failed.
+- Launcher reuses any healthy API and starts the legacy service when the selected
+  generator endpoint is absent.
+- Owner authorized available-only demo generation; preserved prior completed task.
+- Found and loaded the main checkout's ignored .env without printing credentials.
+  Native PostgreSQL and installed Ollama models were available. Confirmed actual
+  Windows PowerShell launcher preflight succeeds; initial short HTTP probes alone
+  were insufficient to establish Ollama availability.
+- Persisted latest failure is S312 / investigation
+  8245ff66-ce77-4ceb-8567-9f44fd1a07cf, with status detail
+  `Synthetic observation source unavailable.` This was an intentional fixture.
 
 ## Completion evidence
 
-- Diagnosis: only AUTHORIZATION_DECLINE_RATE_SPIKE had indexed knowledge:
-  30 PDF documents / 705 chunks. Webhook had two NO_MATCH attempts and
-  reconciliation one; no new-family guidance existed.
-- Existing explicit import command succeeded on 2026-10-01 with the configured
-  local database, SPRING_MAIN_WEB_APPLICATION_TYPE=none,
-  SPRING_AI_MODEL_CHAT=none, SPRING_AI_MODEL_EMBEDDING=ollama,
-  APP_KNOWLEDGE_INGESTION_ENABLED=true and PDF import/backfill disabled:
-  ./mvnw.cmd -pl backend/copilot-api spring-boot:run. It imported 14 documents
-  and embedded 87 chunks. Credentials were loaded from ignored .env without output.
-- PostgreSQL verification: original 30 PDF documents / 705 embeddings retained;
-  each additional family has two Markdown documents and 13 embedded chunks.
-  Two legacy Markdown documents add nine chunks. All use nomic-embed-text,
-  768 dimensions. All fourteen package source hashes still match the manifest.
-- Started the already-built generator and API from temporary jar copies to
-  avoid locking target output. API uses generator MCP at localhost:8082.
-  Both health endpoints are UP. Angular remains available at localhost:4200.
-- Live webhook retry: investigation 9b5daa6f-fed5-4bff-8f38-604ae86d676e,
-  retrieval 6febe78b-4c46-4b81-b1ed-ea920987f7dc, AVAILABLE with seven chunks,
-  version 1.0.0 runbook/policy, exact Markdown line locators. Three retained
-  attempts: AVAILABLE, NO_MATCH, NO_MATCH.
-- Live reconciliation retry: investigation 94deb248-9dea-44e6-bcbb-d22ca6dce5d0,
-  retrieval 8046adbf-3a00-4673-a602-b96fca3e6d2b, AVAILABLE with seven chunks,
-  version 1.0.0 runbook/policy, exact Markdown line locators. Two retained
-  attempts: AVAILABLE, NO_MATCH.
-- Both use nomic-embed-text query embeddings and postgres-hybrid-related/v4.
-  Exact evidence bindings retained: webhook 5fe0685a-eded-45fe-b2a2-31c3eebcf718;
-  reconciliation 3196aa52-669e-42e6-a243-c8c3fbc239da. Both remain INVESTIGATING
-  with zero human decisions. No reports or operational actions were requested.
-- No production code, ranking, filters, corpus/source versions or dependencies
-  changed in this recovery. Live before/after verification covers this local
-  preparation failure; no artificial automated tests or new full gate required.
-  Final ./verify.ps1 -Scope Repository passed, including preparation/evaluator
-  tests, Compose validation and git diff --check.
+- Red: ./mvnw.cmd -f syntheticIncidentGenerator/pom.xml
+  -Dtest=WeightedScenarioSelectorTest test failed two regressions: normal selection
+  returned PARTIAL, and an unavailable-only rarity did not fail closed.
+- Red: API metadata test compilation failed for missing contributor; PowerShell
+  startup regressions failed for missing verification module before implementation.
+- Green: four selector tests, two OperationsMcpInfoContributorTest tests and
+  scripts/local/LocalEvidenceStartup.Tests.ps1 passed. Coverage includes every
+  AVAILABLE candidate, all seven families, rarity boundaries, empty eligible
+  bucket rejection, both provider directories, reuse, readiness failure, API
+  mismatch/missing metadata/HTTP failure and sanitized endpoint metadata.
+- ./verify.ps1 passed: 339 API, 9 MCP, 52 generator and 103 Angular tests,
+  zero failures/errors/skips; script suites, Java formatting, locked installation,
+  frontend format/build, Compose validation and diff checks passed.
+- powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/start-local.ps1
+  -UseGeneratorMcp -CheckOnly passed. The same actual launcher without CheckOnly
+  started generator, API and console, waited for health and verified API metadata.
+- Live POST /api/generations created S014 incident
+  f0a43589-2864-40ec-9c0c-ff72bdcb1da3. Started investigation
+  da62c985-a5c2-44c3-ac13-1d8b0bec8a24 through the copilot API and collected
+  AVAILABLE evidence with two payment-authorization observations. Actuator info
+  reports http://localhost:8082; original S312 UNAVAILABLE history is unchanged.
+- ADR-0019 records the owner-authorized demo contract and startup verification.
+  No source/oracle fixture bytes, reports, human decisions or dependencies changed.
 
 ## Remaining limitations
 
-Live report quality is outside this retrieval recovery. New/reset databases and
-future source additions still require explicit knowledge preparation. The API and
-generator are left running locally. Existing dependency/model limitations from
-prior completed tasks are unchanged.
+Existing deliberately degraded incidents keep their original scenario and history;
+new normal demo generation excludes them. Explicit evaluation fixtures still
+exercise degraded outcomes. Real transport failures, timeouts and malformed
+responses remain visible; availability is not fabricated. Older running APIs
+without endpoint metadata require one restart before launcher reuse. API,
+generator and console are left running from this checkout. The full gate's npm
+installation reported eight existing advisories; npm audit is not a failing gate.
 
 ## Decisions needed
 
-None; the owner request explicitly authorizes preparing knowledge to fix retrieval.
+None.
