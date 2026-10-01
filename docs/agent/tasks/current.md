@@ -50,6 +50,11 @@ workflow on GitHub Ubuntu to verify portability and all four check outcomes.
   and frontend; repository fails in the synthetic C: fixture and ci propagates
   that failure. No production behavior change is required.
 - Archived completed E3 task before replacing the current contract.
+- GitHub run 36882660901 proves the portable root passes on Ubuntu. It exposed
+  a second separator-dependent test fixture: the exact three-file oracle
+  allowlist used backslashes while GetRelativePath returned forward slashes.
+  Normalized relative paths and existing allowlist/suffix comparisons to slash
+  separators; permitted membership and forbidden-reference detection are unchanged.
 - First full gate passed the backend and generator builds/tests, then npm ci
   failed with EPERM unlinking esbuild.exe held by the running Angular preview.
   Stopped only verified repository preview PID 26044 and its esbuild child
@@ -64,6 +69,10 @@ workflow on GitHub Ubuntu to verify portability and all four check outcomes.
 - Full ./verify.ps1 passed after releasing the preview lock: 362 API, 9 MCP,
   52 generator and 103 console tests; zero failures/errors/skips. Script suites,
   Java/Prettier formatting, production builds, Compose and diff checks passed.
+- After the second test-only portability fix, Repository scope passed again.
+  A temporary unauthorized backend Java oracle-reference probe was correctly
+  rejected by keepsOracleAndGraderOutOfRuntimeInputs and removed afterward.
+- Restored Angular preview PID 4336 with the original host/port; HTTP 200.
 
 ## Remaining limitations
 

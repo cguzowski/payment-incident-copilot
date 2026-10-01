@@ -18,7 +18,11 @@ the aggregate ci check propagated that failure. A platform-native synthetic
 test root passes the focused script, Repository scope and full ./verify.ps1:
 362 API, 9 MCP, 52 generator and 103 console tests with zero failures/errors/skips,
 plus script, formatting, build, Compose and diff checks. The full gate required
-releasing the Angular preview's esbuild file lock. GitHub verification is pending.
+releasing the Angular preview's esbuild file lock; preview restored with HTTP 200.
+Ubuntu run 36882660901 confirmed the first fix and exposed a second test-only
+path-separator mismatch in the exact oracle allowlist. Slash normalization
+preserves membership and forbidden-reference detection; Repository scope and
+an unauthorized-reference rejection probe passed. GitHub verification is pending.
 
 The [completed E3 task](tasks/completed/2026-10-01-adopt-frozen-payment-pdf-library.md) adopted the frozen payment PDF library.
 E3 is complete under ADR-0020. Both accepted catalogs are prepared locally:

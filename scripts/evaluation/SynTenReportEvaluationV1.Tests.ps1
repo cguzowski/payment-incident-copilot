@@ -290,9 +290,9 @@ Invoke-EvaluationTest 'keepsOracleAndGraderOutOfRuntimeInputs' {
         (Join-Path $repositoryRoot 'syntheticIncidentGenerator\src\main')
     )
     $allowed = @(
-        'syntheticIncidentGenerator\src\main\java\com\cguzowski\syntheticincidentgenerator\generation\AnswerKeyRevealService.java',
-        'syntheticIncidentGenerator\src\main\java\com\cguzowski\syntheticincidentgenerator\scenario\ClasspathScenarioOracleCatalog.java',
-        'syntheticIncidentGenerator\src\main\java\com\cguzowski\syntheticincidentgenerator\scenario\ScenarioOracleCatalog.java'
+        'syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealService.java',
+        'syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ClasspathScenarioOracleCatalog.java',
+        'syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioOracleCatalog.java'
     )
     $violations = [System.Collections.Generic.List[string]]::new()
     foreach ($root in $runtimeRoots) {
@@ -300,9 +300,9 @@ Invoke-EvaluationTest 'keepsOracleAndGraderOutOfRuntimeInputs' {
             $_.FullName -notmatch '[\\/](target|node_modules|dist)[\\/]' -and
             $_.Extension -in @('.java', '.ts', '.html', '.txt', '.json', '.yml', '.yaml')
         } | ForEach-Object {
-            $relative = [IO.Path]::GetRelativePath($repositoryRoot, $_.FullName)
+            $relative = [IO.Path]::GetRelativePath($repositoryRoot, $_.FullName).Replace('\', '/')
             $content = Get-Content -LiteralPath $_.FullName -Raw
-            if (($content -match 'synten-report-eval') -or (($content -match 'oracle\.json|ScenarioOracleCatalog') -and $relative -notin $allowed -and $relative -notlike '*\scenarios\oracle.json')) {
+            if (($content -match 'synten-report-eval') -or (($content -match 'oracle\.json|ScenarioOracleCatalog') -and $relative -notin $allowed -and $relative -notlike '*/scenarios/oracle.json')) {
                 $violations.Add($relative)
             }
         }
