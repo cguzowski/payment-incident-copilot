@@ -1,6 +1,6 @@
 # Task: Restore passing GitHub repository checks
 
-Status: In progress
+Status: Complete — all four GitHub checks pass
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
@@ -35,7 +35,7 @@ No real data or live model providers; no skipped or weakened checks.
 
 - [x] Knowledge-preparation assertions pass with a platform-native root.
 - [x] Focused repository scope and full verify.ps1 pass locally.
-- [ ] GitHub backend, frontend, repository and ci checks pass on the fix commit.
+- [x] GitHub backend, frontend, repository and ci checks pass on the fix commit.
 
 ## Test plan
 
@@ -73,10 +73,17 @@ workflow on GitHub Ubuntu to verify portability and all four check outcomes.
   A temporary unauthorized backend Java oracle-reference probe was correctly
   rejected by keepsOracleAndGraderOutOfRuntimeInputs and removed afterward.
 - Restored Angular preview PID 4336 with the original host/port; HTTP 200.
+- GitHub run [36883849928](https://github.com/cguzowski/payment-incident-copilot/actions/runs/36883849928)
+  passed backend, frontend, repository and ci on fix commit
+  2566145f2fd291003e6d7dd26d716faf9ff03323. Ubuntu ran the unchanged verification
+  scopes, including both corrected script fixtures. Local full verification
+  preceded the second test-only fix; its relevant Repository scope was rerun
+  locally and all three scopes passed afterward on GitHub.
 
 ## Remaining limitations
 
-Pending GitHub verification of the fix.
+No remaining limitation for this CI repair. Existing npm advisories and product
+limitations remain recorded separately; no dependency changes were made.
 
 ## Decisions needed
 

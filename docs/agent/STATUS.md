@@ -22,7 +22,9 @@ releasing the Angular preview's esbuild file lock; preview restored with HTTP 20
 Ubuntu run 36882660901 confirmed the first fix and exposed a second test-only
 path-separator mismatch in the exact oracle allowlist. Slash normalization
 preserves membership and forbidden-reference detection; Repository scope and
-an unauthorized-reference rejection probe passed. GitHub verification is pending.
+an unauthorized-reference rejection probe passed. GitHub run
+[36883849928](https://github.com/cguzowski/payment-incident-copilot/actions/runs/36883849928)
+passed all four checks (backend, frontend, repository and ci) on 2566145.
 
 The [completed E3 task](tasks/completed/2026-10-01-adopt-frozen-payment-pdf-library.md) adopted the frozen payment PDF library.
 E3 is complete under ADR-0020. Both accepted catalogs are prepared locally:
