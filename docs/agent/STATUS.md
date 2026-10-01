@@ -11,20 +11,31 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md) repairs the GitHub repository verification
-failure: run 36878944702 passed backend/frontend but failed repository because
-the knowledge-preparation test fixture assumed a Windows C: drive on Ubuntu;
-the aggregate ci check propagated that failure. A platform-native synthetic
-test root passes the focused script, Repository scope and full ./verify.ps1:
-362 API, 9 MCP, 52 generator and 103 console tests with zero failures/errors/skips,
-plus script, formatting, build, Compose and diff checks. The full gate required
-releasing the Angular preview's esbuild file lock; preview restored with HTTP 200.
-Ubuntu run 36882660901 confirmed the first fix and exposed a second test-only
-path-separator mismatch in the exact oracle allowlist. Slash normalization
-preserves membership and forbidden-reference detection; Repository scope and
-an unauthorized-reference rejection probe passed. GitHub run
-[36883849928](https://github.com/cguzowski/payment-incident-copilot/actions/runs/36883849928)
-passed all four checks (backend, frontend, repository and ci) on 2566145.
+The [current task](tasks/current.md) adds automatic post-reveal comparison under
+ADR-0021. Separate report and human-decision cards display labeled colored
+borders and black-diamond 0-100 gauges. Only cause/recommendation prose uses an
+independently prompted local LLM; exact disposition/confidence matches,
+aggregation, bands and human-decision expectations are deterministic. Failed
+evaluation retries once and then leaves both cards Not scored. Exact final-
+decision report/evidence bindings and tenant-scoped local artifacts preserve
+the post-decision oracle boundary and provenance.
+
+Full ./verify.ps1 passed 362 API, 9 MCP, 74 generator and 103 console tests
+with zero failures/errors/skips, plus seven nested Node UI behavior cases,
+scripts, formatting, builds, Compose and diff checks. Desktop/mobile browser
+QA confirmed independent card colors, accessible gauges, endpoint diamonds,
+keyboard reveal, unscored failures and no horizontal overflow at 390 CSS pixels.
+An existing terminal S303 refund report compared successfully with local Qwen
+in 24.802 seconds: report 45/BAD, recorded rejection 100/GOOD. Its report and
+decision HTTP responses remained byte-identical; all artifact hashes matched.
+This proves integration, not judge accuracy. Generator and console were restored
+with HTTP 200; the API remained running.
+
+The completed [CI repair](tasks/completed/2026-10-01-restore-github-repository-checks.md)
+preserves platform-native fixture roots and normalized oracle-allowlist paths.
+GitHub run [36883849928](https://github.com/cguzowski/payment-incident-copilot/actions/runs/36883849928)
+passed all four checks on 2566145. The current comparison changes have not been
+pushed or checked on GitHub.
 
 The [completed E3 task](tasks/completed/2026-10-01-adopt-frozen-payment-pdf-library.md) adopted the frozen payment PDF library.
 E3 is complete under ADR-0020. Both accepted catalogs are prepared locally:
@@ -314,6 +325,13 @@ identifiers remain plain text.
   the archived task retains its original 4,096-token wording and reconciliation.
 
 ## Known limitations
+
+- Post-reveal text scores are advisory and not independently calibrated.
+  The local default judge is the report model with a separate prompt; a different
+  installed model is configurable. The four-field deterministic approval rubric
+  is not general semantic verification of every oracle decision-rule condition.
+  Comparison artifacts are ignored local files, not database/audit-timeline
+  records; durable retention requires backing up their configured directory.
 
 - Q5 reports for partial S111 and unavailable S211 assert causes/recommendations
   at MEDIUM confidence instead of the required insufficient-evidence/LOW posture.

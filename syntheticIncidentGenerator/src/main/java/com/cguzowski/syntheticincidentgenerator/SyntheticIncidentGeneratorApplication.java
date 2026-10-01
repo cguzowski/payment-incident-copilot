@@ -1,5 +1,6 @@
 package com.cguzowski.syntheticincidentgenerator;
 
+import com.cguzowski.syntheticincidentgenerator.comparison.ComparisonProperties;
 import com.cguzowski.syntheticincidentgenerator.config.GeneratorProperties;
 import com.cguzowski.syntheticincidentgenerator.mcp.RecentServiceErrorsTool;
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
@@ -12,7 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@EnableConfigurationProperties(GeneratorProperties.class)
+@EnableConfigurationProperties({GeneratorProperties.class, ComparisonProperties.class})
 public class SyntheticIncidentGeneratorApplication {
 
     public static void main(String[] args) {

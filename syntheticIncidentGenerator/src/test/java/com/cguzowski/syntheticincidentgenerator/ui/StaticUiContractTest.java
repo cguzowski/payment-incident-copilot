@@ -11,7 +11,7 @@ class StaticUiContractTest {
 
     @Test
     void clearlyLabelsSeparateTestSystemAndProvidesOneRedGenerationAction() throws IOException {
-        String html = resource("static/index.html");
+        String html = resource("static/index.html").replaceAll("\\s+", " ");
         String css = resource("static/styles.css");
         String javascript = resource("static/app.js");
 
@@ -21,6 +21,9 @@ class StaticUiContractTest {
                 .contains("id=\"generate-incident\"")
                 .contains("Generate synthetic incident")
                 .contains("id=\"reveal-answer-key\"")
+                .contains("id=\"comparison-results\"")
+                .contains("id=\"report-comparison\"")
+                .contains("id=\"decision-comparison\"")
                 .contains("available only after an approved or rejected decision")
                 .doesNotContain("<details");
         assertThat(css)

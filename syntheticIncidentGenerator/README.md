@@ -49,6 +49,56 @@ with the payment incident copilot.
 | Deterministic time-aligned MCP evidence | `RecentServiceErrorsToolTest` |
 | Live MCP v1 discovery and invocation | `GeneratorMcpContractTest` |
 | Clearly separate red-button UI | `StaticUiContractTest` |
+| Deterministic comparison rubric and text-only judge | `ComparisonRubricTest`, `ComparisonServiceTest` |
+| Exact tenant-scoped decision/report/evidence binding | `FrozenOutcomeHttpClientTest` |
+| Bounded Ollama output, timeout and prompt isolation | `OllamaTextJudgeTest` |
+| Comparison request IDs and no client-supplied answers | `ComparisonControllerTest` |
+| Automatic comparison, independent cards, retry and stale results | `ComparisonUiBehaviorTest` (seven Node UI cases) |
+
+## Automatic post-reveal comparison
+
+Revealing a terminal incident's answer key automatically starts a comparison
+underneath it. Four 0-100 gauges compare disposition, confidence, root cause and
+recommendation. Only cause/recommendation text is scored by an independently
+prompted local LLM; disposition and confidence are exact 0/100 checks.
+INSUFFICIENT_EVIDENCE null assertions are scored directly without a model call.
+
+The report card shows the rounded equal-weight average: green Good >=80,
+yellow OK 50-79, red Bad <50. The separate human-decision card compares the
+recorded outcome with the deterministic rubric: expected APPROVED requires
+exact disposition/confidence matches and both text scores >=80; otherwise
+expected REJECTED. Correctly rejecting a poor report therefore earns a good
+decision score. This post-decision advisory rubric does not amend the recorded
+decision or the offline evaluation benchmark. It is a bounded comparison of
+four fields, not a complete proof of the decision rule's evidence semantics.
+
+The UI calls `POST /api/generations/{incidentId}/comparison` with
+`X-Synthetic-Operator-Id` and no body after reveal. The endpoint repeats the
+authoritative terminal gate and selects the exact report referenced by the final
+decision through tenant-scoped GET requests. Model failures retry once, then
+display Not scored; a UI retry starts a new retained attempt.
+
+Configuration is environment-only:
+
+```text
+OLLAMA_BASE_URL=http://localhost:11434
+COMPARISON_CHAT_MODEL=qwen3:8b-q4_K_M
+COMPARISON_TIMEOUT=2m
+COMPARISON_ARTIFACT_DIRECTORY=./tmp/comparisons
+```
+
+The judge defaults to REPORT_CHAT_MODEL when set, otherwise Qwen above; no
+model downloads occur. Text scores are AI-assessed and can be incorrect or
+variable. Use a separately installed judge model when desired. Each unique,
+tenant-scoped local JSON artifact retains full inputs, prompt, model responses,
+IDs, versions, timestamps and hashes. Back up this ignored directory if retained
+demo comparisons must survive local cleanup. Artifact write failure prevents
+returning a successful comparison. See
+[ADR-0021](../docs/agent/decisions/ADR-0021-post-decision-text-comparison.md).
+
+The standalone generator test suite now also requires Node.js (repository-pinned
+version) for its deterministic UI behavior harness; it requires no npm install
+or live model provider.
 
 ## Integration shape
 

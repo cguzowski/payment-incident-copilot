@@ -8,7 +8,7 @@ Last reviewed: 2026-10-01
 |---|---|---|
 | Operator console | Incident work queue, investigation UX, review and decision input | Investigation reasoning or persistence |
 | Copilot API | Workflow, persistence, retrieval, report generation, decisions, audit | Synthetic source-system behavior |
-| Synthetic incident generator | Generated SynTen alerts and deterministic MCP evidence reconstructed from their opaque `sig-v1` references | Copilot persistence, LLM calls, or investigation decisions |
+| Synthetic incident generator | Generated SynTen alerts, deterministic MCP evidence, gated answer-key reveal and post-decision advisory text comparison | Copilot persistence, report generation or investigation decisions |
 | Operations MCP server | Legacy deterministic fixtures and independent MCP v1 compatibility verification | Generated `sig-v1` scenario ownership, LLM calls, or investigation decisions |
 | PostgreSQL | Transactional application state and audit records | Unstructured object storage |
 | pgvector | Tenant-filtered knowledge chunks and embeddings | Final report truth |
@@ -163,6 +163,14 @@ generation; independent parsing rejects violations as MALFORMED. Earlier applica
 observations remain cited history and cannot restore current sufficiency.
 
 ## Knowledge-source evolution
+
+Under [ADR-0021](decisions/ADR-0021-post-decision-text-comparison.md), the
+standalone generator automatically compares the exact decision-bound report
+after reveal. Its independently prompted local Ollama judge scores only cause
+and recommendation text; disposition, confidence, averages, bands and human
+decision match use code. Tenant-scoped read-only API inputs and unique local
+artifacts preserve comparison provenance. This post-decision boundary cannot
+feed oracle content back into the evaluated workflow or change its outputs.
 
 The catalog retains historical Markdown inputs, the 30 authorization PDFs and
 the frozen 16 payment PDFs. New operational searches use only accepted PDFs

@@ -78,6 +78,59 @@
           <h3>Required evidence signature</h3>
           <ul id="required-evidence"></ul>
         </section>
+
+        <section
+          id="comparison-results"
+          aria-labelledby="comparison-title"
+          hidden
+        >
+          <h3 id="comparison-title">Test comparison results</h3>
+          <p class="warning">
+            Text scores are AI-assessed matches. Other scores use the fixed
+            rubric. No report or decision is changed.
+          </p>
+          <p
+            id="comparison-status"
+            class="status"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <article
+            id="report-comparison"
+            class="comparison-card"
+            aria-labelledby="report-comparison-title"
+          >
+            <div class="comparison-heading">
+              <h3 id="report-comparison-title">Report comparison</h3>
+              <strong id="report-comparison-label">Not scored</strong>
+            </div>
+            <p class="comparison-note">
+              Equal-weight average of four metrics. Good ≥80 · OK 50–79 · Bad
+              &lt;50.
+            </p>
+            <div id="report-metrics"></div>
+          </article>
+          <article
+            id="decision-comparison"
+            class="comparison-card"
+            aria-labelledby="decision-comparison-title"
+          >
+            <div class="comparison-heading">
+              <h3 id="decision-comparison-title">Human decision comparison</h3>
+              <strong id="decision-comparison-label">Not scored</strong>
+            </div>
+            <p class="comparison-note">
+              Expected approval requires exact disposition and confidence
+              matches, plus both text scores ≥80. Otherwise, the rubric expects
+              rejection.
+            </p>
+            <div id="decision-metrics"></div>
+          </article>
+          <p id="comparison-provenance" class="comparison-note"></p>
+          <button id="retry-comparison" type="button" hidden>
+            Retry comparison
+          </button>
+        </section>
       </section>
     </main>
   </body>
