@@ -12,6 +12,8 @@ The six added families have deterministic workflow coverage, with live-model
 quality not yet measured.
 See [current status](docs/agent/STATUS.md) and the
 [roadmap](docs/agent/ROADMAP.md).
+See the [expansion plan](docs/agent/PAYMENT_EXPANSION_PLAN.md) for sequencing
+and the distinction between approved direction and implemented behavior.
 
 ## What it does
 

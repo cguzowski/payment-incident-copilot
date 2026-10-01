@@ -1,5 +1,11 @@
 # SynTen Inc authorization knowledge corpus inventory
 
+This frozen v2 inventory is the existing authorization baseline. Scenario coverage
+columns document historical membership, not targets for the next corpus.
+Preserve all versioned source/PDF bytes and hashes. A successor inventory must
+be derived from lifecycle risks under the [expansion plan](../../docs/agent/PAYMENT_EXPANSION_PLAN.md)
+and frozen before new incident scenarios are created.
+
 Status: Frozen v2 inventory; source and PDF generation completed
 Corpus version: `synten-auth-knowledge/v2`
 Tenant ID: `8b860d80-d17f-4e6b-8c48-af35f26a4d61`

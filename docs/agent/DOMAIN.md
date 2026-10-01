@@ -1,6 +1,6 @@
 # Domain glossary
 
-Last reviewed: 2026-09-24
+Last reviewed: 2026-10-01
 
 ## Core terms
 
@@ -105,6 +105,22 @@ chunks must remain traceable to the exact document version and source location;
 ADR-0009 defines the implemented extraction and locator contract.
 
 ## Vocabulary rule
+
+The [expansion plan](PAYMENT_EXPANSION_PLAN.md) uses these conceptual terms;
+they do not establish persisted states or API values:
+
+- **Card rejection:** unsuccessful authorization; a specific reason such as a
+  locked card or insufficient funds requires explicit source evidence.
+- **Uncertain payment outcome:** records do not establish the final result;
+  timeout alone does not prove failure or safe retry.
+- **Suspected duplicate payment:** apparent repetition requiring request/event
+  comparison; two displayed entries do not prove duplicate processing.
+- **Refund:** a separate synthetic return-of-value lifecycle; submission does
+  not prove downstream completion.
+- **Authorization reversal:** release/cancellation of an authorization, distinct
+  from a refund of a completed payment.
+- **Independent held-out incident:** created after corpus freeze from system
+  behavior without target documents; expected answers remain offline.
 
 Use these terms consistently in code, APIs, UI labels, documentation, and
 tests. Add or revise a definition before introducing an overlapping term.

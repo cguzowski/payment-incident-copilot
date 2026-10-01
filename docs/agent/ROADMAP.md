@@ -1,13 +1,15 @@
 # Product roadmap
 
 Status: Active
-Last reviewed: 2026-09-30
+Last reviewed: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Purpose
 
-Preserve the completed single-tenant authorization-decline workflow while
-measuring and improving its quality. This file orders outcomes; only an
+Preserve the completed single-tenant authorization workflow and expand familiar
+payment problems with independent knowledge and incident design. The
+[expansion plan](PAYMENT_EXPANSION_PLAN.md) owns gates and decisions.
+This file orders outcomes; only an
 owner-activated [task contract](tasks/current.md) authorizes implementation.
 
 ## Completed milestones
@@ -38,17 +40,24 @@ K4/K5 completion did not pass the benchmark. See
 
 | Order | Outcome | Completion boundary |
 |---|---|---|
+| E1 — Next | Payment domain and risks | Reviewed lifecycle, independent risk inventory and evidence requirements. |
+| E2 | Independent PDF library | Risk-derived guidance, validated PDFs and frozen hashes before incident creation. |
+| E3 | Catalog and retrieval | Versioned accepted catalog, PDF-only eligibility and applicable shared/family policies. |
+| E4 | Multi-family evidence and workflow | Synthetic payment/refund records and timeline; independent builds and regressions. |
+| E5 | Independent demo incidents | Cases from system behavior after corpus freeze, without target runbooks. |
+| E6 | Held-out evaluation | Grounded conclusions and useful direction measured with retained provenance. |
 | D1 — Deferred | AWS deployment | Select services, tooling, networking, IAM, cost, teardown, and any Bedrock profile in an ADR before implementation. |
 | D2 — Deferred | Authentication | Select identity and authorization and enforce tenant/operator access at every public boundary. |
 
 Q1 gates answer-key reveal on an `APPROVED` or `REJECTED` human decision,
 separates `scenario-oracle/v1` from observable scenario resources, and binds the
-unchanged retrieval labels to oracle-independent corpus v2. The exact v1 corpus
+unchanged retrieval labels to corpus v2, which excludes oracle answers but uses
+observable scenario inputs. It is not independently authored. The exact v1 corpus
 is preserved as a hash-verifiable historical archive.
 
 ## Sequencing rules
 
-- Q2 completed the [documented sequence](tasks/current.md#recommended-sequence-planning-proposal):
+- Q2 completed the [documented sequence](tasks/completed/2026-09-30-resolve-retrieval-quality-disposition-q2.md):
   retained a new baseline, diagnosed per-variant losses, evaluated runbook
   ranking separately from policy relationships, and verified the combined
   change against the fixed benchmark and full repository gate.
@@ -62,7 +71,9 @@ is preserved as a hash-verifiable historical archive.
   led to Q6's completed degraded-evidence remediation. Fresh S111/S211 reports
   pass the LOW/null contract; confidence gaps on sufficient evidence remain.
   No quality threshold was added and the other 34 scenarios were not rerun under v5.
-- Treat corpus v2 and evaluation labels as fixed inputs. Corpus changes require
+- Treat corpus v2 and its labels as fixed historical inputs. New corpus authoring
+  excludes scenario inputs; new scenarios must not target documents. Complete E2
+  before E5. Corpus changes require
   an approved version task; keep source/PDF hashes and prior evidence.
 - Keep generation, ingestion, embedding, and evaluation separately verifiable.
 - Version parser, chunker, query, ranking, and model changes explicitly.

@@ -1,5 +1,11 @@
 # SynTen Inc operating profile
 
+This v1 profile defines the implemented authorization baseline. Its single-family
+scope and scenario references do not govern new corpus authoring. The approved
+[expansion plan](../docs/agent/PAYMENT_EXPANSION_PLAN.md) requires a successor
+payment-domain profile and risk inventory before new PDFs or incidents; this
+notice does not add payment states, components or evidence capabilities.
+
 Status: Approved for corpus authoring
 Profile version: 1.0
 Tenant ID: `8b860d80-d17f-4e6b-8c48-af35f26a4d61`

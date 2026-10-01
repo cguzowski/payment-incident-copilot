@@ -98,6 +98,12 @@ own recorded SHA-256. See [diagnosis](evaluation/q2-baseline-diagnosis.md) and
 
 ## Maintenance boundary
 
+The v2 inventory, profile and authoring standard describe the existing baseline.
+Their scenario-derived coverage is historical, not a rule for future authoring.
+For the next version, define risks from the payment domain without consuming
+scenario inputs, freeze the reviewed PDF corpus, then create incidents without
+target document mappings. Preserve v2 source/PDF bytes, hashes and evaluations.
+
 Keep new tenant-specific assets here. The two legacy API Markdown knowledge
 resources remain under `backend/copilot-api/src/main/resources/knowledge/`
 for compatibility.

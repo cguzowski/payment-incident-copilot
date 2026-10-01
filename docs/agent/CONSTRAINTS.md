@@ -4,6 +4,13 @@ Last reviewed: 2026-10-01
 
 ## Product constraints
 
+- Future knowledge authoring follows PAYMENT_EXPANSION_PLAN.md: derive guidance
+  from lifecycle risks without reading incident fixtures, catalogs, labels or
+  oracle answers. Freeze and hash the PDF library before new scenario authoring.
+- Future scenarios derive from synthetic system behavior without selecting target
+  documents. Coverage is bounded; unresolved cases remain valid outcomes.
+- PDF-only operational retrieval is planned, not currently implemented. Preserve
+  historical Markdown citations and editable source inputs.
 - Build one convincing vertical slice before adding additional incident types.
 - Preserve the completed authorization-decline slice and immutable historical
   corpus/evaluations. The owner-authorized ADR-0018 expansion adds six families

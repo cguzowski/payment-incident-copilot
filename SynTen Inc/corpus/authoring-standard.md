@@ -1,5 +1,13 @@
 # SynTen Inc PDF authoring and validation standard
 
+This v2 contract is retained to reproduce and validate the existing corpus.
+Its permission to consume observable scenarios, exact scenario-code requirements,
+and 30-document completion boundary do not apply to new authoring. The approved
+[expansion plan](../../docs/agent/PAYMENT_EXPANSION_PLAN.md) requires a versioned
+successor standard based on lifecycle risks, independent of all incident inputs.
+Do not alter v2 source/PDF bytes or claim that this historical contract establishes
+independent evaluation.
+
 Status: Approved v2 authoring contract; Q1 independent-input generation completed
 Standard version: `synten-pdf-authoring/v2`
 Applies to: Every source and PDF in `corpus/inventory.md`
