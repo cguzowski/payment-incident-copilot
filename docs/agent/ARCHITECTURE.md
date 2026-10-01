@@ -1,6 +1,6 @@
 # Architecture
 
-Last reviewed: 2026-09-30
+Last reviewed: 2026-10-01
 
 ## System boundaries
 
@@ -263,3 +263,16 @@ Keep the initial deployment simple:
 
 Local development uses Ollama and never requires AWS credentials. Document and
 implement the optional Bedrock profile only when deployment work begins.
+
+## Additional synthetic incident families
+
+[ADR-0018](decisions/ADR-0018-additive-incident-families.md) extends typed alert
+intake to seven families with a backward-compatible omitted-type default. The
+generator composes the original catalog with twelve additive scenarios under
+[SynTen multi-incidents v1](../../SynTen%20Inc/multi-incidents/v1/README.md).
+Family-specific service errors use the unchanged MCP v1 contract. Twelve
+approved Markdown runbooks/policies use the existing explicit ingestion command
+and exact line/source metadata. The launcher includes these sources when
+`-PrepareKnowledge` is explicitly requested. Retrieval retains tenant/family filtering; reports,
+human decisions and audit retain their existing boundaries. No payment engines,
+new infrastructure or automated operational actions are introduced.

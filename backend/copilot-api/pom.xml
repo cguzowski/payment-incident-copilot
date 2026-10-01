@@ -101,6 +101,12 @@
                     <include>versions/*/pdfs/*.pdf</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${project.basedir}/../../SynTen Inc/multi-incidents/v1</directory>
+                <targetPath>knowledge/multi-incidents/v1</targetPath>
+                <filtering>false</filtering>
+                <includes><include>*-runbook.md</include><include>*-policy.md</include></includes>
+            </resource>
         </resources>
         <testResources>
             <testResource>
@@ -111,6 +117,11 @@
                 <directory>${project.basedir}/../../contracts/mcp/get-recent-service-errors/v1</directory>
                 <targetPath>contracts/mcp/get-recent-service-errors/v1</targetPath>
                 <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>${project.basedir}/../../SynTen Inc/multi-incidents/v1</directory>
+                <targetPath>multi-incidents/v1</targetPath>
+                <includes><include>catalog.json</include></includes>
             </testResource>
         </testResources>
         <plugins>

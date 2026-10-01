@@ -29,7 +29,12 @@ public class IncidentGenerationService {
         Instant detectedAt = Instant.now(clock).truncatedTo(ChronoUnit.SECONDS);
         String externalAlertId = referenceCodec.encode(scenario.code(), detectedAt);
         AlertIntakeRequest request = new AlertIntakeRequest(
-                externalAlertId, scenario.severity(), detectedAt, scenario.title(), scenario.description());
+                externalAlertId,
+                scenario.severity(),
+                detectedAt,
+                scenario.title(),
+                scenario.description(),
+                scenario.incidentType());
         AlertIntakeResponse accepted = alertIntake.submit(request);
         GeneratedAlert alert = new GeneratedAlert(
                 request.externalAlertId(),

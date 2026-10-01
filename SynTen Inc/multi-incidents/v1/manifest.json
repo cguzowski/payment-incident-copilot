@@ -1,0 +1,62 @@
+{
+  "version": "synten-multi-incidents/v1",
+  "tenantId": "8b860d80-d17f-4e6b-8c48-af35f26a4d61",
+  "files": [
+    {
+      "path": "authorization-timeout-policy.md",
+      "sha256": "99957ac741613730f2c8e5f63c874ebe5a07cb724cf33062b452f1e3f160f0a7"
+    },
+    {
+      "path": "authorization-timeout-runbook.md",
+      "sha256": "ffa6d4b09e34e60936225f385425a73340f9c55e06db8db33d080a1e614957e7"
+    },
+    {
+      "path": "capture-failure-policy.md",
+      "sha256": "946080f61a905f84a738c2b2b6f59b8ffb84456f18d5fc4c4deff7cf54f7ce6e"
+    },
+    {
+      "path": "capture-failure-runbook.md",
+      "sha256": "21ffa39baf6afd1c698d6c84373a09a23f6ac0f95cbbbc0ed48aa7539fe7360d"
+    },
+    {
+      "path": "catalog.json",
+      "sha256": "ea7efc4b3ff6456e322f5761fc3e8615865cdc7eedf98a201e2f327d28baacb3"
+    },
+    {
+      "path": "oracle.json",
+      "sha256": "4e81990c0fa2db1a0673cb5dd744eda2cc27d19b74bb2a189bffd782cca072e1"
+    },
+    {
+      "path": "reconciliation-mismatch-policy.md",
+      "sha256": "1a94dc878728162103fb58123072bd7a0c199edace85d838ad5f2ec0bdbb32ba"
+    },
+    {
+      "path": "reconciliation-mismatch-runbook.md",
+      "sha256": "b112ed187307b958c2bb9cf0583e3334aad92fc75e3bcc1fcc4274fe949bc669"
+    },
+    {
+      "path": "refund-failure-policy.md",
+      "sha256": "4223f246e21a9f8609570569db84ff5179ae1966952e8392195e45799505bc1a"
+    },
+    {
+      "path": "refund-failure-runbook.md",
+      "sha256": "0e0c9a44d9a0aa9e52e7b71020f87df7b30bb8cb93f8e80edaa5946d28528a92"
+    },
+    {
+      "path": "settlement-delay-policy.md",
+      "sha256": "8e6087c33b57a6058405970099952f4ab2d24eaaed3195cf94c6a6dd3a007386"
+    },
+    {
+      "path": "settlement-delay-runbook.md",
+      "sha256": "b7f616b2a6e59f0f1834789a09e925bb9a7ec1c0273e1f56cd8288e4c6c9dbde"
+    },
+    {
+      "path": "webhook-delivery-policy.md",
+      "sha256": "cf73b768a48581e8ec8a8e505865b9216a71e53c0cbec5d4300ecf2e3e2e3db5"
+    },
+    {
+      "path": "webhook-delivery-runbook.md",
+      "sha256": "998d928748d58412d3f2b82652f6eb1b7144412a7ea3df17c87f8a2716ff98f3"
+    }
+  ]
+}

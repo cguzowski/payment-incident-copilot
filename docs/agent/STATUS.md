@@ -1,6 +1,6 @@
 # Project status
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 ## Current state
 
@@ -11,14 +11,34 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md), Q6 insufficient-evidence report safety, is
-complete. All 48 focused report tests pass. report-prompt/v5, context-dependent
-provider constraints and independent parsing require insufficient-evidence/LOW/null
-reports for degraded or empty observations. Fresh S111/S211 live checks both pass,
-with ten audit events and zero decisions; fixed-grader regrade matches bytes.
-[Q6 results](../../SynTen%20Inc/evaluation/q6-live-results.md) retain the two fresh
-attempts and an explicitly mixed diagnostic with 34 unchanged Q5 results.
-The full verification gate passed after Windows jar/esbuild file locks were resolved.
+The [current task](tasks/current.md) recovers approved-knowledge retrieval for
+the additional incident families. The configured local database originally had
+only the 30 authorization-decline PDF documents / 705 chunks. Webhook and
+reconciliation investigations returned NO_MATCH because their approved sources
+had not been imported. Explicit Markdown preparation added fourteen documents /
+87 embedded chunks, including two documents and thirteen chunks for each new
+family. All use nomic-embed-text with 768 dimensions; the original PDFs and
+package hashes are unchanged.
+
+Live retries of both affected investigations return AVAILABLE with seven
+family-matching approved runbook/policy chunks, retained version/line/model/evidence
+provenance, and all prior NO_MATCH attempts preserved. Both remain INVESTIGATING
+with zero decisions. API and generator are now running and healthy. Repository
+verification passed; no production behavior or ranking changes were needed.
+
+The completed six-family expansion passed full verification on 2026-10-01:
+337 API, 9 MCP, 50 generator and 103 Angular tests, zero failures/errors/skips,
+plus formatting, builds, Compose and repository checks. Launcher -PrepareKnowledge
+imports the guidance; normal startup remains explicit about using a prepared
+index. [Package and preparation](../../SynTen%20Inc/multi-incidents/v1/README.md)
+and ADR-0018 describe the seven-family workflow. New-family live report quality
+has not been measured.
+
+Q6 insufficient-evidence report safety remains complete. All 48 focused report
+tests passed; report-prompt/v5 requires insufficient-evidence/LOW/null reports
+for degraded or empty observations. Fresh S111/S211 live checks both passed,
+with ten audit events and zero decisions. [Q6 results](../../SynTen%20Inc/evaluation/q6-live-results.md)
+retain the fresh attempts and an explicitly mixed diagnostic with 34 Q5 results.
 
 Q5 broader live-model coverage is complete.
 Live execution, reproducible grading and the documentation verification gate passed.
@@ -63,6 +83,24 @@ open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
+
+- Local retrieval recovery on 2026-10-01 imported 14 Markdown documents / 87
+  embeddings, preserving 30 PDF documents / 705 embeddings. Webhook retry
+  6febe78b-4c46-4b81-b1ed-ea920987f7dc and reconciliation retry
+  8046adbf-3a00-4673-a602-b96fca3e6d2b are AVAILABLE with seven family-matching
+  chunks each. Their two/one earlier NO_MATCH attempts are retained. Exact
+  approved version 1.0.0 line provenance, source hashes, 768-dimensional nomic
+  metadata and evidence bindings were verified; both services are UP.
+  ./verify.ps1 -Scope Repository and diff checks passed.
+
+- ADR-0018 expansion passed ./verify.ps1 on 2026-10-01: 337 API, 9 operations
+  MCP, 50 generator and 103 Angular tests, zero failures/errors/skips. All twelve
+  new complete/degraded workflows preserve exact family/source bindings through
+  human decision and audit. Fourteen added asset hashes match; original corpus,
+  scenarios, oracle, evaluations and legacy guidance have no diff. API runtime
+  packaging contains no oracle. Launcher preparation tests cover the third
+  explicit Markdown import step. npm ci reports eight advisories with unchanged
+  lockfile; npm-audit is not a failing gate step.
 
 - Q6 passed ./verify.ps1 on 2026-09-30: 317 API, 9 operations MCP, 31 generator
   and 91 Angular tests with zero failures/errors/skips, formatting, builds,
@@ -192,7 +230,8 @@ identifiers remain plain text.
 - Only `getRecentServiceErrors` is implemented. Evidence sufficiency and broad
   live-model quality are not established by one successful S001 demonstration.
 - The Q1 install recorded six dependency advisories (five moderate, one high).
-  Q6 npm ci reported seven (four moderate, three high), with unchanged lockfile.
+  Q6 npm ci reported seven (four moderate, three high); the 2026-10-01 expansion gate reports eight
+  (four moderate, four high), with unchanged lockfile.
   The verification gate has no failing npm-audit step. [QUALITY.md](QUALITY.md)
   defines what the gate actually checks.
 - Knowledge preparation is explicit; normal startup does not populate a new

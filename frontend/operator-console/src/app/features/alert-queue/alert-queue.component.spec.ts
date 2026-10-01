@@ -18,6 +18,22 @@ describe('AlertQueueComponent', () => {
     }).compileComponents();
   });
 
+  it.each([
+    ['AUTHORIZATION_TIMEOUT_SPIKE', 'Authorization timeout spike'],
+    ['CAPTURE_FAILURE_SPIKE', 'Capture failure spike'],
+    ['REFUND_FAILURE_SPIKE', 'Refund failure spike'],
+    ['SETTLEMENT_DELAY', 'Settlement delay'],
+    ['WEBHOOK_DELIVERY_FAILURE', 'Webhook delivery failure'],
+    ['RECONCILIATION_MISMATCH', 'Reconciliation mismatch'],
+  ])('renders actual family %s', (family, label) => {
+    queueResponse = of([
+      { ...queueItems()[0], incidentType: family as AlertQueueItem['incidentType'] },
+    ]);
+    const fixture = TestBed.createComponent(AlertQueueComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain(label);
+  });
+
   it('shows loading, empty, and retryable error states', () => {
     const loading = TestBed.createComponent(AlertQueueComponent);
     loading.detectChanges();

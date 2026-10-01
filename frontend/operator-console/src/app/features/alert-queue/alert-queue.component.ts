@@ -10,6 +10,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { interval } from 'rxjs';
+import { IncidentType, incidentTypeLabels } from '../../core/models/incident';
 import { AlertQueueApiService } from './alert-queue-api.service';
 import { AlertQueueItem, IncidentSeverity, IncidentStatus } from './alert-queue.models';
 
@@ -116,7 +117,7 @@ export class AlertQueueComponent {
     }
   }
 
-  protected incidentTypeLabel(): string {
-    return 'Authorization decline spike';
+  protected incidentTypeLabel(type: IncidentType): string {
+    return incidentTypeLabels[type];
   }
 }

@@ -1,6 +1,6 @@
 # Project definition
 
-Last reviewed: 2026-09-24
+Last reviewed: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Goal
@@ -29,7 +29,8 @@ AI inference as verified fact.
 
 ## Scope
 
-- One fictional tenant, SynTen Inc, and the authorization-decline incident family.
+- One fictional tenant, SynTen Inc, and seven synthetic incident families (authorization declines/timeouts,
+  capture/refund failures, settlement delay, webhook delivery and reconciliation).
 - Synthetic alert intake, tenant-scoped queue, and operator-triggered investigation.
 - Read-only MCP service-error evidence.
 - Explicit versioned Markdown and page-aware PDF knowledge ingestion.
@@ -45,7 +46,8 @@ AI inference as verified fact.
 - Processing or moving money, or using real customer/card/bank/transaction data.
 - Production fraud scoring or complete payment-platform simulation.
 - Autonomous remediation, external communication, or report approval.
-- Multiple tenants or incident families in the first demonstration.
+- Multiple tenants. The original single-family demonstration is complete;
+  ADR-0018 authorizes six additional synthetic incident families.
 - Infrastructure added for hypothetical scale, including Kafka, Redis, or Kubernetes.
 - Training or fine-tuning a foundation model.
 

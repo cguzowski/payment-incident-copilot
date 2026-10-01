@@ -23,7 +23,10 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
     private final Map<String, ScenarioDefinition> scenariosByCode;
 
     public ClasspathScenarioCatalog(JsonMapper jsonMapper) {
-        this.scenarios = load(jsonMapper);
+        this.scenarios = java.util.stream.Stream.concat(
+                        load(jsonMapper, CATALOG_PATH).stream(),
+                        load(jsonMapper, "scenarios/multi-incidents/v1/catalog.json").stream())
+                .toList();
         this.scenariosByCode = scenarios.stream()
                 .collect(Collectors.toUnmodifiableMap(ScenarioDefinition::code, scenario -> scenario));
     }
@@ -38,8 +41,8 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
         return Optional.ofNullable(scenariosByCode.get(code));
     }
 
-    private static List<ScenarioDefinition> load(JsonMapper jsonMapper) {
-        try (InputStream input = new ClassPathResource(CATALOG_PATH).getInputStream()) {
+    private static List<ScenarioDefinition> load(JsonMapper jsonMapper, String path) {
+        try (InputStream input = new ClassPathResource(path).getInputStream()) {
             FixtureDocument document = jsonMapper.readValue(input, FixtureDocument.class);
             if (document == null
                     || document.scenarios() == null
@@ -55,7 +58,7 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
             EnumSet<ScenarioRarity> rarities = scenarios.stream()
                     .map(ScenarioDefinition::rarity)
                     .collect(Collectors.toCollection(() -> EnumSet.noneOf(ScenarioRarity.class)));
-            if (!rarities.equals(EnumSet.allOf(ScenarioRarity.class))) {
+            if (path.equals(CATALOG_PATH) && !rarities.equals(EnumSet.allOf(ScenarioRarity.class))) {
                 throw new IllegalStateException("Synthetic incident catalog must cover every rarity.");
             }
             return List.copyOf(scenarios);
@@ -78,9 +81,27 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
         require(bounded(fixture.description(), 2000), "invalid description");
         require(fixture.evidence() != null, "missing evidence");
 
+        require(
+                fixture.incidentType() == null
+                        || Set.of(
+                                        "AUTHORIZATION_DECLINE_RATE_SPIKE",
+                                        "AUTHORIZATION_TIMEOUT_SPIKE",
+                                        "CAPTURE_FAILURE_SPIKE",
+                                        "REFUND_FAILURE_SPIKE",
+                                        "SETTLEMENT_DELAY",
+                                        "WEBHOOK_DELIVERY_FAILURE",
+                                        "RECONCILIATION_MISMATCH")
+                                .contains(fixture.incidentType()),
+                "invalid incident type");
         ScenarioEvidence evidence = evidence(fixture.evidence());
         return new ScenarioDefinition(
-                fixture.code(), fixture.rarity(), fixture.severity(), fixture.title(), fixture.description(), evidence);
+                fixture.code(),
+                fixture.rarity(),
+                fixture.severity(),
+                fixture.title(),
+                fixture.description(),
+                evidence,
+                fixture.incidentType() == null ? "AUTHORIZATION_DECLINE_RATE_SPIKE" : fixture.incidentType());
     }
 
     private static ScenarioEvidence evidence(FixtureEvidence fixture) {
@@ -125,7 +146,8 @@ public class ClasspathScenarioCatalog implements ScenarioCatalog {
             String severity,
             String title,
             String description,
-            FixtureEvidence evidence) {}
+            FixtureEvidence evidence,
+            String incidentType) {}
 
     private record FixtureEvidence(
             EvidenceAvailability availability, String statusDetail, String serviceName, List<FixtureError> errors) {}

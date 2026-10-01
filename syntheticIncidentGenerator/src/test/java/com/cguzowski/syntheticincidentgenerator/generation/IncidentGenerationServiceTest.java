@@ -22,6 +22,26 @@ class IncidentGenerationServiceTest {
     private static final Instant DETECTED_AT = Instant.parse("2026-08-31T09:15:30Z");
     private static final UUID INCIDENT_ID = UUID.fromString("36cfb9b5-21c9-44b8-b10c-ad2a60706ab6");
 
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"S301", "S302", "S303", "S304", "S305", "S306"})
+    void sendsSelectedFamilyThroughIntakeWithoutOracle(String code) {
+        var scenario = new com.cguzowski.syntheticincidentgenerator.scenario.ClasspathScenarioCatalog(
+                        JsonMapper.builder().findAndAddModules().build())
+                .findByCode(code)
+                .orElseThrow();
+        AtomicReference<AlertIntakeRequest> submitted = new AtomicReference<>();
+        var service = new IncidentGenerationService(
+                () -> scenario,
+                new AlertReferenceCodec(),
+                request -> {
+                    submitted.set(request);
+                    return new AlertIntakeResponse(INCIDENT_ID, request.incidentType(), "NEW", DETECTED_AT);
+                },
+                Clock.fixed(DETECTED_AT, ZoneOffset.UTC));
+        assertThat(service.generate().incidentType()).isEqualTo(scenario.incidentType());
+        assertThat(submitted.get().incidentType()).isEqualTo(scenario.incidentType());
+    }
+
     @Test
     void submitsOnlySparseAlertFieldsAndDoesNotReturnTheReviewOracle() throws Exception {
         ScenarioDefinition scenario = scenario();

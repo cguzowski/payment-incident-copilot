@@ -108,3 +108,13 @@ ADR-0009 defines the implemented extraction and locator contract.
 
 Use these terms consistently in code, APIs, UI labels, documentation, and
 tests. Add or revise a definition before introducing an overlapping term.
+
+## Additional synthetic incident families
+
+ADR-0018 distinguishes authorization timeouts (missing timely responses),
+capture/refund submission failures, overdue synthetic settlement checkpoints,
+exhausted notification delivery, and reconciliation input/total mismatches.
+These are incident signals requiring investigation, not confirmed payment
+outcomes. Each family has stage-specific aggregate error evidence and approved
+guidance under SynTen Inc/multi-incidents/v1. No corresponding payment engine or
+money movement is implemented.

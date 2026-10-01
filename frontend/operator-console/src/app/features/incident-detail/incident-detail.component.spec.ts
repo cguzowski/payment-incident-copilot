@@ -39,6 +39,23 @@ describe('IncidentDetailComponent', () => {
     }).compileComponents();
   });
 
+  it.each([
+    ['AUTHORIZATION_TIMEOUT_SPIKE', 'Authorization timeout spike'],
+    ['CAPTURE_FAILURE_SPIKE', 'Capture failure spike'],
+    ['REFUND_FAILURE_SPIKE', 'Refund failure spike'],
+    ['SETTLEMENT_DELAY', 'Settlement delay'],
+    ['WEBHOOK_DELIVERY_FAILURE', 'Webhook delivery failure'],
+    ['RECONCILIATION_MISMATCH', 'Reconciliation mismatch'],
+  ])('renders actual family %s', (family, label) => {
+    detailResponse = of({
+      ...incidentDetail(),
+      incidentType: family as IncidentDetail['incidentType'],
+    });
+    const fixture = TestBed.createComponent(IncidentDetailComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain(label);
+  });
+
   it('showsLoadingStateWhileDetailRequestIsPending', () => {
     const fixture = TestBed.createComponent(IncidentDetailComponent);
 

@@ -84,8 +84,8 @@ class KnowledgeRetrievalApiPostgresIntegrationTest {
         jdbcClient.sql("DELETE FROM incident").update();
         when(embeddingClient.embed(anyString())).thenReturn(normalizedEmbedding());
         assertThat(ingestionService.importApprovedSources())
-                .isEqualTo(new KnowledgeImportSummary(2, 0, persistedChunkCount()));
-        assertThat(ingestionService.importApprovedSources()).isEqualTo(new KnowledgeImportSummary(0, 2, 0));
+                .isEqualTo(new KnowledgeImportSummary(14, 0, persistedChunkCount()));
+        assertThat(ingestionService.importApprovedSources()).isEqualTo(new KnowledgeImportSummary(0, 14, 0));
         insertIncidentInvestigationAndEvidence();
         reset(embeddingClient);
     }

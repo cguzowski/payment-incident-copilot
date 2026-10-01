@@ -73,6 +73,49 @@ class AlertApiPostgresIntegrationTest {
         jdbcClient.sql("DELETE FROM incident").update();
     }
 
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(
+            strings = {
+                "AUTHORIZATION_TIMEOUT_SPIKE", "CAPTURE_FAILURE_SPIKE", "REFUND_FAILURE_SPIKE",
+                "SETTLEMENT_DELAY", "WEBHOOK_DELIVERY_FAILURE", "RECONCILIATION_MISMATCH"
+            })
+    void persistsExplicitFamilyAndRetainsItOnReplay(String family) throws Exception {
+        String body = validAlertJson().replace("\"severity\":", "\"incidentType\": \"" + family + "\", \"severity\":");
+        mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.incidentType").value(family));
+        UUID id = jdbcClient.sql("SELECT id FROM incident").query(UUID.class).single();
+        mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validAlertJson()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.incidentType").value(family));
+        mockMvc.perform(get("/api/incidents").header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].incidentType").value(family));
+        mockMvc.perform(get("/api/incidents/{id}", id).header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void rejectsUnknownFamilyWithoutPersistence() throws Exception {
+        String body = validAlertJson().replace("\"severity\":", "\"incidentType\": \"UNKNOWN\", \"severity\":");
+        mockMvc.perform(post("/api/alerts")
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+        assertThat(jdbcClient
+                        .sql("SELECT COUNT(*) FROM incident")
+                        .query(Integer.class)
+                        .single())
+                .isZero();
+    }
+
     @Test
     void validAlertIsPersistedWithNewStatus() throws Exception {
         mockMvc.perform(post("/api/alerts")

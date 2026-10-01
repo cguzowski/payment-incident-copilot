@@ -1,0 +1,161 @@
+{
+  "version": "scenario-oracle/v1",
+  "scenarios": [
+    {
+      "code": "S301",
+      "truth": {
+        "rootCause": "Gateway response deadline exhaustion",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "payment-authorization",
+          "AUTHORIZATION_DEADLINE_EXCEEDED",
+          "GATEWAY_RESPONSE_LATE"
+        ],
+        "recommendation": "Inspect bounded gateway latency and request deadline records with the authorization service owner; do not blindly retry an uncertain authorization."
+      }
+    },
+    {
+      "code": "S311",
+      "truth": {
+        "rootCause": "Insufficient observed evidence",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "Explicit degraded availability and an evidence gap"
+        ],
+        "recommendation": "Do not assert a probable cause or recommendation; obtain complete evidence."
+      }
+    },
+    {
+      "code": "S302",
+      "truth": {
+        "rootCause": "Capture submission dependency unavailable",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "payment-capture",
+          "CAPTURE_SUBMISSION_FAILED",
+          "CAPTURE_UPSTREAM_UNAVAILABLE"
+        ],
+        "recommendation": "Ask the capture service owner to inspect upstream availability and final capture state before considering a controlled retry."
+      }
+    },
+    {
+      "code": "S312",
+      "truth": {
+        "rootCause": "Insufficient observed evidence",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "Explicit degraded availability and an evidence gap"
+        ],
+        "recommendation": "Do not assert a probable cause or recommendation; obtain complete evidence."
+      }
+    },
+    {
+      "code": "S303",
+      "truth": {
+        "rootCause": "Refund submission dependency timeout",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "payment-refund",
+          "REFUND_SUBMISSION_FAILED",
+          "REFUND_DEPENDENCY_TIMEOUT"
+        ],
+        "recommendation": "Ask the refund service owner to verify upstream acknowledgements and refund idempotency state before considering a controlled retry."
+      }
+    },
+    {
+      "code": "S313",
+      "truth": {
+        "rootCause": "Insufficient observed evidence",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "Explicit degraded availability and an evidence gap"
+        ],
+        "recommendation": "Do not assert a probable cause or recommendation; obtain complete evidence."
+      }
+    },
+    {
+      "code": "S304",
+      "truth": {
+        "rootCause": "Settlement acknowledgement delayed",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "settlement-sim",
+          "SETTLEMENT_BATCH_OVERDUE",
+          "SETTLEMENT_ACK_MISSING"
+        ],
+        "recommendation": "Ask the settlement operations owner to inspect batch checkpoints and upstream acknowledgements; retain the overdue batches for human review."
+      }
+    },
+    {
+      "code": "S314",
+      "truth": {
+        "rootCause": "Insufficient observed evidence",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "Explicit degraded availability and an evidence gap"
+        ],
+        "recommendation": "Do not assert a probable cause or recommendation; obtain complete evidence."
+      }
+    },
+    {
+      "code": "S305",
+      "truth": {
+        "rootCause": "Notification receiver unavailable",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "webhook-dispatcher",
+          "WEBHOOK_DELIVERY_EXHAUSTED",
+          "WEBHOOK_ENDPOINT_TIMEOUT"
+        ],
+        "recommendation": "Ask the notification owner to inspect receiver availability and acknowledgement records before authorizing any bounded replay."
+      }
+    },
+    {
+      "code": "S315",
+      "truth": {
+        "rootCause": "Insufficient observed evidence",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "Explicit degraded availability and an evidence gap"
+        ],
+        "recommendation": "Do not assert a probable cause or recommendation; obtain complete evidence."
+      }
+    },
+    {
+      "code": "S306",
+      "truth": {
+        "rootCause": "Incomplete reconciliation input",
+        "expectedDisposition": "PROPOSED",
+        "expectedConfidence": "MEDIUM",
+        "requiredEvidence": [
+          "reconciliation-sim",
+          "RECONCILIATION_TOTAL_MISMATCH",
+          "RECONCILIATION_RECORD_MISSING"
+        ],
+        "recommendation": "Ask the reconciliation owner to compare immutable input snapshots and missing-record identifiers; do not adjust balances or invent matching entries."
+      }
+    },
+    {
+      "code": "S316",
+      "truth": {
+        "rootCause": "Insufficient observed evidence",
+        "expectedDisposition": "INSUFFICIENT_EVIDENCE",
+        "expectedConfidence": "LOW",
+        "requiredEvidence": [
+          "Explicit degraded availability and an evidence gap"
+        ],
+        "recommendation": "Do not assert a probable cause or recommendation; obtain complete evidence."
+      }
+    }
+  ]
+}

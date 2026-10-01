@@ -24,8 +24,8 @@ function Assert-Equal {
 $repositoryRoot = 'C:\synthetic\payment-incident-copilot'
 $plan = @(Get-LocalKnowledgePreparationPlan -RepositoryRoot $repositoryRoot)
 
-Assert-Equal 2 $plan.Count 'Preparation step count differs.'
-Assert-Equal @('catalog', 'embeddings') $plan.Name 'Preparation order differs.'
+Assert-Equal 3 $plan.Count 'Preparation step count differs.'
+Assert-Equal @('catalog', 'embeddings', 'markdown') $plan.Name 'Preparation order differs.'
 
 $expectedCorpusRoot = Join-Path $repositoryRoot 'SynTen Inc\corpus'
 $catalog = $plan[0]
@@ -53,6 +53,13 @@ Assert-Equal 'false' $embeddings.EnvironmentVariables.APP_KNOWLEDGE_PDF_CATALOG_
 Assert-Equal 'true' $embeddings.EnvironmentVariables.APP_KNOWLEDGE_PDF_BACKFILL_ENABLED `
     'Backfill command must be enabled.'
 
+$markdown = $plan[2]
+Assert-Equal 'none' $markdown.EnvironmentVariables.SPRING_AI_MODEL_CHAT 'Markdown chat provider must be disabled.'
+Assert-Equal 'ollama' $markdown.EnvironmentVariables.SPRING_AI_MODEL_EMBEDDING 'Markdown embedding provider differs.'
+Assert-Equal 'false' $markdown.EnvironmentVariables.APP_KNOWLEDGE_PDF_CATALOG_ENABLED 'PDF catalog must be disabled during Markdown import.'
+Assert-Equal 'false' $markdown.EnvironmentVariables.APP_KNOWLEDGE_PDF_BACKFILL_ENABLED 'PDF backfill must be disabled during Markdown import.'
+Assert-Equal 'true' $markdown.EnvironmentVariables.APP_KNOWLEDGE_INGESTION_ENABLED 'Approved family guidance must be imported.'
+
 $expectedArguments = @(
     '-Dspring-boot.run.arguments=--spring.main.web-application-type=none'
     'spring-boot:run'
@@ -65,7 +72,8 @@ foreach ($step in $plan) {
             'APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED',
             'APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED'
         )) {
-        Assert-Equal 'false' $step.EnvironmentVariables[$disabledMode] `
+        $expectedMode = if ($step.Name -eq 'markdown' -and $disabledMode -eq 'APP_KNOWLEDGE_INGESTION_ENABLED') { 'true' } else { 'false' }
+        Assert-Equal $expectedMode $step.EnvironmentVariables[$disabledMode] `
             "$disabledMode must be disabled for $($step.Name)."
     }
 }

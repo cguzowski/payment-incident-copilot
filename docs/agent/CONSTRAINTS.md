@@ -1,12 +1,13 @@
 # Constraints and guardrails
 
-Last reviewed: 2026-09-24
+Last reviewed: 2026-10-01
 
 ## Product constraints
 
 - Build one convincing vertical slice before adding additional incident types.
-- Preserve the completed authorization-decline vertical slice while expanding
-  knowledge depth; do not use the corpus phase to add another incident family.
+- Preserve the completed authorization-decline slice and immutable historical
+  corpus/evaluations. The owner-authorized ADR-0018 expansion adds six families
+  through separate assets after the original corpus phase.
 - Use synthetic scenarios and synthetic operational records only.
 - The platform investigates; it does not process payments.
 - The model assists; the operator makes the final decision.

@@ -24,7 +24,10 @@ public class ClasspathScenarioOracleCatalog implements ScenarioOracleCatalog {
     private final Map<String, ScenarioOracleEntry> entriesByCode;
 
     public ClasspathScenarioOracleCatalog(JsonMapper jsonMapper) {
-        this.entries = load(jsonMapper);
+        this.entries = java.util.stream.Stream.concat(
+                        load(jsonMapper, ORACLE_PATH).stream(),
+                        load(jsonMapper, "scenarios/multi-incidents/v1/oracle.json").stream())
+                .toList();
         this.entriesByCode =
                 entries.stream().collect(Collectors.toUnmodifiableMap(ScenarioOracleEntry::code, entry -> entry));
     }
@@ -44,8 +47,8 @@ public class ClasspathScenarioOracleCatalog implements ScenarioOracleCatalog {
         return Optional.ofNullable(entriesByCode.get(code));
     }
 
-    private static List<ScenarioOracleEntry> load(JsonMapper jsonMapper) {
-        try (InputStream input = new ClassPathResource(ORACLE_PATH).getInputStream()) {
+    private static List<ScenarioOracleEntry> load(JsonMapper jsonMapper, String path) {
+        try (InputStream input = new ClassPathResource(path).getInputStream()) {
             FixtureDocument document = jsonMapper.readValue(input, FixtureDocument.class);
             require(document != null && ORACLE_VERSION.equals(document.version()), "invalid version");
             require(document.scenarios() != null && !document.scenarios().isEmpty(), "no scenarios");

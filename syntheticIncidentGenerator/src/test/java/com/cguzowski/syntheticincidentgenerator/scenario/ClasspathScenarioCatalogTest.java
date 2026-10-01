@@ -10,6 +10,27 @@ import tools.jackson.databind.json.JsonMapper;
 class ClasspathScenarioCatalogTest {
 
     @Test
+    void addsSixFamiliesWithAvailableAndDegradedEvidence() throws Exception {
+        var mapper = JsonMapper.builder().findAndAddModules().build();
+        ScenarioCatalog catalog = new ClasspathScenarioCatalog(mapper);
+        ScenarioOracleCatalog oracle = new ClasspathScenarioOracleCatalog(mapper);
+        for (int index = 1; index <= 6; index++) {
+            var available = catalog.findByCode("S30" + index).orElseThrow();
+            var degraded = catalog.findByCode("S31" + index).orElseThrow();
+            assertThat(available.evidence().availability()).isEqualTo(EvidenceAvailability.AVAILABLE);
+            assertThat(available.evidence().errors()).isNotEmpty();
+            assertThat(degraded.evidence().availability())
+                    .isIn(EvidenceAvailability.PARTIAL, EvidenceAvailability.UNAVAILABLE);
+            assertThat(oracle.findByCode(available.code())).isPresent();
+            assertThat(oracle.findByCode(degraded.code()).orElseThrow().truth().expectedDisposition())
+                    .isEqualTo("INSUFFICIENT_EVIDENCE");
+            var json = mapper.readTree(mapper.writeValueAsString(available));
+            assertThat(json.get("incidentType").asText()).isNotEqualTo("AUTHORIZATION_DECLINE_RATE_SPIKE");
+        }
+        assertThat(catalog.all()).hasSize(48);
+    }
+
+    @Test
     void loadsBroadReviewedObservableCatalogWithoutOracleFields() throws Exception {
         ScenarioCatalog catalog = new ClasspathScenarioCatalog(
                 JsonMapper.builder().findAndAddModules().build());

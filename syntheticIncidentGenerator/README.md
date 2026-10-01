@@ -7,10 +7,10 @@ with the payment incident copilot.
 ## Behavioral contract
 
 - A deliberately red button selects one weighted scenario from a reviewed
-  catalog of common, uncommon, and rare payment-authorization incidents.
+  catalog of 48 common, uncommon and rare scenarios across seven incident families.
 - The generator sends only the existing alert-system payload to the copilot
-  intake API: opaque external alert ID, severity, detected time, title, and
-  description. Tenant context is carried in the existing synthetic header.
+  intake API: opaque external alert ID, explicit incidentType, severity, detected time,
+  title and description. Tenant context is carried in the existing synthetic header.
 - The copilot API owns the database insert and idempotency behavior; the
   generator never writes into another system's tables.
 - The opaque alert ID lets this service reconstruct the selected scenario and
@@ -99,3 +99,15 @@ through the existing service-error contract. The corpus maps all 36 scenarios,
 but authored coverage does not guarantee successful retrieval or sufficient
 observed evidence. Partial and unavailable evidence can still require
 `INSUFFICIENT_EVIDENCE`; see [corpus results](../SynTen%20Inc/README.md).
+
+## Additional incident families
+
+The original 36 authorization-decline fixtures and sealed oracle retain their
+exact bytes. Maven additionally packages
+[SynTen multi-incidents v1](../SynTen%20Inc/multi-incidents/v1/README.md): complete
+and degraded scenarios for authorization timeouts, capture/refund failures,
+settlement delays, webhook delivery failures and reconciliation mismatches.
+The same random button selects from the composed catalog. Only generation sends
+the explicit incidentType; MCP remains the immutable aggregate-service-errors
+v1 contract. Run `./start-local.bat -PrepareKnowledge` from the repository root
+and restart old API/generator processes to use the new sources and implementation.

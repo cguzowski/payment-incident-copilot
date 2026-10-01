@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { IncidentType, incidentTypeLabels } from '../../core/models/incident';
 import { InvestigationApiService } from '../../core/api/investigations/investigation-api.service';
 import { ApiRequestError } from '../../core/http/api-error.interceptor';
 import { IncidentDetailApiService } from './incident-detail-api.service';
@@ -51,8 +52,8 @@ export class IncidentDetailComponent {
       });
   }
 
-  protected incidentTypeLabel(): string {
-    return 'Authorization decline spike';
+  protected incidentTypeLabel(type: IncidentType): string {
+    return incidentTypeLabels[type];
   }
 
   protected startInvestigation(): void {

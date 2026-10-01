@@ -1,0 +1,262 @@
+{
+  "scenarios": [
+    {
+      "code": "S301",
+      "incidentType": "AUTHORIZATION_TIMEOUT_SPIKE",
+      "rarity": "COMMON",
+      "severity": "HIGH",
+      "title": "Authorization timeout spike",
+      "description": "Synthetic authorization requests exceeded the five-second response deadline 38 times in five minutes.",
+      "evidence": {
+        "availability": "AVAILABLE",
+        "errors": [
+          {
+            "errorCode": "AUTHORIZATION_DEADLINE_EXCEEDED",
+            "count": 21,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "GATEWAY_RESPONSE_LATE",
+            "count": 8,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "payment-authorization"
+      }
+    },
+    {
+      "code": "S311",
+      "incidentType": "AUTHORIZATION_TIMEOUT_SPIKE",
+      "rarity": "UNCOMMON",
+      "severity": "HIGH",
+      "title": "Authorization timeout spike",
+      "description": "Synthetic authorization requests exceeded the five-second response deadline 38 times in five minutes. Observation coverage requires verification.",
+      "evidence": {
+        "availability": "PARTIAL",
+        "errors": [
+          {
+            "errorCode": "AUTHORIZATION_DEADLINE_EXCEEDED",
+            "count": 21,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "GATEWAY_RESPONSE_LATE",
+            "count": 8,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "payment-authorization",
+        "statusDetail": "Synthetic observation partition missing."
+      }
+    },
+    {
+      "code": "S302",
+      "incidentType": "CAPTURE_FAILURE_SPIKE",
+      "rarity": "COMMON",
+      "severity": "HIGH",
+      "title": "Capture failure spike",
+      "description": "Synthetic capture submission attempts recorded 29 failures in five minutes on route-blue.",
+      "evidence": {
+        "availability": "AVAILABLE",
+        "errors": [
+          {
+            "errorCode": "CAPTURE_SUBMISSION_FAILED",
+            "count": 22,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "CAPTURE_UPSTREAM_UNAVAILABLE",
+            "count": 9,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "payment-capture"
+      }
+    },
+    {
+      "code": "S312",
+      "incidentType": "CAPTURE_FAILURE_SPIKE",
+      "rarity": "UNCOMMON",
+      "severity": "HIGH",
+      "title": "Capture failure spike",
+      "description": "Synthetic capture submission attempts recorded 29 failures in five minutes on route-blue. Observation coverage requires verification.",
+      "evidence": {
+        "availability": "UNAVAILABLE",
+        "errors": [],
+        "statusDetail": "Synthetic observation source unavailable."
+      }
+    },
+    {
+      "code": "S303",
+      "incidentType": "REFUND_FAILURE_SPIKE",
+      "rarity": "COMMON",
+      "severity": "HIGH",
+      "title": "Refund failure spike",
+      "description": "Synthetic refund submission attempts recorded 21 failures in five minutes on route-green.",
+      "evidence": {
+        "availability": "AVAILABLE",
+        "errors": [
+          {
+            "errorCode": "REFUND_SUBMISSION_FAILED",
+            "count": 23,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "REFUND_DEPENDENCY_TIMEOUT",
+            "count": 10,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "payment-refund"
+      }
+    },
+    {
+      "code": "S313",
+      "incidentType": "REFUND_FAILURE_SPIKE",
+      "rarity": "UNCOMMON",
+      "severity": "HIGH",
+      "title": "Refund failure spike",
+      "description": "Synthetic refund submission attempts recorded 21 failures in five minutes on route-green. Observation coverage requires verification.",
+      "evidence": {
+        "availability": "PARTIAL",
+        "errors": [
+          {
+            "errorCode": "REFUND_SUBMISSION_FAILED",
+            "count": 23,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "REFUND_DEPENDENCY_TIMEOUT",
+            "count": 10,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "payment-refund",
+        "statusDetail": "Synthetic observation partition missing."
+      }
+    },
+    {
+      "code": "S304",
+      "incidentType": "SETTLEMENT_DELAY",
+      "rarity": "COMMON",
+      "severity": "HIGH",
+      "title": "Settlement delay",
+      "description": "Two synthetic settlement batches remained unacknowledged 20 minutes past their fictional scheduled checkpoint.",
+      "evidence": {
+        "availability": "AVAILABLE",
+        "errors": [
+          {
+            "errorCode": "SETTLEMENT_BATCH_OVERDUE",
+            "count": 24,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "SETTLEMENT_ACK_MISSING",
+            "count": 11,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "settlement-sim"
+      }
+    },
+    {
+      "code": "S314",
+      "incidentType": "SETTLEMENT_DELAY",
+      "rarity": "UNCOMMON",
+      "severity": "HIGH",
+      "title": "Settlement delay",
+      "description": "Two synthetic settlement batches remained unacknowledged 20 minutes past their fictional scheduled checkpoint. Observation coverage requires verification.",
+      "evidence": {
+        "availability": "UNAVAILABLE",
+        "errors": [],
+        "statusDetail": "Synthetic observation source unavailable."
+      }
+    },
+    {
+      "code": "S305",
+      "incidentType": "WEBHOOK_DELIVERY_FAILURE",
+      "rarity": "COMMON",
+      "severity": "HIGH",
+      "title": "Webhook delivery failure",
+      "description": "Synthetic notification deliveries exhausted their bounded retry budget 16 times in five minutes for cohort-07.",
+      "evidence": {
+        "availability": "AVAILABLE",
+        "errors": [
+          {
+            "errorCode": "WEBHOOK_DELIVERY_EXHAUSTED",
+            "count": 25,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "WEBHOOK_ENDPOINT_TIMEOUT",
+            "count": 12,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "webhook-dispatcher"
+      }
+    },
+    {
+      "code": "S315",
+      "incidentType": "WEBHOOK_DELIVERY_FAILURE",
+      "rarity": "UNCOMMON",
+      "severity": "HIGH",
+      "title": "Webhook delivery failure",
+      "description": "Synthetic notification deliveries exhausted their bounded retry budget 16 times in five minutes for cohort-07. Observation coverage requires verification.",
+      "evidence": {
+        "availability": "PARTIAL",
+        "errors": [
+          {
+            "errorCode": "WEBHOOK_DELIVERY_EXHAUSTED",
+            "count": 25,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "WEBHOOK_ENDPOINT_TIMEOUT",
+            "count": 12,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "webhook-dispatcher",
+        "statusDetail": "Synthetic observation partition missing."
+      }
+    },
+    {
+      "code": "S306",
+      "incidentType": "RECONCILIATION_MISMATCH",
+      "rarity": "COMMON",
+      "severity": "HIGH",
+      "title": "Reconciliation mismatch",
+      "description": "A synthetic reconciliation checkpoint reported three unmatched records and an aggregate total mismatch.",
+      "evidence": {
+        "availability": "AVAILABLE",
+        "errors": [
+          {
+            "errorCode": "RECONCILIATION_TOTAL_MISMATCH",
+            "count": 26,
+            "secondsBeforeDetection": 100
+          },
+          {
+            "errorCode": "RECONCILIATION_RECORD_MISSING",
+            "count": 13,
+            "secondsBeforeDetection": 65
+          }
+        ],
+        "serviceName": "reconciliation-sim"
+      }
+    },
+    {
+      "code": "S316",
+      "incidentType": "RECONCILIATION_MISMATCH",
+      "rarity": "UNCOMMON",
+      "severity": "HIGH",
+      "title": "Reconciliation mismatch",
+      "description": "A synthetic reconciliation checkpoint reported three unmatched records and an aggregate total mismatch. Observation coverage requires verification.",
+      "evidence": {
+        "availability": "UNAVAILABLE",
+        "errors": [],
+        "statusDetail": "Synthetic observation source unavailable."
+      }
+    }
+  ]
+}

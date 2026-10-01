@@ -23,7 +23,7 @@ class AlertIngestionService {
                 UUID.randomUUID(),
                 command.tenantId(),
                 command.externalAlertId(),
-                IncidentType.AUTHORIZATION_DECLINE_RATE_SPIKE,
+                command.incidentType(),
                 command.severity(),
                 IncidentStatus.NEW,
                 command.title(),

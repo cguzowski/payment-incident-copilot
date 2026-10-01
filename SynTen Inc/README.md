@@ -1,8 +1,10 @@
 # SynTen Inc
 
 SynTen Inc is the fictional tenant `8b860d80-d17f-4e6b-8c48-af35f26a4d61`.
-All data is synthetic and belongs to the single
-`AUTHORIZATION_DECLINE_RATE_SPIKE` incident family.
+All data is synthetic. The historical authorization corpus covers
+`AUTHORIZATION_DECLINE_RATE_SPIKE`. The owner-authorized
+[multi-incidents v1](multi-incidents/v1/README.md) package adds six distinct
+families with twelve scenarios and twelve approved Markdown sources.
 
 ## Corpus authorities
 
@@ -19,7 +21,7 @@ The active `synten-auth-knowledge/v2` corpus contains 30 maintained Markdown
 sources and 30 PDFs: 22 runbooks and 8 policies, comprising 27 approved and 3
 superseded versions. Its manifest reports 113 pages, 3-5 per document; all pages
 passed automated validation and visual inspection. The hard maximum is 15. The
-inventory covers all 36 observable generator scenarios. The exact v1 sources,
+inventory covers the original 36 authorization-decline observable scenarios. The exact v1 sources,
 PDFs, contract, tooling, and manifest remain under
 `corpus/versions/synten-auth-knowledge-v1/` and are hash-verifiable there.
 

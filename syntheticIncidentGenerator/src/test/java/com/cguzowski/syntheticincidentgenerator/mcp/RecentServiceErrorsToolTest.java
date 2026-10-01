@@ -19,6 +19,30 @@ class RecentServiceErrorsToolTest {
     private static final Instant DETECTED_AT = Instant.parse("2026-08-31T09:15:30Z");
     private static final Instant RETRIEVED_AT = Instant.parse("2026-08-31T09:20:00Z");
 
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(
+            strings = {"S301", "S302", "S303", "S304", "S305", "S306", "S311", "S312", "S313", "S314", "S315", "S316"})
+    void reconstructsAdditionalFamilyEvidenceWithoutLosingAvailability(String code) {
+        var fixture = new ClasspathScenarioCatalog(
+                        JsonMapper.builder().findAndAddModules().build())
+                .findByCode(code)
+                .orElseThrow()
+                .evidence();
+        var reference = "sig-v1-" + code + "-1788167730-1234567890ab";
+        var result = tool().getRecentServiceErrors(TENANT_ID, reference, CORRELATION_ID, TOOL_CALL_ID);
+        assertThat(result.status().name()).isEqualTo(fixture.availability().name());
+        if (result.content() == null) {
+            assertThat(fixture.serviceName()).isNull();
+        } else {
+            assertThat(result.content().serviceName()).isEqualTo(fixture.serviceName());
+            assertThat(result.content().errors())
+                    .extracting(RecentServiceErrorObservation::errorCode)
+                    .containsExactlyElementsOf(fixture.errors().stream()
+                            .map(error -> error.errorCode())
+                            .toList());
+        }
+    }
+
     @Test
     void reconstructsDeterministicTimeAlignedEvidenceFromOpaqueAlertReference() {
         RecentServiceErrorsTool tool = tool();

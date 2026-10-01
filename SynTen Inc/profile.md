@@ -144,3 +144,16 @@ banks, processors, cloud accounts, domains, IP addresses, employee names,
 customer names, contractual limits, or regulatory attestations. Later work must
 not fill those gaps by borrowing real data; any additional fact requires an
 explicit synthetic design decision recorded under `SynTen Inc/`.
+
+## Owner-authorized incident expansion (2026-09-30)
+
+The original profile and authorization corpus remain historical authorities.
+ADR-0018 extends the demonstration vocabulary to six additional synthetic
+incident families. payment-capture, payment-refund, settlement-sim,
+webhook-dispatcher and reconciliation-sim are fictional observation source
+names, not new deployables or engines. Authorization timeouts use
+payment-authorization. The application does not capture, refund or settle funds.
+The additional services emit only deterministic aggregate diagnostic records.
+Family-specific service-owner roles are fictional authority labels; all actual
+report decisions still belong to a human operator. Membership, guidance,
+provenance and preparation steps are in multi-incidents/v1/README.md.

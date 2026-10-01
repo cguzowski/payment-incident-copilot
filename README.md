@@ -5,15 +5,19 @@ An auditable copilot for investigating synthetic payment incidents:
 **alert → incident work queue → evidence → approved knowledge → advisory report
 → human decision → audit timeline**
 
-The core MVP is implemented, and a live local S001 report has been demonstrated.
-The retrieval benchmark still fails all three quality thresholds; one complete
-live-model terminal-decision proof and broader evaluation remain outstanding.
+The core MVP is implemented. Seven synthetic incident families now share the
+complete triage and human-review workflow. The authorization corpus passes its
+fixed retrieval thresholds; retained live-model evaluations record quality gaps.
+The six added families have deterministic workflow coverage, with live-model
+quality not yet measured.
 See [current status](docs/agent/STATUS.md) and the
 [roadmap](docs/agent/ROADMAP.md).
 
 ## What it does
 
 - Keeps active and completed incidents in one tenant-scoped operator queue.
+- Triages authorization declines/timeouts, capture/refund failures, settlement
+  delays, webhook delivery failures and reconciliation mismatches.
 - Collects read-only synthetic service-error evidence through MCP.
 - Retrieves approved Markdown/PDF knowledge with immutable source provenance.
 - Generates schema- and citation-validated reports through local Ollama.
@@ -41,7 +45,10 @@ provider remains independently runnable. See
 
 The [SynTen Inc corpus](SynTen%20Inc/README.md) contains 30 PDF versions and
 705 page-aware chunks. Its README owns the recorded benchmark results and
-their evidence limitations.
+their evidence limitations. The additive
+[incident-family package](SynTen%20Inc/multi-incidents/v1/README.md) contains
+six additional families, twelve scenarios and twelve approved Markdown sources.
+The local launcher imports these sources with `./start-local.bat -PrepareKnowledge`.
 
 ## Run locally on Windows
 
@@ -91,8 +98,10 @@ embeddings before the application starts:
 .\start-local.bat -PrepareKnowledge
 ```
 
-This imports the validated PDF catalog, then calls the local embedding model
-for the catalog's 705 chunks. It can take substantial time. Exact complete
+This imports the validated PDF catalog, prepares its 705 embeddings, then
+imports/embeds the two legacy Markdown sources and twelve additional
+incident-family runbooks/policies. Run this once when upgrading an existing
+database to the added families too. It can take substantial time. Exact complete
 reruns are no-ops; incompatible or partial catalog/embedding state fails closed
 rather than being silently overwritten. It never downloads models.
 
@@ -114,9 +123,9 @@ generator's MCP endpoint explicitly.
 | Copilot API | http://localhost:8080 |
 | Generator UI and MCP evidence | http://localhost:8082 |
 
-Use the generator's red button to create an incident. Its answer key is
-collapsed in the browser, not isolated from the reviewer; see
-[evaluation limitations](docs/agent/STATUS.md).
+Use the generator's red button to create an incident. Its sealed answer key
+can be revealed only after the exact incident has an explicit terminal human
+decision. See [evaluation limitations](docs/agent/STATUS.md).
 
 ## Independent development and verification
 

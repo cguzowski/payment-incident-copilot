@@ -314,7 +314,7 @@ function Start-LocalApplication {
             -Plan $preparationPlan `
             -MavenCommand $mavenCommand `
             -BackendDirectory $backendDirectory
-        Write-Host 'Local SynTen PDF knowledge is ready.'
+        Write-Host 'Local SynTen PDF and incident-family Markdown knowledge is ready.'
     }
 
     if (Test-HttpEndpoint -Uri $mcpHealthUri) {

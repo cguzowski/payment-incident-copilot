@@ -59,7 +59,8 @@ class CopilotAlertHttpClientTest {
         assertThat(tenantHeader.get()).isEqualTo(TENANT_ID.toString());
         Map<String, Object> body = mapper.readValue(requestBody.get(), new TypeReference<>() {});
         assertThat(body.keySet())
-                .containsExactlyInAnyOrder("externalAlertId", "severity", "detectedAt", "title", "description");
+                .containsExactlyInAnyOrder(
+                        "externalAlertId", "severity", "detectedAt", "title", "description", "incidentType");
         assertThat(body).doesNotContainKeys("tenantId", "scenarioCode", "answerKey", "rootCause", "evidence");
         assertThat(response.incidentId()).isEqualTo(INCIDENT_ID);
         assertThat(response.incidentType()).isEqualTo("AUTHORIZATION_DECLINE_RATE_SPIKE");

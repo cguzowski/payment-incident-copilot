@@ -49,6 +49,21 @@ function Get-LocalKnowledgePreparationPlan {
                 APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = $disabledModes.APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED
             }
         }
+        [pscustomobject]@{
+            Name = 'markdown'
+            Description = 'Importing approved Markdown guidance for all seven incident families'
+            MavenArguments = $mavenArguments
+            EnvironmentVariables = [ordered]@{
+                SYNTEN_CORPUS_ROOT = $corpusRoot
+                SPRING_AI_MODEL_CHAT = 'none'
+                SPRING_AI_MODEL_EMBEDDING = 'ollama'
+                APP_KNOWLEDGE_PDF_CATALOG_ENABLED = 'false'
+                APP_KNOWLEDGE_PDF_BACKFILL_ENABLED = 'false'
+                APP_KNOWLEDGE_INGESTION_ENABLED = 'true'
+                APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED = $disabledModes.APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED
+                APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = $disabledModes.APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED
+            }
+        }
     )
 }
 
