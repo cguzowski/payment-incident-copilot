@@ -11,7 +11,16 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md) adopts the frozen payment PDF library (E3).
+The [current task](tasks/current.md) repairs the GitHub repository verification
+failure: run 36878944702 passed backend/frontend but failed repository because
+the knowledge-preparation test fixture assumed a Windows C: drive on Ubuntu;
+the aggregate ci check propagated that failure. A platform-native synthetic
+test root passes the focused script, Repository scope and full ./verify.ps1:
+362 API, 9 MCP, 52 generator and 103 console tests with zero failures/errors/skips,
+plus script, formatting, build, Compose and diff checks. The full gate required
+releasing the Angular preview's esbuild file lock. GitHub verification is pending.
+
+The [completed E3 task](tasks/completed/2026-10-01-adopt-frozen-payment-pdf-library.md) adopted the frozen payment PDF library.
 E3 is complete under ADR-0020. Both accepted catalogs are prepared locally:
 30 authorization PDF versions / 705 chunks and 16 independent payment PDFs /
 65 chunks, embedded with nomic-embed-text / 768. New direct and related searches

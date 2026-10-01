@@ -21,7 +21,7 @@ function Assert-Equal {
     }
 }
 
-$repositoryRoot = 'C:\synthetic\payment-incident-copilot'
+$repositoryRoot = Join-Path $PSScriptRoot 'synthetic/payment-incident-copilot'
 $plan = @(Get-LocalKnowledgePreparationPlan -RepositoryRoot $repositoryRoot)
 
 Assert-Equal 6 $plan.Count 'Preparation step count differs.'
