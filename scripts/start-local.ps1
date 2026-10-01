@@ -257,13 +257,13 @@ function Invoke-LocalKnowledgePreparation {
 
 function Start-LocalApplication {
     $repositoryRoot = Split-Path -Parent $PSScriptRoot
-    $mcpDirectory = Join-Path $repositoryRoot 'backend/operations-mcp-server'
     $backendDirectory = Join-Path $repositoryRoot 'backend/copilot-api'
     $frontendDirectory = Join-Path $repositoryRoot 'frontend/operator-console'
     $knowledgePreparationModule = Join-Path $repositoryRoot 'scripts/local/LocalKnowledgePreparation.psm1'
     $aiPrerequisitesModule = Join-Path $repositoryRoot 'scripts/local/LocalAiPrerequisites.psm1'
     Import-Module $knowledgePreparationModule -Force
     Import-Module $aiPrerequisitesModule -Force
+    Import-Module (Join-Path $repositoryRoot 'scripts/local/LocalEvidenceStartup.psm1') -Force
 
     Import-DotEnv -Path (Join-Path $repositoryRoot '.env')
     if ($UseGeneratorMcp) {
@@ -317,14 +317,15 @@ function Start-LocalApplication {
         Write-Host 'Local SynTen PDF and incident-family Markdown knowledge is ready.'
     }
 
-    if (Test-HttpEndpoint -Uri $mcpHealthUri) {
-        Write-Host 'Operations MCP server is already running.'
-    } else {
-        Write-Host 'Starting the operations MCP server in a new terminal...'
-        Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'mvn spring-boot:run' `
-            -WorkingDirectory $mcpDirectory -WindowStyle Normal
-        Wait-ForHttpEndpoint -Name 'Operations MCP server' -Uri $mcpHealthUri
-    }
+    Start-SelectedMcpProvider -RepositoryRoot $repositoryRoot -UseGeneratorMcp:$UseGeneratorMcp `
+        -HealthUri $mcpHealthUri `
+        -IsHealthy { param($Uri) Test-HttpEndpoint -Uri $Uri } `
+        -StartProvider {
+            param($Directory)
+            Start-Process -FilePath $env:ComSpec -ArgumentList '/k', 'mvn spring-boot:run' `
+                -WorkingDirectory $Directory -WindowStyle Hidden
+        } `
+        -WaitForProvider { param($Uri) Wait-ForHttpEndpoint -Name 'Selected evidence provider' -Uri $Uri }
 
     $apiHealthUri = 'http://localhost:8080/actuator/health'
     if (Test-HttpEndpoint -Uri $apiHealthUri) {
@@ -335,6 +336,8 @@ function Start-LocalApplication {
             -WorkingDirectory $backendDirectory -WindowStyle Normal
         Wait-ForHttpEndpoint -Name 'Copilot API' -Uri $apiHealthUri
     }
+
+    Assert-LocalApiMcpConfiguration -ExpectedBaseUrl $env:OPERATIONS_MCP_BASE_URL
 
     $operatorConsoleUri = 'http://localhost:4200'
     if (Test-HttpEndpoint -Uri $operatorConsoleUri) {

@@ -255,6 +255,7 @@ function Invoke-RepositoryVerificationStep {
             & (Join-Path $RepositoryRoot 'scripts/verification/Verification.Tests.ps1')
             & (Join-Path $RepositoryRoot 'scripts/local/LocalKnowledgePreparation.Tests.ps1')
             & (Join-Path $RepositoryRoot 'scripts/local/LocalAiPrerequisites.Tests.ps1')
+            & (Join-Path $RepositoryRoot 'scripts/local/LocalEvidenceStartup.Tests.ps1')
             & (Join-Path $RepositoryRoot 'scripts/evaluation/SynTenRetrievalEvaluationV1.Tests.ps1')
             & (Join-Path $RepositoryRoot 'scripts/evaluation/SynTenReportEvaluationV1.Tests.ps1')
         }

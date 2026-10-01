@@ -16,9 +16,10 @@ public class WeightedScenarioSelector implements ScenarioSelector {
         for (ScenarioRarity rarity : ScenarioRarity.values()) {
             List<ScenarioDefinition> scenarios = catalog.all().stream()
                     .filter(scenario -> scenario.rarity() == rarity)
+                    .filter(scenario -> scenario.evidence().availability() == EvidenceAvailability.AVAILABLE)
                     .toList();
             if (scenarios.isEmpty()) {
-                throw new IllegalStateException("Scenario catalog has no " + rarity + " scenarios.");
+                throw new IllegalStateException("Scenario catalog has no AVAILABLE " + rarity + " scenarios.");
             }
             grouped.put(rarity, scenarios);
         }
