@@ -50,6 +50,9 @@ class SynTenCorpusSourceRepository {
         if (corpusRoot == null) {
             throw new IllegalStateException("SynTen PDF catalog corpus root is required.");
         }
+        if (Files.exists(corpusRoot.resolve("freeze-manifest.json"))) {
+            return new PaymentPdfSourceLoader(corpusRoot, jsonMapper).load();
+        }
         Manifest manifest = readManifest();
         validateManifest(manifest);
         validateExactArtifacts(manifest);

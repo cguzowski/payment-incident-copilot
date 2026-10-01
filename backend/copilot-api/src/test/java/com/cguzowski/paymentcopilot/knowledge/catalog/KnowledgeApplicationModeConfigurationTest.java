@@ -69,6 +69,14 @@ class KnowledgeApplicationModeConfigurationTest {
     }
 
     @Test
+    void rejectsReadinessAndImportTogether() {
+        contextRunner
+                .withPropertyValues(
+                        "app.knowledge.pdf-readiness.enabled=true", "app.knowledge.pdf-catalog.enabled=true")
+                .run(context -> assertThat(context).hasFailed());
+    }
+
+    @Test
     void rejectsEvaluationAndBackfillTogether() {
         contextRunner
                 .withPropertyValues(

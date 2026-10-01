@@ -93,9 +93,12 @@ Q5 retains a complete live input and reproducible grade for all 36 scenarios.
 See [measured results and artifacts](q5-live-results.md); citation validity does
 not erase the insufficient-evidence and confidence failures.
 
-Under PowerShell 7.6.5, the wrapper's default `ConvertFrom-Json` turns input
-ISO timestamps into DateTime objects, causing `createdAt must be non-blank`.
-For retained live input, use the unchanged module with
-`ConvertFrom-Json -DateKind String`, as documented in Q5 reproduction.
-That invocation produced a byte-identical regrade. The existing runner test
-checks structure and does not cover execution of this CLI input path.
+The CLI preserves JSON timestamp strings by selecting `ConvertFrom-Json
+-DateKind String` where supported. Earlier PowerShell versions without DateKind
+retain their default string parsing. The evaluator still rejects malformed
+round-trip ISO-8601 timestamps. Executable CLI regressions on PowerShell 7.6.5
+compare the exact grade bytes (including input hash and latency) with direct
+module invocation and verify invalid timestamps publish no output.
+
+Q5's historical CLI failure and direct-module workaround remain recorded in
+its reproduction evidence; retained input and result artifacts are unchanged.

@@ -11,17 +11,32 @@ history. Live S001 evidence, retrieval, and Qwen report generation were recorded
 Q4 now proves a complete terminal human rejection on a newly generated live
 Qwen report.
 
-The [current task](tasks/current.md) completes expansion E2. The
+The [current task](tasks/current.md) adopts the frozen payment PDF library (E3).
+E3 is complete under ADR-0020. Both accepted catalogs are prepared locally:
+30 authorization PDF versions / 705 chunks and 16 independent payment PDFs /
+65 chunks, embedded with nomic-embed-text / 768. New direct and related searches
+are PDF-only with declared family/shared-policy applicability. Ordinary local
+startup checks exact catalog/embedding readiness without importing. Historical
+PDF/Markdown rows and snapshots remain readable; frozen source/PDF bytes are unchanged.
+Final verification passed 362 API, 9 MCP, 52 generator and 103 console tests,
+zero failures/errors/skips, plus scripts, formatting, builds and repository checks.
+Live authorization, capture, reconciliation and webhook retries each returned
+AVAILABLE with seven PDF chunks; exact PDF hashes/pages and unchanged previous
+snapshots were verified. No reports or decisions were created. API, generator
+and console are running. This proves technical adoption/provenance, not report
+quality; E4 richer evidence is next. See the current task for exact retained IDs.
+The previous task completed report token provenance and grading
+CLI timestamp parsing. Completed [expansion E2](tasks/completed/2026-10-01-independent-operational-pdf-library.md) froze the
 [independent payment library](../../SynTen%20Inc/payment-knowledge/v1/README.md)
-is frozen as synten-payment-knowledge/v1: 11 runbooks and 5 policies, 16 PDFs / 48
+as synten-payment-knowledge/v1: 11 runbooks and 5 policies, 16 PDFs / 48
 pages, each three pages. All 24 domain risks have editorial coverage. All rendered
 pages passed visual review; metadata/substantive text extraction and byte-identical
 rebuilds passed. Exact source/PDF/tool/font/domain-input hashes are retained. The
 historical 30-PDF baseline remains separate and unchanged; no new incident fixtures,
 oracle, labels or report outputs were authoring inputs. Full repository verification
-passed after starting Docker to prevent skipped database tests. E3 is next: accepted
-catalogs, explicit preparation and PDF-only/shared-policy retrieval. This asset task
-does not import the PDFs or add item-level evidence to the application.
+passed after starting Docker to prevent skipped database tests. E3 consumes this
+frozen library through accepted catalogs and PDF-only/shared-policy retrieval.
+E2 itself imported no PDFs and added no item-level evidence.
 
 The completed [evidence availability task](tasks/completed/2026-10-01-available-demo-evidence.md) prevents accidental local evidence
 unavailability. The latest reported failure was S312, whose provider deliberately
@@ -40,8 +55,8 @@ Completed E1's
 [successor payment domain](../../SynTen%20Inc/domain/v2/README.md) defines conceptual
 lifecycle transitions, synthetic amount/timing rules, source authority, 24 independent
 risks and 11 evidence requirements. Only aggregate service errors are currently
-exposed through MCP; payment/event/refund records and PDF-only retrieval remain
-future work. The independent library is frozen before new incident creation.
+exposed through MCP; payment/event/refund records remain future work. E3 adds
+PDF-only retrieval. The independent library is frozen before new incident creation.
 E1 changes documentation only and preserves Q6, seven-family behavior and historical
 corpus/scenario/evaluation inputs.
 
@@ -117,6 +132,25 @@ open exact rendered records or immutable cited PDFs, while unresolved
 identifiers remain plain text.
 
 ## Verification evidence
+
+- Generator UI recovery on 2026-10-01: the pre-verification spring-boot:run
+  process (PID 27644, started 12:28 CEST) returned 404 for /, /index.html and
+  /app.js despite UP health and rebuilt static resources. Restarted only the
+  generator using the verified packaged JAR (PID 30468). Root, index, JavaScript,
+  CSS and health now return 200; root contains the generator action and MCP
+  initialize confirms synthetic-incident-generator. API health and console
+  also return 200. No source change, incident generation or human decision;
+  stale development-process resource state was resolved by restart.
+
+- Token provenance and grading CLI fixes passed ./verify.ps1 on 2026-10-01:
+  339 API, 9 MCP, 52 generator and 103 Angular tests, zero failures/errors/skips;
+  script tests, formatting, production builds, Compose and diff checks passed.
+  Focused report tests passed 12 cases including PostgreSQL persistence. Ten
+  grading tests passed on PowerShell 7.6.5, including exact CLI/direct grade
+  equality and invalid timestamp rejection. Actual CLI Q5 regrade is byte-identical
+  to its retained result (efb290272dfb073e701ef75e495fd91f446ffe188eef4e9b4c56e9196b7a14fb).
+  Historical Q5/Q6 metadata remains unchanged; restart the API with the updated
+  build for future attempts to record the shared 1,536-token budget.
 
 - Combined worktree integration passed ./verify.ps1 on 2026-10-01: 339 API,
   9 MCP, 52 generator and 103 Angular tests, zero failures/errors/skips; script,
@@ -272,12 +306,13 @@ identifiers remain plain text.
   contract. Valid source IDs and schema do not establish supported conclusions;
   all PARTIAL evidence is now conservatively treated as insufficient, and a full
   new 36-scenario v5 live run has not been performed.
-- Report attempt metadata records 4,096 output tokens although the running adapter
-  sets 1,536; exact jar bytecode and persisted values confirm the discrepancy.
-- The report-grading CLI input path fails under PowerShell 7.6.5 because default
-  JSON date coercion violates its string timestamp contract. Direct invocation of
-  the unchanged module with `ConvertFrom-Json -DateKind String` reproduces Q5
-  byte-for-byte. Existing tests do not execute that CLI input path.
+- Historical Q5/Q6 report attempt metadata records 4,096 output tokens despite
+  the adapter's 1,536 limit. New attempts and adapter options now share the
+  ADR-0012 1,536-token setting; historical records remain unchanged. A running
+  API must be restarted with the updated build to use corrected provenance.
+- The report-grading CLI now preserves timestamp strings under PowerShell 7.6.5,
+  retaining strict validation. Historical Q5 CLI failure and its direct-module
+  workaround remain recorded; executable CLI regressions cover the corrected path.
 
 - Q3's deterministic unsupported-claim detector is deliberately bounded. It
   cannot establish general natural-language entailment, and the fixture does

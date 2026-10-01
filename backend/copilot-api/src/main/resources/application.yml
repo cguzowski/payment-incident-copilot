@@ -65,6 +65,10 @@ app:
     smoke-test:
       enabled: false
   knowledge:
+    retrieval:
+      pdf-only: true
+    pdf-readiness:
+      enabled: false
     ingestion:
       enabled: false
     pdf-catalog:

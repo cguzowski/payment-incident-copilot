@@ -11,9 +11,15 @@ class KnowledgeApplicationModeValidator {
             @Value("${app.knowledge.pdf-catalog.enabled:false}") boolean pdfCatalogEnabled,
             @Value("${app.knowledge.pdf-backfill.enabled:false}") boolean pdfBackfillEnabled,
             @Value("${app.knowledge.retrieval-evaluation.enabled:false}") boolean evaluationEnabled,
-            @Value("${app.knowledge.embedding-smoke-test.enabled:false}") boolean embeddingSmokeTestEnabled) {
+            @Value("${app.knowledge.embedding-smoke-test.enabled:false}") boolean embeddingSmokeTestEnabled,
+            @Value("${app.knowledge.pdf-readiness.enabled:false}") boolean readinessEnabled) {
         int enabledModes = countEnabled(
-                ingestionEnabled, pdfCatalogEnabled, pdfBackfillEnabled, evaluationEnabled, embeddingSmokeTestEnabled);
+                ingestionEnabled,
+                pdfCatalogEnabled,
+                pdfBackfillEnabled,
+                evaluationEnabled,
+                embeddingSmokeTestEnabled,
+                readinessEnabled);
         if (enabledModes > 1) {
             throw new IllegalStateException("Only one explicit knowledge command mode may be enabled at a time.");
         }

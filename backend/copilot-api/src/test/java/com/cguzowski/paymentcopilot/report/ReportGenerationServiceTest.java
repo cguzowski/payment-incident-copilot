@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
 class ReportGenerationServiceTest {
@@ -81,6 +82,12 @@ class ReportGenerationServiceTest {
         order.verify(model).generate("prompt", "{}");
         order.verify(parser).parse("{json}", context);
         order.verify(persistence).completeAvailable(any());
+        ArgumentCaptor<ReportGenerationAttempt> started = ArgumentCaptor.forClass(ReportGenerationAttempt.class);
+        verify(persistence).start(started.capture());
+        assertThat(started.getValue().maxOutputTokens()).isEqualTo(1536);
+        ArgumentCaptor<ReportGenerationAttempt> completed = ArgumentCaptor.forClass(ReportGenerationAttempt.class);
+        verify(persistence).completeAvailable(completed.capture());
+        assertThat(completed.getValue().maxOutputTokens()).isEqualTo(1536);
     }
 
     @Test
@@ -130,7 +137,9 @@ class ReportGenerationServiceTest {
 
         assertThat(response.status()).isEqualTo(ReportGenerationStatus.TIMED_OUT);
         assertThat(response.report()).isNull();
-        verify(persistence).completeFailure(any());
+        ArgumentCaptor<ReportGenerationAttempt> failed = ArgumentCaptor.forClass(ReportGenerationAttempt.class);
+        verify(persistence).completeFailure(failed.capture());
+        assertThat(failed.getValue().maxOutputTokens()).isEqualTo(1536);
         verify(parser, never()).parse(any(), any());
         verify(persistence, never()).completeAvailable(any());
     }

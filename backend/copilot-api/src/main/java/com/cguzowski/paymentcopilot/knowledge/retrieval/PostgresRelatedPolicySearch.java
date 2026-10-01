@@ -15,9 +15,11 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 /** One bounded expansion over the same eligible catalog; never follows file references. */
 final class PostgresRelatedPolicySearch {
     private final JdbcClient jdbc;
+    private final boolean pdfOnly;
 
-    PostgresRelatedPolicySearch(JdbcClient jdbc) {
+    PostgresRelatedPolicySearch(JdbcClient jdbc, boolean pdfOnly) {
         this.jdbc = jdbc;
+        this.pdfOnly = pdfOnly;
     }
 
     List<KnowledgeSearchCandidate> expand(KnowledgeSearchRequest request, List<KnowledgeSearchCandidate> direct) {
@@ -36,8 +38,12 @@ final class PostgresRelatedPolicySearch {
         List<KnowledgeSearchCandidate> related = jdbc.sql("""
                 WITH eligible AS (
                     SELECT d.* FROM knowledge_document_version d
-                    WHERE d.tenant_id=:tenantId AND d.incident_family=:family
+                    WHERE d.tenant_id=:tenantId
+                      AND ((:pdfOnly AND :family=ANY(d.applicable_families))
+                          OR (NOT :pdfOnly AND d.incident_family=:family))
                       AND d.approval_status='APPROVED' AND d.effective_at<=:effectiveAt
+                      AND (NOT :pdfOnly OR (d.source_format='PDF'
+                          AND d.catalog_version IN ('synten-auth-knowledge/v2', 'synten-payment-knowledge/v1')))
                 ), keyed AS (
                     SELECT e.*, COUNT(*) OVER(PARTITION BY document_key) AS key_count
                     FROM eligible e WHERE document_key IS NOT NULL
@@ -109,6 +115,7 @@ final class PostgresRelatedPolicySearch {
                 """)
                 .param("tenantId", request.tenantId())
                 .param("family", request.incidentFamily())
+                .param("pdfOnly", pdfOnly)
                 .param("effectiveAt", OffsetDateTime.ofInstant(request.effectiveAt(), ZoneOffset.UTC))
                 .param(
                         "anchors",

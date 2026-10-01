@@ -18,9 +18,14 @@ import org.springframework.stereotype.Repository;
 class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
 
     private final JdbcClient jdbcClient;
+    private final boolean pdfOnly;
 
-    PostgresKnowledgeSearchRepository(JdbcClient jdbcClient) {
+    PostgresKnowledgeSearchRepository(
+            JdbcClient jdbcClient,
+            @org.springframework.beans.factory.annotation.Value("${app.knowledge.retrieval.pdf-only:true}")
+                    boolean pdfOnly) {
         this.jdbcClient = jdbcClient;
+        this.pdfOnly = pdfOnly;
     }
 
     @Override
@@ -89,7 +94,10 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                             WHERE c.tenant_id = :tenantId
                               AND d.approval_status = 'APPROVED'
                               AND d.effective_at <= :effectiveAt
-                              AND d.incident_family = :incidentFamily
+                              AND ((:pdfOnly AND :incidentFamily = ANY(d.applicable_families))
+                                  OR (NOT :pdfOnly AND d.incident_family = :incidentFamily))
+                              AND (NOT :pdfOnly OR (d.source_format = 'PDF'
+                                  AND d.catalog_version IN ('synten-auth-knowledge/v2', 'synten-payment-knowledge/v1')))
                         ),
                         lexical_scored AS (
                             SELECT e.*,
@@ -203,6 +211,7 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                 .param("tenantId", request.tenantId())
                 .param("effectiveAt", OffsetDateTime.ofInstant(request.effectiveAt(), ZoneOffset.UTC))
                 .param("incidentFamily", request.incidentFamily())
+                .param("pdfOnly", pdfOnly)
                 .param("minimumLexicalRank", request.minimumLexicalRank())
                 .param("queryVector", new SqlParameterValue(Types.VARCHAR, vector))
                 .param("embeddingModelId", request.embeddingModelId())
@@ -212,7 +221,7 @@ class PostgresKnowledgeSearchRepository implements KnowledgeSearchRepository {
                 .param("rrfK", request.rrfK())
                 .query(PostgresKnowledgeSearchRepository::mapCandidate)
                 .list();
-        return new PostgresRelatedPolicySearch(jdbcClient).expand(request, candidates);
+        return new PostgresRelatedPolicySearch(jdbcClient, pdfOnly).expand(request, candidates);
     }
 
     static KnowledgeSearchCandidate mapCandidate(ResultSet resultSet, int rowNumber) throws SQLException {

@@ -35,7 +35,12 @@ class PostgresSynTenPdfEmbeddingPersistence implements SynTenPdfEmbeddingPersist
         SynTenPdfEmbeddingState initialState = SynTenPdfEmbeddingStateMachine.classify(
                 lockedChunks.stream().map(LockedChunk::embeddingMetadata).toList());
         if (initialState == SynTenPdfEmbeddingState.COMPLETE_SAME_MODEL) {
-            return summary(initialState, SynTenPdfCatalogPlanner.EXPECTED_CHUNK_COUNT, true);
+            return summary(
+                    first.target().catalogFingerprint(),
+                    preparedEmbeddings.size(),
+                    initialState,
+                    preparedEmbeddings.size(),
+                    true);
         }
         if (initialState != SynTenPdfEmbeddingState.ABSENT) {
             throw new IllegalStateException(
@@ -45,7 +50,7 @@ class PostgresSynTenPdfEmbeddingPersistence implements SynTenPdfEmbeddingPersist
         for (PreparedSynTenPdfEmbedding prepared : preparedEmbeddings) {
             updateChunk(prepared, embeddedAt);
         }
-        return summary(initialState, 0, false);
+        return summary(first.target().catalogFingerprint(), preparedEmbeddings.size(), initialState, 0, false);
     }
 
     private List<LockedChunk> lockChunks(UUID tenantId, Set<UUID> chunkIds) {
@@ -92,8 +97,16 @@ class PostgresSynTenPdfEmbeddingPersistence implements SynTenPdfEmbeddingPersist
             List<PreparedSynTenPdfEmbedding> preparedEmbeddings, Instant embeddedAt) {
         Objects.requireNonNull(preparedEmbeddings, "preparedEmbeddings");
         Objects.requireNonNull(embeddedAt, "embeddedAt");
-        if (preparedEmbeddings.size() != SynTenPdfCatalogPlanner.EXPECTED_CHUNK_COUNT) {
-            throw new IllegalArgumentException("The SynTen PDF backfill must prepare exactly 705 embeddings.");
+        if (preparedEmbeddings.isEmpty()
+                || preparedEmbeddings.getFirst() == null
+                || preparedEmbeddings.getFirst().target() == null) {
+            throw new IllegalArgumentException("Prepared PDF embeddings are empty or null.");
+        }
+        String fingerprint = preparedEmbeddings.getFirst().target().catalogFingerprint();
+        int count = SynTenPdfCatalogPlanner.acceptedChunkCount(fingerprint);
+        if (preparedEmbeddings.size() != count) {
+            throw new IllegalArgumentException(
+                    "The SynTen PDF backfill must prepare exactly " + count + " embeddings.");
         }
 
         Map<UUID, PreparedSynTenPdfEmbedding> preparedByChunkId = new HashMap<>();
@@ -103,7 +116,7 @@ class PostgresSynTenPdfEmbeddingPersistence implements SynTenPdfEmbeddingPersist
                 throw new IllegalArgumentException("A prepared SynTen PDF embedding is null.");
             }
             SynTenPdfEmbeddingTarget target = prepared.target();
-            if (!SynTenPdfCatalogPlanner.ACCEPTED_CATALOG_FINGERPRINT.equals(target.catalogFingerprint())) {
+            if (!fingerprint.equals(target.catalogFingerprint())) {
                 throw new IllegalArgumentException("The prepared embeddings do not match the accepted K3 catalog.");
             }
             if (tenantId == null) {
@@ -143,7 +156,7 @@ class PostgresSynTenPdfEmbeddingPersistence implements SynTenPdfEmbeddingPersist
 
     private static void compareWithPrepared(
             Map<UUID, PreparedSynTenPdfEmbedding> preparedByChunkId, List<LockedChunk> lockedChunks) {
-        if (lockedChunks.size() != SynTenPdfCatalogPlanner.EXPECTED_CHUNK_COUNT) {
+        if (lockedChunks.size() != preparedByChunkId.size()) {
             throw catalogChanged();
         }
         Set<UUID> seen = new HashSet<>();
@@ -200,13 +213,12 @@ class PostgresSynTenPdfEmbeddingPersistence implements SynTenPdfEmbeddingPersist
     }
 
     private static SynTenPdfEmbeddingOperationSummary summary(
-            SynTenPdfEmbeddingState initialState, int alreadyEmbeddedChunks, boolean noOp) {
-        return new SynTenPdfEmbeddingOperationSummary(
-                SynTenPdfCatalogPlanner.ACCEPTED_CATALOG_FINGERPRINT,
-                initialState,
-                SynTenPdfCatalogPlanner.EXPECTED_CHUNK_COUNT,
-                alreadyEmbeddedChunks,
-                noOp);
+            String fingerprint,
+            int count,
+            SynTenPdfEmbeddingState initialState,
+            int alreadyEmbeddedChunks,
+            boolean noOp) {
+        return new SynTenPdfEmbeddingOperationSummary(fingerprint, initialState, count, alreadyEmbeddedChunks, noOp);
     }
 
     private static IllegalStateException catalogChanged() {

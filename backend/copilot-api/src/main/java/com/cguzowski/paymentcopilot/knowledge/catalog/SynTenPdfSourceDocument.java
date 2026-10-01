@@ -89,4 +89,21 @@ record SynTenPdfSourceDocument(
     public byte[] pdfBytes() {
         return pdfBytes.clone();
     }
+
+    boolean independentPaymentLibrary() {
+        return new String(sourceBytes, java.nio.charset.StandardCharsets.UTF_8)
+                .replace("\r\n", "\n")
+                .startsWith("---\n{");
+    }
+
+    java.util.List<String> applicableFamilies() {
+        if (!independentPaymentLibrary()) return java.util.List.of(incidentFamily);
+        return PaymentPdfSourceLoader.metadata(sourceBytes).families();
+    }
+
+    String corpusVersion() {
+        return independentPaymentLibrary()
+                ? PaymentPdfSourceLoader.VERSION
+                : SynTenCorpusSourceRepository.CORPUS_VERSION;
+    }
 }

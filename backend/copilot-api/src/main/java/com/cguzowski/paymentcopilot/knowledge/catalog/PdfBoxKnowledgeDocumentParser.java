@@ -36,7 +36,10 @@ final class PdfBoxKnowledgeDocumentParser {
                 pages.add(extractPage(document, source, pageNumber, pageCount));
             }
             return new PdfKnowledgeDocument(
-                    source, source.pdfSha256(), EXTRACTION_STRATEGY_VERSION, List.copyOf(pages));
+                    source,
+                    source.pdfSha256(),
+                    source.independentPaymentLibrary() ? "pdfbox-payment-pages/v1" : EXTRACTION_STRATEGY_VERSION,
+                    List.copyOf(pages));
         } catch (InvalidPasswordException exception) {
             throw invalid("SynTen PDF is encrypted or password-protected: " + source.documentKey(), exception);
         } catch (IOException exception) {
@@ -59,6 +62,10 @@ final class PdfBoxKnowledgeDocumentParser {
                 .filter(line -> !line.isBlank())
                 .toList();
 
+        if (source.independentPaymentLibrary()) {
+            return extractPaymentPage(source, pageNumber, pageCount, lines);
+        }
+
         String expectedHeader = normalizeLine(source.documentKey() + " | " + source.title() + " v" + source.version()
                 + " | " + source.classification());
         String expectedFooter = normalizeLine("SynTen Inc - " + source.classification() + " " + source.documentId()
@@ -80,6 +87,22 @@ final class PdfBoxKnowledgeDocumentParser {
             blocks.add(new PdfTextBlock(index + 1, content.get(index)));
         }
         return new PdfKnowledgePage(pageNumber, blocks);
+    }
+
+    private static PdfKnowledgePage extractPaymentPage(
+            SynTenPdfSourceDocument source, int page, int count, List<String> lines) {
+        List<String> content = new ArrayList<>(lines);
+        List<String> furniture = List.of(
+                "SYNTEN INC / " + source.documentKey() + " / " + source.type() + " / v" + source.version(),
+                "SynTen Inc - " + source.classification() + " Page " + page + " of " + count,
+                source.documentId() + " / " + source.version());
+        for (String expected : furniture) {
+            if (!content.remove(expected)) throw invalid("Payment PDF header/footer mismatch: " + source.documentKey());
+        }
+        if (content.isEmpty()) throw invalid("Payment PDF page has no extractable content.");
+        List<PdfTextBlock> blocks = new ArrayList<>();
+        for (int i = 0; i < content.size(); i++) blocks.add(new PdfTextBlock(i + 1, content.get(i)));
+        return new PdfKnowledgePage(page, blocks);
     }
 
     static String normalizeLine(String value) {

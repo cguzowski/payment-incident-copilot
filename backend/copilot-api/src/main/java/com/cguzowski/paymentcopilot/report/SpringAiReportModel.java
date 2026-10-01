@@ -41,8 +41,8 @@ class SpringAiReportModel implements ReportModel {
         ChatModel provider = chatModel.orElseThrow(ReportModelUnavailableException::new);
         OllamaChatOptions options = OllamaChatOptions.builder()
                 .model(modelId)
-                .temperature(0.0)
-                .maxTokens(1_536)
+                .temperature((double) ReportGenerationSettings.TEMPERATURE)
+                .maxTokens(ReportGenerationSettings.MAX_OUTPUT_TOKENS)
                 .disableThinking()
                 .outputSchema(outputSchema)
                 .build();

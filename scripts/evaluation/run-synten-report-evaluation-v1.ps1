@@ -35,7 +35,12 @@ else {
     if (-not (Test-Path -LiteralPath $InputPath -PathType Leaf)) {
         throw "Report evaluation input is missing: $InputPath"
     }
-    Get-Content -LiteralPath $InputPath -Raw | ConvertFrom-Json
+    # PowerShell 7.5+ coerces ISO timestamps by default; the grader requires strings.
+    $jsonOptions = @{}
+    if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) {
+        $jsonOptions.DateKind = 'String'
+    }
+    Get-Content -LiteralPath $InputPath -Raw | ConvertFrom-Json @jsonOptions
 }
 
 $evaluation = Invoke-SynTenReportEvaluation `

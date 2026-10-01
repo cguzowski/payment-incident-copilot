@@ -8,6 +8,17 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 class PackagedPdfKnowledgeArtifactRepositoryTest {
 
     @Test
+    void resolvesFrozenPaymentLibraryPdfWithExactBytes() throws Exception {
+        var repository = new PackagedPdfKnowledgeArtifactRepository(new PathMatchingResourcePatternResolver());
+        var artifact = repository
+                .findBySha256("f4cc3d2f22bcf130dd399bf8ec08763428ddc72bc63d9438d69eae5736f46359")
+                .orElseThrow();
+        assertThat(artifact.content())
+                .isEqualTo(java.nio.file.Files.readAllBytes(PaymentPdfCatalogTest.ROOT.resolve(
+                        "pdfs/rb-101-authorization-rejection-establish-the-source.pdf")));
+    }
+
+    @Test
     void resolvesOnlyPackagedManifestPdfByItsExactHash() {
         PackagedPdfKnowledgeArtifactRepository repository =
                 new PackagedPdfKnowledgeArtifactRepository(new PathMatchingResourcePatternResolver());

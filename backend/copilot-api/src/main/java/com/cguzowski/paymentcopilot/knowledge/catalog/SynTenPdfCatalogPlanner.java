@@ -17,6 +17,15 @@ class SynTenPdfCatalogPlanner {
     static final int EXPECTED_CHUNK_COUNT = 705;
     static final String ACCEPTED_CATALOG_FINGERPRINT =
             "5d704fee24f9754176f1be2e449050190e0b78ffa3fdb9ddc92b464006d198e9";
+    static final String PAYMENT_CATALOG_FINGERPRINT =
+            "d4e008fceb8b765cb644e45be14c71753fb3a4220f473d33973652578f164f46";
+    static final int PAYMENT_CHUNK_COUNT = 65;
+
+    static int acceptedChunkCount(String fingerprint) {
+        if (ACCEPTED_CATALOG_FINGERPRINT.equals(fingerprint)) return EXPECTED_CHUNK_COUNT;
+        if (PAYMENT_CATALOG_FINGERPRINT.equals(fingerprint)) return PAYMENT_CHUNK_COUNT;
+        throw new IllegalArgumentException("Unaccepted PDF catalog fingerprint.");
+    }
 
     private final SynTenCorpusSourceRepository sources;
     private final PdfBoxKnowledgeDocumentParser parser;
@@ -57,6 +66,14 @@ class SynTenPdfCatalogPlanner {
         List<PdfCatalogDocumentPlan> immutableDocuments = List.copyOf(documents);
         SynTenPdfCatalogPlan plan = new SynTenPdfCatalogPlan(
                 tenantId, catalogFingerprint(tenantId, immutableDocuments), immutableDocuments);
+        if (plan.documents().getFirst().document().source().independentPaymentLibrary()) {
+            if (plan.documents().size() != 16
+                    || plan.chunkCount() != PAYMENT_CHUNK_COUNT
+                    || !plan.catalogFingerprint().equals(PAYMENT_CATALOG_FINGERPRINT)) {
+                throw new IllegalArgumentException("Payment catalog differs from the accepted plan.");
+            }
+            return plan;
+        }
         if (plan.documents().size() != EXPECTED_DOCUMENT_COUNT
                 || plan.chunkCount() != EXPECTED_CHUNK_COUNT
                 || !plan.catalogFingerprint().equals(ACCEPTED_CATALOG_FINGERPRINT)) {

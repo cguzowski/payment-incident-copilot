@@ -23,6 +23,17 @@ import org.mockito.ArgumentCaptor;
 
 class KnowledgeRetrievalExecutorTest {
 
+    @Test
+    void pdfOnlyPlanRecordsSuccessorEligibilityStrategy() {
+        var executor = new KnowledgeRetrievalExecutor(
+                mock(KnowledgeEmbeddingClient.class),
+                mock(KnowledgeSearchRepository.class),
+                new KnowledgeContextSelector(),
+                new KnowledgeRetrievalQueryBuilder(),
+                true);
+        assertThat(executor.plan(CONTEXT, EFFECTIVE_AT).rankingVersion()).isEqualTo("postgres-pdf-family-related/v5");
+    }
+
     private static final UUID TENANT_ID = UUID.fromString("8b860d80-d17f-4e6b-8c48-af35f26a4d61");
     private static final Instant EFFECTIVE_AT = Instant.parse("2026-09-01T12:00:00Z");
     private static final KnowledgeRetrievalContext CONTEXT = new KnowledgeRetrievalContext(

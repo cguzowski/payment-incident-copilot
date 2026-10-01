@@ -2,69 +2,41 @@ Set-StrictMode -Version Latest
 
 function Get-LocalKnowledgePreparationPlan {
     [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string] $RepositoryRoot
-    )
+    param([Parameter(Mandatory)][string] $RepositoryRoot)
 
-    $corpusRoot = Join-Path $RepositoryRoot 'SynTen Inc\corpus'
-    $mavenArguments = @(
-        '-Dspring-boot.run.arguments=--spring.main.web-application-type=none'
-        'spring-boot:run'
+    $roots = @(
+        (Join-Path $RepositoryRoot 'SynTen Inc\corpus'),
+        (Join-Path $RepositoryRoot 'SynTen Inc\payment-knowledge\v1')
     )
-    $disabledModes = [ordered]@{
-        APP_KNOWLEDGE_INGESTION_ENABLED = 'false'
-        APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED = 'false'
-        APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = 'false'
+    $steps = @(
+        @{ Name = 'catalog'; Root = 0; Mode = 'catalog' },
+        @{ Name = 'embeddings'; Root = 0; Mode = 'embeddings' },
+        @{ Name = 'payment-catalog'; Root = 1; Mode = 'catalog' },
+        @{ Name = 'payment-embeddings'; Root = 1; Mode = 'embeddings' },
+        @{ Name = 'readiness'; Root = 0; Mode = 'readiness' },
+        @{ Name = 'payment-readiness'; Root = 1; Mode = 'readiness' }
+    )
+    foreach ($step in $steps) {
+        [pscustomobject]@{
+            Name = $step.Name
+            Description = "Preparing SynTen PDF knowledge: $($step.Name)"
+            MavenArguments = @(
+                '-Dspring-boot.run.arguments=--spring.main.web-application-type=none',
+                'spring-boot:run'
+            )
+            EnvironmentVariables = [ordered]@{
+                SYNTEN_CORPUS_ROOT = $roots[$step.Root]
+                SPRING_AI_MODEL_CHAT = 'none'
+                SPRING_AI_MODEL_EMBEDDING = $(if ($step.Mode -eq 'embeddings') { 'ollama' } else { 'none' })
+                APP_KNOWLEDGE_PDF_CATALOG_ENABLED = ($step.Mode -eq 'catalog').ToString().ToLowerInvariant()
+                APP_KNOWLEDGE_PDF_BACKFILL_ENABLED = ($step.Mode -eq 'embeddings').ToString().ToLowerInvariant()
+                APP_KNOWLEDGE_PDF_READINESS_ENABLED = ($step.Mode -eq 'readiness').ToString().ToLowerInvariant()
+                APP_KNOWLEDGE_INGESTION_ENABLED = 'false'
+                APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED = 'false'
+                APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = 'false'
+            }
+        }
     }
-
-    return @(
-        [pscustomobject]@{
-            Name = 'catalog'
-            Description = 'Importing the validated SynTen PDF catalog'
-            MavenArguments = $mavenArguments
-            EnvironmentVariables = [ordered]@{
-                SYNTEN_CORPUS_ROOT = $corpusRoot
-                SPRING_AI_MODEL_CHAT = 'none'
-                SPRING_AI_MODEL_EMBEDDING = 'none'
-                APP_KNOWLEDGE_PDF_CATALOG_ENABLED = 'true'
-                APP_KNOWLEDGE_PDF_BACKFILL_ENABLED = 'false'
-                APP_KNOWLEDGE_INGESTION_ENABLED = $disabledModes.APP_KNOWLEDGE_INGESTION_ENABLED
-                APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED = $disabledModes.APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED
-                APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = $disabledModes.APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED
-            }
-        }
-        [pscustomobject]@{
-            Name = 'embeddings'
-            Description = 'Preparing all SynTen PDF embeddings with nomic-embed-text'
-            MavenArguments = $mavenArguments
-            EnvironmentVariables = [ordered]@{
-                SYNTEN_CORPUS_ROOT = $corpusRoot
-                SPRING_AI_MODEL_CHAT = 'none'
-                SPRING_AI_MODEL_EMBEDDING = 'ollama'
-                APP_KNOWLEDGE_PDF_CATALOG_ENABLED = 'false'
-                APP_KNOWLEDGE_PDF_BACKFILL_ENABLED = 'true'
-                APP_KNOWLEDGE_INGESTION_ENABLED = $disabledModes.APP_KNOWLEDGE_INGESTION_ENABLED
-                APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED = $disabledModes.APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED
-                APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = $disabledModes.APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED
-            }
-        }
-        [pscustomobject]@{
-            Name = 'markdown'
-            Description = 'Importing approved Markdown guidance for all seven incident families'
-            MavenArguments = $mavenArguments
-            EnvironmentVariables = [ordered]@{
-                SYNTEN_CORPUS_ROOT = $corpusRoot
-                SPRING_AI_MODEL_CHAT = 'none'
-                SPRING_AI_MODEL_EMBEDDING = 'ollama'
-                APP_KNOWLEDGE_PDF_CATALOG_ENABLED = 'false'
-                APP_KNOWLEDGE_PDF_BACKFILL_ENABLED = 'false'
-                APP_KNOWLEDGE_INGESTION_ENABLED = 'true'
-                APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED = $disabledModes.APP_KNOWLEDGE_RETRIEVAL_EVALUATION_ENABLED
-                APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED = $disabledModes.APP_KNOWLEDGE_EMBEDDING_SMOKE_TEST_ENABLED
-            }
-        }
-    )
 }
 
 Export-ModuleMember -Function 'Get-LocalKnowledgePreparationPlan'

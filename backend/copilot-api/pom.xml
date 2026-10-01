@@ -107,6 +107,12 @@
                 <filtering>false</filtering>
                 <includes><include>*-runbook.md</include><include>*-policy.md</include></includes>
             </resource>
+            <resource>
+                <directory>${project.basedir}/../../SynTen Inc/payment-knowledge/v1</directory>
+                <targetPath>knowledge/pdf-artifacts/payment-v1</targetPath>
+                <filtering>false</filtering>
+                <includes><include>pdfs/*.pdf</include></includes>
+            </resource>
         </resources>
         <testResources>
             <testResource>

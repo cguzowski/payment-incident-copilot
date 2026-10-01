@@ -81,6 +81,8 @@ class ReportPersistencePostgresIntegrationTest {
 
         assertThat(persistence.completeAvailable(completed)).isTrue();
         assertThat(persistence.findAll(TENANT_ID, INVESTIGATION_ID)).containsExactly(completed);
+        assertThat(persistence.findAll(TENANT_ID, INVESTIGATION_ID).getFirst().maxOutputTokens())
+                .isEqualTo(1536);
         assertThat(persistence.findAll(OTHER_TENANT_ID, INVESTIGATION_ID)).isEmpty();
         assertThat(jdbcClient
                         .sql("SELECT status FROM incident WHERE tenant_id = :tenantId AND id = :incidentId")

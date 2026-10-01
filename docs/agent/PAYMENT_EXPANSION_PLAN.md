@@ -1,6 +1,6 @@
 # Independent knowledge and familiar payment incidents
 
-Status: E1/E2 complete; E3 is next
+Status: E1/E2/E3 complete; E4 is next
 Last reviewed: 2026-10-01
 Owner: Christopher Guzowski
 
@@ -17,7 +17,7 @@ documents, competing hypotheses or further evidence. Guidance never proves that
 a condition occurred. Coverage is bounded by the supported payment domain, not
 a promise to solve every possible scenario.
 
-## Baseline
+## Pre-E3 baseline
 
 Runtime supports seven incident families under ADR-0018 and aggregate service-error
 evidence. Six additional families use versioned Markdown guidance. Their deterministic
@@ -55,12 +55,12 @@ accounts are inspected and no payment, refund or reversal is executed.
 |---|---|---|
 | E1 — Complete: domain and risks | [Successor domain](../../SynTen%20Inc/domain/v2/README.md), lifecycle, 24 independent risks and 11 source requirements | Static/editorial review and Repository verification; no incident fixtures |
 | E2 — Complete: independent PDF library | [Frozen independent library](../../SynTen%20Inc/payment-knowledge/v1/README.md): 11 runbooks / 5 policies; historical baseline retained separately | 16 PDFs / 48 pages, extraction, all-page editorial/visual QA, byte-identical builds, hashes and full gate |
-| E3 — Next: catalog and retrieval | PDF-only eligibility, versioned accepted catalogs, applicable shared/family policies, embeddings and readiness | Test-first isolation, idempotency, missing-PDF behavior, relationship eligibility and historical provenance |
+| E3 — Complete: catalog and retrieval | PDF-only eligibility, separately pinned accepted catalogs, declared shared/family policies, embeddings and readiness (ADR-0020) | Full gate and local preparation passed; four representative live PDF retries with exact source hashes and unchanged history |
 | E4 — Evidence and workflow | Read-only synthetic payment/event/refund evidence, multi-family intake and understandable timeline | Versioned MCP contracts, failure-path/persistence tests, independent builds, visual QA and authorization regressions |
 | E5 — Independent incidents | Cases derived from system behavior after corpus freeze | Recorded inputs exclude PDF text, target document identities, mapping labels and oracle answers; observed records separated from sealed truth |
 | E6 — Held-out evaluation | Fixed post-run rubric, live runs and review examples | Grounding, relevance, effects/causes, conditional resolution, uncertainty, citations, policy compliance, latency and failures with exact provenance |
 
-E3 is the next implementation objective. E2 is frozen before E5 starts. E3/E4
+E4 is the next implementation objective. E2 is frozen before E5 starts. E3/E4
 consume agreed domain contracts, not desired incident answers. Use one active
 objective and one writing agent per worktree.
 

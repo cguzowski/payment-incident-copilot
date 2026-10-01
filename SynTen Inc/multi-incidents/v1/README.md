@@ -29,6 +29,13 @@ are added; existing Markdown ingestion and line provenance apply.
 
 ## Preparing and using the application
 
+E3 supersedes the following historical Markdown preparation procedure for new
+operational retrieval. Use `./start-local.bat -PrepareKnowledge` to import/embed
+both accepted PDF catalogs, including the frozen payment library. New searches
+are PDF-only; twelve Markdown inputs and previous citations remain intact. See
+[ADR-0020](../../../docs/agent/decisions/ADR-0020-accepted-payment-pdf-catalogs.md).
+The procedure below records the original v1 package preparation.
+
 Build the API and standalone generator, then restart them (API port 8080,
 generator/MCP port 8082). The API must use the generator's MCP endpoint, as in
 `start-local.bat`; the legacy operations MCP fixtures do not own these alerts.

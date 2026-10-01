@@ -81,7 +81,7 @@ function New-CompleteTestRun {
             disposition = $truth.expectedDisposition
             summary = New-TestClaim -Statement $requiredStatement -EvidenceId $evidenceId
             observations = @(New-TestClaim -Statement $requiredStatement -EvidenceId $evidenceId)
-            inferences = if ($insufficient) { @() } else { @(New-TestClaim -Statement $truth.rootCause -EvidenceId $evidenceId -KnowledgeIds @($knowledgeId)) }
+            inferences = @(if (-not $insufficient) { New-TestClaim -Statement $truth.rootCause -EvidenceId $evidenceId -KnowledgeIds @($knowledgeId) })
             probableCause = if ($insufficient) { $null } else { New-TestClaim -Statement $truth.rootCause -EvidenceId $evidenceId -KnowledgeIds @($knowledgeId) }
             confidence = [ordered]@{
                 level = $truth.expectedConfidence
@@ -90,7 +90,7 @@ function New-CompleteTestRun {
             }
             recommendation = if ($insufficient) { $null } else { New-TestClaim -Statement $truth.recommendation -EvidenceId $evidenceId -KnowledgeIds @($knowledgeId) }
             contradictions = @()
-            evidenceGaps = if ($insufficient) { @([ordered]@{ description = $truth.recommendation }) } else { @() }
+            evidenceGaps = @(if ($insufficient) { [ordered]@{ description = $truth.recommendation } })
         }
         $results.Add([ordered]@{
             scenarioCode = $scenario.code
@@ -233,6 +233,48 @@ Invoke-EvaluationTest 'runnerGradesInputOrFixtureWithoutNetworkOrDatabaseAccess'
     }
     foreach ($forbidden in @('Invoke-RestMethod', 'Invoke-WebRequest', 'Invoke-Sqlcmd', 'psql ', 'INSERT INTO', 'ollama ')) {
         Assert-True (-not $runner.Contains($forbidden)) "Runner contains forbidden external operation '$forbidden'."
+    }
+}
+
+Invoke-EvaluationTest 'cliInputPreservesTimestampStringsAndMatchesDirectGrade' {
+    $temporaryRoot = Join-Path ([IO.Path]::GetTempPath()) ("synten-report-cli-test-" + [Guid]::NewGuid().ToString('N'))
+    $null = New-Item -ItemType Directory -Path $temporaryRoot
+    try {
+        $run = New-CompleteTestRun
+        $run.createdAt = '2026-09-30T14:00:00.1234567+02:00'
+        $run.results[0].requestedAt = '2026-09-30T12:00:00.1234567+02:00'
+        $run.results[0].completedAt = '2026-09-30T12:00:00.2234567+02:00'
+        $inputPath = Join-Path $temporaryRoot 'input.json'
+        $outputPath = Join-Path $temporaryRoot 'output.json'
+        $run | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $inputPath -Encoding utf8
+        $expected = Invoke-SynTenReportEvaluation -InputRun $run -ObservableCatalogPath $catalogPath -OraclePath $oraclePath
+        $expectedPath = Join-Path $temporaryRoot 'expected.json'
+        $null = Write-SynTenReportEvaluationArtifact -Path $expectedPath -Evaluation $expected
+        & (Join-Path $PSScriptRoot 'run-synten-report-evaluation-v1.ps1') -InputPath $inputPath -OutputPath $outputPath
+        Assert-True ((Get-FileSha256 $outputPath) -eq (Get-FileSha256 $expectedPath)) 'CLI grade differs from direct grade, including input hash, timestamps or latency.'
+    }
+    finally {
+        Remove-Item -LiteralPath $temporaryRoot -Recurse -Force
+    }
+}
+
+Invoke-EvaluationTest 'cliRejectsInvalidTimestampWithoutPublishingArtifact' {
+    $temporaryRoot = Join-Path ([IO.Path]::GetTempPath()) ("synten-report-cli-test-" + [Guid]::NewGuid().ToString('N'))
+    $null = New-Item -ItemType Directory -Path $temporaryRoot
+    try {
+        foreach ($field in @('createdAt', 'requestedAt', 'completedAt')) {
+            $run = New-CompleteTestRun
+            if ($field -eq 'createdAt') { $run.createdAt = 'invalid-timestamp' }
+            else { $run.results[0][$field] = 'invalid-timestamp' }
+            $inputPath = Join-Path $temporaryRoot "$field-input.json"
+            $outputPath = Join-Path $temporaryRoot "$field-output.json"
+            $run | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $inputPath -Encoding utf8
+            Assert-Throws { & (Join-Path $PSScriptRoot 'run-synten-report-evaluation-v1.ps1') -InputPath $inputPath -OutputPath $outputPath } '*must use the round-trip ISO-8601 format*'
+            Assert-True (-not (Test-Path -LiteralPath $outputPath)) 'Invalid input published an artifact.'
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $temporaryRoot -Recurse -Force
     }
 }
 

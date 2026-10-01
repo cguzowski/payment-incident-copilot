@@ -24,16 +24,29 @@ class KnowledgeRetrievalExecutor {
     private final KnowledgeSearchRepository searchRepository;
     private final KnowledgeContextSelector selector;
     private final KnowledgeRetrievalQueryBuilder queryBuilder;
+    private final String rankingVersion;
 
     KnowledgeRetrievalExecutor(
             KnowledgeEmbeddingClient embeddingClient,
             KnowledgeSearchRepository searchRepository,
             KnowledgeContextSelector selector,
             KnowledgeRetrievalQueryBuilder queryBuilder) {
+        this(embeddingClient, searchRepository, selector, queryBuilder, false);
+    }
+
+    @org.springframework.beans.factory.annotation.Autowired
+    KnowledgeRetrievalExecutor(
+            KnowledgeEmbeddingClient embeddingClient,
+            KnowledgeSearchRepository searchRepository,
+            KnowledgeContextSelector selector,
+            KnowledgeRetrievalQueryBuilder queryBuilder,
+            @org.springframework.beans.factory.annotation.Value("${app.knowledge.retrieval.pdf-only:true}")
+                    boolean pdfOnly) {
         this.embeddingClient = embeddingClient;
         this.searchRepository = searchRepository;
         this.selector = selector;
         this.queryBuilder = queryBuilder;
+        this.rankingVersion = pdfOnly ? "postgres-pdf-family-related/v5" : RANKING_VERSION;
     }
 
     KnowledgeRetrievalExecution execute(KnowledgeRetrievalContext context, Instant effectiveAt) {
@@ -51,7 +64,7 @@ class KnowledgeRetrievalExecutor {
                 context.tenantId(),
                 query,
                 filters,
-                RANKING_VERSION,
+                rankingVersion,
                 RRF_K,
                 CANDIDATE_DEPTH,
                 MINIMUM_LEXICAL_RANK,

@@ -21,7 +21,8 @@ and the distinction between approved direction and implemented behavior.
 - Triages authorization declines/timeouts, capture/refund failures, settlement
   delays, webhook delivery failures and reconciliation mismatches.
 - Collects read-only synthetic service-error evidence through MCP.
-- Retrieves approved Markdown/PDF knowledge with immutable source provenance.
+- Retrieves approved PDF knowledge with immutable source provenance; historical
+  Markdown citations remain readable.
 - Generates schema- and citation-validated reports through local Ollama.
 - Requires an attributable human approval or rejection with a reason.
 - Preserves attempt outcomes, missing evidence, and the audit timeline.
@@ -50,7 +51,9 @@ The [SynTen Inc corpus](SynTen%20Inc/README.md) contains 30 PDF versions and
 their evidence limitations. The additive
 [incident-family package](SynTen%20Inc/multi-incidents/v1/README.md) contains
 six additional families, twelve scenarios and twelve approved Markdown sources.
-The local launcher imports these sources with `./start-local.bat -PrepareKnowledge`.
+Those Markdown sources remain historical inputs. The local launcher now imports
+both the historical PDF catalog and frozen 16-document / 65-chunk independent
+payment library with `./start-local.bat -PrepareKnowledge`.
 
 ## Run locally on Windows
 
@@ -100,12 +103,14 @@ embeddings before the application starts:
 .\start-local.bat -PrepareKnowledge
 ```
 
-This imports the validated PDF catalog, prepares its 705 embeddings, then
-imports/embeds the two legacy Markdown sources and twelve additional
-incident-family runbooks/policies. Run this once when upgrading an existing
+This imports/embeds both accepted PDF catalogs: the historical 30 documents /
+705 chunks and independent 16 documents / 65 chunks. New searches use PDF-only
+guidance and applicable shared policies. Run this when upgrading an existing
 database to the added families too. It can take substantial time. Exact complete
 reruns are no-ops; incompatible or partial catalog/embedding state fails closed
-rather than being silently overwritten. It never downloads models.
+rather than being silently overwritten. It never downloads models. Ordinary
+startup checks both catalogs without importing or embedding. Previous Markdown
+rows and citations remain intact; Markdown ingestion is not needed for startup.
 
 For subsequent starts:
 

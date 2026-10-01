@@ -314,7 +314,11 @@ function Start-LocalApplication {
             -Plan $preparationPlan `
             -MavenCommand $mavenCommand `
             -BackendDirectory $backendDirectory
-        Write-Host 'Local SynTen PDF and incident-family Markdown knowledge is ready.'
+        Write-Host 'Both accepted SynTen PDF catalogs and embeddings are ready.'
+    } else {
+        $readinessPlan = @(Get-LocalKnowledgePreparationPlan -RepositoryRoot $repositoryRoot |
+            Where-Object { $_.Name -in @('readiness', 'payment-readiness') })
+        Invoke-LocalKnowledgePreparation -Plan $readinessPlan -MavenCommand $mavenCommand -BackendDirectory $backendDirectory
     }
 
     Start-SelectedMcpProvider -RepositoryRoot $repositoryRoot -UseGeneratorMcp:$UseGeneratorMcp `

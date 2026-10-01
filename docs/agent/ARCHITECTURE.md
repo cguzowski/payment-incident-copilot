@@ -164,15 +164,20 @@ observations remain cited history and cannot restore current sufficiency.
 
 ## Knowledge-source evolution
 
-The catalog supports two legacy repository-owned Markdown sources and the
-30 SynTen Inc PDF versions. Parsing, chunking, hashing, embedding, and index
+The catalog retains historical Markdown inputs, the 30 authorization PDFs and
+the frozen 16 payment PDFs. New operational searches use only accepted PDFs
+with declared family applicability, including shared policies (ADR-0020).
+Explicit preparation imports/embeds each catalog; ordinary local startup checks
+both exact persisted plans and complete compatible vectors without importing.
+Parsing, chunking, hashing, embedding, and index
 writes remain inside `knowledge.catalog`. Retrieval and report generation
 consume persisted catalog records rather than reading PDFs directly or sending
 whole documents to a model.
 
 ADR-0009 selects PDFBox 3.0.8 and an immutable page/block representation for
 PDF ingestion. A PDF catalog row retains the exact maintained-source and PDF
-hashes plus `pdfbox-text-pages/v1`; each `pdf-page-sections/v1` chunk has a
+hashes plus `pdfbox-text-pages/v1` for the baseline or `pdfbox-payment-pages/v1`
+for the independent library; each `pdf-page-sections/v1` chunk has a
 1-based physical page and block range and never crosses a page. Retrieval
 snapshots copy that locator rather than resolving it from mutable files.
 
@@ -276,8 +281,8 @@ intake to seven families with a backward-compatible omitted-type default. The
 generator composes the original catalog with twelve additive scenarios under
 [SynTen multi-incidents v1](../../SynTen%20Inc/multi-incidents/v1/README.md).
 Family-specific service errors use the unchanged MCP v1 contract. Twelve
-approved Markdown runbooks/policies use the existing explicit ingestion command
-and exact line/source metadata. The launcher includes these sources when
-`-PrepareKnowledge` is explicitly requested. Retrieval retains tenant/family filtering; reports,
+approved Markdown runbooks/policies remain immutable historical inputs with
+line/source metadata. ADR-0020 replaces operational preparation with both
+accepted PDF catalogs and PDF-only multi-family/shared-policy retrieval. Reports,
 human decisions and audit retain their existing boundaries. No payment engines,
 new infrastructure or automated operational actions are introduced.

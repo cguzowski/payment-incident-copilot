@@ -72,9 +72,13 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
                 UPDATE knowledge_document_version
                 SET document_key = :documentKey,
                     related_document_keys = CAST(:relatedKeys AS TEXT[]),
+                    applicable_families = CAST(:families AS TEXT[]),
+                    catalog_version = :catalogVersion,
                     relationship_metadata_version = 'document-relationships/v1'
                 WHERE tenant_id = :tenantId AND id = :versionId
                   AND source_artifact_hash = :sourceHash
+                  AND (catalog_version IS NULL OR (catalog_version = :catalogVersion
+                       AND applicable_families = CAST(:families AS TEXT[])))
                   AND (document_key IS NULL OR (
                       document_key = :documentKey AND related_document_keys = CAST(:relatedKeys AS TEXT[])
                       AND relationship_metadata_version = 'document-relationships/v1'))
@@ -84,6 +88,8 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
                 .param("documentKey", source.documentKey())
                 .param("sourceHash", source.sourceSha256())
                 .param("relatedKeys", "{" + String.join(",", source.relatedDocumentKeys()) + "}")
+                .param("families", "{" + String.join(",", source.applicableFamilies()) + "}")
+                .param("catalogVersion", source.corpusVersion())
                 .update();
         if (changed != 1) {
             throw new IllegalArgumentException("Changed document relationships require a new source version.");
@@ -112,6 +118,8 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
                                document.source_artifact_hash,
                                document.pdf_artifact_hash,
                                document.extraction_strategy_version,
+                               document.applicable_families,
+                               document.catalog_version,
                                chunk.id AS chunk_id,
                                chunk.chunk_ordinal,
                                chunk.section_path,
@@ -139,9 +147,13 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
                           ON chunk.tenant_id = document.tenant_id
                          AND chunk.document_version_id = document.id
                         WHERE document.tenant_id = :tenantId
+                          AND document.catalog_version = :catalogVersion
                         ORDER BY document.document_id, document.document_version, chunk.chunk_ordinal
                         """)
                 .param("tenantId", expectedPlan.tenantId())
+                .param(
+                        "catalogVersion",
+                        expectedPlan.documents().getFirst().document().source().corpusVersion())
                 .query((resultSet, rowNumber) -> new PersistedCatalogRow(
                         resultSet.getObject("document_version_id", UUID.class),
                         resultSet.getObject("document_id", UUID.class),
@@ -160,6 +172,9 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
                         resultSet.getString("source_artifact_hash"),
                         resultSet.getString("pdf_artifact_hash"),
                         resultSet.getString("extraction_strategy_version"),
+                        List.of((String[])
+                                resultSet.getArray("applicable_families").getArray()),
+                        resultSet.getString("catalog_version"),
                         resultSet.getObject("chunk_id", UUID.class),
                         resultSet.getObject("chunk_ordinal", Integer.class),
                         resultSet.getString("section_path"),
@@ -245,6 +260,8 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
 
     private static void compareDocument(PdfCatalogDocumentPlan expected, PersistedCatalogRow actual) {
         SynTenPdfSourceDocument source = expected.document().source();
+        requireEqual("family applicability", source.applicableFamilies(), actual.applicableFamilies());
+        requireEqual("catalog version", source.corpusVersion(), actual.catalogVersion());
         requireEqual("document version ID", expected.documentVersionId(), actual.documentVersionId());
         requireEqual("document ID", source.documentId(), actual.documentId());
         requireEqual("document type", source.type().name(), actual.documentType());
@@ -405,6 +422,8 @@ class PostgresSynTenPdfCatalogRepository implements SynTenPdfCatalogRepository, 
             String sourceArtifactHash,
             String pdfArtifactHash,
             String extractionStrategyVersion,
+            List<String> applicableFamilies,
+            String catalogVersion,
             UUID chunkId,
             Integer chunkOrdinal,
             String sectionPath,

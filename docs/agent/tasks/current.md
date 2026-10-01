@@ -1,120 +1,155 @@
-# Task: E2 independent operational PDF library
+# Task: E3 — Adopt the frozen payment PDF library
 
-Status: Complete - independent library frozen; full verification passed
+Status: Complete — final full verification and local PDF retrieval checks passed
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
 ## Goal
 
-Author, validate and freeze a risk-derived synthetic PDF library before independent
-incident creation, preserving the existing authorization corpus.
+Adopt synten-payment-knowledge/v1 for operational retrieval with the same exact
+PDF citations and explicit embedding preparation as the authorization baseline.
 
 ## User story
 
-As an operator, I want varied approved operational guidance that helps distinguish
-causes, effects and safe next evidence requests without containing incident answers.
+As an operator investigating any supported incident family, I want approved,
+applicable PDF excerpts and shared policies with exact source versions, hashes,
+pages and blocks, so I can review the guidance supporting an advisory report.
 
 ## Chosen contract
 
-The owner's proceed activates E2 from PAYMENT_EXPANSION_PLAN.md. Create a separate
-synten-payment-knowledge/v1 package under SynTen Inc/payment-knowledge/v1 with
-16 new documents: 11 diagnostic runbooks and 5 shared policies. Derive topics and
-coverage solely from domain/v2's 24 risks and 11 evidence requirements. Use stable
-opaque document IDs, version 1.0.0, synthetic APPROVED metadata, owner roles,
-effective date 2026-10-01 and explicit stage/family/shared applicability. Preserve
-30 original PDFs and their manifests as a separately identified historical baseline;
-do not relabel it independent. Freeze exact editable sources, PDFs, inventory,
-authoring/generator provenance and review evidence. No runtime import is activated.
+Accept unchanged synten-auth-knowledge/v2 and frozen 16-document
+synten-payment-knowledge/v1 through separately pinned plans. Use declared
+inventory families for applicability, including shared policies. Retain bounded
+source-derived related-policy ranking. New operational searches are PDF-only.
+Preserve Markdown inputs and historical snapshots. Explicit preparation validates
+all hashes before atomic import, then embeds. Repeated preparation is idempotent.
+Missing/changed PDFs or incomplete/failed embeddings prevent readiness; never
+fall back to Markdown. Preserve NO_MATCH/UNAVAILABLE semantics.
 
 ## In scope
 
-Successor authoring standard/inventory, source/PDF generation, deterministic asset
-validation, extraction, all-page visual/editorial QA, hashes/freeze and navigation.
+Accepted catalogs, layout-specific extraction, multi-family metadata, PDF-only
+eligibility, source packaging, explicit preparation/readiness, tests, ADR and docs.
+Local preparation and representative retrieval/source checks.
 
 ## Out of scope
 
-Incident/oracle/evaluation creation, application API/MCP/database/retrieval changes,
-live embeddings/model runs, PDF-only runtime enforcement or report-safety changes.
+Source/PDF rewrites, new fixtures, E4 evidence, report/schema/Q6 changes,
+autonomous actions, historical rewrites and held-out quality claims.
 
 ## Constraints
 
-No authoring from scenarios, labels, report outputs or oracle. Every PDF <=15 pages
-including control/revision material. Only synthetic records and units; guidance is
-not proof. E02-E11 remain unavailable current sources. Shared policies do not imply
-implemented cross-family retrieval. Preserve Q6 LOW/null and human-only actions.
+Preserve baseline bytes/chunks/fingerprint, tenant/version/approval isolation,
+independent deployables and deterministic automated providers. Legacy tests may
+explicitly exercise Markdown compatibility; operational default is PDF-only.
 
 ## Acceptance criteria
 
-- [x] Versioned authoring standard and exact 16-document inventory map every R01-R24
-      to useful diagnostic or policy content with scope, sources and related items.
-- [x] Editable, independently risk-derived sources and text PDFs contain controlled
-      metadata, distinguishing/negative checks, uncertainty and conditional recovery;
-      policies define durable controls without copying runbook procedures.
-- [x] Deterministic generation and validators verify exact membership/metadata/hashes,
-      extraction, 1-15 pages, related references and invalid input rejection.
-- [x] Every rendered page passes visual review; all documents pass editorial review
-      with source-capability limits and no unresolved layout defects.
-- [x] Frozen package retains exact provenance/hashes and review evidence; historical
-      assets unchanged; required focused and repository verification pass.
+- [x] Both accepted catalogs are pinned, deterministic and hash-validated;
+      missing, changed, invalid or unaccepted inputs fail before persistence.
+- [x] Successor chunks retain exact PDF/page/block/model provenance, declared
+      family applicability and shared-policy relationships; imports are atomic
+      and repeatable, preserving historical records.
+- [x] Direct and related operational searches exclude Markdown, wrong tenant,
+      wrong family, future/superseded and unaccepted sources; all seven families
+      have PDF guidance. Historical citations remain readable.
+- [x] Explicit preparation covers both catalogs; readiness rejects missing,
+      incomplete or failed embeddings without automatic import.
+- [x] Focused and full verification pass; local preparation and representative
+      retrieval/source checks are recorded separately from model quality.
 
 ## Test plan
 
-Before tooling implementation, write focused Python tests for missing/extra files,
-duplicate metadata, missing risk coverage, unsafe source paths, source mismatch,
-PDF limits/text/encryption and altered freeze hashes. Confirm intended red failure,
-then focused green. Generate twice and compare PDF bytes. Validate/extract all PDFs
-and render every page with Poppler; inspect every cover, procedure/control page and
-revision page. Review every source for operational relevance and independence.
-Run ./verify.ps1 and static links/diff/preservation checks; live providers not needed.
+PaymentPdfCatalogTest: deterministic plan, immutable baseline regression,
+source/PDF hash/path/metadata and missing-file rejection.
+PaymentPdfCatalogPostgresIntegrationTest: combined atomic/idempotent import,
+shared/family policy eligibility, provenance, exclusions, empty catalog,
+historical Markdown preservation and embedding readiness.
+LocalKnowledgePreparation.Tests.ps1: separate catalog/backfill/readiness steps
+and disabled Markdown import. Existing embedding failure and artifact endpoint
+tests remain regression coverage. Confirm intended red, then focused suites and
+full verify.ps1. Manual local checks use the configured synthetic environment.
 
 ## Progress notes
 
-- Integrated all current worktree histories after E2 completion. Full combined
-  ./verify.ps1 passed (503 Java/Angular tests, no failures/errors/skips), eight
-  PDF tooling tests passed and frozen hashes remained unchanged. The independent
-  evidence-availability task is preserved in completed/2026-10-01-available-demo-evidence.md.
-
-- Required context and PDF skill read; clean initial working tree.
-- Archived completed E1 unchanged. Existing authoring contract remains historical;
-  successor intentionally uses independent risks rather than scenario-code coverage.
+- Owner selected frozen-library adoption (option 1). Existing staged report/CLI
+  changes are user-owned and preserved; completed task archived.
+- Risks: layout differences, multi-family applicability and catalog coexistence
+  in embedding snapshots. Resolve through focused regressions before production.
+- Confirmed red: successor loading initially rejected its absent legacy manifest;
+  shared policies were absent for six families and Markdown entered PDF-only
+  searches. Catalog coexistence and the 65-target backfill failed under the
+  original one-catalog/705-target assumptions. All pass after implementation.
+- Applicability drift and conflicting readiness/import modes reproduced before
+  correction. Legacy wrong-family exclusion caught an unintended compatibility
+  change; legacy mode now retains the original single-family filter.
+- Full gate passed 361 API, 9 MCP, 52 generator and 103 console tests before the
+  final historical-version fix. A generator JAR lock required a scoped stop;
+  generator restored from byte-identical runtime copy to avoid future clean locks.
+- Local database contained 30 untagged historical PDF versions (705 chunks),
+  fourteen Markdown versions (87 chunks) and subsequently imported thirty v2
+  PDFs (705 chunks). Backfill failed on the retained untagged versions. A focused
+  regression reproduced the failure; scoped catalog snapshots now preserve and
+  ignore those historical versions. Five preparation tests passed afterward.
+- Frozen library verify and eight tooling tests passed; sources, PDFs, inventory,
+  freeze manifest and package-control hashes remain unchanged. Final full gate
+  and local preparation/retrieval checks subsequently passed.
 
 ## Completion evidence
 
-- Red: focused unittest discovery failed with ModuleNotFoundError for missing
-  library builder/validator before implementation. Green: all eight focused tests
-  passed, including deterministic build, invalid membership/identity/risk/source/
-  references/path/metadata, encrypted/empty/malformed/over-limit PDFs and tampering.
-- Validated 16 PDFs / 48 pages with full metadata/substantive text extraction;
-  each document is three pages (min/max/median 3). Two rebuilds were byte-identical
-  and matched the exact PDFs used for the final visual inspection.
-- Poppler rendered all 48 pages at 96 dpi. Inspected every cover, procedure/control
-  and final revision page at readable resolution. Corrected merged numbered steps
-  and added visible tenant metadata before final all-page reinspection. No remaining
-  layout defects. Editorial review of all sources and coverage is in review.md.
-- Full ./verify.ps1 passed on 2026-10-01: 337 API, 9 MCP, 50 generator and 103
-  Angular tests, zero failures/errors/skips; format/build/Compose/repository checks.
-  Initial full run correctly rejected skipped PostgreSQL tests while Docker was
-  unavailable. Started Docker and reran with Docker access; the complete gate passed.
-- Focused commands (bundled Python): -m unittest discover -s
-  "SynTen Inc/payment-knowledge/v1/tools" -v; tools/library.py build/validate/verify;
-  tools/render_library.py. Actual freeze command ran once after review; a second
-  freeze attempt was rejected and left the manifest byte-identical.
-- Freeze SHA-256: a1fe13333de61f51a9406827a577f880ca7d88b1bcd2e0a4def438f6b134b421.
-  Manifest retains exact source/PDF/package/generator/font/domain-input hashes,
-  ReportLab 4.4.9 and UTC freeze timestamp. Input allowlist excludes scenario/
-  oracle/evaluation/report artifacts; historical manifest is a hash-only reference.
-- Changed/new Markdown links, label/credential pattern checks and git diff --check
-  passed. Historical corpus/evaluation/multi-incident/domain/runtime paths have
-  no diff against 4d6effd. Completed E1 archive text matches exactly.
-- npm ci reported eight existing advisories (four moderate, four high) with no
-  lockfile change; the gate has no failing npm-audit step.
+- Final ./verify.ps1 passed on 2026-10-01: 362 API, 9 operations MCP,
+  52 generator and 103 console tests, zero failures/errors/skips; PowerShell
+  script suites, Java/Prettier formatting, production builds, Compose and diff
+  checks passed. Docker-backed commands required elevation for named-pipe access.
+- Focused command ./mvnw.cmd -pl backend/copilot-api
+  '-Dtest=PaymentPdfPreparationPostgresIntegrationTest' test passed five cases
+  after the final historical-version fix. Earlier focused suites covered the
+  four catalog input tests, all seven family searches/exclusions, readiness,
+  mode conflicts, strategy provenance, baseline fingerprint and exact packaged
+  PDF bytes. Existing embedding/migration/snapshot/report suites passed in the gate.
+- Bundled Python: library.py verify and unittest discover -s
+  'SynTen Inc/payment-knowledge/v1/tools' -v passed freeze verification and
+  eight tooling tests. Temporary fixture access required elevation. No frozen
+  library, baseline corpus, domain or historical evaluation bytes changed.
+- Executed the six-step Get-LocalKnowledgePreparationPlan against the configured
+  synthetic database using the existing launcher functions. Baseline reimport
+  skipped 30 identical v2 versions; backfill wrote 705 nomic-embed-text vectors.
+  Successor imported 16 versions / 65 chunks and wrote 65 vectors. Both readiness
+  commands passed their exact fingerprints/counts. Retained 30 untagged historical
+  PDF versions / 705 chunks and fourteen Markdown versions / 87 chunks unchanged.
+- Live final checks (all AVAILABLE, seven PDF chunks, nomic-embed-text / 768,
+  postgres-pdf-family-related/v5):
+  authorization investigation da62c985-a5c2-44c3-ac13-1d8b0bec8a24, retrieval
+  a2bdacb2-9ab4-4dcb-a1c7-8eaff3e96665;
+  capture 8245ff66-ce77-4ceb-8567-9f44fd1a07cf, retrieval
+  9f9eaf77-a166-40ab-aaaa-b3feb21cbebd;
+  reconciliation 94deb248-9dea-44e6-bcbb-d22ca6dce5d0, retrieval
+  eb6b3e7f-3ca8-46ef-8108-b61f3ade39cc;
+  webhook f1c24df6-ec42-4d48-b70e-f58f458fd576, retrieval
+  dde80050-2326-452b-ab96-90e4fcad8b83.
+  Downloaded first-cited PDF bytes matched each SHA-256, with valid page/block
+  locators. All previous retrieval responses were byte-equivalent after JSON
+  normalization. Every incident stayed INVESTIGATING; no reports/decisions created.
+  An initial authorization retrieval also succeeded before correcting the temporary
+  check script's array handling; that attempt remains retained.
+- API and generator health, console root and effective API MCP endpoint checks
+  passed (HTTP 200; MCP http://localhost:8082). API PID 37328, generator PID 38000,
+  console PID 26044 left running. API/generator use identical copies of verified
+  JARs under ignored tmp/e3 to avoid Windows clean-build locks.
+- Changed application files are confined to knowledge catalog/retrieval, V11,
+  PDF resource packaging and launcher preparation. ADR-0020 and current docs
+  describe the resulting contract. Prior staged report/CLI work remains untouched.
 
 ## Remaining limitations
 
-E3 must select accepted catalogs, PDF-only eligibility and shared-policy retrieval.
-E4 must implement richer read-only evidence. No held-out quality claim is made.
+E4 item-level evidence and independent live-model quality evaluation remain
+deferred. Live checks establish retrieval availability and source provenance,
+not cause correctness or report quality. Capture S312 evidence remains deliberately
+UNAVAILABLE; knowledge availability does not repair or relabel that evidence.
+The immutable library README records its E2 adoption boundary; current adoption
+instructions live in the root/tenant README and ADR-0020 to preserve the freeze.
 
 ## Decisions needed
 
-None for E2 assets; existing baseline kept separate, new metadata explicitly scoped
-for later catalog design. Fictional knowledge approval is not a human report decision.
+None: owner selected E3; inventory-declared applicability, separately pinned
+accepted catalogs and fail-closed explicit readiness implement the contract.
