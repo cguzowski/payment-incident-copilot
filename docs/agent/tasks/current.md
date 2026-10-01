@@ -69,6 +69,11 @@ Run ./verify.ps1 and static links/diff/preservation checks; live providers not n
 
 ## Progress notes
 
+- Integrated all current worktree histories after E2 completion. Full combined
+  ./verify.ps1 passed (503 Java/Angular tests, no failures/errors/skips), eight
+  PDF tooling tests passed and frozen hashes remained unchanged. The independent
+  evidence-availability task is preserved in completed/2026-10-01-available-demo-evidence.md.
+
 - Required context and PDF skill read; clean initial working tree.
 - Archived completed E1 unchanged. Existing authoring contract remains historical;
   successor intentionally uses independent risks rather than scenario-code coverage.

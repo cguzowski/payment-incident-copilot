@@ -118,6 +118,12 @@ identifiers remain plain text.
 
 ## Verification evidence
 
+- Combined worktree integration passed ./verify.ps1 on 2026-10-01: 339 API,
+  9 MCP, 52 generator and 103 Angular tests, zero failures/errors/skips; script,
+  formatting, build, Compose and diff checks passed. Eight PDF tooling tests
+  passed and the frozen library hashes/provenance remain unchanged. Original
+  planning history and the completed evidence-availability task are retained.
+
 - Evidence availability on 2026-10-01: persisted investigation
   8245ff66-ce77-4ceb-8567-9f44fd1a07cf has scenario S312 and status detail
   `Synthetic observation source unavailable.` Confirmed selector regressions
