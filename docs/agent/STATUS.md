@@ -1,10 +1,10 @@
 # Project status
 
-Last updated: 2026-10-01
+Last updated: 2026-10-04
 
 ## Current state
 
-The local demo is complete and the owner has paused feature work. Seven
+The local demo is complete; the owner has activated confidence calibration. Seven
 synthetic incident families support intake, active/completed queues, MCP
 service-error evidence, approved PDF retrieval, advisory reports, explicit
 human decisions and audit history. Normal generation selects AVAILABLE
@@ -28,16 +28,61 @@ See the [completed comparison task](tasks/completed/2026-10-01-automatic-post-re
 The [first cleanup](tasks/completed/2026-10-01-demo-maintenance-cleanup.md) is complete: unused CSS aliases,
 a deployment placeholder and 2,865 disposable local files (40,096,595 bytes)
 were removed. Active runtime files and retained artifacts are preserved.
-The [thorough cleanup](tasks/current.md) retires all 13 Python authoring scripts
+The [deferred thorough cleanup](tasks/2026-10-04-deferred-demo-cleanup.md) retires all 13 Python authoring scripts
 into a [hash-verified historical archive](../../SynTen%20Inc/history/pdf-authoring-tools/README.md)
 and removes an unused report helper and ORM dependency. Frozen assets are
-unchanged. The prepared JDBC-only API package is smaller, but Docker-backed
-post-change verification was rejected by the permission prompt and awaits owner
-authorization. The running demo remains on its previous tested API JAR.
+unchanged. Its original unfinished task and verification limitations are retained
+byte-for-byte. O1's subsequent full verification passed against the current
+checkout; the cleanup task has not been independently closed. The latest observed
+main demo attempts now use report-prompt/v7.
 Feature expansion and AWS deployment remain deferred;
 see the [roadmap](ROADMAP.md).
 
+The owner has queued [four next investigation-quality tasks](tasks/next.md):
+confidence calibration, useful operational passages, specific grounded
+recommendations and observed-fact/source preservation. The owner clarified
+[confidence selection](tasks/completed/2026-10-04-attainable-high-confidence.md): report-prompt/v7 restores attainable
+HIGH, normally favors MEDIUM, and uses LOW for weak support. HIGH requires
+exceptionally strong support of the narrow mechanism, not independent
+confirmation as a prerequisite. Degraded LOW/null behavior remains enforced.
+[ADR-0024](decisions/ADR-0024-attainable-high-confidence.md) supersedes v6's
+ceiling. O2-O4 remain queued. The owner subsequently authorized
+[explicit confidence expectations](tasks/current.md) under
+[ADR-0025](decisions/ADR-0025-evidence-based-confidence-expectations.md).
+confidence-evidence/v1 evaluates the decision-bound latest snapshot independently
+of actual report confidence. comparison-rubric/v2 changes only that expected
+input; exact match, other metrics, weights, bands and decision formula stay intact.
+Original keys and historical artifacts remain unchanged. HIGH is attainable for
+three consistent direct diagnostic signatures without independent confirmation.
+
 ## Verification and retained evidence
+
+- Evidence-based confidence calibration passed all 82 generator tests, including
+  eight nested Node UI cases. Regression logs and exact retained-input replay are
+  in tmp/confidence-rules/. Both recent v7 rate-limit/DNS comparisons independently
+  expect MEDIUM and score confidence 100 using retained text scores; original
+  artifact hashes remain intact. This replay makes no model calls or historical
+  writes. Full ./verify.ps1 passed 368 API, 9 MCP, 82 generator and 103 console tests with zero failures/errors/skips plus formatting, builds, Compose and diff checks. The first full run failed only on a task-document trailing blank line; the repaired final run passed.
+
+- Attainable-HIGH v7 correction passed 25 focused report tests in final full
+  verification, and full ./verify.ps1 passed 368 API, 9 MCP, 74 generator and
+  103 console tests with zero failures/errors/skips plus formatting/build checks.
+  Logs are tmp/confidence-v7-*.log. Initial nonpersisted live diagnostics chose
+  MEDIUM/MEDIUM/LOW; the weak MEDIUM relied on unsupported synthetic metadata.
+  A tightened prompt's weak replay timed out at 120 seconds. All results remain
+  in tmp/confidence-v7-live/. Frequency and semantic quality remain unestablished;
+  exact confidence comparison, answer keys and historical scores are unchanged.
+
+- O1's focused red-green cycle passed 24 prompt/parser and PostgreSQL HTTP tests.
+  Full ./verify.ps1 passed 367 API, 9 MCP, 74 generator and 103 console tests,
+  with zero failures/errors/skips, plus seven nested Node cases, formatting,
+  builds, repository and Compose checks. Logs remain under tmp/o1-*.log.
+  [Seven fresh O1 attempts](../../SynTen%20Inc/evaluation/2026-10-04-o1-confidence.md)
+  yielded three AVAILABLE reports and four timeouts, no retries. Completed
+  comparison scores are 88/100/64 with confidence matches 2/3 and 24/24 valid
+  citation references. S002 expected HIGH and could not match v6's ceiling;
+  these historical scores are unchanged. S301/S302/S303 timed out, leaving the original confidence
+  misses unmeasured. No overall answer-key improvement is established.
 
 - The [five-case investigation diagnostic](../../SynTen%20Inc/evaluation/2026-10-01-investigation-diagnostic.md)
   completed fresh terminal decisions/reveal/comparison with report scores
@@ -75,6 +120,19 @@ see the [roadmap](ROADMAP.md).
   [tenant documentation](../../SynTen%20Inc/README.md).
 
 ## Known limitations
+
+- Confidence expectations are bounded explicit aggregate rules, not calibrated
+  probabilities or general semantic verification. Three direct diagnostic pairs
+  can reach HIGH; other substantial mechanisms stay MEDIUM until reviewed.
+  Required-code extraction does not prove the key's prose conditions, affected
+  paths, deeper causes, approved-guidance applicability or final payment outcomes.
+
+- v7 confidence selection is advisory; structural validation permits HIGH but
+  cannot prove its justification or guarantee how frequently a level is selected.
+  Live timeout and grounding defects persist. The owner's webhook investigation
+  had three v6 MALFORMED attempts; Ollama logs confirm each prompt was truncated
+  from 4,209 to 2,050 tokens. A nonpersisted replay violated insufficient-evidence
+  null fields. These failures remain unchanged; context budgeting is unresolved.
 
 - Post-reveal text scores are advisory and not independently calibrated.
   The local default judge is the report model with a separate prompt; a different

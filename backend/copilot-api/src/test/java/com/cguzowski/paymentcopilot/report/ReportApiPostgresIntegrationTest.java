@@ -2,6 +2,7 @@ package com.cguzowski.paymentcopilot.report;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,6 +13,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbedding;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeEmbeddingClient;
+import com.cguzowski.paymentcopilot.knowledge.catalog.KnowledgeIngestionService;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +73,115 @@ class ReportApiPostgresIntegrationTest {
     @MockitoBean
     private ReportModel model;
 
+    @MockitoBean
+    private KnowledgeEmbeddingClient embeddingClient;
+
+    @Autowired
+    private KnowledgeIngestionService ingestion;
+
+    @Autowired
+    private ReportContextAssembler contexts;
+
+    @Autowired
+    private ReportOutputParser parser;
+
+    @Autowired
+    private ReportGenerationPersistenceService persistence;
+
     private MockMvc mockMvc;
+
+    @Test
+    void persistsAvailableHighForHumanReview() throws Exception {
+        ReportGenerationContext context = prepareKnowledge();
+        ReportDocument medium = proposedReport(context, ReportConfidenceLevel.MEDIUM);
+        var mapper = tools.jackson.databind.json.JsonMapper.builder().build();
+        assertThat(parser.parse(mapper.writeValueAsString(medium), context)).isEqualTo(medium);
+        String high = mapper.writeValueAsString(proposedReport(context, ReportConfidenceLevel.HIGH));
+        when(model.generate(any(), any())).thenReturn(new ReportModelResponse(high, "high-request"));
+
+        mockMvc.perform(post("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("AVAILABLE"))
+                .andExpect(jsonPath("$.report.confidence.level").value("HIGH"))
+                .andExpect(jsonPath("$.promptVersion").value("report-prompt/v7"));
+        mockMvc.perform(get("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].status").value("AVAILABLE"))
+                .andExpect(jsonPath("$[0].report.confidence.level").value("HIGH"));
+        assertThat(jdbcClient
+                        .sql("SELECT status FROM incident WHERE id = :id")
+                        .param("id", INCIDENT_ID)
+                        .query(String.class)
+                        .single())
+                .isEqualTo("AWAITING_REVIEW");
+        assertThat(jdbcClient
+                        .sql("SELECT COUNT(*) FROM report_claim")
+                        .query(Integer.class)
+                        .single())
+                .isPositive();
+        verify(model, times(1)).generate(any(), any());
+    }
+
+    @Test
+    void readsHistoricalHighConfidenceWithoutRevalidating() throws Exception {
+        ReportGenerationContext context = prepareKnowledge();
+        var historical = ReportGenerationAttempt.started(
+                UUID.randomUUID(),
+                OPERATOR_ID,
+                Instant.parse("2026-10-01T10:00:00Z"),
+                context,
+                "historical-model",
+                new ReportPrompt("historical", "report-prompt/v5", "a".repeat(64), "report-v1", "b".repeat(64)));
+        assertThat(persistence.start(historical)).isTrue();
+        assertThat(persistence.completeAvailable(historical.completeAvailable(
+                        Instant.parse("2026-10-01T10:00:02Z"),
+                        new ReportModelResponse("historical", "historical-request"),
+                        proposedReport(context, ReportConfidenceLevel.HIGH))))
+                .isTrue();
+        mockMvc.perform(get("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].report.confidence.level").value("HIGH"))
+                .andExpect(jsonPath("$[0].promptVersion").value("report-prompt/v5"));
+        verifyNoInteractions(model);
+    }
+
+    private ReportGenerationContext prepareKnowledge() throws Exception {
+        float[] vector = new float[KnowledgeEmbeddingClient.DIMENSIONS];
+        vector[0] = 1;
+        when(embeddingClient.embed(anyString()))
+                .thenReturn(new KnowledgeEmbedding(
+                        KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, vector));
+        ingestion.importApprovedSources();
+        mockMvc.perform(post("/api/investigations/{investigationId}/knowledge-retrievals", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("AVAILABLE"));
+        return contexts.find(TENANT_ID, INVESTIGATION_ID).orElseThrow();
+    }
+
+    private static ReportDocument proposedReport(ReportGenerationContext context, ReportConfidenceLevel level) {
+        var evidence = new ReportClaim("Gateway timeouts observed.", List.of(EVIDENCE_ID), List.of());
+        var advice = new ReportClaim(
+                "Inspect gateway telemetry.",
+                List.of(EVIDENCE_ID),
+                List.of(context.knowledge().chunks().getFirst().chunkId()));
+        return new ReportDocument(
+                ReportDisposition.PROPOSED,
+                evidence,
+                List.of(evidence),
+                List.of(),
+                advice,
+                new ReportConfidence(level, "Aggregate evidence lacks independent confirmation.", List.of(EVIDENCE_ID)),
+                advice,
+                List.of(),
+                List.of(new ReportGap("Independent confirmation is missing.")));
+    }
 
     @BeforeEach
     void setUp() {
@@ -178,7 +292,7 @@ class ReportApiPostgresIntegrationTest {
                         .sql("SELECT prompt_version FROM report_generation_attempt")
                         .query(String.class)
                         .single())
-                .isEqualTo("report-prompt/v5");
+                .isEqualTo("report-prompt/v7");
         verify(model, times(1)).generate(any(), any());
     }
 

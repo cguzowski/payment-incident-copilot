@@ -3,6 +3,10 @@ package com.cguzowski.syntheticincidentgenerator.comparison;
 record ComparisonGrade(
         int disposition,
         int confidence,
+        String expectedConfidence,
+        String originalExpectedConfidence,
+        String confidenceRuleVersion,
+        String confidenceReason,
         int rootCause,
         String rootCauseReason,
         int recommendation,

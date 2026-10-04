@@ -130,6 +130,19 @@ function allText(element) {
   return [element.textContent, ...element.children.map(allText)].join(' ');
 }
 
+test('confidence displays calibrated expectation and retains the original key', () => {
+  const ui = setup(async () => response({}));
+  ui.run('renderComparison(' + JSON.stringify({ ...comparison, grade: { ...grade,
+    expectedConfidence: 'MEDIUM', originalExpectedConfidence: 'HIGH',
+    confidenceRuleVersion: 'confidence-evidence/v1', confidenceReason: 'Bounded rate-limit evidence lacks traffic shape.'
+  }, report: { ...comparison.report, confidence: { level: 'MEDIUM' } } }) + ', ' + JSON.stringify(key) + ')');
+  const text = allText(ui.elements.get('#report-metrics'));
+  assert.match(text, /Expected: MEDIUM · Actual: MEDIUM/);
+  assert.match(text, /Original key: HIGH/);
+  assert.match(text, /confidence-evidence\/v1/);
+  assert.match(text, /lacks traffic shape/);
+});
+
 test('comparison follows successful reveal and shows separate independently colored cards', async () => {
   const calls = [];
   const ui = setup(async (url) => {

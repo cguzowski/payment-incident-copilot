@@ -166,6 +166,17 @@ explicit gap. report-prompt/v5 and the provider's per-context schema constrain
 generation; independent parsing rejects violations as MALFORMED. Earlier applicable
 observations remain cited history and cannot restore current sufficiency.
 
+[ADR-0024](decisions/ADR-0024-attainable-high-confidence.md) supersedes the
+v6 aggregate-only confidence ceiling. report-prompt/v7 permits LOW/MEDIUM/HIGH
+for AVAILABLE evidence, normally favors MEDIUM, and reserves HIGH for unusually
+substantial, direct, consistent support of a narrow observed mechanism. Missing
+independent confirmation makes HIGH exceptional but does not prohibit it.
+Rationale preserves the uncertainty; HIGH does not confirm a deeper cause or
+final outcome. Degraded/empty evidence still independently requires LOW/null.
+Structural validation cannot prove semantic support or guarantee a distribution.
+Historical reports and comparisons remain unchanged. New post-decision confidence
+expectations follow ADR-0025; report generation remains governed by ADR-0024.
+
 ## Knowledge-source evolution
 
 Under [ADR-0021](decisions/ADR-0021-post-decision-text-comparison.md), the
@@ -175,6 +186,16 @@ and recommendation text; disposition, confidence, averages, bands and human
 decision match use code. Tenant-scoped read-only API inputs and unique local
 artifacts preserve comparison provenance. This post-decision boundary cannot
 feed oracle content back into the evaluated workflow or change its outputs.
+
+[ADR-0025](decisions/ADR-0025-evidence-based-confidence-expectations.md) adds
+confidence-evidence/v1: deterministic rules evaluate the exact latest operational
+snapshot and required machine signals independently of actual report confidence.
+LOW covers weak/degraded support; MEDIUM covers bounded candidate mechanisms;
+HIGH requires one of three explicit consistent direct diagnostic signatures.
+No independent confirmation is mandatory. comparison-rubric/v2 retains exact
+0/100 checks, weights, bands and approval formula, changing only confidence's
+expected input. UI/artifacts retain original and calibrated levels plus rationale
+and version. Original keys, historical artifacts and offline grading remain intact.
 
 The catalog retains historical Markdown inputs, the 30 authorization PDFs and
 the frozen 16 payment PDFs. New operational searches use only accepted PDFs

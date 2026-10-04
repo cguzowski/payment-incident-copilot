@@ -18,7 +18,7 @@ import tools.jackson.databind.node.ObjectNode;
 @Component
 class ReportPromptFactory {
 
-    static final String PROMPT_VERSION = "report-prompt/v5";
+    static final String PROMPT_VERSION = "report-prompt/v7";
     static final String SCHEMA_VERSION = "report-v1";
 
     private final JsonMapper jsonMapper;

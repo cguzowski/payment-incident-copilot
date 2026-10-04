@@ -20,7 +20,7 @@ class ComparisonRubricTest {
 
     @Test
     void exactEnumsAndRoundedMeanAreDeterministic() {
-        var grade = ComparisonRubric.grade(
+        var grade = grade(
                 truth,
                 report("PROPOSED", "HIGH", false),
                 "APPROVED",
@@ -35,7 +35,7 @@ class ComparisonRubricTest {
 
     @Test
     void correctlyRejectingPoorReportIsGoodDecisionButBadReport() {
-        var grade = ComparisonRubric.grade(
+        var grade = grade(
                 truth,
                 report("INSUFFICIENT_EVIDENCE", "LOW", false),
                 "REJECTED",
@@ -48,7 +48,7 @@ class ComparisonRubricTest {
 
     @Test
     void incorrectApprovalAndExactConfidenceMismatchDoNotPassDecisionRubric() {
-        var grade = ComparisonRubric.grade(
+        var grade = grade(
                 truth, report("PROPOSED", "MEDIUM", false), "APPROVED", new TextScores(100, "Matches", 100, "Matches"));
         assertThat(grade.confidence()).isZero();
         assertThat(grade.expectedDecision()).isEqualTo("REJECTED");
@@ -86,8 +86,7 @@ class ComparisonRubricTest {
                 "{\"rootCause\":80,\"rootCauseReason\":\"x\",\"recommendation\":80,\"recommendationReason\":\"x\",\"decision\":100}")) {
             assertThatThrownBy(() -> TextScores.parse(mapper, output)).isInstanceOf(IllegalArgumentException.class);
         }
-        assertThatThrownBy(() -> ComparisonRubric.grade(
-                        truth, mapper.readTree("{}"), "APPROVED", new TextScores(80, "x", 80, "x")))
+        assertThatThrownBy(() -> grade(truth, mapper.readTree("{}"), "APPROVED", new TextScores(80, "x", 80, "x")))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -99,6 +98,16 @@ class ComparisonRubricTest {
         assertThatThrownBy(() ->
                         TextScores.parse(mapper, valid.replace("\"rootCause\":80", "\"rootCause\":0,\"rootCause\":80")))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private ComparisonGrade grade(
+            ScenarioTruth key, tools.jackson.databind.JsonNode report, String decision, TextScores scores) {
+        return ComparisonRubric.grade(
+                key,
+                report,
+                decision,
+                scores,
+                new ConfidenceExpectation(key.expectedConfidence(), "Independent test expectation"));
     }
 
     private tools.jackson.databind.JsonNode report(String disposition, String confidence, boolean nulls) {

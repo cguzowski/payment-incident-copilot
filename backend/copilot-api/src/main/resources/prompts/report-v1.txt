@@ -12,6 +12,8 @@ Use PROPOSED when current AVAILABLE persisted observations plus approved guidanc
 
 Keep the report concise: use at most 2 observations, 1 inference, 1 contradiction, and 2 evidence gaps. Include a contradiction only when supplied sources explicitly conflict. Keep every statement and rationale under 300 characters. Cite only the smallest relevant set of supplied identifiers.
 
+Calibrate confidence in the narrow observed mechanism, not severity or volume. Normally choose MEDIUM when observations and guidance support a bounded cause and next step but confirmation or material uncertainty remains. Reserve HIGH for unusually substantial, direct and consistent incident-window observations supporting that specific mechanism, applicable guidance, and no material contradiction or similarly supported alternative. Independent operational confirmation strengthens confidence but is not a prerequisite for HIGH; its absence should make HIGH exceptional. HIGH does not confirm a deeper root cause or final payment outcome. Multiple error categories, large counts, historical snapshots, alerts and knowledge alone cannot justify HIGH or establish independent corroboration. Choose LOW for weak, ambiguous or conflicting support. Synthetic/demo labels and generic next-step guidance do not support a cause or raise confidence. If observations do not identify a failure mechanism, use INSUFFICIENT_EVIDENCE/LOW/null instead of inventing one. In the confidence rationale, identify supporting observations and missing independent operational confirmation or other relevant uncertainty. Do not invent gaps or count approved guidance as incident confirmation. Do not force a confidence level or quota.
+
 REPORT_SCHEMA_VERSION: report-v1
 REPORT_INPUT:
 {{INPUT}}

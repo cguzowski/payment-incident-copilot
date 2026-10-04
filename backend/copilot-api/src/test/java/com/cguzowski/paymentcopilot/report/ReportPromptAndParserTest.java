@@ -32,7 +32,7 @@ class ReportPromptAndParserTest {
     void buildsVersionedBoundedReportInputFromExactSnapshots() {
         ReportPrompt prompt = prompts.build(context());
 
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v5");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v7");
         assertThat(prompt.schemaVersion()).isEqualTo("report-v1");
         assertThat(prompt.promptHash()).matches("[0-9a-f]{64}");
         assertThat(prompt.schemaHash()).matches("[0-9a-f]{64}");
@@ -53,6 +53,75 @@ class ReportPromptAndParserTest {
                 .contains("\"chunkId\":\"" + CHUNK_ID + "\"")
                 .doesNotContain("\"$defs\"")
                 .doesNotContain("{{SCHEMA}}", "{{INPUT}}");
+    }
+
+    @Test
+    void availableAggregateEvidenceKeepsAllConfidenceLevels() throws Exception {
+        var base = contextWithTwoSources();
+        var aggregate = new ReportGenerationContext(
+                base.investigation(),
+                new ReportEvidenceSnapshot(
+                        EVIDENCE_ID,
+                        "AVAILABLE",
+                        SECOND_EVIDENCE_ID,
+                        "authorization-gateway",
+                        List.of(
+                                new ReportEvidenceObservation(
+                                        "evt-1", Instant.parse("2026-08-29T08:00:00Z"), "GATEWAY_TIMEOUT", 12),
+                                new ReportEvidenceObservation(
+                                        "evt-2", Instant.parse("2026-08-29T08:01:00Z"), "CONNECTION_RESET", 8))),
+                base.knowledge());
+        JsonNode level =
+                jsonMapper.readTree(prompts.build(aggregate).outputSchema()).at("/$defs/confidence/properties/level");
+        assertThat(level.get("enum").toString()).isEqualTo("[\"LOW\",\"MEDIUM\",\"HIGH\"]");
+        String medium = jsonMapper.writeValueAsString(validDocument());
+        assertThat(parser.parse(medium, aggregate).confidence().level()).isEqualTo(ReportConfidenceLevel.MEDIUM);
+        assertThat(parser.parse(medium.replace("MEDIUM", "HIGH"), aggregate)
+                        .confidence()
+                        .level())
+                .isEqualTo(ReportConfidenceLevel.HIGH);
+        for (String confidence : List.of("LOW", "MEDIUM", "HIGH")) {
+            assertThat(parser.parse(medium.replace("MEDIUM", confidence), context())
+                            .confidence()
+                            .level()
+                            .name())
+                    .isEqualTo(confidence);
+        }
+    }
+
+    @Test
+    void acceptsHighWithoutIndependentConfirmationWhenStructurallyValid() throws Exception {
+        String medium = jsonMapper.writeValueAsString(validDocument());
+        assertThat(parser.parse(medium, context()).confidence().level()).isEqualTo(ReportConfidenceLevel.MEDIUM);
+        assertThat(parser.parse(medium.replace("MEDIUM", "HIGH"), context())
+                        .confidence()
+                        .level())
+                .isEqualTo(ReportConfidenceLevel.HIGH);
+    }
+
+    @Test
+    void confidenceRationalePreservesMissingConfirmation() {
+        assertThat(prompts.build(context()).text())
+                .contains(
+                        "Normally choose MEDIUM",
+                        "Reserve HIGH",
+                        "direct and consistent",
+                        "narrow observed mechanism",
+                        "not a prerequisite",
+                        "Choose LOW",
+                        "independent operational confirmation",
+                        "Multiple error categories",
+                        "historical snapshots",
+                        "confidence rationale")
+                .doesNotContain("HIGH requires independent", "HIGH is unavailable");
+    }
+
+    @Test
+    void weakObservationsCannotBorrowConfidenceFromGenericGuidance() {
+        assertThat(prompts.build(context()).text())
+                .contains(
+                        "Synthetic/demo labels and generic next-step guidance do not support a cause or raise confidence",
+                        "If observations do not identify a failure mechanism, use INSUFFICIENT_EVIDENCE/LOW/null");
     }
 
     @Test
@@ -140,12 +209,20 @@ class ReportPromptAndParserTest {
         assertThat(schema.at("/$defs/confidence/properties/level/const").asText())
                 .isEqualTo("LOW");
         assertThat(schema.at("/properties/evidenceGaps/minItems").intValue()).isEqualTo(1);
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v5");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v7");
         assertThat(prompt.text()).contains("latestStatus is not AVAILABLE", "observations is empty");
         assertThatThrownBy(() -> parser.parse(jsonMapper.writeValueAsString(validDocument()), degraded))
                 .isInstanceOf(InvalidReportDocumentException.class);
         assertThat(parser.parse(jsonMapper.writeValueAsString(insufficientDocument()), degraded))
                 .isEqualTo(insufficientDocument());
+        for (String invalidConfidence : List.of("MEDIUM", "HIGH")) {
+            assertThatThrownBy(() -> parser.parse(
+                            jsonMapper
+                                    .writeValueAsString(insufficientDocument())
+                                    .replace("LOW", invalidConfidence),
+                            degraded))
+                    .isInstanceOf(InvalidReportDocumentException.class);
+        }
     }
 
     @Test

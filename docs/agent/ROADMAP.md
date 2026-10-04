@@ -1,7 +1,7 @@
 # Product roadmap
 
 Status: Active
-Last reviewed: 2026-10-01
+Last reviewed: 2026-10-04
 Owner: Christopher Guzowski
 
 ## Purpose
@@ -40,6 +40,21 @@ K4/K5 completion did not pass the benchmark. See
 [SynTen Inc](../../SynTen%20Inc/README.md) for recorded results.
 
 ## Active and ordered future outcomes
+
+The owner queued [four investigation-quality optimizations](tasks/next.md):
+O1 confidence calibration, O2 useful
+operational passages, O3 specific grounded recommendations and O4 observed-fact/
+source preservation. They retain the existing comparison rubric and oracle
+boundary. Activate one task at a time; queueing does not start implementation.
+O1 implementation and verification are retained in its completed task; live results
+retain a HIGH-key mismatch and four timeouts without an overall improvement
+claim. O2-O4 remain queued. The unfinished cleanup is preserved in a deferred task record.
+The owner subsequently clarified attainable, exceptional HIGH confidence;
+The [completed clarification](tasks/completed/2026-10-04-attainable-high-confidence.md)
+owns report-prompt/v7 and ADR-0024 supersedes the ceiling. The owner then
+authorized explicit post-investigation confidence expectations in current.md
+and ADR-0025, preserving original keys and all other scoring formulas.
+These tasks precede resumption of the expansion outcomes below.
 
 | Order | Outcome | Completion boundary |
 |---|---|---|

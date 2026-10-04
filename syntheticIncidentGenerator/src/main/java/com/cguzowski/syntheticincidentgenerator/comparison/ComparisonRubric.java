@@ -5,21 +5,24 @@ import java.util.Set;
 import tools.jackson.databind.JsonNode;
 
 final class ComparisonRubric {
-    static final String VERSION = "comparison-rubric/v1";
+    static final String VERSION = "comparison-rubric/v2";
 
     private ComparisonRubric() {}
 
-    static ComparisonGrade grade(ScenarioTruth truth, JsonNode report, String decision, TextScores scores) {
+    static ComparisonGrade grade(
+            ScenarioTruth truth,
+            JsonNode report,
+            String decision,
+            TextScores scores,
+            ConfidenceExpectation expectation) {
         validateReport(report);
         if (!Set.of("APPROVED", "REJECTED").contains(decision)) {
             throw new IllegalArgumentException("Invalid final decision");
         }
         int disposition =
                 truth.expectedDisposition().equals(report.get("disposition").asText()) ? 100 : 0;
-        int confidence = truth.expectedConfidence()
-                        .equals(report.get("confidence").get("level").asText())
-                ? 100
-                : 0;
+        int confidence =
+                expectation.level().equals(report.get("confidence").get("level").asText()) ? 100 : 0;
         int average = (int) Math.round((disposition + confidence + scores.rootCause() + scores.recommendation()) / 4.0);
         String expected =
                 disposition == 100 && confidence == 100 && scores.rootCause() >= 80 && scores.recommendation() >= 80
@@ -29,6 +32,10 @@ final class ComparisonRubric {
         return new ComparisonGrade(
                 disposition,
                 confidence,
+                expectation.level(),
+                truth.expectedConfidence(),
+                ConfidenceExpectation.VERSION,
+                expectation.reason(),
                 scores.rootCause(),
                 scores.rootCauseReason(),
                 scores.recommendation(),

@@ -135,9 +135,11 @@ const renderComparison = (comparison, reveal) => {
     metrics,
     'Confidence match',
     grade.confidence,
-    key.expectedConfidence,
+    grade.expectedConfidence ?? key.expectedConfidence,
     report.confidence.level,
-    'Exact LOW / MEDIUM / HIGH match: 0 or 100.',
+    grade.confidenceReason
+      ? `Exact LOW / MEDIUM / HIGH match: 0 or 100. Original key: ${grade.originalExpectedConfidence}. ${grade.confidenceRuleVersion}: ${grade.confidenceReason}`
+      : 'Exact LOW / MEDIUM / HIGH match: 0 or 100.',
   );
   const insufficient = key.expectedDisposition === 'INSUFFICIENT_EVIDENCE';
   addMetric(

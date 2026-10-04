@@ -33,10 +33,66 @@ class ComparisonServiceTest {
             "Gateway unreachable",
             "PROPOSED",
             "HIGH",
-            List.of("GATEWAY_TIMEOUT"),
+            List.of("UPSTREAM_CONNECTION_RESET"),
             "Escalate; do not retry",
             "Approve matching reports only");
     private final Clock clock = Clock.fixed(Instant.parse("2026-10-01T12:00:00Z"), ZoneOffset.UTC);
+
+    @Test
+    void boundedRateLimitEvidenceMatchesMediumInsteadOfTheStaticHighKey() {
+        var rateTruth = new ScenarioTruth(
+                "Rate limited",
+                "PROPOSED",
+                "HIGH",
+                List.of("UPSTREAM_RATE_LIMITED dominates the window"),
+                "Escalate",
+                "Match");
+        prepare(rateTruth);
+        var prior = outcomes.find(incident, "APPROVED");
+        var evidence = mapper.readTree("""
+                [{"evidenceId":"latest","status":"AVAILABLE","contentSchemaVersion":"service-errors/v1",
+                "content":{"serviceName":"payment-authorization","observedFrom":"2026-10-01T11:55:00Z",
+                "observedTo":"2026-10-01T12:00:00Z","errors":[{"errorCode":"UPSTREAM_RATE_LIMITED",
+                "count":83,"observedAt":"2026-10-01T11:59:00Z"}]}}]
+                """);
+        var report = mapper.readTree(prior.report().toString().replace("HIGH", "MEDIUM"));
+        when(outcomes.find(incident, "APPROVED"))
+                .thenReturn(new FrozenOutcome(
+                        prior.investigationId(),
+                        prior.reportAttemptId(),
+                        prior.decisionId(),
+                        prior.outcome(),
+                        report,
+                        evidence,
+                        prior.decision(),
+                        mapper.readTree("{\"latestEvidenceId\":\"latest\"}")));
+        when(judge.evaluate(anyString()))
+                .thenReturn(new TextJudge.Reply(
+                        "{\"rootCause\":100,\"rootCauseReason\":\"Match\",\"recommendation\":100,\"recommendationReason\":\"Match\"}",
+                        "raw"));
+        var result = service().compare(incident, operator);
+        assertThat(result.grade().confidence()).isEqualTo(100);
+        assertThat(result.grade().expectedConfidence()).isEqualTo("MEDIUM");
+        assertThat(result.grade().originalExpectedConfidence()).isEqualTo("HIGH");
+        assertThat(result.grade().confidenceRuleVersion()).isEqualTo(ConfidenceExpectation.VERSION);
+        assertThat(result.grade().confidenceReason()).contains("traffic shape");
+        assertThat(result.grade().reportScore()).isEqualTo(100);
+        assertThat(rateTruth.expectedConfidence()).isEqualTo("HIGH");
+        // Changing the actual level never changes the expectation; HIGH now fails.
+        when(outcomes.find(incident, "APPROVED"))
+                .thenReturn(new FrozenOutcome(
+                        prior.investigationId(),
+                        prior.reportAttemptId(),
+                        prior.decisionId(),
+                        prior.outcome(),
+                        mapper.readTree(prior.report().toString().replace("MEDIUM", "HIGH")),
+                        evidence,
+                        prior.decision(),
+                        mapper.readTree("{\"latestEvidenceId\":\"latest\"}")));
+        var mismatch = service().compare(incident, operator);
+        assertThat(mismatch.grade().expectedConfidence()).isEqualTo("MEDIUM");
+        assertThat(mismatch.grade().confidence()).isZero();
+    }
 
     @Test
     void terminalGatePrecedesAnyOutcomeOrModelAccess() {
@@ -59,7 +115,7 @@ class ComparisonServiceTest {
         var captured = org.mockito.ArgumentCaptor.forClass(String.class);
         verify(judge).evaluate(captured.capture());
         assertThat(captured.getValue())
-                .contains("Gateway unreachable", "Escalate; do not retry", "GATEWAY_TIMEOUT")
+                .contains("Gateway unreachable", "Escalate; do not retry", "UPSTREAM_CONNECTION_RESET")
                 .doesNotContain(
                         "APPROVED", "expectedConfidence", "expectedDisposition", "decisionRule", "human-secret-reason");
         Path artifact = directory.resolve(tenant.toString()).resolve(result.comparisonId() + ".json");
@@ -67,6 +123,17 @@ class ComparisonServiceTest {
         assertThat(retained.path("inputHash").asText()).hasSize(64);
         assertThat(retained.path("promptHash").asText()).hasSize(64);
         assertThat(retained.path("response").path("rubricVersion").asText()).isEqualTo(ComparisonRubric.VERSION);
+        assertThat(retained.path("input")
+                        .path("answerKey")
+                        .path("answerKey")
+                        .path("expectedConfidence")
+                        .asText())
+                .isEqualTo("HIGH");
+        assertThat(retained.path("response")
+                        .path("grade")
+                        .path("expectedConfidence")
+                        .asText())
+                .isEqualTo("MEDIUM");
         assertThat(retained.path("calls").get(0).path("providerResponse").asText())
                 .isEqualTo("raw-provider-response");
         assertThat(retained.path("input")
@@ -150,7 +217,7 @@ class ComparisonServiceTest {
                 "{\"disposition\":\"%s\",\"confidence\":{\"level\":\"%s\"},\"probableCause\":%s,\"recommendation\":%s}"
                         .formatted(
                                 key.expectedDisposition(),
-                                key.expectedConfidence(),
+                                nulls ? "LOW" : "MEDIUM",
                                 nulls ? "null" : "{\"statement\":\"Gateway unreachable\"}",
                                 nulls ? "null" : "{\"statement\":\"Escalate; do not retry\"}"));
         when(outcomes.find(incident, "APPROVED"))
@@ -160,8 +227,13 @@ class ComparisonServiceTest {
                         UUID.randomUUID(),
                         "APPROVED",
                         report,
-                        mapper.readTree("[]"),
+                        mapper.readTree("""
+                                [{"evidenceId":"latest","status":"%s","contentSchemaVersion":"service-errors/v1",
+                                "content":{"serviceName":"payment-authorization","observedFrom":"2026-10-01T11:55:00Z",
+                                "observedTo":"2026-10-01T12:00:00Z","errors":[{"errorCode":"UPSTREAM_CONNECTION_RESET",
+                                "count":83,"observedAt":"2026-10-01T11:59:00Z"}]}}]
+                                """.formatted(nulls ? "PARTIAL" : "AVAILABLE")),
                         mapper.readTree("{\"reason\":\"human-secret-reason\"}"),
-                        mapper.readTree("{}")));
+                        mapper.readTree("{\"latestEvidenceId\":\"latest\"}")));
     }
 }

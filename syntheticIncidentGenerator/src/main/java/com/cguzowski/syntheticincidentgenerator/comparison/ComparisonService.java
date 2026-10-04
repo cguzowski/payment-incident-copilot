@@ -71,6 +71,8 @@ final class ComparisonService {
         String detail = "Comparison inputs unavailable. No score was assigned.";
         try {
             frozen = outcomes.find(incidentId, key.terminalStatus());
+            var expectation =
+                    ConfidenceExpectation.evaluate(key.answerKey(), frozen.evidence(), frozen.reportAttempt());
             TextScores text = ComparisonRubric.nullScores(key.answerKey(), frozen.report());
             if (text == null) {
                 prompt = prompt(key, frozen);
@@ -95,7 +97,7 @@ final class ComparisonService {
                 }
             }
             if (text != null) {
-                grade = ComparisonRubric.grade(key.answerKey(), frozen.report(), frozen.outcome(), text);
+                grade = ComparisonRubric.grade(key.answerKey(), frozen.report(), frozen.outcome(), text, expectation);
                 detail =
                         "Text match is AI-assessed; exact matches, averages and decision scoring use the fixed rubric.";
             } else detail = "Text evaluator failed after automatic retry. No score was assigned.";
