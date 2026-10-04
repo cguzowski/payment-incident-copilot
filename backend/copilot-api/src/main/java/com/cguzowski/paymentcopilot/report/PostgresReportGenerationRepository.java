@@ -40,13 +40,13 @@ class PostgresReportGenerationRepository
                         INSERT INTO report_generation_attempt (
                             id, tenant_id, investigation_id, incident_id,
                             investigation_correlation_id, requested_by, status,
-                            requested_at, model_id, temperature, max_output_tokens,
+                            requested_at, model_id, temperature, max_output_tokens, model_settings,
                             prompt_version, prompt_hash, schema_version, schema_hash,
                             latest_evidence_id, applicable_evidence_id, retrieval_id
                         )
                         SELECT :id, :tenantId, :investigationId, :incidentId,
                                :correlationId, :requestedBy, 'STARTED',
-                               :requestedAt, :modelId, :temperature, :maxOutputTokens,
+                               :requestedAt, :modelId, :temperature, :maxOutputTokens, CAST(:modelSettings AS JSONB),
                                :promptVersion, :promptHash, :schemaVersion, :schemaHash,
                                :latestEvidenceId, :applicableEvidenceId, :retrievalId
                         WHERE NOT EXISTS (
@@ -68,6 +68,7 @@ class PostgresReportGenerationRepository
                         .param("modelId", attempt.modelId())
                         .param("temperature", attempt.temperature())
                         .param("maxOutputTokens", attempt.maxOutputTokens())
+                        .param("modelSettings", nullable(Types.VARCHAR, writeSettings(attempt.modelSettings())))
                         .param("promptVersion", attempt.promptVersion())
                         .param("promptHash", attempt.promptHash())
                         .param("schemaVersion", attempt.schemaVersion())
@@ -158,7 +159,7 @@ class PostgresReportGenerationRepository
                         SELECT id, tenant_id, investigation_id, incident_id,
                                investigation_correlation_id, requested_by, status,
                                requested_at, completed_at, model_id, temperature,
-                               max_output_tokens, prompt_version, prompt_hash,
+                               max_output_tokens, model_settings, prompt_version, prompt_hash,
                                schema_version, schema_hash, latest_evidence_id,
                                applicable_evidence_id, retrieval_id,
                                provider_request_id, status_detail, report_content
@@ -237,6 +238,7 @@ class PostgresReportGenerationRepository
                 resultSet.getString("model_id"),
                 resultSet.getInt("temperature"),
                 resultSet.getInt("max_output_tokens"),
+                readSettings(resultSet.getString("model_settings")),
                 resultSet.getString("prompt_version"),
                 resultSet.getString("prompt_hash"),
                 resultSet.getString("schema_version"),
@@ -348,6 +350,14 @@ class PostgresReportGenerationRepository
         } catch (JacksonException exception) {
             throw new IllegalStateException("The validated report could not be serialized.", exception);
         }
+    }
+
+    private String writeSettings(ReportModelSettings settings) {
+        return settings == null ? null : jsonMapper.writeValueAsString(settings);
+    }
+
+    private ReportModelSettings readSettings(String settings) {
+        return settings == null ? null : jsonMapper.readValue(settings, ReportModelSettings.class);
     }
 
     private ReportDocument readReport(String content) {

@@ -1,126 +1,123 @@
-# Task: Generate specific, grounded recommendations (O3)
+# Task: Preserve report context and cancel timed-out generation
 
-Status: Implementation and evaluation verified; grounding acceptance criteria remain unmet
+Status: Complete within authorized scope; live throughput/timeouts remain
 Created: 2026-10-04
 Owner: Christopher Guzowski
 
 ## Goal
 
-Anchor probable causes and concrete safe advisory next steps to observed
-mechanisms and supplied approved guidance.
+Resolve the measured prompt truncation and continued provider work behind the
+O3 timeout cases without concealing failures or changing report semantics.
 
 ## User story
 
-As an analyst, I want a bounded explanation and a concrete safe
-next step so that I know which owner and records can resolve the incident.
+As an analyst, I want generation to receive the complete supplied context and
+stop when its deadline expires so that later requests are not delayed by
+abandoned work and every outcome remains auditable.
 
 ## Chosen contract
 
-Version the generation prompt with concise cause/recommendation instructions.
-Keep existing structural validation; do not add a general prose entailment
-checker or silently repair model output. Separate observed mechanisms from
-unverified deeper hypotheses. Use only supplied guidance for owners, records,
-and applicable retry prerequisites; preserve missing guidance and unknown final
-outcomes. Existing malformed-output and explicit human-review behavior remains.
+Keep Qwen, report-prompt/v8, the report-v1 schema, temperature zero, disabled
+thinking, no tools, 1,536 output tokens and the existing two-minute deadline.
+Set an explicit 8,192-token Ollama context for measured inputs. Send top-level
+truncate=false and shift=false: oversized input or exhausted context fails
+closed rather than silently dropping instructions or evidence. Use Spring AI's
+reactive transport internally, assemble only a completed response, and cancel
+its subscription on deadline/interruption. The HTTP report API remains a single
+completed result. Persist versioned context/transport settings for new attempts;
+leave historical settings unknown and historical rows unchanged.
 
 ## In scope
 
-Versioned report prompt, prompt/provenance regression tests, documentation,
-focused/full verification and fresh live comparisons with manual support review.
+Report model transport/options, deterministic wire and cancellation regressions,
+additive Flyway provenance, documentation, focused/full verification, and one
+fresh live attempt each for S301, S302 and S303 in an isolated evaluation runtime.
 
 ## Out of scope
 
-Retrieval/corpus changes, O2/O4, new capabilities, automatic retries or decisions,
-oracle-derived templates, historical mutation, comparison/evaluator changes,
-context-budget changes, commits and pushes.
+O3 prose quality, retrieval/corpus changes, model substitution, longer deadlines,
+automatic retries or decisions, oracle inputs, comparator changes, historical
+mutation, commits and pushes.
 
 ## Constraints
 
-Preserve frozen corpus, tenant isolation, exact snapshot/citation bindings,
-advisory output, versioned provenance and explicit human decisions. Preserve
-INSUFFICIENT_EVIDENCE/LOW/null for degraded or empty evidence. Keep the current
-comparison-rubric/v2 and comparison-text-prompt/v1 unchanged, including keys,
-weights, bands and thresholds. Generation never receives oracle data.
+Preserve tenant isolation, exact persisted snapshots/citations, schema validation,
+INSUFFICIENT_EVIDENCE/LOW/null for degraded evidence, human review and immutable
+original failures. No live provider in automated tests or new dependency.
+Preserve O3 as unfinished in 2026-10-04-unfinished-o3-grounded-recommendations.md.
 
 ## Acceptance criteria
 
-- [ ] An observed timeout/unavailability signature is distinguished from an
-  unverified configuration hypothesis.
-- [ ] Available guidance produces a specific advisory owner/record request and
-  applicable no-blind-retry safeguards without inventing absent guidance.
-- [x] Concision, schema, exact citations, degraded LOW/null and human authority
-  remain enforced by existing and focused report tests.
-- [x] Fresh live cause/recommendation scores and cited support are retained under
-  the unchanged comparison, with manual support review recorded separately.
+- [x] Deterministic wire tests prove complete input, num_ctx=8192, top-level
+  truncate=false/shift=false, existing schema/output settings and one call.
+- [x] Deadline and caller interruption cancel the actual HTTP subscription;
+  partial output and provider errors never become successful reports.
+- [x] New attempts retain exact versioned settings; historical attempts remain
+  readable with unknown settings and unchanged report/provenance bytes.
+- [x] Focused tests and the full verification gate pass with no skipped tests.
+- [x] Fresh isolated S301/S302/S303 attempts and runtime evidence are retained;
+  original timeouts remain unchanged and any unresolved live failures are explicit.
 
 ## Test plan
 
-ReportPromptAndParserTest:
-probableCauseSeparatesObservedMechanismFromUnverifiedHypothesis,
-recommendationNamesSupportedOwnerRecordsAndSafetyConditions,
-missingGuidanceRemainsExplicitRatherThanInvented. Test version/hash and exact
-serialized evidence/guidance; retain parser concision/citation/degraded tests.
-ReportApiPostgresIntegrationTest verifies new provenance and human-review state.
-Run focused prompt/parser and HTTP tests, then ./verify.ps1.
-Fresh live attempts cover the five diagnostic regressions plus sufficient and
-degraded cases outside that sample, one attempt per case. Retain baseline/new
-artifacts, failures, metrics, model/prompt/retrieval provenance and separate
-manual cited-support review. No retries to improve scores or new threshold.
+SpringAiReportModelTest covers options, fragment assembly, timeout/error mapping
+and cancellation. SpringAiReportTransportTest uses a deterministic local HTTP
+server through the real Spring AI client to verify the JSON wire request,
+rejection, premature termination and socket cancellation. Report persistence
+PostgreSQL tests cover new settings, nullable legacy settings and immutable
+terminal outcomes. Existing prompt/parser/service/API tests cover schema,
+citations, degraded evidence and lifecycle. Run focused report tests, then
+./verify.ps1. Live checks use fresh synthetic incidents without retries/reveal;
+retain exact snapshots, prompt/schema/settings, timing and provider runtime logs.
 
 ## Progress notes
 
-- Owner activated O3. Archived the completed confidence-expectation task.
-- Plan: failing instruction/provenance regressions, minimal prompt update,
-  focused/full gate, fresh bounded live comparison and manual support review.
-- Risks: prompt instructions cannot prove semantic support; existing limited
-  context, retrieval misses and model timeouts may prevent live success.
-- Owner authorized the four prepared fixed evaluation rejections after reviewing
-  the request. They were submitted only in the isolated O3 database; comparisons
-  ran after those decisions. No retries, AI approval or recovery action.
+- Owner authorized a separate reliability task after the timeout diagnosis.
+- Preserved the unfinished O3 task byte-for-byte before activating this task.
+- Plan: reproduce transport/options and provenance defects, implement one
+  behavior at a time, verify focused/full gates, then measure three fresh cases.
+- Owner explicitly chose to keep the two-minute deadline and retain the measured
+  throughput limitation; no longer-deadline validation is authorized.
+- Risks: 8,192 context uses more local memory; preserving input cannot guarantee
+  generation speed or semantic quality. Cancellation closes the HTTP request;
+  live logs must confirm the installed provider stops its work.
 
 ## Completion evidence
 
-- Red: tmp/o3/red.log records the three new instruction failures. The initial
-  provenance run skipped PostgreSQL tests without Docker; red-docker.log executed
-  all 28 cases with 13 intended instruction/version failures and no errors/skips.
-- Green: green.log passed all 28 focused prompt/parser and PostgreSQL HTTP tests.
-- Full ./verify.ps1 passed 371 API, 9 MCP, 82 generator and 103 console tests,
-  zero failures/errors/skips, eight nested Node UI cases, formatting/builds,
-  Compose and diff checks (full-verification-final.log). The first run stopped
-  on the console's esbuild.exe lock. Console was stopped and restored after the
-  successful rerun, with HTTP 200 on port 4200.
-- Seven first live attempts returned four AVAILABLE and three TIMED_OUT reports,
-  no retries. Both degraded cases preserve LOW/null; all 25 citations match their
-  exact snapshots. Manual review finds unsupported configuration prose, generic
-  recommendations, guidance copied into observations and truncated sentences.
-  The first two acceptance criteria remain unchecked because dependable live
-  adherence is not established despite passing instruction regressions.
-- [Live review](../../../SynTen%20Inc/evaluation/2026-10-04-o3-grounded-recommendations.md)
-  retains failures, timings, separate cited-support review and baseline context.
-  All seven template/schema hashes match persisted provenance; 357 baseline/corpus
-  and 16 comparison/oracle/evaluator file hashes remain unchanged. Archive Git
-  blob equals the previous current.md blob. Artifacts are retained under tmp/o3/.
-- Four authorized fixed rejections/reveals/comparisons completed. Report scores
-  S005/S313/S002/S211 are 88/100/90/100; cause/recommendation 70/80, 100/100,
-  80/80 and 100/100. Disposition and confidence match 4/4. The degraded text scores
-  are deterministic null checks; manual support defects remain. Fixed rejection
-  scores are 100/0/0/0 and are not a human-review benchmark.
-- comparison-verification.log confirms seven unchanged report histories, four
-  exact evidence/report/decision bindings, two judge calls without retries,
-  three unfinalized failures and all 373 protected hashes. comparison-hashes.log
-  verifies all four native input/prompt/response hashes. Summary/artifact hashes
-  are retained in comparison-summary.json. Historical scoring inputs are intact.
-- ./verify.ps1 -Scope Repository and git diff --check passed after recording
-  comparison results (repository-after-comparison.log). No production changes
-  were made after the previously passing full gate.
+- Red model tests fail four cases against blocking generation (red-model.log).
+  The corrected wire fixture fails once for absent top-level truncate=false
+  (red-wire-final.log); the first fixture failure is retained separately.
+- Red PostgreSQL executes six tests with two intended missing-column failures
+  (red-provenance-docker.log). The initial sandbox Docker skips are retained
+  in red-provenance.log and do not count as verification.
+- Green-focused.log passes all 52 focused report tests without failures/errors/
+  skips, including actual HTTP cancellation/interruption, incomplete/error
+  rejection, exact wire options and nullable legacy provenance.
+- Full ./verify.ps1 passes 380 API, 9 MCP, 82 generator and 103 console tests,
+  zero failures/errors/skips, eight nested Node cases, formatting, builds,
+  repository-script, Compose and diff checks (full-verification.log).
+- Three fresh first attempts remain TIMED_OUT at 120.019/120.016/120.008 seconds.
+  Ollama receives 4,419/4,427/4,339 full input tokens in an 8,192 context and
+  confirms cancellation/slot release at every deadline with truncated=0.
+  Provider throughput remains roughly 4-5 tokens/second; no partial report,
+  automatic retry, decision, reveal or comparison was persisted.
+- Seven original O3 histories and all 373 protected hashes remain unchanged.
+  Three reconstructed prompt/schema hashes match persisted settings and exact
+  snapshot bindings. The unfinished O3 archive equals the previous Git blob.
+- Both console loopback listeners were restored with HTTP 200. The first
+  sandbox launches failed with esbuild EPERM; outside-sandbox restores passed.
+- [Retained live evaluation](../../../SynTen%20Inc/evaluation/2026-10-04-report-context-and-cancellation.md)
+  records exact artifacts, first-attempt failures and limitations. Logs and
+  reconstruction/verification scripts are under tmp/report-reliability/.
 
 ## Remaining limitations
 
-No general semantic entailment checker. Three stage cases timed out; returned
-reports do not establish reliable adherence despite GOOD comparison bands.
-Context budgeting and retrieval usefulness
-are outside this task. Prompt tests establish instructions, not semantic support.
+The owner retained the two-minute deadline. All three full-context live cases
+still time out because local throughput is limited; timely report completion
+and semantic quality are not established. Context preservation and cancellation
+are verified. The existing main API was not restarted; only the isolated runtime
+uses this artifact. Historical attempts remain unchanged.
 
 ## Decisions needed
 
-None. Use prompt instructions with existing validation for this bounded scope.
+None. Owner authorized context budgeting and cancellation as a separate task.

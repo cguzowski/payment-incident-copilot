@@ -4,7 +4,7 @@ Last updated: 2026-10-04
 
 ## Current state
 
-The local demo is complete; the owner has activated O3 grounded recommendations. Seven
+The local demo is complete; the owner has activated report reliability after O3. Seven
 synthetic incident families support intake, active/completed queues, MCP
 service-error evidence, approved PDF retrieval, advisory reports, explicit
 human decisions and audit history. Normal generation selects AVAILABLE
@@ -46,7 +46,7 @@ HIGH, normally favors MEDIUM, and uses LOW for weak support. HIGH requires
 exceptionally strong support of the narrow mechanism, not independent
 confirmation as a prerequisite. Degraded LOW/null behavior remains enforced.
 [ADR-0024](decisions/ADR-0024-attainable-high-confidence.md) supersedes v6's
-ceiling. O2/O4 remain queued; [O3](tasks/current.md) is active. The owner subsequently authorized
+ceiling. O2/O4 remain queued; [O3](tasks/2026-10-04-unfinished-o3-grounded-recommendations.md) remains unfinished. The owner subsequently authorized
 [explicit confidence expectations](tasks/completed/2026-10-04-evidence-based-confidence-expectations.md) under
 [ADR-0025](decisions/ADR-0025-evidence-based-confidence-expectations.md).
 confidence-evidence/v1 evaluates the decision-bound latest snapshot independently
@@ -70,6 +70,19 @@ Two judge calls required no retries; degraded scores check null fields only.
 Seven report histories and 373 protected hashes remain unchanged. O3's first two
 grounding criteria remain unmet despite GOOD score bands; no reliable improvement
 is established. The three timed-out cases remain open and unrevealed.
+
+The owner authorized the separate [report reliability task](tasks/current.md).
+[ADR-0026](decisions/ADR-0026-report-context-and-cancellation.md) keeps the
+existing deadline/model/prompt while explicitly preserving context and cancelling
+abandoned HTTP work. All 52 focused report tests and full ./verify.ps1 pass
+(380 API / 9 MCP / 82 generator / 103 console, zero failures/errors/skips).
+[Three fresh first attempts](../../SynTen%20Inc/evaluation/2026-10-04-report-context-and-cancellation.md)
+still time out at two minutes, but all inputs are untruncated and every deadline
+cancels the provider task and releases its slot. Qwen generates roughly 4-5
+tokens/second. The owner retained the two-minute limit. Seven original O3
+histories and 373 protected hashes are unchanged. New attempts retain versioned
+settings through V12; historical settings stay unknown. Main-demo API processes
+were not restarted; the updated artifact was verified in the isolated runtime.
 
 ## Verification and retained evidence
 
@@ -148,7 +161,8 @@ is established. The three timed-out cases remain open and unrevealed.
   Live timeout and grounding defects persist. The owner's webhook investigation
   had three v6 MALFORMED attempts; Ollama logs confirm each prompt was truncated
   from 4,209 to 2,050 tokens. A nonpersisted replay violated insufficient-evidence
-  null fields. These failures remain unchanged; context budgeting is unresolved.
+  null fields. These historical failures remain unchanged. ADR-0026 now preserves new-call
+  context and cancels abandoned work; local throughput still causes timeouts.
 
 - Post-reveal text scores are advisory and not independently calibrated.
   The local default judge is the report model with a separate prompt; a different
@@ -190,8 +204,8 @@ is established. The three timed-out cases remain open and unrevealed.
   are caller-supplied; tenant-scoped storage checks remain required.
 - Only `getRecentServiceErrors` is implemented. Evidence sufficiency and broad
   live-model quality are not established by one successful S001 demonstration.
-- The latest cleanup npm ci reports nine dependency advisories (three moderate,
-  four high, two critical), with unchanged package manifests and lockfile.
+- The latest verification npm ci reports ten dependency advisories (three moderate,
+  five high, two critical), with unchanged package manifests and lockfile.
   The verification gate has no failing npm-audit step. [QUALITY.md](QUALITY.md)
   defines what the gate actually checks.
 - Knowledge preparation is explicit; normal startup does not populate a new

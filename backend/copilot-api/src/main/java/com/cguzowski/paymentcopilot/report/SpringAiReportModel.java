@@ -43,18 +43,32 @@ class SpringAiReportModel implements ReportModel {
                 .model(modelId)
                 .temperature((double) ReportGenerationSettings.TEMPERATURE)
                 .maxTokens(ReportGenerationSettings.MAX_OUTPUT_TOKENS)
+                .numCtx(ReportGenerationSettings.CONTEXT_TOKENS)
                 .disableThinking()
                 .outputSchema(outputSchema)
                 .build();
         try {
-            ChatResponse response = provider.call(new Prompt(promptText, options));
-            String output = response == null || response.getResult() == null
-                    ? null
-                    : response.getResult().getOutput().getText();
-            String requestId = response == null || response.getMetadata() == null
-                    ? null
-                    : response.getMetadata().getId();
-            return new ReportModelResponse(output, requestId);
+            var fragments = provider.stream(new Prompt(promptText, options))
+                    .collectList()
+                    .block();
+            if (fragments == null || fragments.isEmpty()) {
+                throw new ReportModelUnavailableException();
+            }
+            ChatResponse terminal = fragments.getLast();
+            if (terminal.getResult() == null
+                    || !"stop"
+                            .equalsIgnoreCase(terminal.getResult().getMetadata().getFinishReason())) {
+                throw new ReportModelUnavailableException();
+            }
+            StringBuilder output = new StringBuilder();
+            for (ChatResponse fragment : fragments) {
+                if (fragment.getResult() != null
+                        && fragment.getResult().getOutput().getText() != null) {
+                    output.append(fragment.getResult().getOutput().getText());
+                }
+            }
+            return new ReportModelResponse(
+                    output.toString(), terminal.getMetadata().getId());
         } catch (RuntimeException exception) {
             if (hasTimeoutCause(exception)) {
                 throw new ReportModelTimedOutException();

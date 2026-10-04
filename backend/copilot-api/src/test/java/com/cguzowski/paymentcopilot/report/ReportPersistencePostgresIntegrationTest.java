@@ -70,6 +70,70 @@ class ReportPersistencePostgresIntegrationTest {
     }
 
     @Test
+    void persistsVersionedContextAndTransportSettingsForNewAttempts() throws Exception {
+        ReportGenerationAttempt attempt = started(UUID.randomUUID(), Instant.parse("2026-10-04T12:00:00Z"));
+        assertThat(persistence.start(attempt)).isTrue();
+        String settings = jdbcClient
+                .sql("SELECT model_settings::text FROM report_generation_attempt WHERE id = :id")
+                .param("id", attempt.attemptId())
+                .query(String.class)
+                .single();
+        var json = tools.jackson.databind.json.JsonMapper.builder().build().readTree(settings);
+        assertThat(json.path("version").asString()).isEqualTo("report-model-settings/v2");
+        assertThat(json.path("contextTokens").asInt()).isEqualTo(8192);
+        assertThat(json.path("stream").asBoolean()).isTrue();
+        assertThat(json.path("truncate").asBoolean(true)).isFalse();
+        assertThat(json.path("shift").asBoolean(true)).isFalse();
+        assertThat(persistence.findAll(TENANT_ID, INVESTIGATION_ID)).containsExactly(attempt);
+        ReportGenerationAttempt failed = attempt.completeFailure(
+                ReportGenerationStatus.TIMED_OUT,
+                Instant.parse("2026-10-04T12:02:00Z"),
+                null,
+                "The report model timed out.");
+        assertThat(persistence.completeFailure(failed)).isTrue();
+        assertThat(jdbcClient
+                        .sql("SELECT model_settings::text FROM report_generation_attempt WHERE id = :id")
+                        .param("id", attempt.attemptId())
+                        .query(String.class)
+                        .single())
+                .isEqualTo(settings);
+        assertThat(persistence.findAll(TENANT_ID, INVESTIGATION_ID)).containsExactly(failed);
+    }
+
+    @Test
+    void historicalUnknownSettingsRemainReadableWithoutChangingTerminalReport() {
+        ReportGenerationAttempt attempt = started(UUID.randomUUID(), Instant.parse("2026-08-29T10:00:00Z"));
+        assertThat(persistence.start(attempt)).isTrue();
+        ReportGenerationAttempt completed = attempt.completeAvailable(
+                Instant.parse("2026-08-29T10:00:02Z"),
+                new ReportModelResponse("discarded", "legacy-request"),
+                insufficientReport());
+        assertThat(persistence.completeAvailable(completed)).isTrue();
+        String before = jdbcClient
+                .sql("SELECT (to_jsonb(a) - 'model_settings')::text FROM report_generation_attempt a WHERE id = :id")
+                .param("id", attempt.attemptId())
+                .query(String.class)
+                .single();
+        jdbcClient
+                .sql("UPDATE report_generation_attempt SET model_settings = NULL WHERE id = :id")
+                .param("id", attempt.attemptId())
+                .update();
+        ReportGenerationAttempt legacy =
+                persistence.findAll(TENANT_ID, INVESTIGATION_ID).getFirst();
+        assertThat(legacy.report()).isEqualTo(completed.report());
+        assertThat(legacy.promptHash()).isEqualTo(completed.promptHash());
+        assertThat(legacy.schemaHash()).isEqualTo(completed.schemaHash());
+        assertThat(legacy.providerRequestId()).isEqualTo("legacy-request");
+        assertThat(jdbcClient
+                        .sql(
+                                "SELECT (to_jsonb(a) - 'model_settings')::text FROM report_generation_attempt a WHERE id = :id")
+                        .param("id", attempt.attemptId())
+                        .query(String.class)
+                        .single())
+                .isEqualTo(before);
+    }
+
+    @Test
     void atomicallyPersistsValidatedReportClaimsAndMovesIncidentToAwaitingReview() {
         ReportGenerationAttempt started =
                 started(UUID.fromString("28165339-8e37-49c7-9859-493277b34da2"), Instant.parse("2026-08-29T10:00:00Z"));

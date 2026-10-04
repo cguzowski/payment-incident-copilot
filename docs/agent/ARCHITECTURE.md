@@ -186,6 +186,13 @@ validation remains authoritative; no semantic prose checker or output repair is
 added. Human review precedes any operational action. Live adherence remains
 limited; passing prompt tests do not establish supported prose.
 
+[ADR-0026](decisions/ADR-0026-report-context-and-cancellation.md) sets the report
+context to 8,192 tokens and sends top-level truncate=false/shift=false through a
+Spring AI 2.0 compatibility codec. Oversized context fails closed. Internal
+reactive generation is cancelled on deadline/interruption; only a completed stop
+response is assembled for existing validation and one terminal HTTP response.
+V12 retains versioned context/transport settings on new attempts with historical
+NULLs. The two-minute deadline, output budget, model and v8 prompt remain.
 ## Knowledge-source evolution
 
 Under [ADR-0021](decisions/ADR-0021-post-decision-text-comparison.md), the

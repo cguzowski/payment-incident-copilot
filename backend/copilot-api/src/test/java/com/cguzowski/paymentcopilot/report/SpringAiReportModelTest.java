@@ -3,52 +3,93 @@ package com.cguzowski.paymentcopilot.report;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.net.SocketTimeoutException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.metadata.ChatGenerationMetadata;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.ollama.api.ThinkOption;
-import tools.jackson.core.JacksonException;
+import reactor.core.publisher.Flux;
 import tools.jackson.databind.json.JsonMapper;
 
 class SpringAiReportModelTest {
-
     private static final String MODEL_ID = "test-report-model";
 
+    private SpringAiReportModel model(ChatModel provider) {
+        return new SpringAiReportModel(
+                Optional.of(provider),
+                MODEL_ID,
+                new ReportPromptFactory(JsonMapper.builder().build()));
+    }
+
+    private ChatResponse fragment(String text, String finishReason) {
+        return new ChatResponse(List.of(new Generation(
+                new AssistantMessage(text),
+                ChatGenerationMetadata.builder().finishReason(finishReason).build())));
+    }
+
     @Test
-    void callsOllamaOnceWithDeterministicSchemaConstrainedOptionsAndNoTools() throws JacksonException {
-        ChatModel chatModel = mock(ChatModel.class);
-        when(chatModel.call(any(Prompt.class)))
-                .thenReturn(new ChatResponse(List.of(new Generation(new AssistantMessage("{\"result\":true}")))));
-        ReportPromptFactory prompts =
-                new ReportPromptFactory(JsonMapper.builder().build());
-        SpringAiReportModel model = new SpringAiReportModel(Optional.of(chatModel), MODEL_ID, prompts);
-
+    void callsOllamaOnceWithDeterministicSchemaConstrainedOptionsAndNoTools() {
+        ChatModel provider = mock(ChatModel.class);
+        when(provider.stream(any(Prompt.class)))
+                .thenReturn(Flux.just(fragment("{\"result\":", null), fragment("true}", "stop")));
         String outputSchema = "{\"type\":\"object\"}";
-        ReportModelResponse result = model.generate("prompt", outputSchema);
-
+        ReportModelResponse result = model(provider).generate("prompt", outputSchema);
         assertThat(result.output()).isEqualTo("{\"result\":true}");
         ArgumentCaptor<Prompt> prompt = ArgumentCaptor.forClass(Prompt.class);
-        verify(chatModel).call(prompt.capture());
+        verify(provider).stream(prompt.capture());
+        verify(provider, never()).call(any(Prompt.class));
         assertThat(prompt.getValue().getContents()).isEqualTo("prompt");
         OllamaChatOptions options = (OllamaChatOptions) prompt.getValue().getOptions();
         assertThat(options.getModel()).isEqualTo(MODEL_ID);
         assertThat(options.getTemperature()).isZero();
         assertThat(options.getMaxTokens()).isEqualTo(1536);
+        assertThat(options.getNumCtx()).isEqualTo(8192);
         assertThat(options.getToolCallbacks()).isNullOrEmpty();
         assertThat(options.getThinkOption()).isEqualTo(ThinkOption.ThinkBoolean.DISABLED);
         assertThat(options.getOutputSchema()).isEqualTo(outputSchema);
+    }
+
+    @Test
+    void deadlineCancelsSubscriptionAndDiscardsPartialOutput() throws Exception {
+        ChatModel provider = mock(ChatModel.class);
+        CountDownLatch cancelled = new CountDownLatch(1);
+        when(provider.stream(any(Prompt.class)))
+                .thenReturn(Flux.concat(Flux.just(fragment("partial", null)), Flux.<ChatResponse>never())
+                        .doOnCancel(cancelled::countDown));
+        assertThatThrownBy(() ->
+                        new ReportModelCallExecutor(Duration.ofMillis(200)).generate(model(provider), "prompt", "{}"))
+                .isInstanceOf(ReportModelTimedOutException.class);
+        assertThat(cancelled.await(2, TimeUnit.SECONDS)).isTrue();
+        verify(provider).stream(any(Prompt.class));
+    }
+
+    @Test
+    void prematureCompletionAndMidstreamFailureDiscardPartialOutput() {
+        ChatModel provider = mock(ChatModel.class);
+        when(provider.stream(any(Prompt.class))).thenReturn(Flux.just(fragment("partial", null)));
+        assertThatThrownBy(() -> model(provider).generate("prompt", "{}"))
+                .isInstanceOf(ReportModelUnavailableException.class)
+                .hasMessage(null);
+        when(provider.stream(any(Prompt.class)))
+                .thenReturn(Flux.concat(
+                        Flux.just(fragment("partial", null)),
+                        Flux.error(new IllegalStateException("provider detail"))));
+        assertThatThrownBy(() -> model(provider).generate("prompt", "{}"))
+                .isInstanceOf(ReportModelUnavailableException.class)
+                .hasMessage(null);
     }
 
     @Test
@@ -58,13 +99,10 @@ class SpringAiReportModelTest {
         assertThatThrownBy(() -> new SpringAiReportModel(Optional.empty(), MODEL_ID, prompts).generate("prompt", "{}"))
                 .isInstanceOf(ReportModelUnavailableException.class)
                 .hasMessage(null);
-
-        ChatModel chatModel = mock(ChatModel.class);
-        when(chatModel.call(any(Prompt.class)))
-                .thenThrow(new RuntimeException(new SocketTimeoutException("provider detail")));
-
-        assertThatThrownBy(() ->
-                        new SpringAiReportModel(Optional.of(chatModel), MODEL_ID, prompts).generate("prompt", "{}"))
+        ChatModel provider = mock(ChatModel.class);
+        when(provider.stream(any(Prompt.class)))
+                .thenReturn(Flux.error(new RuntimeException(new SocketTimeoutException("provider detail"))));
+        assertThatThrownBy(() -> model(provider).generate("prompt", "{}"))
                 .isInstanceOf(ReportModelTimedOutException.class)
                 .hasMessage(null);
     }
