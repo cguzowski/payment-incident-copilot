@@ -105,7 +105,7 @@ class ReportApiPostgresIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status").value("AVAILABLE"))
                 .andExpect(jsonPath("$.report.confidence.level").value("HIGH"))
-                .andExpect(jsonPath("$.promptVersion").value("report-prompt/v7"));
+                .andExpect(jsonPath("$.promptVersion").value("report-prompt/v8"));
         mockMvc.perform(get("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
                         .header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
@@ -292,7 +292,7 @@ class ReportApiPostgresIntegrationTest {
                         .sql("SELECT prompt_version FROM report_generation_attempt")
                         .query(String.class)
                         .single())
-                .isEqualTo("report-prompt/v7");
+                .isEqualTo("report-prompt/v8");
         verify(model, times(1)).generate(any(), any());
     }
 

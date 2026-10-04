@@ -32,7 +32,7 @@ class ReportPromptAndParserTest {
     void buildsVersionedBoundedReportInputFromExactSnapshots() {
         ReportPrompt prompt = prompts.build(context());
 
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v7");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v8");
         assertThat(prompt.schemaVersion()).isEqualTo("report-v1");
         assertThat(prompt.promptHash()).matches("[0-9a-f]{64}");
         assertThat(prompt.schemaHash()).matches("[0-9a-f]{64}");
@@ -125,6 +125,60 @@ class ReportPromptAndParserTest {
     }
 
     @Test
+    void probableCauseSeparatesObservedMechanismFromUnverifiedHypothesis() {
+        assertThat(prompts.build(context()).text())
+                .contains(
+                        "Anchor probableCause to the observed failure mechanism",
+                        "configuration, capacity or dependency-health explanations remain unverified hypotheses",
+                        "Label a deeper hypothesis as unverified in inferences",
+                        "GATEWAY_TIMEOUT");
+    }
+
+    @Test
+    void recommendationNamesSupportedOwnerRecordsAndSafetyConditions() {
+        var base = context();
+        String guidance =
+                "Gateway Operations: request acknowledgement records; verify final state and idempotency before retry.";
+        var chunk = base.knowledge().chunks().getFirst();
+        var supported = new ReportGenerationContext(
+                base.investigation(),
+                base.evidence(),
+                new ReportKnowledgeSnapshot(
+                        base.knowledge().retrievalId(),
+                        "AVAILABLE",
+                        List.of(new ReportKnowledgeChunk(
+                                chunk.chunkId(),
+                                chunk.documentId(),
+                                chunk.documentType(),
+                                chunk.documentTitle(),
+                                chunk.documentVersion(),
+                                chunk.sectionPath(),
+                                guidance))));
+        assertThat(prompts.build(supported).text())
+                .contains(
+                        "Request the responsible owner and stage-specific records named in supplied guidance",
+                        "Preserve unknown final payment outcomes",
+                        "include applicable no-blind-retry prerequisites from supplied guidance",
+                        "Human review is required before any operational action",
+                        guidance);
+    }
+
+    @Test
+    void missingGuidanceRemainsExplicitRatherThanInvented() {
+        var base = context();
+        var missing = new ReportGenerationContext(
+                base.investigation(),
+                base.evidence(),
+                new ReportKnowledgeSnapshot(base.knowledge().retrievalId(), "NO_MATCH", List.of()));
+        assertThat(prompts.build(missing).text())
+                .contains(
+                        "Do not invent an owner, record source, retry condition or recovery procedure",
+                        "Put missing guidance details in evidenceGaps",
+                        "If no supplied guidance supports a concrete safe next step, use INSUFFICIENT_EVIDENCE/LOW/null")
+                .contains("\"chunks\":[]");
+    }
+
+    @Test
     void narrowsCitationArrayBoundsToDistinctEligibleSources() throws Exception {
         JsonNode oneSource = jsonMapper.readTree(prompts.build(context()).outputSchema());
 
@@ -209,7 +263,7 @@ class ReportPromptAndParserTest {
         assertThat(schema.at("/$defs/confidence/properties/level/const").asText())
                 .isEqualTo("LOW");
         assertThat(schema.at("/properties/evidenceGaps/minItems").intValue()).isEqualTo(1);
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v7");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v8");
         assertThat(prompt.text()).contains("latestStatus is not AVAILABLE", "observations is empty");
         assertThatThrownBy(() -> parser.parse(jsonMapper.writeValueAsString(validDocument()), degraded))
                 .isInstanceOf(InvalidReportDocumentException.class);

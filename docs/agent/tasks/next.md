@@ -1,6 +1,6 @@
 # Next tasks: Investigation quality optimizations
 
-Status: O1 clarification implemented; O2-O4 queued
+Status: O1 clarification implemented; O3 active; O2/O4 queued
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
@@ -15,7 +15,7 @@ preserving the previous task's actual completion state.
 
 ## Shared constraints and verification
 
-Owner-authorized exception on 2026-10-04: [the current task](current.md) calibrates
+Owner-authorized exception on 2026-10-04: [the completed confidence task](completed/2026-10-04-evidence-based-confidence-expectations.md) calibrates
 only post-decision confidence expectations using explicit evidence rules under
 ADR-0025/comparison-rubric/v2. Original keys, other metrics and formulas stay intact.
 The constraints below retain the original O1-O4 contract and historical context.
@@ -39,7 +39,7 @@ The constraints below retain the original O1-O4 contract and historical context.
 
 ## O1: Calibrate confidence from evidence strength
 
-Status: Initial implementation complete; ceiling superseded by current.md
+Status: Initial implementation complete; ceiling superseded by [attainable HIGH](completed/2026-10-04-attainable-high-confidence.md)
 
 **User story:** As an analyst, I want confidence to reflect corroboration and
 missing evidence so that repeated errors do not masquerade as a confirmed cause.
@@ -109,7 +109,7 @@ Measure actual prompt tokens before making any context-size change.
 
 ## O3: Generate specific, grounded recommendations
 
-Status: Queued
+Status: Active in [current.md](current.md)
 
 **User story:** As an analyst, I want a bounded explanation and a concrete safe
 next step so that I know which owner and records can resolve the incident.

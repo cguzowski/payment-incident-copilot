@@ -177,6 +177,15 @@ Structural validation cannot prove semantic support or guarantee a distribution.
 Historical reports and comparisons remain unchanged. New post-decision confidence
 expectations follow ADR-0025; report generation remains governed by ADR-0024.
 
+O3 versions generation to report-prompt/v8. Instructions request causes bounded
+to observed failure mechanisms and explicitly unverified deeper configuration/
+capacity/dependency hypotheses. Recommendations should request owners and stage-specific
+records from supplied guidance, preserve unknown final outcomes and include
+applicable retry prerequisites. Missing guidance stays visible. Existing structural
+validation remains authoritative; no semantic prose checker or output repair is
+added. Human review precedes any operational action. Live adherence remains
+limited; passing prompt tests do not establish supported prose.
+
 ## Knowledge-source evolution
 
 Under [ADR-0021](decisions/ADR-0021-post-decision-text-comparison.md), the

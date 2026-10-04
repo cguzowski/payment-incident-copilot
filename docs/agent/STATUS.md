@@ -4,7 +4,7 @@ Last updated: 2026-10-04
 
 ## Current state
 
-The local demo is complete; the owner has activated confidence calibration. Seven
+The local demo is complete; the owner has activated O3 grounded recommendations. Seven
 synthetic incident families support intake, active/completed queues, MCP
 service-error evidence, approved PDF retrieval, advisory reports, explicit
 human decisions and audit history. Normal generation selects AVAILABLE
@@ -46,14 +46,30 @@ HIGH, normally favors MEDIUM, and uses LOW for weak support. HIGH requires
 exceptionally strong support of the narrow mechanism, not independent
 confirmation as a prerequisite. Degraded LOW/null behavior remains enforced.
 [ADR-0024](decisions/ADR-0024-attainable-high-confidence.md) supersedes v6's
-ceiling. O2-O4 remain queued. The owner subsequently authorized
-[explicit confidence expectations](tasks/current.md) under
+ceiling. O2/O4 remain queued; [O3](tasks/current.md) is active. The owner subsequently authorized
+[explicit confidence expectations](tasks/completed/2026-10-04-evidence-based-confidence-expectations.md) under
 [ADR-0025](decisions/ADR-0025-evidence-based-confidence-expectations.md).
 confidence-evidence/v1 evaluates the decision-bound latest snapshot independently
 of actual report confidence. comparison-rubric/v2 changes only that expected
 input; exact match, other metrics, weights, bands and decision formula stay intact.
 Original keys and historical artifacts remain unchanged. HIGH is attainable for
 three consistent direct diagnostic signatures without independent confirmation.
+
+O3 introduces report-prompt/v8 instructions for bounded observed mechanisms,
+explicitly unverified deeper hypotheses and guidance-supported owners, records
+and retry safeguards. The focused 28 prompt/parser and PostgreSQL HTTP tests
+and full ./verify.ps1 pass (371 API / 9 MCP / 82 generator / 103 console, zero
+failures/errors/skips, formatting/builds/Compose/diff checks). [Seven isolated
+first attempts](../../SynTen%20Inc/evaluation/2026-10-04-o3-grounded-recommendations.md)
+returned four reports and three timeouts. Both degraded cases preserve LOW/null
+and 25/25 references are valid, but unsupported/generic prose and guidance copied
+into observations persist. The owner authorized four fixed diagnostic rejections
+in the isolated evaluation database; comparisons completed with report scores
+88/100/90/100, cause/recommendation 70/80, 100/100, 80/80 and 100/100.
+Two judge calls required no retries; degraded scores check null fields only.
+Seven report histories and 373 protected hashes remain unchanged. O3's first two
+grounding criteria remain unmet despite GOOD score bands; no reliable improvement
+is established. The three timed-out cases remain open and unrevealed.
 
 ## Verification and retained evidence
 
