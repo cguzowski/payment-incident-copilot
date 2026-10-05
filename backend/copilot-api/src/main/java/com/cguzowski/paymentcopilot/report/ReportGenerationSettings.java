@@ -6,7 +6,7 @@ final class ReportGenerationSettings {
     static final int MAX_OUTPUT_TOKENS = 1_536;
     static final int CONTEXT_TOKENS = 8_192;
     static final ReportModelSettings MODEL_SETTINGS =
-            new ReportModelSettings("report-model-settings/v2", CONTEXT_TOKENS, true, false, false);
+            new ReportModelSettings("report-model-settings/v3", CONTEXT_TOKENS, true, false, false, -1, 128);
 
     private ReportGenerationSettings() {}
 }

@@ -49,7 +49,7 @@ class ReportGenerationSmokeTestCommandTest {
                 {
                   "disposition":"INSUFFICIENT_EVIDENCE",
                   "summary":{"statement":"The synthetic inputs are insufficient.","evidenceIds":["%s"],"knowledgeChunkIds":[]},
-                  "observations":[{"statement":"A synthetic timeout was observed.","evidenceIds":["%s"],"knowledgeChunkIds":[]}],
+                  "observations":[{"statement":"sourceEventId=synthetic-event-1; observedAt=2026-08-29T08:00:00Z; errorCode=GATEWAY_TIMEOUT; count=1","evidenceIds":["%s"],"knowledgeChunkIds":[]}],
                   "inferences":[],"probableCause":null,
                   "confidence":{"level":"LOW","rationale":"Only one synthetic observation is available.","evidenceIds":["%s"]},
                   "recommendation":null,"contradictions":[],

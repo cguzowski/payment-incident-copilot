@@ -105,7 +105,7 @@ class ReportApiPostgresIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status").value("AVAILABLE"))
                 .andExpect(jsonPath("$.report.confidence.level").value("HIGH"))
-                .andExpect(jsonPath("$.promptVersion").value("report-prompt/v8"));
+                .andExpect(jsonPath("$.promptVersion").value("report-prompt/v9"));
         mockMvc.perform(get("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
                         .header("X-Synthetic-Tenant-Id", TENANT_ID))
                 .andExpect(status().isOk())
@@ -165,6 +165,59 @@ class ReportApiPostgresIntegrationTest {
         return contexts.find(TENANT_ID, INVESTIGATION_ID).orElseThrow();
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"count", "source"})
+    void rejectsDistortedClaimAsTenantScopedMalformedAttemptWithoutRetry(String defect) throws Exception {
+        var context = prepareKnowledge();
+        var mapper = tools.jackson.databind.json.JsonMapper.builder().build();
+        var tree = (tools.jackson.databind.node.ObjectNode)
+                mapper.valueToTree(proposedReport(context, ReportConfidenceLevel.MEDIUM));
+        if (defect.equals("count")) {
+            ((tools.jackson.databind.node.ObjectNode) tree.at("/observations/0"))
+                    .put(
+                            "statement",
+                            "sourceEventId=evt-1; observedAt=2026-08-29T09:57:00Z; errorCode=GATEWAY_TIMEOUT; count=1");
+        } else {
+            ((tools.jackson.databind.node.ObjectNode) tree.get("recommendation"))
+                    .put("statement", "Request E04 capture acknowledgements.");
+        }
+        String invalid = mapper.writeValueAsString(tree);
+        when(model.generate(any(), any())).thenReturn(new ReportModelResponse(invalid, "distorted-request"));
+        mockMvc.perform(post("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID)
+                        .header("X-Synthetic-Operator-Id", OPERATOR_ID))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("MALFORMED"))
+                .andExpect(jsonPath("$.report").isEmpty())
+                .andExpect(jsonPath("$.promptVersion").value("report-prompt/v9"));
+        mockMvc.perform(get("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", OTHER_TENANT_ID))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/investigations/{investigationId}/reports", INVESTIGATION_ID)
+                        .header("X-Synthetic-Tenant-Id", TENANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].status").value("MALFORMED"));
+        assertThat(jdbcClient
+                        .sql("SELECT status FROM incident WHERE id = :id")
+                        .param("id", INCIDENT_ID)
+                        .query(String.class)
+                        .single())
+                .isEqualTo("INVESTIGATING");
+        assertThat(jdbcClient
+                        .sql("SELECT COUNT(*) FROM report_claim")
+                        .query(Integer.class)
+                        .single())
+                .isZero();
+        assertThat(jdbcClient
+                        .sql("SELECT content::text FROM evidence_collection_attempt WHERE id = :id")
+                        .param("id", EVIDENCE_ID)
+                        .query(String.class)
+                        .single())
+                .contains("GATEWAY_TIMEOUT", "\"count\": 12");
+        verify(model, times(1)).generate(any(), any());
+    }
+
     private static ReportDocument proposedReport(ReportGenerationContext context, ReportConfidenceLevel level) {
         var evidence = new ReportClaim("Gateway timeouts observed.", List.of(EVIDENCE_ID), List.of());
         var advice = new ReportClaim(
@@ -174,7 +227,10 @@ class ReportApiPostgresIntegrationTest {
         return new ReportDocument(
                 ReportDisposition.PROPOSED,
                 evidence,
-                List.of(evidence),
+                List.of(new ReportClaim(
+                        "sourceEventId=evt-1; observedAt=2026-08-29T09:57:00Z; errorCode=GATEWAY_TIMEOUT; count=12",
+                        List.of(EVIDENCE_ID),
+                        List.of())),
                 List.of(),
                 advice,
                 new ReportConfidence(level, "Aggregate evidence lacks independent confirmation.", List.of(EVIDENCE_ID)),
@@ -292,7 +348,7 @@ class ReportApiPostgresIntegrationTest {
                         .sql("SELECT prompt_version FROM report_generation_attempt")
                         .query(String.class)
                         .single())
-                .isEqualTo("report-prompt/v8");
+                .isEqualTo("report-prompt/v9");
         verify(model, times(1)).generate(any(), any());
     }
 
@@ -428,7 +484,7 @@ class ReportApiPostgresIntegrationTest {
                 {
                   "disposition":"INSUFFICIENT_EVIDENCE",
                   "summary":{"statement":"Available evidence is insufficient.","evidenceIds":["%s"],"knowledgeChunkIds":[]},
-                  "observations":[{"statement":"Gateway timeouts were observed.","evidenceIds":["%s"],"knowledgeChunkIds":[]}],
+                  "observations":[],
                   "inferences":[],
                   "probableCause":null,
                   "confidence":{"level":"LOW","rationale":"Approved guidance is unavailable.","evidenceIds":["%s"]},
@@ -436,6 +492,6 @@ class ReportApiPostgresIntegrationTest {
                   "contradictions":[],
                   "evidenceGaps":[{"description":"No approved knowledge matched."}]
                 }
-                """.formatted(EVIDENCE_ID, EVIDENCE_ID, EVIDENCE_ID);
+                """.formatted(EVIDENCE_ID, EVIDENCE_ID);
     }
 }

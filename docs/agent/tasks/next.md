@@ -1,6 +1,6 @@
 # Next tasks: Investigation quality optimizations
 
-Status: O1 clarification implemented; O3 active; O2/O4 queued
+Status: O1 clarification implemented; O3 unfinished; O4 bounded scope complete; O2 queued
 Created: 2026-10-01
 Owner: Christopher Guzowski
 
@@ -109,7 +109,7 @@ Measure actual prompt tokens before making any context-size change.
 
 ## O3: Generate specific, grounded recommendations
 
-Status: Active in [current.md](current.md)
+Status: Unfinished in [retained O3 task](2026-10-04-unfinished-o3-grounded-recommendations.md)
 
 **User story:** As an analyst, I want a bounded explanation and a concrete safe
 next step so that I know which owner and records can resolve the incident.
@@ -144,7 +144,7 @@ handling of unsupported hypotheses; do not silently repair persisted reports.
 
 ## O4: Preserve observed facts and source mapping
 
-Status: Queued
+Status: Approved bounded scope complete in [the retained O4 task](completed/2026-10-04-o4-bounded-fact-and-source-validation.md); live sufficient-evidence quality unmeasured
 
 **User story:** As an analyst, I want exact codes, counts and source roles
 preserved so that a cited report cannot quietly distort the underlying evidence.
@@ -159,17 +159,17 @@ comparison-rule change or mutation of historical reports.
 
 **Acceptance criteria and test map:**
 
-- [ ] Codes/counts described as observations preserve their evidence association;
+- [x] Codes/counts described as observations preserve their evidence association;
   a count of eight cannot be accepted/rendered as one.
   Proposed tests: preservesExactObservedCodeAndCount and
   detectsCountAssignedToWrongErrorCode.
-- [ ] Missing counts remain missing; repeated or absent signals are not invented.
+- [x] Missing counts remain missing; repeated or absent signals are not invented.
   Proposed tests: missingObservationIsNotFabricated and
   repeatedSignalsPreserveTheirBoundedSourceContext.
-- [ ] Stage-specific requests use the supported source role, including E04 for
+- [x] Stage-specific requests use the supported source role, including E04 for
   capture acknowledgements where guidance requires it.
   Proposed test: captureConfirmationRequestUsesSupportedSourceRole.
-- [ ] Schema/citation/failure paths remain auditable and tenant-scoped. Fresh
+- [x] Schema/citation/failure paths remain auditable and tenant-scoped. Fresh
   live attempts receive separate fact/source checks alongside unchanged scores.
 
 **Likely components:** ReportEvidenceSnapshot/ReportEvidenceObservation,
@@ -202,3 +202,15 @@ normalization was implemented. O2-O4 are still queued.
 The v7 correction passed full verification (368 API / 9 MCP / 74 generator /
 103 console). Live confidence frequency remains unestablished; the initial weak
 case selected MEDIUM and its follow-up under tightened instructions timed out.
+
+2026-10-04: Owner activated O4 and approved bounded validation with MALFORMED
+rejection, no rewrite and no retry. O4 is retained in completed/2026-10-04-o4-bounded-fact-and-source-validation.md; the
+completed reliability task is archived and O3 remains unfinished. The 75-test
+focused suite and full gate pass (401 API / 9 MCP / 82 generator / 103 console,
+zero failures/errors/skips). Seven isolated first attempts yield six timeouts
+and one unavailable-source LOW/null report. Separate manual review retains
+summary/gap limits. Owner-authorized fixed rejection and comparison complete:
+S211 report 100/GOOD, diagnostic decision 0/BAD, no judge call. Verified exact
+artifact bindings, unchanged histories and protected hashes; six failures remain
+open and unrevealed. O4's approved bounded scope is complete, with no live
+count/source-role improvement established. O2 remains queued.

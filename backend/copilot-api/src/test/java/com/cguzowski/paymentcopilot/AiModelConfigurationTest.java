@@ -31,7 +31,9 @@ class AiModelConfigurationTest {
         assertThat(local.getProperty("spring.ai.ollama.embedding.model"))
                 .isEqualTo("${KNOWLEDGE_EMBEDDING_MODEL:nomic-embed-text}");
         assertThat(local.getProperty("spring.ai.retry.max-attempts")).isEqualTo(1);
-        assertThat(local.getProperty("app.report.generation-timeout")).isEqualTo("${REPORT_GENERATION_TIMEOUT:2m}");
+        assertThat(local.getProperty("app.report.generation-timeout")).isEqualTo("${REPORT_GENERATION_TIMEOUT:150s}");
+        assertThat(local.getProperty("spring.ai.ollama.embedding.keep-alive"))
+                .isEqualTo("${KNOWLEDGE_EMBEDDING_KEEP_ALIVE:5m}");
         assertThat(local.getProperty("spring.ai.bedrock.aws.region")).isNull();
         assertThat(local.getProperty("app.report.smoke-test.enabled")).isEqualTo(false);
 

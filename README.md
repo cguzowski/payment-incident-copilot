@@ -90,6 +90,21 @@ ollama pull nomic-embed-text
 ollama pull qwen3:8b-q4_K_M
 ```
 
+Report generation defaults to a hard maximum of 150 seconds; shorter
+`REPORT_GENERATION_TIMEOUT` values are supported. `REPORT_BATCH_TOKENS=128`
+reduces the provider's processing batch size while retaining the full context.
+`REPORT_GPU_LAYERS=-1` leaves placement to Ollama. On the measured 6 GiB GTX 1060,
+`REPORT_GPU_LAYERS=35` reduced CPU spill and substantially increased token speed.
+Pair that measured workstation setting with `KNOWLEDGE_EMBEDDING_KEEP_ALIVE=0s`
+to unload the embedding model after retrieval and free GPU memory for reports.
+The portable embedding residency default remains five minutes; explicit bulk
+knowledge preparation can retain that default to avoid repeated model loads.
+Use explicit placement only after measuring memory and latency on your machine;
+return to `-1` if memory pressure slows generation or causes allocation failures.
+Put these values in `.env` and restart the API for changes to take effect.
+Effective GPU/batch options are retained on new report attempts; historical
+settings are preserved. See [ADR-0028](docs/agent/decisions/ADR-0028-report-deadline-and-gpu-tuning.md).
+
 Check local prerequisites:
 
 ```powershell

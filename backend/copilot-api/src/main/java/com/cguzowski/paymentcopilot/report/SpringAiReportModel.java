@@ -7,6 +7,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,14 +17,39 @@ class SpringAiReportModel implements ReportModel {
     private final Optional<ChatModel> chatModel;
     private final String modelId;
     private final ReportPromptFactory prompts;
+    private final ReportModelSettings settings;
 
+    SpringAiReportModel(Optional<ChatModel> chatModel, String modelId, ReportPromptFactory prompts) {
+        this(chatModel, modelId, prompts, -1, 128);
+    }
+
+    @Autowired
     SpringAiReportModel(
             Optional<ChatModel> chatModel,
             @Value("${spring.ai.ollama.chat.model:unconfigured}") String modelId,
-            ReportPromptFactory prompts) {
+            ReportPromptFactory prompts,
+            @Value("${app.report.gpu-layers:-1}") int gpuLayers,
+            @Value("${app.report.batch-tokens:128}") int batchTokens) {
+        if (gpuLayers < -1 || batchTokens < 1) {
+            throw new IllegalArgumentException(
+                    "Report GPU layers must be -1 or nonnegative and batch tokens positive.");
+        }
         this.chatModel = chatModel;
         this.modelId = modelId;
         this.prompts = prompts;
+        this.settings = new ReportModelSettings(
+                "report-model-settings/v3",
+                ReportGenerationSettings.CONTEXT_TOKENS,
+                true,
+                false,
+                false,
+                gpuLayers,
+                batchTokens);
+    }
+
+    @Override
+    public ReportModelSettings settings() {
+        return settings;
     }
 
     @Override
@@ -44,6 +70,8 @@ class SpringAiReportModel implements ReportModel {
                 .temperature((double) ReportGenerationSettings.TEMPERATURE)
                 .maxTokens(ReportGenerationSettings.MAX_OUTPUT_TOKENS)
                 .numCtx(ReportGenerationSettings.CONTEXT_TOKENS)
+                .numGPU(settings.gpuLayers())
+                .numBatch(settings.batchTokens())
                 .disableThinking()
                 .outputSchema(outputSchema)
                 .build();

@@ -19,6 +19,7 @@ class ReportOutputParser {
     private final JsonMapper jsonMapper;
     private final Schema schema;
     private final ReportDocumentValidator validator;
+    private final ReportGroundingValidator groundingValidator = new ReportGroundingValidator();
 
     ReportOutputParser(JsonMapper jsonMapper, ReportPromptFactory prompts) {
         this.jsonMapper = jsonMapper;
@@ -42,6 +43,7 @@ class ReportOutputParser {
             }
             ReportDocument document = jsonMapper.treeToValue(node, ReportDocument.class);
             validator.validate(document, validationContext(context));
+            groundingValidator.validate(document, context);
             if (context.requiresInsufficientEvidence()
                     && (document.disposition() != ReportDisposition.INSUFFICIENT_EVIDENCE
                             || document.evidenceGaps().isEmpty())) {

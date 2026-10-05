@@ -58,6 +58,9 @@ class ReportGenerationServiceTest {
 
     @Test
     void recordsStartedBeforeCallingModelAndCompletesAvailableAtomically() {
+        ReportModelSettings settings =
+                new ReportModelSettings("report-model-settings/v3", 8192, true, false, false, 35, 128);
+        when(model.settings()).thenReturn(settings);
         ReportGenerationContext context = context("INVESTIGATING");
         ReportPrompt prompt =
                 new ReportPrompt("prompt", "report-prompt/v1", "a".repeat(64), "report-v1", "b".repeat(64));
@@ -85,9 +88,11 @@ class ReportGenerationServiceTest {
         ArgumentCaptor<ReportGenerationAttempt> started = ArgumentCaptor.forClass(ReportGenerationAttempt.class);
         verify(persistence).start(started.capture());
         assertThat(started.getValue().maxOutputTokens()).isEqualTo(1536);
+        assertThat(started.getValue().modelSettings()).isEqualTo(settings);
         ArgumentCaptor<ReportGenerationAttempt> completed = ArgumentCaptor.forClass(ReportGenerationAttempt.class);
         verify(persistence).completeAvailable(completed.capture());
         assertThat(completed.getValue().maxOutputTokens()).isEqualTo(1536);
+        assertThat(completed.getValue().modelSettings()).isEqualTo(settings);
     }
 
     @Test

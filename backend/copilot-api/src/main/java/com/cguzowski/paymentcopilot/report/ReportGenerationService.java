@@ -50,7 +50,13 @@ class ReportGenerationService {
 
         ReportPrompt prompt = prompts.build(context);
         ReportGenerationAttempt started = ReportGenerationAttempt.started(
-                identifiers.next(), operatorId, Instant.now(clock), context, model.modelId(), prompt);
+                identifiers.next(),
+                operatorId,
+                Instant.now(clock),
+                context,
+                model.modelId(),
+                java.util.Objects.requireNonNullElse(model.settings(), ReportGenerationSettings.MODEL_SETTINGS),
+                prompt);
         if (!persistence.start(started)) {
             throw new ReportGenerationConflictException("Report generation is already active or complete.");
         }

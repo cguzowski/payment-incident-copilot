@@ -81,7 +81,9 @@ class SpringAiReportTransportTest {
         return new SpringAiReportModel(
                 Optional.of(OllamaChatModel.builder().ollamaApi(api).build()),
                 "test-report-model",
-                new ReportPromptFactory(json));
+                new ReportPromptFactory(json),
+                35,
+                128);
     }
 
     private static String chunk(String content, boolean done) {
@@ -111,6 +113,8 @@ class SpringAiReportTransportTest {
         assertThat(body.path("truncate").asBoolean(true)).isFalse();
         assertThat(body.path("shift").asBoolean(true)).isFalse();
         assertThat(body.path("options").path("num_ctx").asInt()).isEqualTo(8192);
+        assertThat(body.path("options").path("num_batch").asInt()).isEqualTo(128);
+        assertThat(body.path("options").path("num_gpu").asInt()).isEqualTo(35);
         assertThat(body.path("options").path("num_predict").asInt()).isEqualTo(1536);
         assertThat(body.path("options").path("temperature").asDouble()).isZero();
         assertThat(body.path("think").asBoolean(true)).isFalse();

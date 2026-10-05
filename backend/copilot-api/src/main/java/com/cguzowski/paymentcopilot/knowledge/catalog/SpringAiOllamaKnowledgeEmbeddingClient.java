@@ -2,10 +2,14 @@ package com.cguzowski.paymentcopilot.knowledge.catalog;
 
 import java.net.SocketTimeoutException;
 import java.net.http.HttpTimeoutException;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.ai.embedding.EmbeddingRequest;
+import org.springframework.ai.ollama.api.OllamaEmbeddingOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,14 +19,25 @@ final class SpringAiOllamaKnowledgeEmbeddingClient implements KnowledgeEmbedding
     private static final double NORMALIZATION_TOLERANCE = 0.01d;
 
     private final EmbeddingModel model;
+    private final String keepAlive;
+    private final String modelId;
 
     @Autowired
-    SpringAiOllamaKnowledgeEmbeddingClient(Optional<EmbeddingModel> model) {
+    SpringAiOllamaKnowledgeEmbeddingClient(
+            Optional<EmbeddingModel> model,
+            @Value("${spring.ai.ollama.embedding.keep-alive:5m}") String keepAlive,
+            @Value("${spring.ai.ollama.embedding.model:nomic-embed-text}") String modelId) {
         this.model = model.orElse(null);
+        this.keepAlive = keepAlive;
+        this.modelId = modelId;
+    }
+
+    SpringAiOllamaKnowledgeEmbeddingClient(Optional<EmbeddingModel> model) {
+        this(model, "5m", KnowledgeEmbeddingClient.MODEL_ID);
     }
 
     SpringAiOllamaKnowledgeEmbeddingClient(EmbeddingModel model) {
-        this.model = model;
+        this(Optional.ofNullable(model), "5m", KnowledgeEmbeddingClient.MODEL_ID);
     }
 
     @Override
@@ -34,7 +49,15 @@ final class SpringAiOllamaKnowledgeEmbeddingClient implements KnowledgeEmbedding
             throw new KnowledgeEmbeddingUnavailableException();
         }
         try {
-            float[] vector = model.embed(input);
+            // Spring AI 2.0 drops provider-specific defaults when embed(String)
+            // merges generic runtime options. An explicit request preserves residency.
+            var response = model.call(new EmbeddingRequest(
+                    List.of(input),
+                    OllamaEmbeddingOptions.builder()
+                            .model(modelId)
+                            .keepAlive(keepAlive)
+                            .build()));
+            float[] vector = response.getResult().getOutput();
             validate(vector);
             return new KnowledgeEmbedding(
                     KnowledgeEmbeddingClient.MODEL_ID, KnowledgeEmbeddingClient.DIMENSIONS, true, vector);

@@ -1,3 +1,10 @@
 package com.cguzowski.paymentcopilot.report;
 
-record ReportModelSettings(String version, int contextTokens, boolean stream, boolean truncate, boolean shift) {}
+record ReportModelSettings(
+        String version,
+        int contextTokens,
+        boolean stream,
+        boolean truncate,
+        boolean shift,
+        Integer gpuLayers,
+        Integer batchTokens) {}

@@ -193,6 +193,17 @@ reactive generation is cancelled on deadline/interruption; only a completed stop
 response is assembled for existing validation and one terminal HTTP response.
 V12 retains versioned context/transport settings on new attempts with historical
 NULLs. The two-minute deadline, output budget, model and v8 prompt remain.
+[ADR-0028](decisions/ADR-0028-report-deadline-and-gpu-tuning.md) supersedes the
+previous deadline with a 150-second default and maximum. Report-only execution
+options expose automatic or explicit GPU layer placement and a 128-token default
+processing batch. The installed model, 8,192-token context, precision, prompt,
+1,536 output-token budget and validation remain unchanged. New v3 settings retain
+effective GPU/batch options; absent historical options remain unknown. The measured
+35-layer workstation setting is local configuration, not a portable GPU assumption.
+The local embedding residency setting is 0s to free GPU memory after retrieval;
+the portable default remains 5m. An explicit provider-specific embedding request
+preserves this option through Spring AI 2.0 without changing query/vector semantics.
+
 ## Knowledge-source evolution
 
 Under [ADR-0021](decisions/ADR-0021-post-decision-text-comparison.md), the

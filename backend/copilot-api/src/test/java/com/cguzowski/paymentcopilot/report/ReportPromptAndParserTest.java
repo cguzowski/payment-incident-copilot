@@ -32,7 +32,7 @@ class ReportPromptAndParserTest {
     void buildsVersionedBoundedReportInputFromExactSnapshots() {
         ReportPrompt prompt = prompts.build(context());
 
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v8");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v9");
         assertThat(prompt.schemaVersion()).isEqualTo("report-v1");
         assertThat(prompt.promptHash()).matches("[0-9a-f]{64}");
         assertThat(prompt.schemaHash()).matches("[0-9a-f]{64}");
@@ -75,8 +75,14 @@ class ReportPromptAndParserTest {
                 jsonMapper.readTree(prompts.build(aggregate).outputSchema()).at("/$defs/confidence/properties/level");
         assertThat(level.get("enum").toString()).isEqualTo("[\"LOW\",\"MEDIUM\",\"HIGH\"]");
         String medium = jsonMapper.writeValueAsString(validDocument());
-        assertThat(parser.parse(medium, aggregate).confidence().level()).isEqualTo(ReportConfidenceLevel.MEDIUM);
-        assertThat(parser.parse(medium.replace("MEDIUM", "HIGH"), aggregate)
+        String aggregateReport = medium.replace(
+                "\"statement\":\"sourceEventId=evt-1; observedAt=2026-08-29T08:00:00Z; errorCode=GATEWAY_TIMEOUT; count=12\",\"evidenceIds\":[\""
+                        + EVIDENCE_ID,
+                "\"statement\":\"sourceEventId=evt-1; observedAt=2026-08-29T08:00:00Z; errorCode=GATEWAY_TIMEOUT; count=12\",\"evidenceIds\":[\""
+                        + SECOND_EVIDENCE_ID);
+        assertThat(parser.parse(aggregateReport, aggregate).confidence().level())
+                .isEqualTo(ReportConfidenceLevel.MEDIUM);
+        assertThat(parser.parse(aggregateReport.replace("MEDIUM", "HIGH"), aggregate)
                         .confidence()
                         .level())
                 .isEqualTo(ReportConfidenceLevel.HIGH);
@@ -263,7 +269,7 @@ class ReportPromptAndParserTest {
         assertThat(schema.at("/$defs/confidence/properties/level/const").asText())
                 .isEqualTo("LOW");
         assertThat(schema.at("/properties/evidenceGaps/minItems").intValue()).isEqualTo(1);
-        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v8");
+        assertThat(prompt.promptVersion()).isEqualTo("report-prompt/v9");
         assertThat(prompt.text()).contains("latestStatus is not AVAILABLE", "observations is empty");
         assertThatThrownBy(() -> parser.parse(jsonMapper.writeValueAsString(validDocument()), degraded))
                 .isInstanceOf(InvalidReportDocumentException.class);
@@ -283,8 +289,10 @@ class ReportPromptAndParserTest {
     void retainsEarlierApplicableObservationsWithoutRestoringCurrentSufficiency() throws Exception {
         var degraded = degradedContext("UNAVAILABLE");
         var report = insufficientDocument();
-        var historical =
-                new ReportClaim("Earlier telemetry recorded GATEWAY_TIMEOUT.", List.of(SECOND_EVIDENCE_ID), List.of());
+        var historical = new ReportClaim(
+                "sourceEventId=evt-1; observedAt=2026-08-29T08:00:00Z; errorCode=GATEWAY_TIMEOUT; count=12",
+                List.of(SECOND_EVIDENCE_ID),
+                List.of());
         var withHistory = new ReportDocument(
                 report.disposition(),
                 report.summary(),
@@ -491,7 +499,10 @@ class ReportPromptAndParserTest {
         return new ReportDocument(
                 ReportDisposition.PROPOSED,
                 evidence,
-                List.of(evidence),
+                List.of(new ReportClaim(
+                        "sourceEventId=evt-1; observedAt=2026-08-29T08:00:00Z; errorCode=GATEWAY_TIMEOUT; count=12",
+                        List.of(EVIDENCE_ID),
+                        List.of())),
                 List.of(knowledge),
                 knowledge,
                 new ReportConfidence(ReportConfidenceLevel.MEDIUM, "One source is available.", List.of(EVIDENCE_ID)),

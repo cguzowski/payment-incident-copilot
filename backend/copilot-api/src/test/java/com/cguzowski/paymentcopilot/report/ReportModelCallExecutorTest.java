@@ -60,6 +60,15 @@ class ReportModelCallExecutorTest {
         assertThat(interrupted.await(1, SECONDS)).isTrue();
     }
 
+    @Test
+    void rejectsDeadlinesAboveTheOwnerApprovedMaximum() {
+        assertThatThrownBy(() -> new ReportModelCallExecutor(Duration.ofSeconds(151)))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ReportModelCallExecutor(Duration.ofMillis(150_001)))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThat(new ReportModelCallExecutor(Duration.ofSeconds(150))).isNotNull();
+    }
+
     private static ReportModel modelReturning(ReportModelResponse response) {
         return new ReportModel() {
             @Override

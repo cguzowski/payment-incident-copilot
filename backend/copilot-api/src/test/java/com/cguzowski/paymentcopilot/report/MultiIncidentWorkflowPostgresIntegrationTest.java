@@ -239,7 +239,22 @@ class MultiIncidentWorkflowPostgresIntegrationTest {
                 degraded
                         ? List.of()
                         : List.of(claim(
-                                fixture.get("errors").get(0).get("errorCode").asText() + " recorded",
+                                "sourceEventId=" + reference + "-e1"
+                                        + "; observedAt="
+                                        + DETECTED.minusSeconds(fixture.get("errors")
+                                                .get(0)
+                                                .get("secondsBeforeDetection")
+                                                .asInt())
+                                        + "; errorCode="
+                                        + fixture.get("errors")
+                                                .get(0)
+                                                .get("errorCode")
+                                                .asText()
+                                        + "; count="
+                                        + fixture.get("errors")
+                                                .get(0)
+                                                .get("count")
+                                                .asLong(),
                                 evidenceId,
                                 null)));
         report.put("inferences", List.of());

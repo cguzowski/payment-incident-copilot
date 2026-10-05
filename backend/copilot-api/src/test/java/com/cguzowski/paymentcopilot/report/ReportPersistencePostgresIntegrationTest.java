@@ -79,8 +79,10 @@ class ReportPersistencePostgresIntegrationTest {
                 .query(String.class)
                 .single();
         var json = tools.jackson.databind.json.JsonMapper.builder().build().readTree(settings);
-        assertThat(json.path("version").asString()).isEqualTo("report-model-settings/v2");
+        assertThat(json.path("version").asString()).isEqualTo("report-model-settings/v3");
         assertThat(json.path("contextTokens").asInt()).isEqualTo(8192);
+        assertThat(json.path("gpuLayers").asInt()).isEqualTo(-1);
+        assertThat(json.path("batchTokens").asInt()).isEqualTo(128);
         assertThat(json.path("stream").asBoolean()).isTrue();
         assertThat(json.path("truncate").asBoolean(true)).isFalse();
         assertThat(json.path("shift").asBoolean(true)).isFalse();
@@ -131,6 +133,23 @@ class ReportPersistencePostgresIntegrationTest {
                         .query(String.class)
                         .single())
                 .isEqualTo(before);
+    }
+
+    @Test
+    void historicalV2SettingsKeepUnknownGpuAndBatchOptions() {
+        ReportGenerationAttempt attempt = started(UUID.randomUUID(), Instant.parse("2026-10-04T12:00:00Z"));
+        assertThat(persistence.start(attempt)).isTrue();
+        jdbcClient.sql("""
+                UPDATE report_generation_attempt SET model_settings =
+                '{"version":"report-model-settings/v2","contextTokens":8192,
+                  "stream":true,"truncate":false,"shift":false}'::jsonb WHERE id = :id
+                """).param("id", attempt.attemptId()).update();
+        ReportModelSettings legacy =
+                persistence.findAll(TENANT_ID, INVESTIGATION_ID).getFirst().modelSettings();
+        assertThat(legacy.version()).isEqualTo("report-model-settings/v2");
+        assertThat(legacy.contextTokens()).isEqualTo(8192);
+        assertThat(legacy.gpuLayers()).isNull();
+        assertThat(legacy.batchTokens()).isNull();
     }
 
     @Test

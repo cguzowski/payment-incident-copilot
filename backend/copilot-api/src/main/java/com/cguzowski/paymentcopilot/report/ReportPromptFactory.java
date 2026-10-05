@@ -8,6 +8,8 @@ import java.util.HexFormat;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import tools.jackson.core.JacksonException;
@@ -18,7 +20,7 @@ import tools.jackson.databind.node.ObjectNode;
 @Component
 class ReportPromptFactory {
 
-    static final String PROMPT_VERSION = "report-prompt/v8";
+    static final String PROMPT_VERSION = "report-prompt/v9";
     static final String SCHEMA_VERSION = "report-v1";
 
     private final JsonMapper jsonMapper;
@@ -34,7 +36,18 @@ class ReportPromptFactory {
     ReportPrompt build(ReportGenerationContext context) {
         try {
             String input = jsonMapper.writeValueAsString(context);
-            String text = template.replace("{{SCHEMA}}", schema).replace("{{INPUT}}", input);
+            String observations = jsonMapper.writeValueAsString(context.evidence().observations().stream()
+                    .map(ReportGroundingValidator::observationStatement)
+                    .distinct()
+                    .toList());
+            String text = Pattern.compile("\\{\\{(SCHEMA|INPUT|OBSERVATIONS)}}")
+                    .matcher(template)
+                    .replaceAll(match -> Matcher.quoteReplacement(
+                            switch (match.group(1)) {
+                                case "SCHEMA" -> schema;
+                                case "INPUT" -> input;
+                                default -> observations;
+                            }));
             String outputSchema = constrainedSchema(context);
             return new ReportPrompt(
                     text, PROMPT_VERSION, sha256(template), SCHEMA_VERSION, sha256(outputSchema), outputSchema);
@@ -70,6 +83,26 @@ class ReportPromptFactory {
                 "confidence");
         boundReferenceArrays(
                 definitions, "knowledgeChunkIds", knowledgeIds.size(), "claim", "evidenceOnlyClaim", "knowledgeClaim");
+        ObjectNode observationArray = (ObjectNode) root.get("properties").get("observations");
+        observationArray.put("uniqueItems", true);
+        if (context.evidence().observations().isEmpty() || context.evidence().applicableAttemptId() == null) {
+            observationArray.put("maxItems", 0);
+        } else {
+            ObjectNode item = ((ObjectNode) definitions.get("evidenceOnlyClaim")).deepCopy();
+            ObjectNode properties = (ObjectNode) item.get("properties");
+            ArrayNode statements = ((ObjectNode) properties.get("statement")).putArray("enum");
+            context.evidence().observations().stream()
+                    .map(ReportGroundingValidator::observationStatement)
+                    .distinct()
+                    .forEach(statements::add);
+            ObjectNode identifier = jsonMapper.createObjectNode().put("type", "string");
+            identifier
+                    .putArray("enum")
+                    .add(context.evidence().applicableAttemptId().toString());
+            ((ObjectNode) properties.get("evidenceIds")).set("items", identifier);
+            ((ObjectNode) properties.get("evidenceIds")).put("maxItems", 1);
+            observationArray.set("items", item);
+        }
         if (context.requiresInsufficientEvidence()) {
             ObjectNode properties = (ObjectNode) root.get("properties");
             ((ObjectNode) properties.get("disposition")).put("const", "INSUFFICIENT_EVIDENCE");

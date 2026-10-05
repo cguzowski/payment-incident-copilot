@@ -57,9 +57,53 @@ class SpringAiReportModelTest {
         assertThat(options.getTemperature()).isZero();
         assertThat(options.getMaxTokens()).isEqualTo(1536);
         assertThat(options.getNumCtx()).isEqualTo(8192);
+        assertThat(options.getNumBatch()).isEqualTo(128);
         assertThat(options.getToolCallbacks()).isNullOrEmpty();
         assertThat(options.getThinkOption()).isEqualTo(ThinkOption.ThinkBoolean.DISABLED);
         assertThat(options.getOutputSchema()).isEqualTo(outputSchema);
+    }
+
+    @Test
+    void sendsConfiguredGpuPlacementWithoutChangingModelOrContext() {
+        ChatModel provider = mock(ChatModel.class);
+        when(provider.stream(any(Prompt.class))).thenReturn(Flux.just(fragment("{}", "stop")));
+        new org.springframework.boot.test.context.runner.ApplicationContextRunner()
+                .withUserConfiguration(SpringAiReportModel.class)
+                .withBean(ChatModel.class, () -> provider)
+                .withBean(
+                        ReportPromptFactory.class,
+                        () -> new ReportPromptFactory(JsonMapper.builder().build()))
+                .withPropertyValues(
+                        "spring.ai.ollama.chat.model=test-report-model",
+                        "app.report.gpu-layers=35",
+                        "app.report.batch-tokens=128")
+                .run(context -> {
+                    SpringAiReportModel model = context.getBean(SpringAiReportModel.class);
+                    assertThat(model.settings().gpuLayers()).isEqualTo(35);
+                    assertThat(model.settings().batchTokens()).isEqualTo(128);
+                    model.generate("exact input", "{}");
+                });
+        ArgumentCaptor<Prompt> prompt = ArgumentCaptor.forClass(Prompt.class);
+        verify(provider).stream(prompt.capture());
+        OllamaChatOptions options = (OllamaChatOptions) prompt.getValue().getOptions();
+        assertThat(options.getNumGPU()).isEqualTo(35);
+        assertThat(options.getNumBatch()).isEqualTo(128);
+        assertThat(options.getNumCtx()).isEqualTo(8192);
+        assertThat(options.getMaxTokens()).isEqualTo(1536);
+        assertThat(prompt.getValue().getContents()).isEqualTo("exact input");
+    }
+
+    @Test
+    void rejectsInvalidExecutionSettings() {
+        for (String setting : List.of("app.report.gpu-layers=-2", "app.report.batch-tokens=0")) {
+            new org.springframework.boot.test.context.runner.ApplicationContextRunner()
+                    .withUserConfiguration(SpringAiReportModel.class)
+                    .withBean(
+                            ReportPromptFactory.class,
+                            () -> new ReportPromptFactory(JsonMapper.builder().build()))
+                    .withPropertyValues(setting)
+                    .run(context -> assertThat(context).hasFailed());
+        }
     }
 
     @Test

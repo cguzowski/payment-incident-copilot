@@ -4,7 +4,8 @@ Last updated: 2026-10-04
 
 ## Current state
 
-The local demo is complete; the owner has activated report reliability after O3. Seven
+The local demo and approved O4 bounded fact/source validation are complete;
+live sufficient-evidence quality remains unmeasured. Seven
 synthetic incident families support intake, active/completed queues, MCP
 service-error evidence, approved PDF retrieval, advisory reports, explicit
 human decisions and audit history. Normal generation selects AVAILABLE
@@ -46,7 +47,7 @@ HIGH, normally favors MEDIUM, and uses LOW for weak support. HIGH requires
 exceptionally strong support of the narrow mechanism, not independent
 confirmation as a prerequisite. Degraded LOW/null behavior remains enforced.
 [ADR-0024](decisions/ADR-0024-attainable-high-confidence.md) supersedes v6's
-ceiling. O2/O4 remain queued; [O3](tasks/2026-10-04-unfinished-o3-grounded-recommendations.md) remains unfinished. The owner subsequently authorized
+ceiling. O2 remains queued; [O4](tasks/completed/2026-10-04-o4-bounded-fact-and-source-validation.md) is complete within its approved bounded scope and [O3](tasks/2026-10-04-unfinished-o3-grounded-recommendations.md) remains unfinished. The owner subsequently authorized
 [explicit confidence expectations](tasks/completed/2026-10-04-evidence-based-confidence-expectations.md) under
 [ADR-0025](decisions/ADR-0025-evidence-based-confidence-expectations.md).
 confidence-evidence/v1 evaluates the decision-bound latest snapshot independently
@@ -71,7 +72,7 @@ Seven report histories and 373 protected hashes remain unchanged. O3's first two
 grounding criteria remain unmet despite GOOD score bands; no reliable improvement
 is established. The three timed-out cases remain open and unrevealed.
 
-The owner authorized the separate [report reliability task](tasks/current.md).
+The owner authorized the separate [completed report reliability task](tasks/completed/2026-10-04-report-context-and-cancellation.md).
 [ADR-0026](decisions/ADR-0026-report-context-and-cancellation.md) keeps the
 existing deadline/model/prompt while explicitly preserving context and cancelling
 abandoned HTTP work. All 52 focused report tests and full ./verify.ps1 pass
@@ -83,6 +84,54 @@ tokens/second. The owner retained the two-minute limit. Seven original O3
 histories and 373 protected hashes are unchanged. New attempts retain versioned
 settings through V12; historical settings stay unknown. Main-demo API processes
 were not restarted; the updated artifact was verified in the isolated runtime.
+
+O4's report-prompt/v9 and [ADR-0027](decisions/ADR-0027-bounded-report-fact-and-source-validation.md)
+require exact event/time/code/count observation tuples with applicable-attempt
+citations. New reports reject altered/invented/duplicated tuples and unsupported
+explicit source identifiers or authorization/capture/refund/settlement role
+pairings as MALFORMED without rewrite or retry. Schema, tenant boundaries,
+degraded LOW/null and historical reads remain compatible. All 75 focused tests
+and full ./verify.ps1 pass (401 API / 9 MCP / 82 generator / 103 console, zero
+failures/errors/skips, formatting/builds/Compose/diff checks). The first full
+run failed on npm's console-held esbuild lock; verified consoles were temporarily
+stopped and restored, with both loopback listeners returning HTTP 200.
+Seven fresh isolated first attempts finish with six two-minute timeouts and
+S211 AVAILABLE in 60.350 seconds, preserving LOW/null/empty observations.
+Its 2/2 references are valid, but manual review records alert wording asserted
+under an unavailable citation and an unrelated source-role guidance gap.
+All seven prompt/schema hashes and settings match persisted bindings; all ten
+original histories and 373 protected hashes are unchanged. No live count/source
+quality improvement is established. The owner-authorized diagnostic rejection
+and post-decision comparison are complete: report 100/GOOD, fixed decision 0/BAD
+against expected APPROVED, no judge call. Null-field scores do not resolve manual
+summary/gap findings. Exact tenant/report/evidence/decision bindings pass; seven
+new histories remain unchanged and six failures stay open and unrevealed.
+At O4 completion the main API had not been restarted; the following performance
+task subsequently activated the verified v9 artifact in the main demo.
+
+The [report performance task](tasks/current.md) is complete under
+[ADR-0028](decisions/ADR-0028-report-deadline-and-gpu-tuning.md). The owner permits
+at most 150 seconds. New configuration enforces that maximum, preserves full
+context/cancellation and exposes GPU placement and processing-batch options.
+The measured GTX 1060 profile uses 35 GPU layers, batch 128 and immediate Nomic
+embedding unload to free report memory. Portable defaults keep automatic GPU
+placement and five-minute embedding residency. An explicit embedding request
+preserves the configured model and keepAlive through Spring AI 2.0's merge;
+vector semantics, retrieval, precision, prompt and validation are unchanged.
+New v3 settings retain effective GPU/batch values with historical NULL options.
+The initial GPU-only profile retains four reports and three 150-second timeouts.
+[Seven final fresh first attempts](../../SynTen%20Inc/evaluation/2026-10-04-report-performance.md)
+return five AVAILABLE and two MALFORMED with zero timeouts, 36.46–93.07 seconds,
+median 68.50 and 12.09–13.76 generated tokens/sec. All 34 references and degraded
+LOW/null constraints pass; no retry, oracle access, decisions or comparisons occur.
+Final ./verify.ps1 passes 406 API / 9 MCP / 82 generator / 103 console tests,
+zero failures/errors/skips, formatting/builds/Compose/diff checks. All 373
+protected hashes, 17 original histories and main-demo report history are unchanged.
+The exact verified artifact is active in the main API, health UP, with unchanged
+localhost:8082 evidence binding and both console loopbacks HTTP 200. Two October 1
+STARTED records remain unchanged and unreconciled. Seven sequential attempts do
+not establish a broad timeout frequency; malformed/semantic failures remain and
+other GPU workloads can reintroduce memory pressure. No quality improvement claim.
 
 ## Verification and retained evidence
 

@@ -1,123 +1,127 @@
-# Task: Preserve report context and cancel timed-out generation
+# Task: Reduce report timeouts within 150 seconds
 
-Status: Complete within authorized scope; live throughput/timeouts remain
+Status: Complete; measured local speed improvement, zero timeouts in seven final attempts
 Created: 2026-10-04
 Owner: Christopher Guzowski
 
 ## Goal
 
-Resolve the measured prompt truncation and continued provider work behind the
-O3 timeout cases without concealing failures or changing report semantics.
+Make report timeouts uncommon and improve generation speed within the owner's
+hard maximum of two minutes thirty seconds.
 
 ## User story
 
-As an analyst, I want generation to receive the complete supplied context and
-stop when its deadline expires so that later requests are not delayed by
-abandoned work and every outcome remains auditable.
+As an analyst, I want reports to finish reliably within 150 seconds so that
+investigations do not repeatedly fail while waiting for the local model.
 
 ## Chosen contract
 
-Keep Qwen, report-prompt/v8, the report-v1 schema, temperature zero, disabled
-thinking, no tools, 1,536 output tokens and the existing two-minute deadline.
-Set an explicit 8,192-token Ollama context for measured inputs. Send top-level
-truncate=false and shift=false: oversized input or exhausted context fails
-closed rather than silently dropping instructions or evidence. Use Spring AI's
-reactive transport internally, assemble only a completed response, and cancel
-its subscription on deadline/interruption. The HTTP report API remains a single
-completed result. Persist versioned context/transport settings for new attempts;
-leave historical settings unknown and historical rows unchanged.
+The owner rejects seven minutes and authorizes a maximum 150-second deadline
+plus performance improvements. Investigate and measure provider execution and
+output overhead. Preserve full evidence/guidance, strict validation, cancellation,
+tenant isolation, immutable histories and mandatory human review. Start with
+the installed local model; no hosted provider or automatic report retries.
 
 ## In scope
 
-Report model transport/options, deterministic wire and cancellation regressions,
-additive Flyway provenance, documentation, focused/full verification, and one
-fresh live attempt each for S301, S302 and S303 in an isolated evaluation runtime.
+Deadline configuration, measured local-provider optimizations, deterministic
+regressions, provenance, focused/full verification, fresh synthetic diagnostics
+and activation in the local demo after verification.
 
 ## Out of scope
 
-O3 prose quality, retrieval/corpus changes, model substitution, longer deadlines,
-automatic retries or decisions, oracle inputs, comparator changes, historical
-mutation, commits and pushes.
+Corpus/retrieval/answer-key/comparison changes, historical mutation, automatic
+human decisions, cloud providers, commits and pushes.
 
 ## Constraints
 
-Preserve tenant isolation, exact persisted snapshots/citations, schema validation,
-INSUFFICIENT_EVIDENCE/LOW/null for degraded evidence, human review and immutable
-original failures. No live provider in automated tests or new dependency.
-Preserve O3 as unfinished in 2026-10-04-unfinished-o3-grounded-recommendations.md.
+No evidence truncation or weakening of report-v1 and O4 validation. Preserve
+user-owned pending O4 changes. No new dependency. Use red-green-refactor.
 
 ## Acceptance criteria
 
-- [x] Deterministic wire tests prove complete input, num_ctx=8192, top-level
-  truncate=false/shift=false, existing schema/output settings and one call.
-- [x] Deadline and caller interruption cancel the actual HTTP subscription;
-  partial output and provider errors never become successful reports.
-- [x] New attempts retain exact versioned settings; historical attempts remain
-  readable with unknown settings and unchanged report/provenance bytes.
-- [x] Focused tests and the full verification gate pass with no skipped tests.
-- [x] Fresh isolated S301/S302/S303 attempts and runtime evidence are retained;
-  original timeouts remain unchanged and any unresolved live failures are explicit.
+- [x] Default report deadline is 150 seconds and configuration cannot exceed it.
+- [x] A measured optimization improves local generation speed without dropping
+  evidence or accepting partial/invalid output.
+- [x] Deadline cancellation, invalid responses, tenant/citation binding and
+  immutable legacy provenance remain covered by passing deterministic tests.
+- [x] Fresh first attempts record latency, outcomes and timeout frequency;
+  insufficient sample or remaining failures are explicitly reported.
+- [x] Focused tests and full ./verify.ps1 pass; verified local runtime is activated.
 
 ## Test plan
 
-SpringAiReportModelTest covers options, fragment assembly, timeout/error mapping
-and cancellation. SpringAiReportTransportTest uses a deterministic local HTTP
-server through the real Spring AI client to verify the JSON wire request,
-rejection, premature termination and socket cancellation. Report persistence
-PostgreSQL tests cover new settings, nullable legacy settings and immutable
-terminal outcomes. Existing prompt/parser/service/API tests cover schema,
-citations, degraded evidence and lifecycle. Run focused report tests, then
-./verify.ps1. Live checks use fresh synthetic incidents without retries/reveal;
-retain exact snapshots, prompt/schema/settings, timing and provider runtime logs.
+AiModelConfigurationTest and ReportModelCallExecutorTest cover the default and
+maximum deadline. Model/transport/persistence tests cover measured provider
+options and their provenance, unchanged context and cancellation. Run focused
+report tests, then ./verify.ps1. Use nonpersisted exact-context diagnostics to
+select an optimization, then fresh isolated first attempts with no oracle access,
+retry or decisions. Review preserved historical/corpus hashes where applicable.
 
 ## Progress notes
 
-- Owner authorized a separate reliability task after the timeout diagnosis.
-- Preserved the unfinished O3 task byte-for-byte before activating this task.
-- Plan: reproduce transport/options and provenance defects, implement one
-  behavior at a time, verify focused/full gates, then measure three fresh cases.
-- Owner explicitly chose to keep the two-minute deadline and retain the measured
-  throughput limitation; no longer-deadline validation is authorized.
-- Risks: 8,192 context uses more local memory; preserving input cannot guarantee
-  generation speed or semantic quality. Cancellation closes the HTTP request;
-  live logs must confirm the installed provider stops its work.
+- Archived the completed O4 task unchanged before replacing current.md.
+- Existing logs show 25/37 GPU layers, CPU spill and roughly 4-6 generated
+  tokens/second; Flash Attention is already enabled on the 6 GiB GTX 1060.
+- Plan: measure safe GPU placement; implement/test the selected optimization
+  and 150-second cap; verify and retain fresh outcomes; activate the local demo.
+- The initial profile exposes idle embedding-model memory pressure; the final
+  profile combines 35 GPU layers, batch 128 and immediate embedding unload.
+- Risks: GPU memory pressure can worsen speed; concise model output or changed
+  execution precision can affect quality and require separate validation.
 
 ## Completion evidence
 
-- Red model tests fail four cases against blocking generation (red-model.log).
-  The corrected wire fixture fails once for absent top-level truncate=false
-  (red-wire-final.log); the first fixture failure is retained separately.
-- Red PostgreSQL executes six tests with two intended missing-column failures
-  (red-provenance-docker.log). The initial sandbox Docker skips are retained
-  in red-provenance.log and do not count as verification.
-- Green-focused.log passes all 52 focused report tests without failures/errors/
-  skips, including actual HTTP cancellation/interruption, incomplete/error
-  rejection, exact wire options and nullable legacy provenance.
-- Full ./verify.ps1 passes 380 API, 9 MCP, 82 generator and 103 console tests,
-  zero failures/errors/skips, eight nested Node cases, formatting, builds,
-  repository-script, Compose and diff checks (full-verification.log).
-- Three fresh first attempts remain TIMED_OUT at 120.019/120.016/120.008 seconds.
-  Ollama receives 4,419/4,427/4,339 full input tokens in an 8,192 context and
-  confirms cancellation/slot release at every deadline with truncated=0.
-  Provider throughput remains roughly 4-5 tokens/second; no partial report,
-  automatic retry, decision, reveal or comparison was persisted.
-- Seven original O3 histories and all 373 protected hashes remain unchanged.
-  Three reconstructed prompt/schema hashes match persisted settings and exact
-  snapshot bindings. The unfinished O3 archive equals the previous Git blob.
-- Both console loopback listeners were restored with HTTP 200. The first
-  sandbox launches failed with esbuild EPERM; outside-sandbox restores passed.
-- [Retained live evaluation](../../../SynTen%20Inc/evaluation/2026-10-04-report-context-and-cancellation.md)
-  records exact artifacts, first-attempt failures and limitations. Logs and
-  reconstruction/verification scripts are under tmp/report-reliability/.
+- Deadline red: AiModelConfigurationTest and ReportModelCallExecutorTest execute
+  five tests with two intended failures; green passes all five. Above-maximum
+  integer and fractional deadlines are rejected, and 150 seconds is accepted.
+- GPU/batch regressions fail before options are applied; service provenance fails
+  with automatic -1 instead of configured 35. All 78 focused report tests pass
+  without failures/skips, including actual socket cancellation and legacy v2 reads.
+- First full ./verify.ps1 passes 405 API / 9 MCP / 82 generator / 103 console
+  tests with no failures/errors/skips. Console processes were temporarily stopped
+  to avoid the previously reproduced esbuild lock and their commands restored.
+- Seven initial GPU-only first attempts retain four AVAILABLE reports and three
+  TIMED_OUT outcomes at 150 seconds. Citation bindings and degraded contracts
+  pass; 373 protected hashes and 17 original report histories remain unchanged.
+  One manual idle-embedding unload during S302 is retained with its timestamp;
+  this initial profile is not a clean estimate of the final combined settings.
+- Embedding-residency wire regression reproduces missing keep_alive even after
+  property binding. An explicit provider request preserves keep_alive=0s and
+  the configured Nomic model. Five focused configuration/embedding tests pass,
+  preserving exact query/vector, dimensions, normalization and failure mapping.
+- Final ./verify.ps1 passes 406 API / 9 MCP / 82 generator / 103 console
+  tests with zero failures/errors/skips, eight nested Node cases, formatting,
+  builds, repository scripts, Compose and diff checks (full-verification-final.log).
+- Seven final combined-profile first attempts return five AVAILABLE and two
+  MALFORMED, with zero TIMED_OUT. Persisted latency ranges 36.46–93.07 seconds,
+  median 68.50; full-input provider throughput ranges 12.09–13.76 tokens/sec.
+  All 34/34 accepted references are valid, degraded LOW/null is preserved,
+  and seven exact prompt/schema hashes and v3 GPU/batch settings match storage.
+- All 373 protected hashes, 17 original histories and the main-demo report-history
+  fingerprint remain unchanged. The main API is activated with the exact final
+  isolated artifact, health UP and unchanged localhost:8082 evidence binding;
+  IPv4/IPv6 consoles return HTTP 200. Two October 1 STARTED records predate the
+  current API process and remain unchanged; no live report is interrupted.
+- [Retained evaluation](../../../SynTen%20Inc/evaluation/2026-10-04-report-performance.md)
+  records both profiles and limitations. Raw evidence remains under
+  tmp/report-speed/ and tmp/report-speed-final/. No retries, oracle access,
+  answer-key reveal, comparisons or human decisions occur.
+
+- Final documentation/static verification passes ./verify.ps1 -Scope Repository
+  and git diff --check. Only the four newly created evaluation services are
+  stopped afterward to free memory; retained databases/artifacts and the main
+  demo remain available. Main history/health and both console listeners pass again.
 
 ## Remaining limitations
 
-The owner retained the two-minute deadline. All three full-context live cases
-still time out because local throughput is limited; timely report completion
-and semantic quality are not established. Context preservation and cancellation
-are verified. The existing main API was not restarted; only the isolated runtime
-uses this artifact. Historical attempts remain unchanged.
+Zero timeouts in seven final sequential cases is a limited sample, not a general
+frequency guarantee. Two MALFORMED reports and O3 semantic-quality limitations
+remain. Explicit GPU placement can degrade under other GPU workloads; bulk
+knowledge preparation can use 5m residency to avoid repeated embedding loads.
+Two historical STARTED records remain unreconciled and unchanged.
 
 ## Decisions needed
 
-None. Owner authorized context budgeting and cancellation as a separate task.
+None for the authorized deadline and reversible performance diagnostics. A new
+provider/model or material report-contract change requires an owner decision.

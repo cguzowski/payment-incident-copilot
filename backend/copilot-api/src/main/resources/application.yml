@@ -24,6 +24,7 @@ spring:
         model: ${REPORT_CHAT_MODEL:qwen3:8b-q4_K_M}
       embedding:
         model: ${KNOWLEDGE_EMBEDDING_MODEL:nomic-embed-text}
+        keep-alive: ${KNOWLEDGE_EMBEDDING_KEEP_ALIVE:5m}
     mcp:
       client:
         initialized: false
@@ -53,7 +54,9 @@ management:
 
 app:
   report:
-    generation-timeout: ${REPORT_GENERATION_TIMEOUT:2m}
+    generation-timeout: ${REPORT_GENERATION_TIMEOUT:150s}
+    gpu-layers: ${REPORT_GPU_LAYERS:-1}
+    batch-tokens: ${REPORT_BATCH_TOKENS:128}
     smoke-test:
       enabled: false
   knowledge:

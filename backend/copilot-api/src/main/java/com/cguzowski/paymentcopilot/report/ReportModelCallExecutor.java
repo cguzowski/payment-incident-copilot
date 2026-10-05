@@ -13,9 +13,10 @@ class ReportModelCallExecutor {
 
     private final Duration timeout;
 
-    ReportModelCallExecutor(@Value("${app.report.generation-timeout:2m}") Duration timeout) {
-        if (timeout.isZero() || timeout.isNegative()) {
-            throw new IllegalArgumentException("The report generation timeout must be positive.");
+    ReportModelCallExecutor(@Value("${app.report.generation-timeout:150s}") Duration timeout) {
+        if (timeout.isZero() || timeout.isNegative() || timeout.compareTo(Duration.ofSeconds(150)) > 0) {
+            throw new IllegalArgumentException(
+                    "The report generation timeout must be positive and at most 150 seconds.");
         }
         this.timeout = timeout;
     }

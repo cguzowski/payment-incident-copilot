@@ -35,6 +35,18 @@ record ReportGenerationAttempt(
             ReportGenerationContext context,
             String modelId,
             ReportPrompt prompt) {
+        return started(
+                attemptId, operatorId, requestedAt, context, modelId, ReportGenerationSettings.MODEL_SETTINGS, prompt);
+    }
+
+    static ReportGenerationAttempt started(
+            UUID attemptId,
+            UUID operatorId,
+            Instant requestedAt,
+            ReportGenerationContext context,
+            String modelId,
+            ReportModelSettings settings,
+            ReportPrompt prompt) {
         return new ReportGenerationAttempt(
                 attemptId,
                 context.investigation().tenantId(),
@@ -48,7 +60,7 @@ record ReportGenerationAttempt(
                 modelId,
                 ReportGenerationSettings.TEMPERATURE,
                 ReportGenerationSettings.MAX_OUTPUT_TOKENS,
-                ReportGenerationSettings.MODEL_SETTINGS,
+                settings,
                 prompt.promptVersion(),
                 prompt.promptHash(),
                 prompt.schemaVersion(),
