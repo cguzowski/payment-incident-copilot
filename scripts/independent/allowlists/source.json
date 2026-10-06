@@ -1,0 +1,211 @@
+{
+  "application": "source",
+  "version": "independent/v1",
+  "files": [
+    {
+      "source": ".gitattributes",
+      "target": ".gitattributes",
+      "sha256": "34ab5935c5d181ef7c4a06db0cf5f079df4e0a5fa7cdb4f080867cec34e46631"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioRarity.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioRarity.java",
+      "sha256": "4695e6ac28539f83bab8fc26eb24a7457f23738d6cf8211d0102b1eb957207af"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioSelector.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioSelector.java",
+      "sha256": "21beadbeefc90346f7a3e007d5a3c8423ed4ffe3598263bf9e19d893a8e7fc30"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/WeightedScenarioSelector.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/WeightedScenarioSelector.java",
+      "sha256": "7c030d221d5353b04a1408cc2ac8076ddd6b64f8af47db6064d48ed449639025"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/resources/scenarios/catalog.json",
+      "target": "src/main/resources/scenarios/catalog.json",
+      "sha256": "dadffe9e20b0f2c5089a08c1d62aefd93273444810464988c5cc4274a3421eb8"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioEvidence.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioEvidence.java",
+      "sha256": "8c8ce96be054bbe3e6f5eb6b52f680d8d2dbfa9c6ef2ab7e87c285a1edfe2438"
+    },
+    {
+      "source": "scripts/independent/source/app.js",
+      "target": "src/main/resources/static/app.js",
+      "sha256": "4efca181047e90145afa2add9eab599cb55bc5a0c9e33f54e4d76c0f6bcd17a8"
+    },
+    {
+      "source": "scripts/independent/source/application.yml",
+      "target": "src/main/resources/application.yml",
+      "sha256": "49d1a93bf4ffa5accf63fe25fb3016109bd3da60468d0944c3aa7a4e23f02dcb"
+    },
+    {
+      "source": "scripts/migration/m2/source/GeneratorExceptionHandler.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/GeneratorExceptionHandler.java",
+      "sha256": "6f9f1fd44fc24a0a5a70244fa7debf8c78942bf6dac99a6f1a5ca2b6eca1f481"
+    },
+    {
+      "source": "scripts/migration/m2/source/IncidentGenerationController.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/IncidentGenerationController.java",
+      "sha256": "d76306b717217ac5aa2b5ec105d2419bc8eebe9e7985d5903a49160b2ee66a8e"
+    },
+    {
+      "source": "scripts/independent/source/index.html",
+      "target": "src/main/resources/static/index.html",
+      "sha256": "db5258f0990ccde545d66d31a05c651ecbaaf0cc5b678f8f285ad985c61caf86"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/resources/static/styles.css",
+      "target": "src/main/resources/static/styles.css",
+      "sha256": "f9dd4345cc3e4b5563fb641dfa8e8080abafacd146f0d3af99c3fb75a27cd1da"
+    },
+    {
+      "source": "scripts/migration/m2/source/SyntheticIncidentGeneratorApplication.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/SyntheticIncidentGeneratorApplication.java",
+      "sha256": "29e0cc76144e39187f46f08391d217c1a36ce0760f7220e2bf6bff1429953b61"
+    },
+    {
+      "source": "scripts/independent/source/EvaluationBrowserConfiguration.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/EvaluationBrowserConfiguration.java",
+      "sha256": "0faf905f690e3cc43f03379637305dfefc4968997a12f7ae7c0e99691b664470"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioError.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioError.java",
+      "sha256": "38db05f15cf98d36894e4c730169cac693d4b99b2ed62bd8d1083a5713531ccd"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioCatalog.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioCatalog.java",
+      "sha256": "07dd2b2e798bea2aba6598d778a79ae162adcd5caf667df6f18a2a460dde6a74"
+    },
+    {
+      "source": ".mvn/wrapper/maven-wrapper.properties",
+      "target": ".mvn/wrapper/maven-wrapper.properties",
+      "sha256": "488e1b3f2e641779d4636abf9390845f901e64607261bc3c0b0bfe4fe96e6706"
+    },
+    {
+      "source": ".node-version",
+      "target": ".node-version",
+      "sha256": "51849cee918b92b09b95121b54380f6124c0f578d8c2323221c0d75bbbadb08d"
+    },
+    {
+      "source": "mvnw",
+      "target": "mvnw",
+      "sha256": "cae96cef89ebea3531221f4ae17c23cf8edf67d00eae8306d4186ae1bbed4d02"
+    },
+    {
+      "source": "mvnw.cmd",
+      "target": "mvnw.cmd",
+      "sha256": "46eedb8419bd14fe70d5bb2916d7b6f51806e51b39d5b76a42610384ca929c1c"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/catalog.json",
+      "target": "development/scenarios/multi-incidents/v1/catalog.json",
+      "sha256": "ea7efc4b3ff6456e322f5761fc3e8615865cdc7eedf98a201e2f327d28baacb3"
+    },
+    {
+      "source": "syntheticIncidentGenerator/pom.xml",
+      "target": "pom.xml",
+      "sha256": "84a068a7744c9d422737a514fc4c08fed5c1c2669fe4a5b05a64696ac00af947"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/config/GeneratorProperties.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/config/GeneratorProperties.java",
+      "sha256": "be38c968bf4cd9da743e504607f3e00ed5f95b02accec2e6a30aac584159018b"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeClient.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeClient.java",
+      "sha256": "7707b3d3be6cbb0845368d6a69ab7598541ff18517c1462c1fa9e95da6128638"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeException.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeException.java",
+      "sha256": "62b9d9974fee64dac16bb4d2baa43fa1c01a28c11494063c09d7fd6d0c5d620c"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeRequest.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeRequest.java",
+      "sha256": "3a78b31de40d88865eeaa5522073c058520c070a6fe6a293ecfaec4cf3b75d5d"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeResponse.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AlertIntakeResponse.java",
+      "sha256": "5099a63f25edc04615c8802e47afc050dc180860b19352cd4c4a94e4ef12b097"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioDefinition.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioDefinition.java",
+      "sha256": "b44aecce73c7ee46ee7676c5b7b399a358f1b729faf83c3c5b1205d7e72f4a90"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/CopilotAlertHttpClient.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/CopilotAlertHttpClient.java",
+      "sha256": "026831a999f772f5892fd893e00189d7302bfd9389c16c4d4b548f899fa433c0"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/GeneratedIncident.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/GeneratedIncident.java",
+      "sha256": "db576056bcc9f838265b28735a774a271adff6b6981925f239e860ae0a061e87"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/IncidentGenerationService.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/IncidentGenerationService.java",
+      "sha256": "d7556f3dd40b613295838de085e1cea7f5c0cbdc1d2333be1ebfd720063b71c3"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/EvidenceAvailabilityStatus.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/EvidenceAvailabilityStatus.java",
+      "sha256": "d62d1c8910b1eecc5345fac6f663e184e2e73f609d6f20053a325d365ffd2d9d"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorObservation.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorObservation.java",
+      "sha256": "8fb2b953d67aea8a312bb4324626f9ce4db948d7b9367b3aa6290f4b64229ac5"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorsContent.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorsContent.java",
+      "sha256": "0c6e23e36f97f65c866ccb6201ed7f0df59726ddcf0ca9bb6fb32e93513342f0"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorsResult.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorsResult.java",
+      "sha256": "a59a856da9cde98ab02a02347b45d9418e50e70a9287a59e12fbda22f86d6575"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorsTool.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/mcp/RecentServiceErrorsTool.java",
+      "sha256": "81a16b6e23dac898ceb191ce98a44e65f82d0a39a336a60ca7e4156f408ed1fa"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/AlertReferenceCodec.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/AlertReferenceCodec.java",
+      "sha256": "e93ba2e22a029e6f0d1995711f12bd1a1063bb06bb1c9e767f22a874a9109ac8"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ClasspathScenarioCatalog.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ClasspathScenarioCatalog.java",
+      "sha256": "b356e2fecc967cfb7190ab02eee5085c76523b7e891147b4ea3f52cbedb9246c"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/DecodedAlertReference.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/DecodedAlertReference.java",
+      "sha256": "6902a8c9d1fb60c0c05808650997de48856e22179f51ab37c829085cdb6a757d"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/EvidenceAvailability.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/EvidenceAvailability.java",
+      "sha256": "26fd697665dcc23a7ebe41d16420f76dad5a785c24cb237e64c135ce5872029a"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/GeneratedAlert.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/GeneratedAlert.java",
+      "sha256": "a682778aa2a07144caa3743ae82bcd67ac4c851ddc788c26ba1d7d89405335da"
+    }
+  ]
+}

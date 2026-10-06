@@ -1,76 +1,15 @@
-# Constraints and guardrails
+# Runtime constraints
 
-Last reviewed: 2026-10-01
-
-## Product constraints
-
-- Future knowledge authoring follows PAYMENT_EXPANSION_PLAN.md: derive guidance
-  from lifecycle risks without reading incident fixtures, catalogs, labels or
-  oracle answers. Freeze and hash the PDF library before new scenario authoring.
-- Future scenarios derive from synthetic system behavior without selecting target
-  documents. Coverage is bounded; unresolved cases remain valid outcomes.
-- New operational retrieval is PDF-only under ADR-0020. Preserve
-  historical Markdown citations and editable source inputs.
-- Build one convincing vertical slice before adding additional incident types.
-- Preserve the completed authorization-decline slice and immutable historical
-  corpus/evaluations. The owner-authorized ADR-0018 expansion adds six families
-  through separate assets after the original corpus phase.
-- Use synthetic scenarios and synthetic operational records only.
-- The platform investigates; it does not process payments.
-- The model assists; the operator makes the final decision.
-- Partial and unavailable evidence must remain visible.
-
-## Technical constraints
-
-- Java 21, Spring Boot, Spring AI, Maven, and Angular.
-- PostgreSQL stores application state; pgvector stores knowledge embeddings.
-- Ollama provides local chat and embedding models through Spring AI;
-  PostgreSQL/pgvector remains the vector store.
-- Automated tests use mocked or deterministic model responses and must not
-  require a live model provider.
-- Amazon Bedrock may be added as an optional production profile near the
-  deployment milestone, after the local closed loop is complete.
-- MCP evidence comes from deterministic synthetic providers.
-- Services remain independently deployable despite sharing one repository.
-- Use Flyway for database changes.
-- Use Docker Compose only for required local infrastructure.
-- Do not introduce Redis, Kafka, Kubernetes, or a gateway without a measured
-  requirement.
-
-## Data and security constraints
-
-- Never commit AWS keys, database secrets, tokens, or private endpoints.
-- Never use real cardholder, bank-account, customer, or merchant data.
-- SynTen Inc is fictional. Its profile, runbooks, policies, examples, names,
-  identifiers, and operational history must be synthetic and must not reproduce
-  a real company's confidential or proprietary material.
-- Keep SynTen Inc-specific profiles, source content, PDFs, manifests, corpus
-  validation assets, and retrieval-evaluation fixtures under `SynTen Inc/`.
-  The two legacy Markdown knowledge resources remain under the API for
-  compatibility; do not move or rewrite those versioned inputs casually.
-- Make each SynTen Inc PDF operationally credible and no more than 15 pages,
-  counting cover pages, document-control pages, appendices, and revision history.
-- Use opaque synthetic identifiers rather than realistic sensitive values.
-- Carry `tenant_id` through persistence and retrieval boundaries.
-- Avoid sensitive data in prompts, logs, traces, exceptions, and audit details.
-- Use least-privilege IAM roles when AWS integration is deployed.
-
-## Responsible-AI constraints
-
-- Reports must conform to an application-owned schema.
-- Every observation and inference must be traceable to evidence identifiers.
-- Store model identifier, prompt/template version, generation timestamp, and
-  retrieval context identifiers.
-- Preserve enough immutable document, extraction, and source-location metadata
-  to trace each PDF-derived chunk back to the exact synthetic source
-  version.
-- A schema-valid report can still be wrong; the UI must communicate this.
-- Missing or contradictory evidence must reduce confidence, not invite
-  fabrication.
-- No generated recommendation may execute automatically.
-- Operator approval and rejection are explicit, attributable events.
-
-## Scope-change rule
-
-When a task appears to require expanding these constraints, stop and document
-the proposed decision and tradeoff before implementation.
+- Synthetic data only. No payment processing or automated operational actions.
+- Reports are advisory. Human approval/rejection requires an explicit reason.
+- Keep evidence citations, missing/contradictory evidence and model/prompt provenance.
+- Carry tenant identity through persistence and retrieval.
+- Java 21, Spring Boot/Spring AI, Angular, PostgreSQL/pgvector and local Ollama.
+- Investigation, generator and evaluator export/build independently.
+- Keep PDF sources/manifests required for hash-validated catalog import, and older
+  PDFs needed for persisted citations. Do not alter frozen runtime asset bytes.
+- Do not track credentials, installed dependencies, generated builds/workspaces,
+  model weights, database state, local logs or comparison output.
+- Owner-authorized repository cleanup removes tests and historical development
+  records. Application behavior, scoring, prompts and persisted database history
+  remain unchanged.

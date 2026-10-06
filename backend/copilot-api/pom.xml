@@ -62,28 +62,6 @@
             <artifactId>pdfbox</artifactId>
             <version>3.0.8</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-postgresql</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit5</artifactId>
-            <version>1.5.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -114,22 +92,6 @@
                 <includes><include>pdfs/*.pdf</include></includes>
             </resource>
         </resources>
-        <testResources>
-            <testResource>
-                <directory>${project.basedir}/src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>${project.basedir}/../../contracts/mcp/get-recent-service-errors/v1</directory>
-                <targetPath>contracts/mcp/get-recent-service-errors/v1</targetPath>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>${project.basedir}/../../SynTen Inc/multi-incidents/v1</directory>
-                <targetPath>multi-incidents/v1</targetPath>
-                <includes><include>catalog.json</include></includes>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

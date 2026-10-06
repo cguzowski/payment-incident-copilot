@@ -1,0 +1,2521 @@
+{
+  "application": "investigation",
+  "version": "independent/v1",
+  "files": [
+    {
+      "source": ".gitattributes",
+      "target": ".gitattributes",
+      "sha256": "34ab5935c5d181ef7c4a06db0cf5f079df4e0a5fa7cdb4f080867cec34e46631"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/alert-queue/alert-queue.component.scss",
+      "target": "frontend/operator-console/src/app/features/alert-queue/alert-queue.component.scss",
+      "sha256": "8935e513678baf2b901a6351db84f2ad84efd9f7eb200500fa9c43597eac2291"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/alert-queue/alert-queue.component.ts",
+      "target": "frontend/operator-console/src/app/features/alert-queue/alert-queue.component.ts",
+      "sha256": "c5af575c8044d7c76af4d09f64395bb54d4706535e5d422c6c7203dbe8b16e69"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/alert-queue/alert-queue.models.ts",
+      "target": "frontend/operator-console/src/app/features/alert-queue/alert-queue.models.ts",
+      "sha256": "e362397aa28c8f9c42be436a909dd875660d07dc16c83158935279d1926a5484"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/incident-detail/incident-detail-api.service.ts",
+      "target": "frontend/operator-console/src/app/features/incident-detail/incident-detail-api.service.ts",
+      "sha256": "f353e44eef3d9a18f7ac577c04d2ae360e4b48e46707f45e5144e9a8f24fd814"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/incident-detail/incident-detail.component.html",
+      "target": "frontend/operator-console/src/app/features/incident-detail/incident-detail.component.html",
+      "sha256": "a230a2ade7242a1de2eeaf970e47ed664a66fbbebe8467c59984862679adb0f3"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/incident-detail/incident-detail.component.scss",
+      "target": "frontend/operator-console/src/app/features/incident-detail/incident-detail.component.scss",
+      "sha256": "838da7088c8bb537af44f3b952a8641630bb9f3f1e2c75fc85ec942a40f34c20"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/incident-detail/incident-detail.component.ts",
+      "target": "frontend/operator-console/src/app/features/incident-detail/incident-detail.component.ts",
+      "sha256": "b991d18f23eadb0f27e6c970210b3564b4d5ed654a21fb4e2fe42b187b5bc009"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/incident-detail/incident-detail.models.ts",
+      "target": "frontend/operator-console/src/app/features/incident-detail/incident-detail.models.ts",
+      "sha256": "0468b5760e765b2a6d5bc15919d7cfc1fb04ae9231fc4d1d8cf7293ccc30c4e0"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-api.service.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-api.service.ts",
+      "sha256": "79e2166c4a8792543be6eea3df3ab52916fe468bdb542fa766ed431986971fca"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-panel.component.html",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-panel.component.html",
+      "sha256": "528715be39c75628adeb3db9c6c7aad91411e236992a4e40c16d6a58604301e5"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-panel.component.scss",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-panel.component.scss",
+      "sha256": "4dcfd902f46b586e0842b2c27a0dca823c6178608bfedaab388a4a98e316bb0a"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/alert-queue/alert-queue.component.html",
+      "target": "frontend/operator-console/src/app/features/alert-queue/alert-queue.component.html",
+      "sha256": "56a17327878f46544b41ed948ee8890b9166dd2c0381b48eb6f2080ce562715d"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/alert-queue/alert-queue-api.service.ts",
+      "target": "frontend/operator-console/src/app/features/alert-queue/alert-queue-api.service.ts",
+      "sha256": "b3fe68d031e261a2a572e681e1befbe7c1218ffdc7560a5ddb3a04086df4c940"
+    },
+    {
+      "source": "frontend/operator-console/src/app/core/models/incident.ts",
+      "target": "frontend/operator-console/src/app/core/models/incident.ts",
+      "sha256": "2208c0214af7cabaec2371f5b41b07b072ff9c814aa5ad3d1b30cc3e2d9829b2"
+    },
+    {
+      "source": "frontend/operator-console/public/favicon.ico",
+      "target": "frontend/operator-console/public/favicon.ico",
+      "sha256": "f9102be80297c0529207607be5277b4f90bca89d65988fa1771b91c7894e815f"
+    },
+    {
+      "source": "frontend/operator-console/src/app/app.config.ts",
+      "target": "frontend/operator-console/src/app/app.config.ts",
+      "sha256": "8089f802edb9546be9f019e39481c69bdb9b335f797f54178b06ee213ae3fbe0"
+    },
+    {
+      "source": "frontend/operator-console/src/app/app.html",
+      "target": "frontend/operator-console/src/app/app.html",
+      "sha256": "549be68d7a31fa50f829bc0a9e9fe8e60a4e06ab1f1ff40808d90aad57b5033f"
+    },
+    {
+      "source": "frontend/operator-console/src/app/app.routes.ts",
+      "target": "frontend/operator-console/src/app/app.routes.ts",
+      "sha256": "c389d0d45add5827656a1a4928ea4ccae484ce8912d898ec67870776072f18e8"
+    },
+    {
+      "source": "frontend/operator-console/src/app/app.scss",
+      "target": "frontend/operator-console/src/app/app.scss",
+      "sha256": "c50414b2a4ab042821845ebfc99ce0e15e8905a2cb1a031e5325dad5beaf98e1"
+    },
+    {
+      "source": "frontend/operator-console/src/app/app.ts",
+      "target": "frontend/operator-console/src/app/app.ts",
+      "sha256": "3226f0bde8a3a4c898bccce0edd658924baef375e50a002e8f27963c2f4ce7a9"
+    },
+    {
+      "source": "frontend/operator-console/src/app/core/api/investigations/investigation-api.service.ts",
+      "target": "frontend/operator-console/src/app/core/api/investigations/investigation-api.service.ts",
+      "sha256": "e8a33eea245e2ff9796c5a3c5a42b5781a6ac84b47fae7d311caf59dbdc96a48"
+    },
+    {
+      "source": "frontend/operator-console/src/app/core/api/investigations/investigation.models.ts",
+      "target": "frontend/operator-console/src/app/core/api/investigations/investigation.models.ts",
+      "sha256": "6f233638e736a83f8cc45368e29526c4380bd9c9c90287a8a11842af1d8105cb"
+    },
+    {
+      "source": "frontend/operator-console/src/app/core/config/synthetic-tenant.ts",
+      "target": "frontend/operator-console/src/app/core/config/synthetic-tenant.ts",
+      "sha256": "dedffebf604c6633e0ebdd75d9d411a6661828486152712eba39fcd4b6089506"
+    },
+    {
+      "source": "frontend/operator-console/src/app/core/http/api-error.interceptor.ts",
+      "target": "frontend/operator-console/src/app/core/http/api-error.interceptor.ts",
+      "sha256": "9f5922a7275e75da71b55ae81b395f6de4fe899e6f2a0cbfe7ecf9fb0e271c54"
+    },
+    {
+      "source": "frontend/operator-console/src/app/core/http/synthetic-request-context.interceptor.ts",
+      "target": "frontend/operator-console/src/app/core/http/synthetic-request-context.interceptor.ts",
+      "sha256": "6f680ddfc5a76c72aa35f125ffbd26ab46d1ac70f0a66f4ae626515a816d4131"
+    },
+    {
+      "source": "frontend/operator-console/proxy.conf.json",
+      "target": "frontend/operator-console/proxy.conf.json",
+      "sha256": "2295c23feb8f9dbba4350bb2ee358a63df00b3ae59716fab61209fa151eca5ea"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-panel.component.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge-panel.component.ts",
+      "sha256": "02dec73693420eafc0a74f5ac2aa82fa2828f12502b0ac1bfee9a3748ddad4c1"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-api.service.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-api.service.ts",
+      "sha256": "7c98254566fa7ecc78e0b4116cc68bb7756cabbfa8bb23f1658904cddeb91dec"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-panel.component.scss",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-panel.component.scss",
+      "sha256": "f40e4ce20e343720880e852399971c437a22a7ac9c52916fc1ee0665db93af7a"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-panel.component.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-panel.component.ts",
+      "sha256": "3ddf11172ac39153157d8cb7fd4a68e1d878772ffa34cd3154ac2cc67c9eb814"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence.models.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence.models.ts",
+      "sha256": "0816d29b3f6f979973555c3ceca2584c859326a7da0de04ef862cbafae1ad004"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-api.service.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-api.service.ts",
+      "sha256": "3645fd6d28f4df2f12ce6a2a6629efd806eb2074d71c3830bc87d719e63bc5dc"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-panel.component.html",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-panel.component.html",
+      "sha256": "43a07f5113381f86962e36acbeaeb7040f068a47769ce2d7766a1f045e5e4dba"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-panel.component.scss",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-panel.component.scss",
+      "sha256": "ce3210b43181438cec831a6176eb710f40e5847960af3dc1d9beeef3fc78271d"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-panel.component.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report-panel.component.ts",
+      "sha256": "8de956b92935b483bfa0e90407ce6a3731b0654298f5aaa439e591d6146df7e2"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report.models.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/report-panel/report.models.ts",
+      "sha256": "3d19f68fdc7eb0f684f24e0fed8992194ec1805c21f3436d25629e6dd4c13222"
+    },
+    {
+      "source": "frontend/operator-console/src/app/shared/styles/_incident-presentation.scss",
+      "target": "frontend/operator-console/src/app/shared/styles/_incident-presentation.scss",
+      "sha256": "ad97fc3afe2ba784222b37d9856b7b602b940bd9036f59adaa325cf7110c9468"
+    },
+    {
+      "source": "frontend/operator-console/src/index.html",
+      "target": "frontend/operator-console/src/index.html",
+      "sha256": "86d9b0ee44a0bf8b3887a15b7f3d0511fd352f73b6b3eb37c5ec4da67dc39053"
+    },
+    {
+      "source": "frontend/operator-console/src/main.ts",
+      "target": "frontend/operator-console/src/main.ts",
+      "sha256": "ecc610fb7d56c95a01a8aa6c274a63210d45b2944dd6b9a88b2c8f70b6351037"
+    },
+    {
+      "source": "frontend/operator-console/src/styles.scss",
+      "target": "frontend/operator-console/src/styles.scss",
+      "sha256": "ab90a915e4ad85235739d27e77842ca08a8902b4c25fc55e2afe1c6dff6b974e"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-panel.component.html",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-panel.component.html",
+      "sha256": "3b9d235bec896b0103a4e15bc4a61a6d742eda6bc6944baaa0e9260dbd177852"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge.models.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/approved-knowledge-panel/approved-knowledge.models.ts",
+      "sha256": "75b7011eba66027a19f2947349ce83761a7f44324a9783ec8451ab51b4b9754c"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-api.service.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/observed-evidence-panel/observed-evidence-api.service.ts",
+      "sha256": "5f16184e3221a696317e7fec320fa8829350514c8d58520b49ba78f705038485"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/investigation-workspace.component.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/investigation-workspace.component.ts",
+      "sha256": "051528fe99c8d5adb3a11941ae0a949ac673ab71e078fbd66596d531b24c4f40"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-panel.component.html",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-panel.component.html",
+      "sha256": "467922406ff77bcca59b8e172731244f756cf37f4995dd8b4547ffb154fb3e9c"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-panel.component.scss",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-panel.component.scss",
+      "sha256": "42173e77566ebb0d90e0e07a75c40dda0c9d5cdb0c0727f3b60a0f640796d8fd"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-panel.component.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline-panel.component.ts",
+      "sha256": "18441de97786ae609b2f68ed10d2c5b11ada8d4b5beb69a012e6b6d5b3c6b5dd"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline.models.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/audit-timeline-panel/audit-timeline.models.ts",
+      "sha256": "14cbfb2735779bd989dfac7fc82924e53ac5fdc4dcdf3b706b82a6add44260e3"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-api.service.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-api.service.ts",
+      "sha256": "e69b50249f994a9c9ff731a8416c512be4538bb6d094842d59e23c5ddb2d53c3"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-panel.component.html",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-panel.component.html",
+      "sha256": "30025c263ef951b61f89846983fbd348763c98803e1a7308f544687380ce2842"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-panel.component.scss",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-panel.component.scss",
+      "sha256": "a340e3654b1334b32c2873f4cf6fd583a7e653b99880bf854c2489b27ecbce56"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-panel.component.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision-panel.component.ts",
+      "sha256": "0c6d69cc02185c28bbd6d549dc32e2744cedf78a12ba843a6f79707ae8a6d5da"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision.models.ts",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/decision-panel/decision.models.ts",
+      "sha256": "02640273a741e968d61e38a7c18f2122b3374c6eed3ccc8f89a1901a7fc70649"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/investigation-workspace.component.html",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/investigation-workspace.component.html",
+      "sha256": "d057ad7c180593d2a20f21e2a9520afb04f79a717260817d07338d2e553821c7"
+    },
+    {
+      "source": "frontend/operator-console/src/app/features/investigation-workspace/investigation-workspace.component.scss",
+      "target": "frontend/operator-console/src/app/features/investigation-workspace/investigation-workspace.component.scss",
+      "sha256": "97b35582636a9df4b49b4f8cf43377de127c4351aba7416d10518746d24f2c10"
+    },
+    {
+      "source": "frontend/operator-console/tsconfig.app.json",
+      "target": "frontend/operator-console/tsconfig.app.json",
+      "sha256": "d89269f457ae56f3c9808c3c1980a78053284e1968513070a8da8614d56fd967"
+    },
+    {
+      "source": "frontend/operator-console/package.json",
+      "target": "frontend/operator-console/package.json",
+      "sha256": "903eb43dba160644a9b9a952ca34fac1072edee30e41e9add56d58214269bdf2"
+    },
+    {
+      "source": "frontend/operator-console/angular.json",
+      "target": "frontend/operator-console/angular.json",
+      "sha256": "e92ca058a8b1c22c40d4b3dcd49d14ef9c3f9c31fa36546bf8b28e9f2582506f"
+    },
+    {
+      "source": "frontend/operator-console/package-lock.json",
+      "target": "frontend/operator-console/package-lock.json",
+      "sha256": "e963a3101c9b9cc251e3b5c0b7b1bdce47daa4ebde1bb6a166e94a1d6d816c5c"
+    },
+    {
+      "source": "contracts/mcp/get-recent-service-errors/v1/input.schema.json",
+      "target": "contracts/mcp/get-recent-service-errors/v1/input.schema.json",
+      "sha256": "591da3b9e1e60dfb5c12afc3db70c9ed857eb352e4bba2757abe5368f238a2f9"
+    },
+    {
+      "source": "contracts/mcp/get-recent-service-errors/v1/metadata.json",
+      "target": "contracts/mcp/get-recent-service-errors/v1/metadata.json",
+      "sha256": "e2d0126c073fb430bd137ca9e2fba5e7d7032f67420435eec66bbd6ad90d7914"
+    },
+    {
+      "source": "contracts/mcp/get-recent-service-errors/v1/output.schema.json",
+      "target": "contracts/mcp/get-recent-service-errors/v1/output.schema.json",
+      "sha256": "e0a0bbea1a191bae699f4c762ebe95fd324255f24a7a84092cc3a07487f72e82"
+    },
+    {
+      "source": "frontend/operator-console/.editorconfig",
+      "target": "frontend/operator-console/.editorconfig",
+      "sha256": "d62fd282eadb5b3ff888a23ba5968e490cc0a77dded2fbc4f704b7e6e247f4db"
+    },
+    {
+      "source": "frontend/operator-console/.gitignore",
+      "target": "frontend/operator-console/.gitignore",
+      "sha256": "6faa24d286aa308f683225069e0cbabf9146bcb584e5ea06c812a5f7478b2abd"
+    },
+    {
+      "source": "frontend/operator-console/tsconfig.json",
+      "target": "frontend/operator-console/tsconfig.json",
+      "sha256": "1269bd6119d3a64c6119c469b357685660099b67ec2fe3045a72d2da77671576"
+    },
+    {
+      "source": "mvnw",
+      "target": "mvnw",
+      "sha256": "cae96cef89ebea3531221f4ae17c23cf8edf67d00eae8306d4186ae1bbed4d02"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-111-incomplete-evidence-and-conflicting-final-records.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-111-incomplete-evidence-and-conflicting-final-records.pdf",
+      "sha256": "b929f2fba33052f44a86cda52eadbfb051e92a41588353175b5ec0d786dd9730"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/pl-101-evidence-sufficiency-and-conflicting-source-policy.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/pl-101-evidence-sufficiency-and-conflicting-source-policy.md",
+      "sha256": "672efc200c3349538e4ee3dcfef9605e6a6a4fe5c56ba26a53bd29e6d0074b80"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/pl-102-idempotency-retry-and-amount-safety-policy.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/pl-102-idempotency-retry-and-amount-safety-policy.md",
+      "sha256": "132c3845c47c640ff84ec8c2f3a3fe11e8510d4a3476af69a14c3da2ede71ef7"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/pl-103-time-freshness-and-comparable-cutoff-policy.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/pl-103-time-freshness-and-comparable-cutoff-policy.md",
+      "sha256": "c51c39f37de2d23287bcdd4d10ff8ca988de461683ab07082c0389b8940ef035"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/pl-104-tenant-isolation-and-safe-operational-records.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/pl-104-tenant-isolation-and-safe-operational-records.md",
+      "sha256": "461190245b49dcef28f3b9eab5b0e7d7f8a6c0706a45a0cb6e2eae7c898160e9"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/pl-105-human-authority-escalation-and-controlled-recovery.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/pl-105-human-authority-escalation-and-controlled-recovery.md",
+      "sha256": "a85570ccd4a3cf239a8796886e689f04323a16c8c70fcc075bca207e68edf84a"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-101-authorization-rejection-establish-the-source.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-101-authorization-rejection-establish-the-source.md",
+      "sha256": "b1bd33cbd68c00eae6fca2c143587db92d12543704859bc8d4c6a1c0e7149465"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-102-uncertain-authorization-outcomes.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-102-uncertain-authorization-outcomes.md",
+      "sha256": "0e41bf3169296915da2f4cc9499c7e7549e2569516bbd64fc070370480b684db"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-103-suspected-duplicates-and-replayed-events.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-103-suspected-duplicates-and-replayed-events.md",
+      "sha256": "662e77eb576cf9edab20ba8add5bd92b7dcaa5762c2ea0203efa2ca3bcc80831"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-104-capture-acknowledgement-and-amount-checks.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-104-capture-acknowledgement-and-amount-checks.md",
+      "sha256": "3dd9fb8954db33c69b585b80f3d20eb99aa17d181c24bdc65e6cadaaeebe8468"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-105-authorization-holds-release-and-reversal.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-105-authorization-holds-release-and-reversal.md",
+      "sha256": "1f07d148d1aef3fa6f0ee05d4e7c1bdab1af7590f5213e0f6ce1615c23f3506e"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-106-refund-progress-and-partial-amount-exposure.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-106-refund-progress-and-partial-amount-exposure.md",
+      "sha256": "db79f4eb5144babddbd547dbf853e5f54326b6b8f2268d8b2f4adf6b8178057e"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-107-settlement-checkpoints-and-receipt-gaps.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-107-settlement-checkpoints-and-receipt-gaps.md",
+      "sha256": "71ec1bec04772128aa2ed4c0d74036c87ae38ccd87540e433b025211b1fc2c65"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-108-webhook-delivery-and-recipient-acknowledgement.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-108-webhook-delivery-and-recipient-acknowledgement.md",
+      "sha256": "4eb03ee161419582912adfa0f3b012d180b987c26a5758cd1057c3cb4adacc8c"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-109-reconciliation-without-invented-corrections.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-109-reconciliation-without-invented-corrections.md",
+      "sha256": "318d14114f1f1b6a044625ae6ca35395a5c409d212a64b5ae5e767706365e048"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-110-dependency-configuration-and-event-order-investigation.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-110-dependency-configuration-and-event-order-investigation.pdf",
+      "sha256": "87ad33847b440f3779aff336ad7c8e3940735974c9afd0ff6dc4f393a533a0cf"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-110-dependency-configuration-and-event-order-investigation.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-110-dependency-configuration-and-event-order-investigation.md",
+      "sha256": "855999ea43b485ccdae883cb75ef0c0ff6395c7a49234b59f8299e9e121c3d57"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-109-reconciliation-without-invented-corrections.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-109-reconciliation-without-invented-corrections.pdf",
+      "sha256": "5076dd163bcb2281f206759168fa040f4ed300780cfa1ccefcbdb2a15633c9ee"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-107-settlement-checkpoints-and-receipt-gaps.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-107-settlement-checkpoints-and-receipt-gaps.pdf",
+      "sha256": "6c646631d1cca2d4e2f26336c417e159ee9175445f4a05767bedece4bc75a39b"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/webhook-delivery-runbook.md",
+      "target": "SynTen Inc/multi-incidents/v1/webhook-delivery-runbook.md",
+      "sha256": "998d928748d58412d3f2b82652f6eb1b7144412a7ea3df17c87f8a2716ff98f3"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/freeze-manifest.json",
+      "target": "SynTen Inc/payment-knowledge/v1/freeze-manifest.json",
+      "sha256": "a1fe13333de61f51a9406827a577f880ca7d88b1bcd2e0a4def438f6b134b421"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/input-provenance.json",
+      "target": "SynTen Inc/payment-knowledge/v1/input-provenance.json",
+      "sha256": "ab981e4480e456d5d4b1259b02cd8d93427710cb20253695db37ee845ee6b244"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/inventory.json",
+      "target": "SynTen Inc/payment-knowledge/v1/inventory.json",
+      "sha256": "161e282d44802b46c515f641ecb0230301f05b81c95eab69f2533b1b9538398f"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/pl-101-evidence-sufficiency-and-conflicting-source-policy.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/pl-101-evidence-sufficiency-and-conflicting-source-policy.pdf",
+      "sha256": "423ae484b19b443a67ff5664a52b74128da8a77ecac26430636083db898e4107"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/pl-102-idempotency-retry-and-amount-safety-policy.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/pl-102-idempotency-retry-and-amount-safety-policy.pdf",
+      "sha256": "1b3ffa13088a6e3c4cdf943eaf5791b8bdf26e0ef1d842de22048057c1c2731f"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/pl-103-time-freshness-and-comparable-cutoff-policy.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/pl-103-time-freshness-and-comparable-cutoff-policy.pdf",
+      "sha256": "5038ae29dacc09b81c5e524b9fbe873faff4bdadc30be847221f7679ab6d324a"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/pl-104-tenant-isolation-and-safe-operational-records.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/pl-104-tenant-isolation-and-safe-operational-records.pdf",
+      "sha256": "01644a5d554d5bb3b20c6c858a9fb8db073fe1b9d3c980b5c0bdf7bd22c7a14b"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/pl-105-human-authority-escalation-and-controlled-recovery.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/pl-105-human-authority-escalation-and-controlled-recovery.pdf",
+      "sha256": "06c932f12bef13ea57a7ff80594ecc632248ec184ec3ba563883558a0c09e137"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-101-authorization-rejection-establish-the-source.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-101-authorization-rejection-establish-the-source.pdf",
+      "sha256": "f4cc3d2f22bcf130dd399bf8ec08763428ddc72bc63d9438d69eae5736f46359"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-102-uncertain-authorization-outcomes.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-102-uncertain-authorization-outcomes.pdf",
+      "sha256": "56b769b7ced9ba6123e2876222980e069643384341ff0d6be7903f92c17b5bc3"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-103-suspected-duplicates-and-replayed-events.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-103-suspected-duplicates-and-replayed-events.pdf",
+      "sha256": "199c2df2a578328767fa4c4fd300b7c5a39b2a6e5ffd3fdb5181f98ab3b052e5"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-104-capture-acknowledgement-and-amount-checks.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-104-capture-acknowledgement-and-amount-checks.pdf",
+      "sha256": "1181169c1d05dbd705acb36c86f002bb51ab13e81d96e191f8230166670c34ed"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-105-authorization-holds-release-and-reversal.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-105-authorization-holds-release-and-reversal.pdf",
+      "sha256": "477f4bf4fb46e9cf9866d53c0540edc5142e422bcf2b8e4d5c52aa92edd822ba"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-106-refund-progress-and-partial-amount-exposure.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-106-refund-progress-and-partial-amount-exposure.pdf",
+      "sha256": "ff3eda83018d7f1c46bce85395c50730441d95a18370166aad2d856a80337ca3"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/pdfs/rb-108-webhook-delivery-and-recipient-acknowledgement.pdf",
+      "target": "SynTen Inc/payment-knowledge/v1/pdfs/rb-108-webhook-delivery-and-recipient-acknowledgement.pdf",
+      "sha256": "12d1ac8abcb010be71d728d53a4cd1058eb758e30fb7431f6b171fc7790db63b"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/webhook-delivery-policy.md",
+      "target": "SynTen Inc/multi-incidents/v1/webhook-delivery-policy.md",
+      "sha256": "cf73b768a48581e8ec8a8e505865b9216a71e53c0cbec5d4300ecf2e3e2e3db5"
+    },
+    {
+      "source": "SynTen Inc/payment-knowledge/v1/sources/rb-111-incomplete-evidence-and-conflicting-final-records.md",
+      "target": "SynTen Inc/payment-knowledge/v1/sources/rb-111-incomplete-evidence-and-conflicting-final-records.md",
+      "sha256": "8555f94896fe79ec07c6b02907f6d7be4eb127f6e45d37e303fe006333958508"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-011-network-dns-and-external-routing-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-011-network-dns-and-external-routing-v1.0.0.pdf",
+      "sha256": "5a38b69bcddac70e8a8af62f4c554eb92607bb882b248682ed1cf2af9cf5372c"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-012-gateway-credential-rejection-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-012-gateway-credential-rejection-v1.0.0.pdf",
+      "sha256": "dbfb9addc37eff245553a7e93b29161a1d6135d8bdfc9255c349ca60262f8e96"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-013-cache-and-state-lookup-pressure-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-013-cache-and-state-lookup-pressure-v1.0.0.pdf",
+      "sha256": "42f75b6ca7e7b464f7e405043e7d900da7e69539297723ed8d156a050aa16d10"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-014-tls-certificate-and-status-validation-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-014-tls-certificate-and-status-validation-v1.0.0.pdf",
+      "sha256": "cc4d1a99c28a5245898cbb156f64bd75c469a458fd7b800397feb973d5d83c9d"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-015-time-signature-and-entropy-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-015-time-signature-and-entropy-v1.0.0.pdf",
+      "sha256": "3b09861189f6c819b04dc03a1aeea955c8c943e38ad4471e05429b707e23104f"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-016-hsm-signing-and-quorum-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-016-hsm-signing-and-quorum-v1.0.0.pdf",
+      "sha256": "472699e919dcf063694d8d3bd8f261c666e3fe989d4e7ec05a406b1e759d187e"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-017-response-schema-and-mapping-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-017-response-schema-and-mapping-v1.0.0.pdf",
+      "sha256": "0602f10fb10f32aecbe86062d98f21e15c4d59d27a1c3a178fbe1ff6770b8801"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-018-regional-failover-and-config-consistency-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-018-regional-failover-and-config-consistency-v1.0.0.pdf",
+      "sha256": "6d49068d5d8b0b3ef59be72741209d7a94a6a7bbe5fe86a7ae3c42054974f279"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-019-bin-and-issuer-reference-routing-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-019-bin-and-issuer-reference-routing-v1.0.0.pdf",
+      "sha256": "9c979935674ed1c5e6a204fe89712bb13aa4dbb62dc5df3928c000fb46b31cae"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-020-token-vault-and-partial-observability-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-020-token-vault-and-partial-observability-v1.0.0.pdf",
+      "sha256": "0e0ccaad92bc6c9e4fe1c65db9b0f57a1f862ac9026236f8c22f395822bb0792"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-021-recurring-authorization-calendar-rules-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-021-recurring-authorization-calendar-rules-v1.0.0.pdf",
+      "sha256": "7c1dc1770781db7d1ecb61c6bb806fc2c76bdfbd192d5a217d096bb56b018ea8"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-022-legacy-gateway-recovery-v1.2.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-022-legacy-gateway-recovery-v1.2.0.pdf",
+      "sha256": "23c288297188a3154d21ec2cf91a8f595aaec418dc0864dbdd12bd8aea8331fd"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-010-fraud-rejection-surge-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-010-fraud-rejection-surge-v1.0.0.pdf",
+      "sha256": "3d3d4a76b0e1a6b81f12e34e61d4a827876f7416c632aaed8d935924e7e78041"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-009-merchant-profile-validation-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-009-merchant-profile-validation-v1.0.0.pdf",
+      "sha256": "dd7cfd25e3368b7fe87ac9623b7f1f773ff4efd11d7b246be200bff9664379ff"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-007-service-capacity-and-deadlines-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-007-service-capacity-and-deadlines-v1.0.0.pdf",
+      "sha256": "14a43efedfd2bf74b4c15fb7980d846f00796878615fd962427d3f1ac98714ec"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-001-payment-incident-response-governance-v2.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-001-payment-incident-response-governance-v2.0.0.pdf",
+      "sha256": "b1f9356983a217b540d0dd1e30c5013164a735444944c23bf7460ad65b30b5ca"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-002-evidence-integrity-and-provenance-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-002-evidence-integrity-and-provenance-v1.0.0.pdf",
+      "sha256": "3e5083d2bc5f8d0cb324cd8c782958444d15aca348a10ab3d2f80dac272898ba"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-003-human-review-and-action-authority-v2.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-003-human-review-and-action-authority-v2.0.0.pdf",
+      "sha256": "c7759fcb2435b2054daa4c4800193d00130dee8c0a939f320f3acc9a8eb8da29"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-004-knowledge-lifecycle-and-approval-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-004-knowledge-lifecycle-and-approval-v1.0.0.pdf",
+      "sha256": "8269b6abc07771ebd4743e658a019cac5e8730377427dcfc2c40ff7129816ca3"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-005-synthetic-data-handling-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-005-synthetic-data-handling-v1.0.0.pdf",
+      "sha256": "e4244e4007cadf8bd13a4ee4b423c0f16bf389260a5349bf96b7833cb86b84cf"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-006-third-party-escalation-and-communications-v2.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-006-third-party-escalation-and-communications-v2.0.0.pdf",
+      "sha256": "c289f8e5f5604b277df3ec1c792bfac1b1313f855946731f4c644f4fe1a721b1"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-007-legacy-emergency-routing-policy-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-007-legacy-emergency-routing-policy-v1.1.0.pdf",
+      "sha256": "a560aa490be83a0e862397aae3238d10b8442964484d0a35321292aa3c899e93"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-008-legacy-ai-incident-automation-policy-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/pl-008-legacy-ai-incident-automation-policy-v1.0.0.pdf",
+      "sha256": "75c3cf0b771110e5ea5b43265edd01321036c91ccb4d2a3c0c94e4cbb3b6f3ad"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-001-authorization-decline-incident-triage-v2.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-001-authorization-decline-incident-triage-v2.0.0.pdf",
+      "sha256": "4132a6f7a627247c40c5caf2d57b7ca8d200840ea5dbabb9676a8d272168d940"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-002-gateway-connectivity-and-timeouts-v2.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-002-gateway-connectivity-and-timeouts-v2.0.0.pdf",
+      "sha256": "7ea219d9ed06f921feeaea683d8ee4003047755eee0c1eefd240d82dcd484149"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-003-gateway-rate-limits-and-maintenance-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-003-gateway-rate-limits-and-maintenance-v1.0.0.pdf",
+      "sha256": "2bbf1ff6eb53df419af5053f1a9ec876d512667ded376ed412cf1e19631b6b48"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-004-authorization-state-database-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-004-authorization-state-database-v1.0.0.pdf",
+      "sha256": "63aff7f7580a0f5efc3b488206e48d50f43789bf219a0022ae1a9ad76437c079"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-005-issuer-response-anomalies-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-005-issuer-response-anomalies-v1.0.0.pdf",
+      "sha256": "5daa3b4dc03a3a54158cd4adbbf07b68fc069df297985942732a5d7db6ba1c89"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-006-retry-and-circuit-breaker-failures-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-006-retry-and-circuit-breaker-failures-v1.0.0.pdf",
+      "sha256": "12632c15e5ee957761b8509199a398e8b7c17bf8458864acfe70ea14fe2a7492"
+    },
+    {
+      "source": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-008-route-configuration-and-feature-flags-v1.0.0.pdf",
+      "target": "SynTen Inc/corpus/versions/synten-auth-knowledge-v1/pdfs/rb-008-route-configuration-and-feature-flags-v1.0.0.pdf",
+      "sha256": "c776a0f1ce0be714b4ffc6dd746182f500632624e79624811eea3a6e04917227"
+    },
+    {
+      "source": "frontend/operator-console/tsconfig.spec.json",
+      "target": "frontend/operator-console/tsconfig.spec.json",
+      "sha256": "6e4739692d45dec5f69346358b09fcf02f1a6c789a47bee654f773ea9af1f234"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/settlement-delay-runbook.md",
+      "target": "SynTen Inc/multi-incidents/v1/settlement-delay-runbook.md",
+      "sha256": "b7f616b2a6e59f0f1834789a09e925bb9a7ec1c0273e1f56cd8288e4c6c9dbde"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/refund-failure-runbook.md",
+      "target": "SynTen Inc/multi-incidents/v1/refund-failure-runbook.md",
+      "sha256": "0e0c9a44d9a0aa9e52e7b71020f87df7b30bb8cb93f8e80edaa5946d28528a92"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-009-merchant-profile-validation-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-009-merchant-profile-validation-v1.1.0.pdf",
+      "sha256": "cf4854a33b81b57369f8cf340b08a2a262c730d9e6865ecec48d41bd916ba3af"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-010-fraud-rejection-surge-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-010-fraud-rejection-surge-v1.1.0.pdf",
+      "sha256": "33f495fd57a80de19c73ef2582a8a6d1f9c3c107d5f2448ac0b073971b9791ac"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-011-network-dns-and-external-routing-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-011-network-dns-and-external-routing-v1.1.0.pdf",
+      "sha256": "39612d3fcc50352748de342eb76c2e2169448d5e7a3c3d637a143446644013f9"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-012-gateway-credential-rejection-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-012-gateway-credential-rejection-v1.1.0.pdf",
+      "sha256": "c26b7988fd74768065d977f55aaafe3b4513a6f270fd8d2f4ca1641766e59ab1"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-013-cache-and-state-lookup-pressure-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-013-cache-and-state-lookup-pressure-v1.1.0.pdf",
+      "sha256": "13ba7499dcb33e56e0d33f9d2246c88d673955b0720866200aa18dadfc22c0c4"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-014-tls-certificate-and-status-validation-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-014-tls-certificate-and-status-validation-v1.1.0.pdf",
+      "sha256": "6393693c4a013c21f3d7085305653a70865f20b6236eae16c920ac1f8f66add4"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-015-time-signature-and-entropy-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-015-time-signature-and-entropy-v1.1.0.pdf",
+      "sha256": "1e574518120d8b292d90e8ea49623b1766088f1101dfb81f8a8e0cf544be0f7a"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-016-hsm-signing-and-quorum-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-016-hsm-signing-and-quorum-v1.1.0.pdf",
+      "sha256": "8581231c2c9ad94948572db0ec1abe3818cd81a57cd506b8a6c62ed7a3071118"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-017-response-schema-and-mapping-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-017-response-schema-and-mapping-v1.1.0.pdf",
+      "sha256": "57334b77b8151741dae0420da0f2190b43bb8bc95e1be7d8f443954c3c30dbaf"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-018-regional-failover-and-config-consistency-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-018-regional-failover-and-config-consistency-v1.1.0.pdf",
+      "sha256": "461aaff8e004c656ab05024c48af0faf3a8e6c1d28170291810beb17bd43a094"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-019-bin-and-issuer-reference-routing-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-019-bin-and-issuer-reference-routing-v1.1.0.pdf",
+      "sha256": "cbd72c3618aabe614dd2216f4bb6125453e5bbf59d46129fa85840b75d5e11e0"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-020-token-vault-and-partial-observability-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-020-token-vault-and-partial-observability-v1.1.0.pdf",
+      "sha256": "45032de8d6fa43bbbf2c45a92329f0bc01b9b810bfbe4943f289a1ece6209b8b"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-021-recurring-authorization-calendar-rules-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-021-recurring-authorization-calendar-rules-v1.1.0.pdf",
+      "sha256": "d410a71b9617457c03caf15d5e513dc1c2bcd58549fec948a31f080d5b705b59"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-022-legacy-gateway-recovery-v1.3.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-022-legacy-gateway-recovery-v1.3.0.pdf",
+      "sha256": "37f6b2ecddee0d316b48ed2b7040974446e190a2ee3c1a44dd3e9361338db4bc"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-001-payment-incident-response-governance-v2.1.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-001-payment-incident-response-governance-v2.1.0.md",
+      "sha256": "f0d941e80f933429e69172c6ff5e03093a04712db0088736127116dc9ffcc1f2"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-008-route-configuration-and-feature-flags-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-008-route-configuration-and-feature-flags-v1.1.0.pdf",
+      "sha256": "0acd6ef800d74e1862b2e218cffe8dd49e8b61b66016955097373ff3aeb3d683"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-002-evidence-integrity-and-provenance-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-002-evidence-integrity-and-provenance-v1.1.0.md",
+      "sha256": "9191f1a6dfe52a5642211389f0d937cf91eb6bbd2b3f2a4cbd80f93ca76f3525"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-007-service-capacity-and-deadlines-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-007-service-capacity-and-deadlines-v1.1.0.pdf",
+      "sha256": "afca2408ca75bfca0dc9da9c8d831ead3402b83d2d89c6e9df3b7b35eb0f07bb"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-005-issuer-response-anomalies-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-005-issuer-response-anomalies-v1.1.0.pdf",
+      "sha256": "ce51be1ba9de39e9100775d07b197d1143b73c55ae96e4125eabfcac2550457b"
+    },
+    {
+      "source": "mvnw.cmd",
+      "target": "mvnw.cmd",
+      "sha256": "46eedb8419bd14fe70d5bb2916d7b6f51806e51b39d5b76a42610384ca929c1c"
+    },
+    {
+      "source": "pom.xml",
+      "target": "pom.xml",
+      "sha256": "951f6eb38ac3d8dce8f8c03301aa41ed5d41065c3f752186fd7abe2e3b427db8"
+    },
+    {
+      "source": "SynTen Inc/corpus/inventory.md",
+      "target": "SynTen Inc/corpus/inventory.md",
+      "sha256": "1aed81d9a04e890f022ebd05bfdf553427d0ec7b7cc129a084ed32010e2cd60e"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-001-payment-incident-response-governance-v2.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-001-payment-incident-response-governance-v2.1.0.pdf",
+      "sha256": "213e2936e2f78d03c3d25fecfead230916a23d922ab17e44697d645d31c489d2"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-002-evidence-integrity-and-provenance-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-002-evidence-integrity-and-provenance-v1.1.0.pdf",
+      "sha256": "101a38c9d2f3411ac8cb629314fa95059f5904ea0e68d69b674d0859f292ddaa"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-003-human-review-and-action-authority-v2.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-003-human-review-and-action-authority-v2.1.0.pdf",
+      "sha256": "c149c8ac47077016080cfa1d3ce717c2557e532617f8d55a1cc317b4bd332a20"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-004-knowledge-lifecycle-and-approval-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-004-knowledge-lifecycle-and-approval-v1.1.0.pdf",
+      "sha256": "01bb00aff84d0bdc10c020b27dc4555312208cec8636f93517b242fa3c1ed9ac"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-005-synthetic-data-handling-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-005-synthetic-data-handling-v1.1.0.pdf",
+      "sha256": "503e67ce453d32db4a963a9e3c1966d51c5d5cb4aa92a7e5a4927c49b0757207"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-006-third-party-escalation-and-communications-v2.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-006-third-party-escalation-and-communications-v2.1.0.pdf",
+      "sha256": "cf1bef8277f94e1f2122f3c9263e789ba1aeaf0195b9cbccc229f714c287eb6f"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-007-legacy-emergency-routing-policy-v1.2.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-007-legacy-emergency-routing-policy-v1.2.0.pdf",
+      "sha256": "84d3ef23e1afcc87196fc84aa1f2390ada39cc195b0b555ae749651a50dfa732"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/pl-008-legacy-ai-incident-automation-policy-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/pl-008-legacy-ai-incident-automation-policy-v1.1.0.pdf",
+      "sha256": "3d94f47d4ef5b2f161c628effab5fdfc40eb9cf180d57263e6408058e5c24c4d"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-001-authorization-decline-incident-triage-v2.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-001-authorization-decline-incident-triage-v2.1.0.pdf",
+      "sha256": "804ece64d3bbbcb98d99ee0537a7975f2b038ffae4e51e1226977a0fd2b3fa79"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-002-gateway-connectivity-and-timeouts-v2.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-002-gateway-connectivity-and-timeouts-v2.1.0.pdf",
+      "sha256": "ade6a9f80ecafd427a2bac4e151ce0fe2365384643044094697df707bfe9199c"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-003-gateway-rate-limits-and-maintenance-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-003-gateway-rate-limits-and-maintenance-v1.1.0.pdf",
+      "sha256": "9c94b016261d56457da9a9d3bcd114ca58a0459a5b69448a5ceca936896a9321"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-004-authorization-state-database-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-004-authorization-state-database-v1.1.0.pdf",
+      "sha256": "f9bea33851873b2c5d6a7854ffd86a9467bacbeccf858a3b5de33d32ce99a3ad"
+    },
+    {
+      "source": "SynTen Inc/corpus/pdfs/rb-006-retry-and-circuit-breaker-failures-v1.1.0.pdf",
+      "target": "SynTen Inc/corpus/pdfs/rb-006-retry-and-circuit-breaker-failures-v1.1.0.pdf",
+      "sha256": "1c9c433e8b17ea6ec22caac25a4b0cc23c0acd8c3ca2892a29930d47284297b6"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/settlement-delay-policy.md",
+      "target": "SynTen Inc/multi-incidents/v1/settlement-delay-policy.md",
+      "sha256": "8e6087c33b57a6058405970099952f4ab2d24eaaed3195cf94c6a6dd3a007386"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-003-human-review-and-action-authority-v2.1.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-003-human-review-and-action-authority-v2.1.0.md",
+      "sha256": "3d753b1a18a63f7b1432517cd00c3c6ee5a8b1c3a7c34f47b615b613a8a504f5"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-005-synthetic-data-handling-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-005-synthetic-data-handling-v1.1.0.md",
+      "sha256": "13db8c1296e724fdc4ca8e5d8045520ed3fad70e07442b0eb225c392ddb262de"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-017-response-schema-and-mapping-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-017-response-schema-and-mapping-v1.1.0.md",
+      "sha256": "a4fff83d48f67458ca787da68e129c14111535de504ddec52283c365b6b855cd"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-018-regional-failover-and-config-consistency-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-018-regional-failover-and-config-consistency-v1.1.0.md",
+      "sha256": "991736d7d9d8497098e0d4769a43826797408b6018834c476228ada71661c0d8"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-019-bin-and-issuer-reference-routing-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-019-bin-and-issuer-reference-routing-v1.1.0.md",
+      "sha256": "43feca2aba73ca03aa067f659e770d98b7cc61f8a8f1b9ed8c4864ed02034b99"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-020-token-vault-and-partial-observability-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-020-token-vault-and-partial-observability-v1.1.0.md",
+      "sha256": "776ac47cbdd2eaaa4a1e23a365e46c509cad8b4edf4e5d064022ca163de10a88"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-021-recurring-authorization-calendar-rules-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-021-recurring-authorization-calendar-rules-v1.1.0.md",
+      "sha256": "36a49abda540c9e4978a4e828e24764b5ddabd7ba093f5d92cdf4e02db9a3c46"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-022-legacy-gateway-recovery-v1.3.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-022-legacy-gateway-recovery-v1.3.0.md",
+      "sha256": "df9f5a9b5f7455760ec2f12e783669e8a539f8cb20d3a8a164b88612d3340c7a"
+    },
+    {
+      "source": "SynTen Inc/corpus/validation-manifest.json",
+      "target": "SynTen Inc/corpus/validation-manifest.json",
+      "sha256": "dc2ee7a0b188ecc9277ac6ff1efde085f4c5a6aa2997738f000239f24e41fffc"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/authorization-timeout-policy.md",
+      "target": "SynTen Inc/multi-incidents/v1/authorization-timeout-policy.md",
+      "sha256": "99957ac741613730f2c8e5f63c874ebe5a07cb724cf33062b452f1e3f160f0a7"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/authorization-timeout-runbook.md",
+      "target": "SynTen Inc/multi-incidents/v1/authorization-timeout-runbook.md",
+      "sha256": "ffa6d4b09e34e60936225f385425a73340f9c55e06db8db33d080a1e614957e7"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/capture-failure-policy.md",
+      "target": "SynTen Inc/multi-incidents/v1/capture-failure-policy.md",
+      "sha256": "946080f61a905f84a738c2b2b6f59b8ffb84456f18d5fc4c4deff7cf54f7ce6e"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/capture-failure-runbook.md",
+      "target": "SynTen Inc/multi-incidents/v1/capture-failure-runbook.md",
+      "sha256": "21ffa39baf6afd1c698d6c84373a09a23f6ac0f95cbbbc0ed48aa7539fe7360d"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/catalog.json",
+      "target": "SynTen Inc/multi-incidents/v1/catalog.json",
+      "sha256": "ea7efc4b3ff6456e322f5761fc3e8615865cdc7eedf98a201e2f327d28baacb3"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/reconciliation-mismatch-policy.md",
+      "target": "SynTen Inc/multi-incidents/v1/reconciliation-mismatch-policy.md",
+      "sha256": "1a94dc878728162103fb58123072bd7a0c199edace85d838ad5f2ec0bdbb32ba"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/reconciliation-mismatch-runbook.md",
+      "target": "SynTen Inc/multi-incidents/v1/reconciliation-mismatch-runbook.md",
+      "sha256": "b112ed187307b958c2bb9cf0583e3334aad92fc75e3bcc1fcc4274fe949bc669"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/refund-failure-policy.md",
+      "target": "SynTen Inc/multi-incidents/v1/refund-failure-policy.md",
+      "sha256": "4223f246e21a9f8609570569db84ff5179ae1966952e8392195e45799505bc1a"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-016-hsm-signing-and-quorum-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-016-hsm-signing-and-quorum-v1.1.0.md",
+      "sha256": "459cbfff75d9c8f1c6f3e3288ebf336faaa3a07466295ceacd4631673496f5ad"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-004-knowledge-lifecycle-and-approval-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-004-knowledge-lifecycle-and-approval-v1.1.0.md",
+      "sha256": "93612df41667317394224b1673a30223005864a204a847f4873a2d1cc50ac89f"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-015-time-signature-and-entropy-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-015-time-signature-and-entropy-v1.1.0.md",
+      "sha256": "0da4f09ba7e68d3a5ae3ff45e80f569d2188e866abf7b6c8b9d651bc730a09a3"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-013-cache-and-state-lookup-pressure-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-013-cache-and-state-lookup-pressure-v1.1.0.md",
+      "sha256": "0f2269f1fa11d16d32675c07a2b2f0b607a44342353401fd8ab183829ac32766"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-006-third-party-escalation-and-communications-v2.1.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-006-third-party-escalation-and-communications-v2.1.0.md",
+      "sha256": "7ce19837aa8224ac63c7752d9622021362896810297e9603b7335898eed7660d"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-007-legacy-emergency-routing-policy-v1.2.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-007-legacy-emergency-routing-policy-v1.2.0.md",
+      "sha256": "a5f42d66190a04d6a58a6495c2cbcd936025174b4386beda8404a5671c62cc81"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/pl-008-legacy-ai-incident-automation-policy-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/pl-008-legacy-ai-incident-automation-policy-v1.1.0.md",
+      "sha256": "fb8fa30815974f083d36b9154de7953e8e33e321496c970408ca391273fb04a0"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-001-authorization-decline-incident-triage-v2.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-001-authorization-decline-incident-triage-v2.1.0.md",
+      "sha256": "993e73dfe2f19d74692df1f93b55e12d2ed7c36dbb35f18e9c39022bfb36718c"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-002-gateway-connectivity-and-timeouts-v2.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-002-gateway-connectivity-and-timeouts-v2.1.0.md",
+      "sha256": "0c5cd9d8e553ed560c3fe8d6edea840bd11d4977ea201512cab33a163f276765"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-003-gateway-rate-limits-and-maintenance-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-003-gateway-rate-limits-and-maintenance-v1.1.0.md",
+      "sha256": "5044683c15632367bbc37a9776b696943e7e4d21b1623e7aecba703bd7dad954"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-004-authorization-state-database-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-004-authorization-state-database-v1.1.0.md",
+      "sha256": "2f4102ee34b564678b093760d1becebbd1f40f3612a541c521911c5fc36f54cd"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-005-issuer-response-anomalies-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-005-issuer-response-anomalies-v1.1.0.md",
+      "sha256": "6412a9b00d442a2d237e1cb679d96525241ea8ef1227383ccd19fa57d89acb19"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-006-retry-and-circuit-breaker-failures-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-006-retry-and-circuit-breaker-failures-v1.1.0.md",
+      "sha256": "b3d88c51bb9891e56eb8fbb64151ab792ceb415413e352b4b417a178322b1abd"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-007-service-capacity-and-deadlines-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-007-service-capacity-and-deadlines-v1.1.0.md",
+      "sha256": "1d38f13bcd81d30fa962ba84258ae312db48bceefc522612938f73c9baa8e34e"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-008-route-configuration-and-feature-flags-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-008-route-configuration-and-feature-flags-v1.1.0.md",
+      "sha256": "812d2ef9673cf1e27c0e06a35756a5e373b8516704daa64bd27e9bae963aab6e"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-009-merchant-profile-validation-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-009-merchant-profile-validation-v1.1.0.md",
+      "sha256": "c3e5a01a734edf6d0f35cd1e6a39d2c6ba55f7653d009910f87fea006e41aa45"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-010-fraud-rejection-surge-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-010-fraud-rejection-surge-v1.1.0.md",
+      "sha256": "a961de5396467b19e87146f3919b9569d709129472953a9e5129b06190e82e8b"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-011-network-dns-and-external-routing-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-011-network-dns-and-external-routing-v1.1.0.md",
+      "sha256": "f72b37e2cf1b2a078acb52c9ade5085002d4b1dfaa6187f0df13ba496daf0d17"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-012-gateway-credential-rejection-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-012-gateway-credential-rejection-v1.1.0.md",
+      "sha256": "0432a9e4d6768f1b29a943dba3803b02a28cb2173c66687e84be9981d7a7f8bc"
+    },
+    {
+      "source": "SynTen Inc/corpus/sources/rb-014-tls-certificate-and-status-validation-v1.1.0.md",
+      "target": "SynTen Inc/corpus/sources/rb-014-tls-certificate-and-status-validation-v1.1.0.md",
+      "sha256": "64a06dbdd496a6d013e8367849a8467fd33c80885a6dded39c4e54f79c996676"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationResponse.java",
+      "sha256": "88156dec0f2f809a1f6a2d0c3b08443505afd52b7fb74889e4bf2fab8a1d645c"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationService.java",
+      "sha256": "7c918ad643ea7351fa358091fcc633afaacbfca4b3f4866d626cf26ddf9e811f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationSnapshot.java",
+      "sha256": "8e38f9dc198bd6d7e370521ce5b5a36d3fbce54ea9eb8faa7ad45a63335a3f58"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationSnapshotProvider.java",
+      "sha256": "1a3b062590df9d8688b48bde8a893de6374ff5a9ac7a107bad4b74833614e7a4"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationStartResult.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationStartResult.java",
+      "sha256": "1fe32f860243a930d12f50f9db397c4e521a29fcb2126ec17a19f4ee67858805"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationView.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationView.java",
+      "sha256": "7be9a3a16653539214d45f7f6d3bfa9d2e62732e72872e153bf4989d6abccc19"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/PostgresIncidentRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/PostgresIncidentRepository.java",
+      "sha256": "4e94fb2fa7dd5b0e50e51611860166e2d0fa69fc971b2846b554ade0c1d6856b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/PostgresInvestigationRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/PostgresInvestigationRepository.java",
+      "sha256": "9293bac5305086c57f63892a7a83612d2d7b174d518222b9839eba3817b7caa7"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ReportInvestigationSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ReportInvestigationSnapshot.java",
+      "sha256": "866deb82cfc03166659b419417920905adc08e432cb852d11f81a76b17b92950"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ReportInvestigationSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ReportInvestigationSnapshotProvider.java",
+      "sha256": "5bb6fd068d59b2f4af22b163a200170c75e15cebc4ccc1090fbcbcda7f6ee4af"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ReportLifecyclePort.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ReportLifecyclePort.java",
+      "sha256": "d12a066530584f31c5e57631c3993f48bfa3be7cdcf9a036c4ea2e1af0e4e3fa"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ApprovedKnowledgeDocument.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ApprovedKnowledgeDocument.java",
+      "sha256": "69f51530b3dc089551bbfa02fb7df550eba5e60fd2a7b7dc71a1c870ad398056"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ApprovedKnowledgeSourceRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ApprovedKnowledgeSourceRepository.java",
+      "sha256": "e0148c4bed9bc76c4fb8bdfbcd3027c46ebdd78e888f415470d9300ee2eea7df"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ApproximateTokenEstimator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ApproximateTokenEstimator.java",
+      "sha256": "c2e103454d24a124a754bd0e2fb0c16efc2ebf5eb3a581715228fb1434aee526"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ClasspathApprovedKnowledgeSourceRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/ClasspathApprovedKnowledgeSourceRepository.java",
+      "sha256": "b45e677dee762b85b1749bf83760758633a3ffa701e368e35ddc7edb4ee34b49"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationRepository.java",
+      "sha256": "98aeb4667723ae3a062a616d5ec7b7818b94003f952cfd4c2d432838959099c9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/IndexedKnowledgeChunk.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/IndexedKnowledgeChunk.java",
+      "sha256": "0c703e32ee19db016959727d2d16ed2278d4dd6617709e0687c527ea835d6059"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationNotFoundException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationNotFoundException.java",
+      "sha256": "c8fcd9a32600bd9dccc15e550887cc92bb970d987280d7d1eeb1926f323c4032"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationController.java",
+      "sha256": "d588677097a889f5e6f9c62c5cd3e7890933b55c45b4b28c8d5630db487a69bb"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentRepository.java",
+      "sha256": "4a61ff2ccba077e72f6930998809b397b81acd0043bd6a6e3661a811139201de"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentSeverity.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentSeverity.java",
+      "sha256": "fca0856391eb2afb1b1933a5d9d7bfaf390b26039970bcce66416b74d216712f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentStatus.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentStatus.java",
+      "sha256": "97c98b72438732657e36ec58a3008a86bd59b9ad88baab40fce3f048eafe8442"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentTimelineSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentTimelineSnapshot.java",
+      "sha256": "504cc016fe0debb2261078d17e7ba98974f1308ac5ccf5f0b6a91964fb68164a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentTimelineSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentTimelineSnapshotProvider.java",
+      "sha256": "667c154566a09b5a18a21640165777ee11f36af5bffcbe718f5aadfd4a104839"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentType.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentType.java",
+      "sha256": "13c2113abb83b610c8b32e58fef454404283f41a29056cbf0105cd51f6dc090e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueController.java",
+      "sha256": "b939043d2de1bc3f5a6dca9c23d24b87ea45675df6fff6f9ec3ddac41662b36d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueEntry.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueEntry.java",
+      "sha256": "abe997fcff507312e5ac007b1733cf5f8917ae292f179872d3b6bef04b9b9c77"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueItem.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueItem.java",
+      "sha256": "05e6a3dea6c33a2dee1513f888c2ad1e1278f2631dac3755cfff138f62f899ea"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentWorkQueueService.java",
+      "sha256": "cade3acc01e5b46d6929c82792374ae73f4c044fa4a199d0506e302f9a6bbcd9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IngestAlertCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IngestAlertCommand.java",
+      "sha256": "009243795e9b9295cfae89acd9920026b04c0f2614152fc5155c2f43a2579a08"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvalidIncidentRequestException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvalidIncidentRequestException.java",
+      "sha256": "3b375978e44522473d25dcf3531561e10392345a332325ef3edc43395f9542ec"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvalidInvestigationRequestException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvalidInvestigationRequestException.java",
+      "sha256": "eb460568f0212ae21519bca9ee1b6854bf7be3d2c0e40e6e5a104b8b8e7465f7"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/Investigation.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/Investigation.java",
+      "sha256": "43d39e51cf1997118fd58c3105ec2b4f2112ea620b01adeac9dc340cbb08bb62"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationConflictException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationConflictException.java",
+      "sha256": "039411f5e83275e2f8364aee406c324a2c25508468e282b84dd7fe40692b97e3"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationIdentifierGenerator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/InvestigationIdentifierGenerator.java",
+      "sha256": "d437c6d33a716b1e47359ef69f8fab5679cb622e5c3ab40dc0c1f7ec08a694b5"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentQueueView.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentQueueView.java",
+      "sha256": "00dce39fb891991f0f8bd9629e4c0b23d4da6df675bb61958c3816b03437b090"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/IndexedKnowledgeDocument.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/IndexedKnowledgeDocument.java",
+      "sha256": "2002a3dbd67a013bdf99e778f8cfaf4a929e27d7bf9114f7094927a86bd9b5dc"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeApprovalStatus.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeApprovalStatus.java",
+      "sha256": "f236c4d86f171234fe7818a1cfd188a08e629836e263bd5ae5ed73a415bea957"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PaymentPdfSourceLoader.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PaymentPdfSourceLoader.java",
+      "sha256": "226090a1d912b8369b8121af68800907919d559e553e129b9c4a292843bfb474"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfBoxKnowledgeDocumentParser.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfBoxKnowledgeDocumentParser.java",
+      "sha256": "c7fb34aaedba755cc9a70bc3e4505678944781e00689ab0dcd52217226b39929"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfCatalogDocumentPlan.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfCatalogDocumentPlan.java",
+      "sha256": "5e8410461f260a56938bd8625742777021f66ac4edf27eccfb0c0776f25ce00a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfCatalogImportSummary.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfCatalogImportSummary.java",
+      "sha256": "252613e19c6a7470a776832ebfd23db4aef7874e4fde67f6abba23d999ae9f24"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifact.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifact.java",
+      "sha256": "97697569c83ac46878ee983e3ec22476bab227a826900bc7280cf02c829199b5"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactController.java",
+      "sha256": "d22ee8b0b5a8a7f524039ef4282b09d67385a2536361ef5fa2a6ccbf3250d8ab"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactExceptionHandler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactExceptionHandler.java",
+      "sha256": "546e34399e7c0945cbcf73b21b95d46d1e641d466dc9c0519d9c367ffcacb8ad"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactRepository.java",
+      "sha256": "dc713b0eb2a94e448c3cc85dbe673a6822d6c2477170c899023143469b4147a3"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeArtifactService.java",
+      "sha256": "89acd9aa1606f3b941674ddf8d2eff965af542e36fec4255b3acfd61663321c3"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeChunkDraft.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeChunkDraft.java",
+      "sha256": "f819efc4cfdb952b9110fdc69b9456c45a599e3e3e6d7f5008f6b97beee6d195"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeChunker.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeChunker.java",
+      "sha256": "3666b308185daf22458a9ae92700762deeac25eb389323c9387d75bb20c2be0f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeDocument.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgeDocument.java",
+      "sha256": "56833321cee6c8581fc5975a3c26714c5d35d64531fd7b351d867a16b376c3f5"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgePage.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfKnowledgePage.java",
+      "sha256": "ed0d773365df46ec79e7d9bc8e74c4b517796ff3aa165a48abcef5bc6574b519"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfTextBlock.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PdfTextBlock.java",
+      "sha256": "1093844f01cef22694bcaab5a7c37e54d4409076e785930c3ec1846832693070"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PostgresKnowledgeIndexRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PostgresKnowledgeIndexRepository.java",
+      "sha256": "73d863929aa85ad11ae6c1c57b6b9eb5c1a22aa6971e9abe40434adb57018914"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PackagedPdfKnowledgeArtifactRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PackagedPdfKnowledgeArtifactRepository.java",
+      "sha256": "60c48cb7da63326e678f4e4a1a0b9c6cd0cd04f7d590ed78018fa5ccbccce437"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeApplicationModeValidator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeApplicationModeValidator.java",
+      "sha256": "eef933cd46564ff8e694c6e4f7d7954f4b435363dead967c85237467f734baf1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/MarkdownKnowledgeDocumentParser.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/MarkdownKnowledgeDocumentParser.java",
+      "sha256": "98b1e96cf374c0fefb9806a3f59b6241c905716e87481d87ec311a51017b535a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeSourceHasher.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeSourceHasher.java",
+      "sha256": "4f963c197c446701cf84a1dc44a417ceb7e0c9d174ab5ac9feb6c3f00dc142ea"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeChunkDraft.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeChunkDraft.java",
+      "sha256": "773c68f1ff3f45987de26a8b1264d0e7e80ca228476346879066f58e79521815"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeConfiguration.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeConfiguration.java",
+      "sha256": "4f9993d65b7baa7f122944fe56b7e8ec381ababd6c010b2c472b38bb09a4bd15"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeDocumentType.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeDocumentType.java",
+      "sha256": "bade44fa993388bc4a5824387f2856d60e671c3253ed99a8295e40fd7d5abcdb"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbedding.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbedding.java",
+      "sha256": "7833552a0823a84fa4127c4fae9e4043eead48c04f900594c1294113bb15cd3d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingClient.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingClient.java",
+      "sha256": "3ad42e8b97a30fbea398983289958b49abf4e78e4fba854db8fba8b9538d81f1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingMalformedException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingMalformedException.java",
+      "sha256": "be4994cef2dd336439e49c79a96798b861b56f49346e6535d0fc9abf950be459"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingSmokeTestCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingSmokeTestCommand.java",
+      "sha256": "59cef31ac4e43267c60cfd636bcb94b449d8445316b8e45ba0a9347913ba3519"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingTimedOutException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingTimedOutException.java",
+      "sha256": "14c1042db163a70a6fdba094383b2929a2fe1ee10a05424a2c133922b7e064fd"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingUnavailableException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeEmbeddingUnavailableException.java",
+      "sha256": "be42c7e2af4f334b00d08b755dfa34ec03d94bb0edc2798787691ff3dad2678e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeImportSummary.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeImportSummary.java",
+      "sha256": "1233a1fbd4d842b17b5cf8542cdadfe86ca68d79cdb98fd9862f9125db1e2ad9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIndexPersistenceService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIndexPersistenceService.java",
+      "sha256": "3ae5fd501afae789b6dc4ca8857fedb80077d463d3770c131b0b40307e3db2a6"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIndexRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIndexRepository.java",
+      "sha256": "297880f945b7caacbaa650a278eee27a00ba21514f3a8ad7165bcfd7d8355d29"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIngestionCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIngestionCommand.java",
+      "sha256": "fe43fe0eb75a12aa72cd3587da1be9acc9c648c1dc9e92e0d807fd1f6ca87fe2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIngestionService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeIngestionService.java",
+      "sha256": "0117a67b8c2114e2bff0f0ad45890754c3f1e87dbc110cb4b71fc768e45a2a90"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeSourceFormat.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/KnowledgeSourceFormat.java",
+      "sha256": "cb7584f3cc2c5cc1c106ac5518510938e0c6849b9bd6a41e64b14379b117fef9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/MarkdownKnowledgeChunker.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/MarkdownKnowledgeChunker.java",
+      "sha256": "a1927138e4ae00210a9a5013c38cdc5cad5f178e597aaef868accbb21e9a91be"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PostgresSynTenPdfCatalogRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PostgresSynTenPdfCatalogRepository.java",
+      "sha256": "2756081013b8945b4e72bb0a483856adaf1294fb2911f8774d0363cce0f09ecf"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentNotFoundException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentNotFoundException.java",
+      "sha256": "5f997789a9daa61f1e43613736c2978aa41dc1c1d1a4d3993ae598fae057fbfa"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentDetailResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentDetailResponse.java",
+      "sha256": "401d24afc5972f92b02ca8ce4e68dc1d917b5c1650523eb1b1c7d0a2f245ee4a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionController.java",
+      "sha256": "dc107c748d3bf4171526742764302c3697275dfd3432c95c3e4b2427d0e14cc5"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionIdentifierGenerator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionIdentifierGenerator.java",
+      "sha256": "8934c4cd6ae32ffd6c73ef1c6c137870db3f7c344099a76a5b59814eadf46e1f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionPersistenceService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionPersistenceService.java",
+      "sha256": "6967a80463aba68f75104a0efbf6642cb5637da7a0559e1a732c87d1fc489492"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionRecordResult.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionRecordResult.java",
+      "sha256": "ed3b89880fdab8104f8889059e7dc4efd81d21a5767e59ea0f134ae473445d18"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionRepository.java",
+      "sha256": "27c6b0c5d104db467ee1103df874158c35a31b5b9d12c96c1a10ed494302b597"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionRequest.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionRequest.java",
+      "sha256": "166c2f078487e34975b3cd4a28b78a24e60cc049f03ce4e39b8c2625e1c4e5a0"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionResponse.java",
+      "sha256": "be35564224cdfc8f467e53baa7dde44a9c52506ef5d5bb8d25855ceba25ad850"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionService.java",
+      "sha256": "afbd7e0c2e8340ce0ae8c163a8d32e4dd8978651f27dcc4d261b5a68e0abead1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/InvalidHumanDecisionRequestException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/InvalidHumanDecisionRequestException.java",
+      "sha256": "2556d09d818c1bef5747647e6026744ff893ebf3d1be5f8aca22d5d34817ac48"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/PostgresHumanDecisionRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/PostgresHumanDecisionRepository.java",
+      "sha256": "57b9aa574e86885a917415d31043a3e93713b938b73ed41dc4b0517345c07267"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionAttempt.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionAttempt.java",
+      "sha256": "204855acae540a5083109d6b776582a8bcba07c407b46cf7202ae00d2337d7ee"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionController.java",
+      "sha256": "3baccd2c46daee7beb0935763d2edcc5687687d5f351dcb3aaec2cb046f87136"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionPersistenceService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionPersistenceService.java",
+      "sha256": "50cef31dd70114b3217e02dcc76d2a0a556173fd0e1ead825327584d25f61d39"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionRepository.java",
+      "sha256": "d71467420468f17d5983559636b506e5a955fafd37588a56eef415718f11ad8d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionResponse.java",
+      "sha256": "89491bdc33b4a2bbd1f977752c7bb733ff70a875e8c2d7b95face366aa6d8c54"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionConflictException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionConflictException.java",
+      "sha256": "77a03965ab00b5015324e63fa4e4e32dd9dbb9fd195cc6bdba0581b5a580a8f4"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionService.java",
+      "sha256": "3a89596dadc17c30d7d9043e93ee4fae92e85fe71549111a407b65412312750c"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionApiExceptionHandler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecisionApiExceptionHandler.java",
+      "sha256": "79a765d54b61b1dcaa85e57ebebb7ce711687ab2d8aa177710176b6c5a7bdb9e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionTimelineSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionTimelineSnapshotProvider.java",
+      "sha256": "81a247b385b9f99213b87f78ec0b1e5e649c59ec13e83061bcd9e18e1f56baf3"
+    },
+    {
+      "source": ".mvn/wrapper/maven-wrapper.properties",
+      "target": ".mvn/wrapper/maven-wrapper.properties",
+      "sha256": "488e1b3f2e641779d4636abf9390845f901e64607261bc3c0b0bfe4fe96e6706"
+    },
+    {
+      "source": ".node-version",
+      "target": ".node-version",
+      "sha256": "51849cee918b92b09b95121b54380f6124c0f578d8c2323221c0d75bbbadb08d"
+    },
+    {
+      "source": "backend/copilot-api/pom.xml",
+      "target": "backend/copilot-api/pom.xml",
+      "sha256": "2a74c6229e957c2c7cc261fbc4479cb71081a5941cfa7ee7ba832a05136f7e56"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditActorKind.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditActorKind.java",
+      "sha256": "368f1375e27511916f1a743a8ea24f340217875e0ac100731646e8af37c3be8a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineApiExceptionHandler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineApiExceptionHandler.java",
+      "sha256": "0181a92465590da55fbc0d87fa2225db9ebed6296cf1ceb5c35d8c376b5133ae"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineController.java",
+      "sha256": "71cce7973e3153bb22b559f5d722af92d93d8d0a35e92405f6d402271e7f31b3"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineEvent.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineEvent.java",
+      "sha256": "cc14b03a30a9d8eb80bbcc4f0b3d1cbbfef1fd05ca211be683f3dcd6ff84667f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineEventType.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineEventType.java",
+      "sha256": "ce0f1e09ca08863cdc354abb1bd2f514eeec1e4484b3e52ad102fa9722dd1369"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineNotFoundException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineNotFoundException.java",
+      "sha256": "f893b870e9d7225cf61eedcaf30d27487c8d32c2ac73fdd2ea121ef28f5f7e4b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/AuditTimelineService.java",
+      "sha256": "c64da4b08542ced6a2487173905d2a0fe2c7a667ad15e096352badab59453434"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/InvalidAuditTimelineRequestException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/audit/InvalidAuditTimelineRequestException.java",
+      "sha256": "ab4b545cfee9c99ca71066ec69fcf4afac3fc54615ac8158d3edb9a0af5a7cfa"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/CopilotApiApplication.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/CopilotApiApplication.java",
+      "sha256": "51e706f095964e2cccf08ef2180385c8f555c9c6412d39c5d59078e815afba85"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionInvestigationNotFoundException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionInvestigationNotFoundException.java",
+      "sha256": "2920dbb2f36e43019c1344bf8343aa9cda337068949b00aae2eca4070667fa42"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionOutcome.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionOutcome.java",
+      "sha256": "59bc7a233ebe913d4717ea0f0181936ed07c2477a68a194c6d99112fbd49da86"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionTimelineSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/DecisionTimelineSnapshot.java",
+      "sha256": "c7f36f136062fb899d52833e537fab647a550f440072eeb5afa0f992c325e1aa"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecision.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/decision/HumanDecision.java",
+      "sha256": "49751e796c08f2bbc5024225f444addf19821536eac3d5643b45fbcad7167727"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentDetailService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentDetailService.java",
+      "sha256": "9c0418df658bb23534748cb6f50cb6eeb755573e294d4ff8f3013c64ddf4c2f1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionStatus.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceCollectionStatus.java",
+      "sha256": "b83c5185f59b540f6e7ee7ef3dfadd934ce3a24d2614c237b4d584286f1aad39"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceIdentifierGenerator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceIdentifierGenerator.java",
+      "sha256": "d92f2bcc119a5512deefd4c737a21459ba9e7fe5cebb285476bd607299e13b2e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ServiceErrorObservation.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ServiceErrorObservation.java",
+      "sha256": "6fb2136b9f866c982c570ce41801530dff664025cacffdc8be08248d743111dd"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/SpringAiRecentServiceErrorsClient.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/SpringAiRecentServiceErrorsClient.java",
+      "sha256": "11b51c94632665280dbc1f316e5bd7f8aaccdb2d11e5769b78367a1372d6c634"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertController.java",
+      "sha256": "93259cc06773caf4991c661c6db5e5285965266b6af369260f856b73aa3f2bee"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertIngestionResult.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertIngestionResult.java",
+      "sha256": "47f4224380134e832077adb9185cc5c88e9b00b61712d2cb1110105f59d08f51"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertIngestionService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertIngestionService.java",
+      "sha256": "0c982fdc5cbf3f30425cfc40ca43aa7e4a712d0393085eca8098985f36fc256b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertRequest.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertRequest.java",
+      "sha256": "d356b3ce6ff1601f9c647ac7569f5a5af9233d2760e11db2e133894e9cbd552f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/AlertResponse.java",
+      "sha256": "ebb9831eac60e123935cbe0411c685544375ebb682fd14475cfe3191d9eb92f9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ApiExceptionHandler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/ApiExceptionHandler.java",
+      "sha256": "9709b0f46301665430393eef1921e81e91325cf59eb06fb710b9f1625c570940"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/DecisionInvestigationSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/DecisionInvestigationSnapshot.java",
+      "sha256": "1bfdbf165fb2b360758fbd9915636c832ad54e925340b6d9132a8d64b2994918"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/DecisionInvestigationSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/DecisionInvestigationSnapshotProvider.java",
+      "sha256": "10da7043be63b35fb80d469753d545f724a791847b50dc77a52a6c04ea2e6594"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/DecisionLifecyclePort.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/DecisionLifecyclePort.java",
+      "sha256": "d0a8d359426b1d714c64b0628a0de65f33f60713b00e895db8519e02226b80c1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/EvidenceCollectionContext.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/EvidenceCollectionContext.java",
+      "sha256": "984fca5010a23e55c7bdd577bfd218878b6ae0d6158e420c906706e31594b25e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/EvidenceCollectionContextProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/EvidenceCollectionContextProvider.java",
+      "sha256": "00c172b2e21f5f50d96bbb8d40dde3d79d24c33041a2b402760500b49d6ab4b5"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/Incident.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/Incident.java",
+      "sha256": "12c834f62775d63c9eaf236a9fbd6c947136352a85e49332b5428e8ae02bd15c"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentDetailController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/incident/IncidentDetailController.java",
+      "sha256": "030555753582c28fed0042f61c9d8cc7d3e7b6fb2f28c2fc0640cee84a5a5e06"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ServiceErrorEvidenceGateway.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ServiceErrorEvidenceGateway.java",
+      "sha256": "36a8fa204ec9c800354ad0286b733d82ee2c2daa5ab654736cfafa11ec34080b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceErrorCount.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceErrorCount.java",
+      "sha256": "b122f5f8f0dc31b725ba1bce8d180358aff281c35a24f13fa1cd0eed232385e8"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ServiceErrorEvidenceContent.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ServiceErrorEvidenceContent.java",
+      "sha256": "6a1de75c0cedc6f16ffa04d52020743827a6281362f283f6a2e9320193670ff2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ReportEvidenceSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ReportEvidenceSnapshot.java",
+      "sha256": "fe56dddc94d15d884eeade69c522bd35c45de78999f5d8ac40a4c18693637d13"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSnapshot.java",
+      "sha256": "bf3941aba09c2781fa561a60cdf40df13382d19bb1e6ec64a8f2b99b4eb0a675"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSnapshotProvider.java",
+      "sha256": "641de0d406e299114e59f56a4984dea7160692cf4bc193b3751d2d26a7f4db00"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceMalformedException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceMalformedException.java",
+      "sha256": "22c273d954d21b43df868ef8dd666a91052a3d72e486f39e76d822682b5f8699"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceResult.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceResult.java",
+      "sha256": "93d907c9e41b199f035cf3779b509fea3c31e7675219b14c167f4438fc633cb6"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceTimedOutException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceTimedOutException.java",
+      "sha256": "11ebca2330ef69f6663839edbeaa1c61181c3e03c109f62cf5eb988271718f6c"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceUnavailableException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceSourceUnavailableException.java",
+      "sha256": "915fc8c5986fe3937968bf57d64ce115536d1190ca1299254415f70027e53a01"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceTimelineSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceTimelineSnapshot.java",
+      "sha256": "4eef6be0fb1e3c838bee2687d43656d084ecd24e6d1b0dff7e42473fe1f05b80"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceTimelineSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/EvidenceTimelineSnapshotProvider.java",
+      "sha256": "98811fb504b4fab8f82c714ff9192e4b9c4acf495c8c4a8759b499b710a7732a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/InvalidEvidenceSourceResultException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/InvalidEvidenceSourceResultException.java",
+      "sha256": "78bbdff5a86b0162e8b26c9a17790b909f8df653adc325a8b122d7e6ace36eda"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/McpServiceErrorEvidenceGateway.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/McpServiceErrorEvidenceGateway.java",
+      "sha256": "ce6996bbba9d5ade71251717aa5832c7000695aaed20b6386203ac4cff4c433f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/OperationsMcpInfoContributor.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/OperationsMcpInfoContributor.java",
+      "sha256": "5794dd5e0513cbbe38ddcdcd9e7157174b0b09aa0bbc05e0c1f6584e73fb2c6a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/PostgresEvidenceCollectionRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/PostgresEvidenceCollectionRepository.java",
+      "sha256": "3d41e6d9cf9497317b25176ddf12f4b0f1a7df7129c5103cd9af705423356bf9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/RecentServiceErrorsClient.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/RecentServiceErrorsClient.java",
+      "sha256": "3f0132bcf39381b1d3bab4b1c4a87982f9b275cde17d30b05bbd0a6c7e6e1036"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/RecentServiceErrorsPayloadDecoder.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/RecentServiceErrorsPayloadDecoder.java",
+      "sha256": "5a13a7d22e6eb5d6e2e50439f8656929b3b51aa9f435d28d51f9c6a3d89c255d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ReportEvidenceObservation.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ReportEvidenceObservation.java",
+      "sha256": "decdaaaa72c21bcd6804127e658f9aa8e14d6ab8512ed7ee6be282c393baf620"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ReportEvidenceSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/evidence/ReportEvidenceSnapshotProvider.java",
+      "sha256": "7b39ef4fb2c2662c64ff17f9c7db7a293bdb3c3209823b754758f7080972cb9e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PostgresSynTenPdfEmbeddingPersistence.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PostgresSynTenPdfEmbeddingPersistence.java",
+      "sha256": "8adfa964a36e28dffa3be8803bd062ff5e99f12f339de0165491eac8cb42ebc1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PreparedSynTenPdfEmbedding.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/PreparedSynTenPdfEmbedding.java",
+      "sha256": "48cd185105f451bbfda440f935c1387c71635087b6315d536659b656201db8ed"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SpringAiOllamaKnowledgeEmbeddingClient.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SpringAiOllamaKnowledgeEmbeddingClient.java",
+      "sha256": "5527c76d802cdc29b1d441becbe969f60eb90ae09b356442327767ea062bf952"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationRepository.java",
+      "sha256": "5403108c85569608e8e16245dec22b32874fe38999440f303e7a3fc09458150c"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationResponse.java",
+      "sha256": "4162b7328306573e2dfc860bf7d3e3c8903437bb8a7aad01cad0aa069e47f435"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationService.java",
+      "sha256": "73420795c0f7efa8df8b0d8c5c8b031471156053c7555215e3f21d8abf63a5fd"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationSettings.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationSettings.java",
+      "sha256": "7cec495e7b78ff63f505e56e1d3f866a572770ca3b56060256b81af9465b3411"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationSmokeTestCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationSmokeTestCommand.java",
+      "sha256": "12654cf389d4e0998424f047a6c7ef1fca853a252fe342c41ef4113771c035d0"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationStatus.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationStatus.java",
+      "sha256": "a7bfabaca8b514b26921e8ff6e118df09ebaaea59e673b00b0bca5096164fb9a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGroundingValidator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGroundingValidator.java",
+      "sha256": "3dad1fdbc0b35f60a42164c34e43d6c4dbf6ba77c8aa0b30b56b637b66abade2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportIdentifierGenerator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportIdentifierGenerator.java",
+      "sha256": "0cd73ec98f2038204475559cc40affcd97a2dcffe4c534869c7669cc62c34e91"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportInvestigationNotFoundException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportInvestigationNotFoundException.java",
+      "sha256": "d176ec798fb5739f3dde7029cf39d93fe2964555faba012a27790c4b3e746824"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModel.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModel.java",
+      "sha256": "7b7a0ee3bde9aab1cecb6b05fbea1e1b20779bef28c40dfe6a9f7e3c7007c522"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelCallExecutor.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelCallExecutor.java",
+      "sha256": "6a3adb18ba6b289b89b7946f5898f8de13e6a815b208ee48012852c891a620cc"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelResponse.java",
+      "sha256": "d59384711231b1e71a39374c05da7b09fe18d63a13d2422c70e97fd77f51cea4"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelSettings.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelSettings.java",
+      "sha256": "61d5780e3d012fd3e6cc5bce60dc41cd36ffe57b0fc9f15efc2cc09ab251eb70"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelTimedOutException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelTimedOutException.java",
+      "sha256": "51e554e422f119ab973e02358b99d5c641cacd9a71e3d0578a7475f188ef34c1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelUnavailableException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportModelUnavailableException.java",
+      "sha256": "be04fc4601b91fe2db719e54ba8704f570611a2d8f6e63b964602b593c84d327"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationPersistenceService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationPersistenceService.java",
+      "sha256": "9ba4040498ca480426fa15d552527abe3d61665d6658a9ac5bb1dc05dde6205a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportOllamaTransportConfiguration.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportOllamaTransportConfiguration.java",
+      "sha256": "39e8f050de5ed1e1381f0482004de00a2e620c297460fff06d994c4109d1105c"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationContext.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationContext.java",
+      "sha256": "712ae431b1e62ac8ce508e84f11685a7d8191384ccad50d9d348a8b6a2ada848"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationAttempt.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationAttempt.java",
+      "sha256": "ba1aaa5da03104c827ce5e31dfe70c0b56fd2481fc088eb13b40d2cd66a13944"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationSeedRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationSeedRepository.java",
+      "sha256": "061819aa1e80415d3d41c8e1952bbb78e6b24aaa3f1b2919db0a138c4a60dedd"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationService.java",
+      "sha256": "b5536006691b0e0297512f207c22de603dcfdc63613a3d035266c04b06707a0f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/InvalidReportDocumentException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/InvalidReportDocumentException.java",
+      "sha256": "d66aa26d9c19e0584700568962d5ece1fdd95391b16fe8a852a34c2343c594e8"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/InvalidReportRequestException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/InvalidReportRequestException.java",
+      "sha256": "694d45762083c4e0d90f6e503d6749e111794365b8ae3cef1646c1169131682f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/PostgresReportGenerationRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/PostgresReportGenerationRepository.java",
+      "sha256": "f1f2d0db99a364cedffd9ae6fe3c1256a2bc27287235dc9e0c60e6a9ff64eb14"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportApiExceptionHandler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportApiExceptionHandler.java",
+      "sha256": "3f8766171155d389f72c1fdd043176b682104458b5e345cc9ab6628ea4e46879"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportClaim.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportClaim.java",
+      "sha256": "88b33bc3b83218b2e1d0918b40d36fa95b8188b090f3a488a8c434fd8382b2e2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportConfidence.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportConfidence.java",
+      "sha256": "0de47d8b3354bb74032ec4dbc88eae31d18c3c146d0264e10c339635a4e7887b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportConfidenceLevel.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportConfidenceLevel.java",
+      "sha256": "88d8a614491967436b388f7c479e0c134b6c41b9980637643506680bed778acf"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportContextAssembler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportContextAssembler.java",
+      "sha256": "6ec3f7482a25e1b3d299fd65a4beb78f5a89d566554b71977e6391ef12f34f79"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportController.java",
+      "sha256": "78f3970db1d43dda679aa2170aed4d56b6595985bf12502bf9b46d76a9bb85b2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportDisposition.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportDisposition.java",
+      "sha256": "b3824094cca0f400dc36df1ec030e34dcfb90cbc3367f24fa5f067ade44eb5c8"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportDocument.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportDocument.java",
+      "sha256": "5d7c1b3276a479597b2d53876f758f43c9bc65edf6ef5c7708a86036e248bbe0"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportDocumentValidator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportDocumentValidator.java",
+      "sha256": "ae113241c0f6e0f65c23e69547b53ee4d119676455bf943cb31a7692ac8b6e53"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGap.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGap.java",
+      "sha256": "2a5b082391497022150e56f237acd9fbd60530c562a496bb11bc2548891e9f65"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationConflictException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportGenerationConflictException.java",
+      "sha256": "b070b6847338fbf7ca1885f4baad5a6a731d0d2b9598c3edbc563b218bac1b9c"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationSeed.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationSeed.java",
+      "sha256": "a893ba28988169f79774a90c1f37107064593cfd2d41b092ae71c324afc92568"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportOutputParser.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportOutputParser.java",
+      "sha256": "9b053d59d3560e6a1f9ac28647861204e5efd608c94f0ad4fe69840efddac230"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportPromptFactory.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportPromptFactory.java",
+      "sha256": "d1a959743c4bd04722c45c6d06ec61e0bc7a337b6b3a45046a9a83d75bf464c2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V7__support_local_ollama_embeddings.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V7__support_local_ollama_embeddings.sql",
+      "sha256": "498100bce06dbd99dc3d60b38c09f6e0b4aa96fcfe0d03efcf56c24e93f1062e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V8__add_human_decision_and_attempt_actors.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V8__add_human_decision_and_attempt_actors.sql",
+      "sha256": "022b3470de73e355945f49c89f2fd20dc89f09e6c11e765189507a86945e1df9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V9__add_page_aware_pdf_knowledge_catalog.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V9__add_page_aware_pdf_knowledge_catalog.sql",
+      "sha256": "22d4dfe5f6f493254d4d4bb82d99bf63eb7ddcb1315d408d6192a2b74ea09bd7"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/knowledge/authorization-decline-runbook.md",
+      "target": "backend/copilot-api/src/main/resources/knowledge/authorization-decline-runbook.md",
+      "sha256": "f4f78fb8f40ea72568486740037d82c66cdcc1535b36906f0b761e2e26f67801"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/knowledge/payment-incident-response-policy.md",
+      "target": "backend/copilot-api/src/main/resources/knowledge/payment-incident-response-policy.md",
+      "sha256": "8fa15d78420e076cb5855570a903b362d2db37213eef4780bd8609f75e9edb25"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/prompts/report-v1.txt",
+      "target": "backend/copilot-api/src/main/resources/prompts/report-v1.txt",
+      "sha256": "dabbb0a2e0082e29e813861a1c53b7acd5bc48af3a5dd880c14f617cd3f308d3"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/reports/report-v1.schema.json",
+      "target": "backend/copilot-api/src/main/resources/reports/report-v1.schema.json",
+      "sha256": "6007693ec0798e791bff84a526fa10733214322c5007f2730c83f40fdf021bc5"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V6__add_evidence_linked_report_generation.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V6__add_evidence_linked_report_generation.sql",
+      "sha256": "50df545020ef20dc35c1c7ad106e3f9d950899e85a92bfb8cf74e6dac5e7be0a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportPrompt.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportPrompt.java",
+      "sha256": "8bbc10288bb3739398f80f8118f1f2ed1c16b3ecef5ea72ce2d030ddf1b6da29"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V5__add_approved_knowledge_retrieval.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V5__add_approved_knowledge_retrieval.sql",
+      "sha256": "f7e793ff971b8471d5a67bad2f8f7315a619b53df01b49398d9de684841dd1a6"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V3__add_investigation.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V3__add_investigation.sql",
+      "sha256": "e7594bad69cdecc2a9ba37f7916835e7a308f7f788016fa3d233ae6d5c0b0f5e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportTimelineSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportTimelineSnapshot.java",
+      "sha256": "2edca33c1bf77da1604128860821d4f341b2f2facc9de6fe43effae44e2a58dc"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportTimelineSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportTimelineSnapshotProvider.java",
+      "sha256": "bf8dac944f6cafdf7e3c426184e57dee17ec4da67b50b0654fb0852a20932821"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportValidationContext.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReportValidationContext.java",
+      "sha256": "f946549db33fbb40bde9d026af7eef9224a1f0770b841dfbf0833ede4e558a05"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReviewCandidate.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReviewCandidate.java",
+      "sha256": "dc4d8550fb0a0734499bfef816f8165fe3a3e7a672cb7cfb9f125e0e3fcecda6"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReviewCandidateProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/ReviewCandidateProvider.java",
+      "sha256": "7a50dd67d1a58911797e79e37bbac9ef09c744f765d1b49da7ccad426acbda59"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/SpringAiReportModel.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/report/SpringAiReportModel.java",
+      "sha256": "bc66cf68cc36b20731e5c1d611632cb15ac7f9c75aa120cfcfdfecb14ae3d07b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/requestcontext/InvalidSyntheticRequestContextException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/requestcontext/InvalidSyntheticRequestContextException.java",
+      "sha256": "6d9b4b1e1add9f12318fc630796c4ad5932dadedae27ddd76db2c3c8662ea388"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/requestcontext/SyntheticRequestContextExceptionHandler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/requestcontext/SyntheticRequestContextExceptionHandler.java",
+      "sha256": "b5f2ec3ddf975ed546038bf3fbcc2938a9604747259ea2bd3f80ec42a320fc7a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/requestcontext/SyntheticRequestContextResolver.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/requestcontext/SyntheticRequestContextResolver.java",
+      "sha256": "943354afa1daf4b8291359fa7d23723b263390f530104c93eab96da7df8f1d6f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/application.yml",
+      "target": "backend/copilot-api/src/main/resources/application.yml",
+      "sha256": "a8b7eabd86b3c2cfc1f8719d1ee4b9960202d55dac4e3d93b18768c1b75b0493"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V1__baseline.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V1__baseline.sql",
+      "sha256": "999c63e4d2b6f3777e014be54bb19cdfcf6bac6fc7feaac7dfbf014875934183"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V10__add_source_document_relationships.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V10__add_source_document_relationships.sql",
+      "sha256": "44f96e81b781c33165134f7d351dbc92a6718a31efb11e7e22b9ca5d95e84446"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V11__add_accepted_pdf_catalog_applicability.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V11__add_accepted_pdf_catalog_applicability.sql",
+      "sha256": "1eeeadf6b33e8aac044e836fb949c1384a81d43ca12521126d1c03c8422b155f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V12__retain_report_model_settings.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V12__retain_report_model_settings.sql",
+      "sha256": "a33eb400e4ef2015938a077c1cfa0da9abaa668a4c3e425cb47ad001a48eb1bc"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V2__add_incident_description.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V2__add_incident_description.sql",
+      "sha256": "d0c4ca48d00f93154d512014765073fd7886bd082cb9ea508fc869ab6e56715b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/resources/db/migration/V4__add_evidence_collection_attempt.sql",
+      "target": "backend/copilot-api/src/main/resources/db/migration/V4__add_evidence_collection_attempt.sql",
+      "sha256": "b877553d0a0cf62e102baa989e7a11a3ad21bfb7bf071ae43059c580eea0bc1d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationRun.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationRun.java",
+      "sha256": "b466d38e99ede3b5aaa9bc03394f1a53949ecd3a0488faf1f3158296b6595332"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationGrader.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationGrader.java",
+      "sha256": "4ba6ed7239ae1987e4b62550f1fdc2694ffd4cb021021be3ab72ce36f6e2afc7"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationGrade.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationGrade.java",
+      "sha256": "6694aca51c6df6c4c6def2cd2af099599ae8bd9d3f12709d4b058414367f5ee9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfReadinessCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfReadinessCommand.java",
+      "sha256": "f5d6e8839b6f40aa56938e3421827453f4ba07df2b8328d194f803dbc0670b25"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfSourceDocument.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfSourceDocument.java",
+      "sha256": "9f3815bab8987060d06ca908c7d4d1c307f9d5dca6f65856112ac71b09a3ef0a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/TokenEstimator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/TokenEstimator.java",
+      "sha256": "36d45cbae5b644100ca255842868c92feb9fde0aafb7b6c28484aa18240abe8b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/DerivedKnowledgeQuery.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/DerivedKnowledgeQuery.java",
+      "sha256": "436e5b4a7ba400e0bcadc9358d90a05948f4d898291324e342b308e13342dfb1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationAggregateGrade.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationAggregateGrade.java",
+      "sha256": "00a008e90271b218f5e484f81e6cc576e3ba2fdc3e11f2fa879b7dcb204f5fb4"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationCandidateResult.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationCandidateResult.java",
+      "sha256": "fb1485e65c7edd82a7a50ff4602e4a29885c2b58370de1e701a1999a923e41dd"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationCaseGrade.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationCaseGrade.java",
+      "sha256": "03af39711dc05bc6b72d9b8cb89cea8d6d34f3524c5d63723f0784c9506b058f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationDocument.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationDocument.java",
+      "sha256": "667eec83f5f8ef587f5dd09c7551e4aa9f33a725a41ecad0e5b38105d340711f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationScenario.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationScenario.java",
+      "sha256": "5e2c57c479589db58946c6ff6bf7d6eb7527465e413e00ecc1a89cb1374bfdd7"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationVariantGrade.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationVariantGrade.java",
+      "sha256": "54e2dc884a0d8a5048bfd7e822b56aa9a9812e51393768bb3fef7f498569c631"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationVariantResult.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/EvaluationVariantResult.java",
+      "sha256": "7ae7c82596e3715681b6bf3a65b45373aad63f055c32eb5db237823f9940fe3a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/InvalidKnowledgeRetrievalRequestException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/InvalidKnowledgeRetrievalRequestException.java",
+      "sha256": "e0387e649acef053acdbafdd560015f2ed5e5b18b303d464c67322cc77624814"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeApiExceptionHandler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeApiExceptionHandler.java",
+      "sha256": "07a05dd5dbfe3388960c886d9cd6e4f70a4b3f859e9160adb784c881b8619ef7"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeContextSelector.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeContextSelector.java",
+      "sha256": "b9f27c750430b88173dc61c89e08360d6d04618ef5bb53d68f79d73d961d640e"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeErrorCount.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeErrorCount.java",
+      "sha256": "8078a12caa3681d33c60fd1ac62efa9fdeb5f95292431353b33c342c48a7a758"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingTarget.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingTarget.java",
+      "sha256": "2b771d4d4adde976015f70c272271a3e752d59764cfb601526fd4317d156c9a2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeEvidenceReference.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeEvidenceReference.java",
+      "sha256": "eb6db14a9021a711ab31f014f66028c711257fb42a0b7635d841d52cb1abc2b6"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingStateMachine.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingStateMachine.java",
+      "sha256": "8f1e421a4ef618e53ef5ebca0047eddd5c7dd23c2fed569b2a3f2ce2b7719707"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingService.java",
+      "sha256": "673522836e9075a6a89800de5f748970d03595edf3ed9dbe8359f0eeeb9c60e8"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenCorpusSourceRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenCorpusSourceRepository.java",
+      "sha256": "642ebdd947ca4549fa6172339ff3e49bdc76c008eaf8ad1b96b3a72986711aed"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogImportCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogImportCommand.java",
+      "sha256": "f755bde5f8b6726be09de783ccec317e0748789a8971b670323cb27b7388c7fa"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogImportService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogImportService.java",
+      "sha256": "981e6f27127f51f48313dda29816d4279d3446dd18c92be49d9c25778029ce96"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogPersistenceService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogPersistenceService.java",
+      "sha256": "07c47905de10df6d5cbb5072e60d2195cc297150947beeca75705f58037f404d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogPlan.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogPlan.java",
+      "sha256": "8c40e9eab94c8bbbec07addae24fdc6a03911819c2ed6e358a264ef795292ac0"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogPlanner.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogPlanner.java",
+      "sha256": "f1cb4a2d14599b87360da041342eef80a09452ff7950aeef35477eb6451983c8"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogRepository.java",
+      "sha256": "14bf85fc209859006db62133d03ad405ce7d694b5e0122f1c78ba39c21fe6ecb"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogSnapshotRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfCatalogSnapshotRepository.java",
+      "sha256": "fcf824fe6405db3690396f6e3e2744d1ba05aaea85338f93ec8ba03d3e4c761f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingBackfillCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingBackfillCommand.java",
+      "sha256": "f08b940c5186def15a4bb184e30b3f59f0e731e977ad8da3bb87b8146f87d744"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingCallExecutor.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingCallExecutor.java",
+      "sha256": "1434000643c89e6819778b56cc79a3a19786dd8e9f84e4a5256e8f50cb996861"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingCatalogSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingCatalogSnapshot.java",
+      "sha256": "572ab5cf2a13b958969e656534dc100a4105f3fb0825ba5de618ddd168493a5b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingMetadata.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingMetadata.java",
+      "sha256": "af640c777ec97b62d71cfd2e7677a01c5c2f156500eb840dba6c99e6c918f418"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingOperationSummary.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingOperationSummary.java",
+      "sha256": "0ec5347dd6d93188c34fbcc2c989453cf6ae2995d41a5aa926d3ce4ab908e7c1"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingPersistence.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingPersistence.java",
+      "sha256": "ba95e84d51136eb275730b60229a420c0e0b4dbb382f5d5b26c400bcf7d29641"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingPlanService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingPlanService.java",
+      "sha256": "5fcbc37dbfc290bf2fda26eba2dea7f057a4ed3e15e900879b122d9558f70e73"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingState.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/catalog/SynTenPdfEmbeddingState.java",
+      "sha256": "863c9f58e325c9ae84661bb7d8c99f075cea2a0057da0994bdccca0202d6bc02"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeInvestigationNotFoundException.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeInvestigationNotFoundException.java",
+      "sha256": "0a25540f8add137b6453998aa3225e4e090a50d99dcf72e3fb8b0811fb476ba7"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeMetadataFilters.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeMetadataFilters.java",
+      "sha256": "8750373f28f36abdc1c7f421876c45ba24769daea846913e1d29c7875b05ed4d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRankingEvidence.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRankingEvidence.java",
+      "sha256": "cd03297888fb63b655a66413c2988283b64bd2bc783d221a83853997488d7a6f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeTimelineSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeTimelineSnapshotProvider.java",
+      "sha256": "353311048b11b9161b0822f18fd925ce632aec6d57bfdc9e5409b15002c7ea58"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/PostgresKnowledgeRetrievalRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/PostgresKnowledgeRetrievalRepository.java",
+      "sha256": "6abe68d7396cc18054d544f97078a43a18243f8b9a59cc78ef278203dfcce56d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/PostgresKnowledgeSearchRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/PostgresKnowledgeSearchRepository.java",
+      "sha256": "820d1f8d29fce5803bb50170ae58f2b7e5d17cba1f7db19a5af06d451d5a65cf"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/PostgresRelatedPolicySearch.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/PostgresRelatedPolicySearch.java",
+      "sha256": "3058c5a8c49c45916aa706d0ae160ea60ea8568cf2c9bff0494e922fdefa60de"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/QueryEmbeddingOutcome.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/QueryEmbeddingOutcome.java",
+      "sha256": "2cf8e897e4254ad07b1c87b37118515a4437cb0b1655396779e8ea258f453a5f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/QueryEmbeddingStatus.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/QueryEmbeddingStatus.java",
+      "sha256": "a534bb3d625688f0741a683a8990d771a1fbfa05fab37c0e6e2b4c08b93d38cf"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/ReportKnowledgeChunk.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/ReportKnowledgeChunk.java",
+      "sha256": "9920e70b1bb9134e0b0fc29426b748e1e0eac1c6c939fea6866809443ea4172f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/ReportKnowledgeSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/ReportKnowledgeSnapshot.java",
+      "sha256": "bb35cc896d34e3c7f50d626391633dbef7e28724caf88161c40193ceb2462832"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/ReportKnowledgeSnapshotProvider.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/ReportKnowledgeSnapshotProvider.java",
+      "sha256": "91de01e176a7f21b30afc8cf24c28765ed7155b717d033b218c7c2104d9e19b2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/RetrievalEvaluationCase.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/RetrievalEvaluationCase.java",
+      "sha256": "a2953f162b326d24405af11c7787864d7ccd7a91efd0d7c347005972e6cb3eba"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SelectedKnowledgeChunk.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SelectedKnowledgeChunk.java",
+      "sha256": "8cecb944fdf4f8dc8977737601f2044eac2ccc60fcaf97d5c8865f4922b24028"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationArtifactWriter.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationArtifactWriter.java",
+      "sha256": "226430f3c4f2d8d0c204e6ebe3e90849c52a021c4ee28c093d6ac4e6c4a287d8"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationCommand.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationCommand.java",
+      "sha256": "03dd8c505ddb98a94e907c2a2605bd743eebf8ad6ffff839aad2b9edcff9cad6"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationContract.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationContract.java",
+      "sha256": "a6227150d23644248168c11927bcc538bd33bbd3d1e8e9bed86942f7f64c3092"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationContractRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/SynTenRetrievalEvaluationContractRepository.java",
+      "sha256": "9815aedf4404d2d11cefda368179a9182933fdfe0e0fe6ba2bf42ee174a14a88"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeTimelineSnapshot.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeTimelineSnapshot.java",
+      "sha256": "eeff6bcebe8546e07239e4947daefaa32063f6fe7724f69c0b67d7b21e0e6931"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeSearchRequest.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeSearchRequest.java",
+      "sha256": "cb95324fff2b929b2ded5dcc63f42f77fbeebf38bd066563db6be9eb99f0189d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeSearchRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeSearchRepository.java",
+      "sha256": "2c356cdd10c8e210bb8383a9696476f39836792dcee87500573a8f95ece070f4"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeSearchCandidate.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeSearchCandidate.java",
+      "sha256": "05830440bd46f16aaf5fb7825f6c763e717694ee2944e33f5e10f387644a5654"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalAttempt.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalAttempt.java",
+      "sha256": "0ffbfaab27bb4fc5613f87a15e13224afabf80fe3896da73ebebbde5a3f27c2d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalContext.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalContext.java",
+      "sha256": "34f743e9b880c15db68f283abdf567745613060d28523704722f334de3aeaff2"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalContextAssembler.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalContextAssembler.java",
+      "sha256": "1b477bcfb5820623c1d37529d5edafef83cc872ad46cd497516955c6d9c6d82b"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalController.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalController.java",
+      "sha256": "45f1000439a37dc4912391ca38973ffc775c596086f36341c575a72c961cf642"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalExecution.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalExecution.java",
+      "sha256": "bcf78fb2adfaefa1c459fbddc9ca2de3e0cf69c9f2ad67508dda64ae91358660"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalExecutionPlan.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalExecutionPlan.java",
+      "sha256": "b5b86a6cd694926f8ce60480b349af4822058862a79a365dfbe1d179f0247107"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalExecutor.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalExecutor.java",
+      "sha256": "d0c5f43ec86f36e8f2ce46b2cc2085612f7a7902e10563844808cb42a019b839"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalIdentifierGenerator.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalIdentifierGenerator.java",
+      "sha256": "e1cff8173d065a1851c9c175bb08f738f64df57d7c3a8a51a3a6abdda55bb05d"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalQueryBuilder.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalQueryBuilder.java",
+      "sha256": "bc1bab008d32a36148b5863bf52c220d937796050309e47b3f3a678bf77b0461"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalRepository.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalRepository.java",
+      "sha256": "2c0c1d812726546e889b9ba36857b85607dc5d962b3830eb8bd848ac357b396f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalResponse.java",
+      "sha256": "0b5f1304aede7c3f3c74eebf74ea1b04c682b52d6d6839f45f99a8d03b3fc8e9"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalResult.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalResult.java",
+      "sha256": "31341fcb7b21f896cd3337aad2e0cd7e655333bdcef86f7d36efb6fb36c72619"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalResultResponse.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalResultResponse.java",
+      "sha256": "bfba2d959fb8dc5b72f72ac17ec31ed7e6770a3793380b080abd03087559028a"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalService.java",
+      "sha256": "a8900e6223dd45c727de63b26bc296cac1af36466ca5574525d65448c9045953"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalStatus.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalStatus.java",
+      "sha256": "68b9d896e74c588fa67ecccad60fc3ace90b490c8be07de0f547a14b802cc38f"
+    },
+    {
+      "source": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalPersistenceService.java",
+      "target": "backend/copilot-api/src/main/java/com/cguzowski/paymentcopilot/knowledge/retrieval/KnowledgeRetrievalPersistenceService.java",
+      "sha256": "3494fb3d866ee12ca9278b9ad59787441955e6cf1651dc04899fa627418ccb93"
+    }
+  ]
+}

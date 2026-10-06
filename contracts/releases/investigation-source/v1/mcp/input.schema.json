@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:payment-incident-copilot:mcp:getRecentServiceErrors:input:v1",
+  "title": "getRecentServiceErrors input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tenantId", "scenarioReference", "correlationId", "toolCallId"],
+  "properties": {
+    "tenantId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Synthetic tenant UUID"
+    },
+    "scenarioReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "Opaque synthetic alert scenario reference"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Investigation correlation UUID"
+    },
+    "toolCallId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique tool-call UUID"
+    }
+  }
+}

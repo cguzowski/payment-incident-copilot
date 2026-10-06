@@ -1,272 +1,36 @@
-# Project status
+# Current project status
 
-Last updated: 2026-10-04
+Last updated: 2026-10-05
 
-## Current state
+The owner ended feature development and requested a lean repository for Git clones.
+The current investigation API/console, synthetic generator and evaluator remain.
+Tests, obsolete legacy provider/launchers, evaluation archives, completed task/ADR
+history, migration experiments, temporary evidence and preservation backups are
+removed. Runtime PDF sources/manifests and citation-compatible older PDFs remain.
 
-The local demo and approved O4 bounded fact/source validation are complete;
-live sufficient-evidence quality remains unmeasured. Seven
-synthetic incident families support intake, active/completed queues, MCP
-service-error evidence, approved PDF retrieval, advisory reports, explicit
-human decisions and audit history. Normal generation selects AVAILABLE
-scenarios; deliberate degraded fixtures remain available to tests/evaluations.
+Fresh exports of all three systems pass their input and exported-file hash checks.
+Each exported system passes `./mvnw.cmd -Dmaven.test.skip=true package`.
+The console passes a fresh `npm ci --no-audit --no-fund` and `npm run build`
+(404.95 kB initial production bundle). The first sandboxed npm install failed with
+EPERM while spawning a child; rerunning outside the sandbox passed.
+`./start-local.bat --CheckOnly`, PowerShell syntax parsing, public contract pin
+validation, Git exclusion checks and `git diff --check` pass. All 584 distinct
+pinned source/contract inputs survive Git filters byte-for-byte; exact-byte Git
+attributes prevent clone-time newline changes from breaking export hashes.
+Normal startup from removed/recreated workspaces packages all systems. The initial API startup attempt exceeded the launcher readiness deadline; a captured native Maven launch started the API in 4.264 seconds, and a normal launcher retry completed. All three final actuator health responses are UP; console and generator UI return HTTP 200. PostgreSQL remains at Flyway V12 with no migration required.
 
-The prepared local catalogs contain 30 authorization PDF versions / 705 chunks
-and 16 independent payment PDFs / 65 chunks using nomic-embed-text / 768.
-Startup verifies readiness without importing; use start-local.bat
--PrepareKnowledge for explicit preparation. Historical Markdown/PDF rows,
-citations, frozen assets and previous attempts remain readable and unchanged.
-See the [completed adoption task](tasks/completed/2026-10-01-adopt-frozen-payment-pdf-library.md).
+No new tests are added or run; their removal is explicitly owner-authorized.
+No new model-quality measurement, fresh-database preparation, incident creation,
+report generation, human decision or comparison is claimed. Local database
+history and installed models are retained separately from repository cleanup.
 
-Automatic post-reveal comparison is complete under ADR-0021. Separate report
-and human-decision cards use colored borders and black-diamond 0-100 gauges.
-Only cause/recommendation prose uses an independently prompted local LLM;
-other scores and expected decisions are deterministic. Evaluation retries once
-before leaving both cards Not scored. Immutable tenant-scoped local artifacts
-retain exact terminal report/evidence/decision bindings and judge provenance.
-See the [completed comparison task](tasks/completed/2026-10-01-automatic-post-reveal-comparison.md).
+Known runtime limitations remain: no production authentication, advisory scores
+and bounded citation validation do not establish correctness, model throughput
+can cause timeouts/malformed reports, and live semantic quality remains limited.
+The normal console install still reports ten advisories (three moderate, five high, two critical). This cleanup does not remediate dependency vulnerabilities or certify production
+security. Downloads, generated build/dependency output and model/database storage
+will increase disk usage when a user runs the project.
 
-The [first cleanup](tasks/completed/2026-10-01-demo-maintenance-cleanup.md) is complete: unused CSS aliases,
-a deployment placeholder and 2,865 disposable local files (40,096,595 bytes)
-were removed. Active runtime files and retained artifacts are preserved.
-The [deferred thorough cleanup](tasks/2026-10-04-deferred-demo-cleanup.md) retires all 13 Python authoring scripts
-into a [hash-verified historical archive](../../SynTen%20Inc/history/pdf-authoring-tools/README.md)
-and removes an unused report helper and ORM dependency. Frozen assets are
-unchanged. Its original unfinished task and verification limitations are retained
-byte-for-byte. O1's subsequent full verification passed against the current
-checkout; the cleanup task has not been independently closed. The latest observed
-main demo attempts now use report-prompt/v7.
-Feature expansion and AWS deployment remain deferred;
-see the [roadmap](ROADMAP.md).
+Changes are local and uncommitted; the remote repository has not been updated.
 
-The owner has queued [four next investigation-quality tasks](tasks/next.md):
-confidence calibration, useful operational passages, specific grounded
-recommendations and observed-fact/source preservation. The owner clarified
-[confidence selection](tasks/completed/2026-10-04-attainable-high-confidence.md): report-prompt/v7 restores attainable
-HIGH, normally favors MEDIUM, and uses LOW for weak support. HIGH requires
-exceptionally strong support of the narrow mechanism, not independent
-confirmation as a prerequisite. Degraded LOW/null behavior remains enforced.
-[ADR-0024](decisions/ADR-0024-attainable-high-confidence.md) supersedes v6's
-ceiling. O2 remains queued; [O4](tasks/completed/2026-10-04-o4-bounded-fact-and-source-validation.md) is complete within its approved bounded scope and [O3](tasks/2026-10-04-unfinished-o3-grounded-recommendations.md) remains unfinished. The owner subsequently authorized
-[explicit confidence expectations](tasks/completed/2026-10-04-evidence-based-confidence-expectations.md) under
-[ADR-0025](decisions/ADR-0025-evidence-based-confidence-expectations.md).
-confidence-evidence/v1 evaluates the decision-bound latest snapshot independently
-of actual report confidence. comparison-rubric/v2 changes only that expected
-input; exact match, other metrics, weights, bands and decision formula stay intact.
-Original keys and historical artifacts remain unchanged. HIGH is attainable for
-three consistent direct diagnostic signatures without independent confirmation.
-
-O3 introduces report-prompt/v8 instructions for bounded observed mechanisms,
-explicitly unverified deeper hypotheses and guidance-supported owners, records
-and retry safeguards. The focused 28 prompt/parser and PostgreSQL HTTP tests
-and full ./verify.ps1 pass (371 API / 9 MCP / 82 generator / 103 console, zero
-failures/errors/skips, formatting/builds/Compose/diff checks). [Seven isolated
-first attempts](../../SynTen%20Inc/evaluation/2026-10-04-o3-grounded-recommendations.md)
-returned four reports and three timeouts. Both degraded cases preserve LOW/null
-and 25/25 references are valid, but unsupported/generic prose and guidance copied
-into observations persist. The owner authorized four fixed diagnostic rejections
-in the isolated evaluation database; comparisons completed with report scores
-88/100/90/100, cause/recommendation 70/80, 100/100, 80/80 and 100/100.
-Two judge calls required no retries; degraded scores check null fields only.
-Seven report histories and 373 protected hashes remain unchanged. O3's first two
-grounding criteria remain unmet despite GOOD score bands; no reliable improvement
-is established. The three timed-out cases remain open and unrevealed.
-
-The owner authorized the separate [completed report reliability task](tasks/completed/2026-10-04-report-context-and-cancellation.md).
-[ADR-0026](decisions/ADR-0026-report-context-and-cancellation.md) keeps the
-existing deadline/model/prompt while explicitly preserving context and cancelling
-abandoned HTTP work. All 52 focused report tests and full ./verify.ps1 pass
-(380 API / 9 MCP / 82 generator / 103 console, zero failures/errors/skips).
-[Three fresh first attempts](../../SynTen%20Inc/evaluation/2026-10-04-report-context-and-cancellation.md)
-still time out at two minutes, but all inputs are untruncated and every deadline
-cancels the provider task and releases its slot. Qwen generates roughly 4-5
-tokens/second. The owner retained the two-minute limit. Seven original O3
-histories and 373 protected hashes are unchanged. New attempts retain versioned
-settings through V12; historical settings stay unknown. Main-demo API processes
-were not restarted; the updated artifact was verified in the isolated runtime.
-
-O4's report-prompt/v9 and [ADR-0027](decisions/ADR-0027-bounded-report-fact-and-source-validation.md)
-require exact event/time/code/count observation tuples with applicable-attempt
-citations. New reports reject altered/invented/duplicated tuples and unsupported
-explicit source identifiers or authorization/capture/refund/settlement role
-pairings as MALFORMED without rewrite or retry. Schema, tenant boundaries,
-degraded LOW/null and historical reads remain compatible. All 75 focused tests
-and full ./verify.ps1 pass (401 API / 9 MCP / 82 generator / 103 console, zero
-failures/errors/skips, formatting/builds/Compose/diff checks). The first full
-run failed on npm's console-held esbuild lock; verified consoles were temporarily
-stopped and restored, with both loopback listeners returning HTTP 200.
-Seven fresh isolated first attempts finish with six two-minute timeouts and
-S211 AVAILABLE in 60.350 seconds, preserving LOW/null/empty observations.
-Its 2/2 references are valid, but manual review records alert wording asserted
-under an unavailable citation and an unrelated source-role guidance gap.
-All seven prompt/schema hashes and settings match persisted bindings; all ten
-original histories and 373 protected hashes are unchanged. No live count/source
-quality improvement is established. The owner-authorized diagnostic rejection
-and post-decision comparison are complete: report 100/GOOD, fixed decision 0/BAD
-against expected APPROVED, no judge call. Null-field scores do not resolve manual
-summary/gap findings. Exact tenant/report/evidence/decision bindings pass; seven
-new histories remain unchanged and six failures stay open and unrevealed.
-At O4 completion the main API had not been restarted; the following performance
-task subsequently activated the verified v9 artifact in the main demo.
-
-The [report performance task](tasks/current.md) is complete under
-[ADR-0028](decisions/ADR-0028-report-deadline-and-gpu-tuning.md). The owner permits
-at most 150 seconds. New configuration enforces that maximum, preserves full
-context/cancellation and exposes GPU placement and processing-batch options.
-The measured GTX 1060 profile uses 35 GPU layers, batch 128 and immediate Nomic
-embedding unload to free report memory. Portable defaults keep automatic GPU
-placement and five-minute embedding residency. An explicit embedding request
-preserves the configured model and keepAlive through Spring AI 2.0's merge;
-vector semantics, retrieval, precision, prompt and validation are unchanged.
-New v3 settings retain effective GPU/batch values with historical NULL options.
-The initial GPU-only profile retains four reports and three 150-second timeouts.
-[Seven final fresh first attempts](../../SynTen%20Inc/evaluation/2026-10-04-report-performance.md)
-return five AVAILABLE and two MALFORMED with zero timeouts, 36.46–93.07 seconds,
-median 68.50 and 12.09–13.76 generated tokens/sec. All 34 references and degraded
-LOW/null constraints pass; no retry, oracle access, decisions or comparisons occur.
-Final ./verify.ps1 passes 406 API / 9 MCP / 82 generator / 103 console tests,
-zero failures/errors/skips, formatting/builds/Compose/diff checks. All 373
-protected hashes, 17 original histories and main-demo report history are unchanged.
-The exact verified artifact is active in the main API, health UP, with unchanged
-localhost:8082 evidence binding and both console loopbacks HTTP 200. Two October 1
-STARTED records remain unchanged and unreconciled. Seven sequential attempts do
-not establish a broad timeout frequency; malformed/semantic failures remain and
-other GPU workloads can reintroduce memory pressure. No quality improvement claim.
-
-## Verification and retained evidence
-
-- Evidence-based confidence calibration passed all 82 generator tests, including
-  eight nested Node UI cases. Regression logs and exact retained-input replay are
-  in tmp/confidence-rules/. Both recent v7 rate-limit/DNS comparisons independently
-  expect MEDIUM and score confidence 100 using retained text scores; original
-  artifact hashes remain intact. This replay makes no model calls or historical
-  writes. Full ./verify.ps1 passed 368 API, 9 MCP, 82 generator and 103 console tests with zero failures/errors/skips plus formatting, builds, Compose and diff checks. The first full run failed only on a task-document trailing blank line; the repaired final run passed.
-
-- Attainable-HIGH v7 correction passed 25 focused report tests in final full
-  verification, and full ./verify.ps1 passed 368 API, 9 MCP, 74 generator and
-  103 console tests with zero failures/errors/skips plus formatting/build checks.
-  Logs are tmp/confidence-v7-*.log. Initial nonpersisted live diagnostics chose
-  MEDIUM/MEDIUM/LOW; the weak MEDIUM relied on unsupported synthetic metadata.
-  A tightened prompt's weak replay timed out at 120 seconds. All results remain
-  in tmp/confidence-v7-live/. Frequency and semantic quality remain unestablished;
-  exact confidence comparison, answer keys and historical scores are unchanged.
-
-- O1's focused red-green cycle passed 24 prompt/parser and PostgreSQL HTTP tests.
-  Full ./verify.ps1 passed 367 API, 9 MCP, 74 generator and 103 console tests,
-  with zero failures/errors/skips, plus seven nested Node cases, formatting,
-  builds, repository and Compose checks. Logs remain under tmp/o1-*.log.
-  [Seven fresh O1 attempts](../../SynTen%20Inc/evaluation/2026-10-04-o1-confidence.md)
-  yielded three AVAILABLE reports and four timeouts, no retries. Completed
-  comparison scores are 88/100/64 with confidence matches 2/3 and 24/24 valid
-  citation references. S002 expected HIGH and could not match v6's ceiling;
-  these historical scores are unchanged. S301/S302/S303 timed out, leaving the original confidence
-  misses unmeasured. No overall answer-key improvement is established.
-
-- The [five-case investigation diagnostic](../../SynTen%20Inc/evaluation/2026-10-01-investigation-diagnostic.md)
-  completed fresh terminal decisions/reveal/comparison with report scores
-  78/45/48/63/100 under unchanged comparison-rubric/v1. Five of seven report
-  calls succeeded; reconciliation timed out twice. Exact disposition matched
-  5/5, confidence 2/5 and citation membership 43/43. Measured weaknesses include
-  generic recommendations, unsupported HIGH confidence, metadata-only retrieval
-  and an incorrect observed count. No production optimization or improvement
-  claim is made; the cleanup's pending verification is unaffected.
-
-- After the first cleanup, full ./verify.ps1 passed 362 API, 9 MCP, 74 generator and
-  103 console tests with zero failures/errors/skips, plus seven nested Node UI
-  cases, script checks, formatting, builds, Compose and diff checks.
-  Console, API health, generator root and generator health return HTTP 200;
-  console was restored after a temporary npm-install file-lock shutdown.
-- Comparison desktop/mobile QA verified independent card colors, accessible
-  gauges, keyboard reveal, unscored failures and no overflow at 390 CSS pixels.
-  Existing terminal S303 compared with local Qwen in 24.802 seconds:
-  report 45/BAD, rejection 100/GOOD. API histories stayed byte-identical and
-  artifact hashes matched. This proves integration, not judge accuracy.
-- The [CI repair](tasks/completed/2026-10-01-restore-github-repository-checks.md)
-  passed [GitHub run 36883849928](https://github.com/cguzowski/payment-incident-copilot/actions/runs/36883849928)
-  on 2566145. No GitHub verification is claimed for subsequent work.
-- [Q2 retrieval results](../../SynTen%20Inc/evaluation/q2-retrieval-results.md)
-  retain the passing benchmark and individual misses. K4/K5 and the originally
-  recorded Q2 artifact remain absent; successor artifacts have separate hashes.
-- [Q5 live results](../../SynTen%20Inc/evaluation/q5-live-results.md) retain
-  all 36 scenarios: 34/36 dispositions, 9/36 confidence levels, 26/36 signal
-  checks and 374/374 valid citations; median/p95 latency 90.764/109.187 seconds.
-  There were no terminal model failures. The two degraded cases violated the
-  null contract. [Q6 results](../../SynTen%20Inc/evaluation/q6-live-results.md)
-  retain fresh passing insufficient-evidence attempts and the mixed diagnostic.
-- Detailed milestone checks and original failures remain in
-  [completed tasks](tasks/completed/), [ADRs](decisions/) and the
-  [tenant documentation](../../SynTen%20Inc/README.md).
-
-## Known limitations
-
-- Confidence expectations are bounded explicit aggregate rules, not calibrated
-  probabilities or general semantic verification. Three direct diagnostic pairs
-  can reach HIGH; other substantial mechanisms stay MEDIUM until reviewed.
-  Required-code extraction does not prove the key's prose conditions, affected
-  paths, deeper causes, approved-guidance applicability or final payment outcomes.
-
-- v7 confidence selection is advisory; structural validation permits HIGH but
-  cannot prove its justification or guarantee how frequently a level is selected.
-  Live timeout and grounding defects persist. The owner's webhook investigation
-  had three v6 MALFORMED attempts; Ollama logs confirm each prompt was truncated
-  from 4,209 to 2,050 tokens. A nonpersisted replay violated insufficient-evidence
-  null fields. These historical failures remain unchanged. ADR-0026 now preserves new-call
-  context and cancels abandoned work; local throughput still causes timeouts.
-
-- Post-reveal text scores are advisory and not independently calibrated.
-  The local default judge is the report model with a separate prompt; a different
-  installed model is configurable. The four-field deterministic approval rubric
-  is not general semantic verification of every oracle decision-rule condition.
-  Comparison artifacts are ignored local files, not database/audit-timeline
-  records; durable retention requires backing up their configured directory.
-
-- Q5 reports for partial S111 and unavailable S211 assert causes/recommendations
-  at MEDIUM confidence instead of the required insufficient-evidence/LOW posture.
-  These historical reports remain immutable. Q6's fresh attempts pass the corrected
-  contract. Valid source IDs and schema do not establish supported conclusions;
-  all PARTIAL evidence is now conservatively treated as insufficient, and a full
-  new 36-scenario v5 live run has not been performed.
-- Historical Q5/Q6 report attempt metadata records 4,096 output tokens despite
-  the adapter's 1,536 limit. New attempts and adapter options now share the
-  ADR-0012 1,536-token setting; historical records remain unchanged. A running
-  API must be restarted with the updated build to use corrected provenance.
-- The report-grading CLI now preserves timestamp strings under PowerShell 7.6.5,
-  retaining strict validation. Historical Q5 CLI failure and its direct-module
-  workaround remain recorded; executable CLI regressions cover the corrected path.
-
-- Q3's deterministic unsupported-claim detector is deliberately bounded. It
-  cannot establish general natural-language entailment, and the fixture does
-  not measure live-model quality. Q5 separately records broad live results with
-  explicit confidence and insufficient-evidence failures; no promotion threshold exists.
-- The benchmark PASS permits individual misses: KQ-004/S005 and KQ-019/S109
-  omit PL-002, and KQ-018/S201 still ranks its weak match above its primary.
-  The first two are policy regressions from baseline. Aggregate success is not
-  universal source coverage or evidence of report quality.
-- K4/K5 and the originally recorded Q2 artifact remain absent. New retained
-  baseline and passing artifacts have separate identities and hashes.
-- Existing databases require explicit corpus reimport after V10 to populate
-  derived relationship metadata. Unprepared documents retain direct retrieval.
-- Corpus v2 still repeats generic procedures and requests handoff records the
-  UI does not capture. Its neutral signal guidance removes oracle contamination
-  but does not establish retrieval or report quality.
-- No authentication or production authorization. Synthetic identity headers
-  are caller-supplied; tenant-scoped storage checks remain required.
-- Only `getRecentServiceErrors` is implemented. Evidence sufficiency and broad
-  live-model quality are not established by one successful S001 demonstration.
-- The latest verification npm ci reports ten dependency advisories (three moderate,
-  five high, two critical), with unchanged package manifests and lockfile.
-  The verification gate has no failing npm-audit step. [QUALITY.md](QUALITY.md)
-  defines what the gate actually checks.
-- Knowledge preparation is explicit; normal startup does not populate a new
-  database. Local database/container state is not guaranteed by repository docs.
-- Historical Titan vectors remain auditable and lexically eligible but are not
-  compared with local 768-dimensional `nomic-embed-text` query vectors.
-- AWS deployment and an optional Bedrock profile are not implemented.
-- Investigation workspace incident-context expansion remains deferred.
-
-## Maintenance
-
-Keep only current facts and the latest relevant verification summary here.
-Use completed tasks for historical evidence, ADRs for decisions, and the
-roadmap for ordered work. Never overwrite a measured failure with a completion
-claim.
+Final footprint: approximately 12.05 MiB including retained Git metadata, versus about 4.9 GiB initially. Maintained source/runtime inputs are approximately 3.29 MiB across 616 files. Services are stopped; dependencies and exported workspaces will be recreated on startup.

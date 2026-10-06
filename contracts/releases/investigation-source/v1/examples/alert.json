@@ -1,0 +1,1 @@
+{"externalAlertId":"wire-example-8f6c48206e0b4ada9cdb851a2c093345","severity":"LOW","detectedAt":"2026-10-05T12:00:00Z","title":"Synthetic contract example","description":"Neutral wire example with no recorded source events.","incidentType":"AUTHORIZATION_TIMEOUT_SPIKE"}

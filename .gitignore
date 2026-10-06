@@ -31,6 +31,13 @@ Thumbs.db
 tmp/
 .tmp/
 
+# Retained local legacy migration backups; never package as application input
+.legacy-preservation/
+.migration-workspaces/
+
+# Recreated build validation workspaces
+.build-check/
+
 # Local infrastructure state
 infra/**/*.tfstate
 infra/**/*.tfstate.*

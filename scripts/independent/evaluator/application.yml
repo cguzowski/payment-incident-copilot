@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: incident-evaluator
+server:
+  address: 127.0.0.1
+  port: ${EVALUATOR_PORT:8083}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  info:
+    env:
+      enabled: true
+info:
+  system: evaluator
+  release: independent-v1
+evaluation:
+  browser-origins: ${GENERATOR_BROWSER_ORIGINS:http://localhost:8082,http://127.0.0.1:8082}
+generator:
+  copilot-api-base-url: ${COPILOT_API_BASE_URL:http://localhost:8080}
+  tenant-id: ${SYNTHETIC_TENANT_ID:8b860d80-d17f-4e6b-8c48-af35f26a4d61}
+  request-timeout: ${COPILOT_API_REQUEST_TIMEOUT:5s}
+  comparison:
+    base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+    model: ${COMPARISON_CHAT_MODEL:${REPORT_CHAT_MODEL:qwen3:8b-q4_K_M}}
+    timeout: ${COMPARISON_TIMEOUT:2m}
+    artifact-directory: ${COMPARISON_ARTIFACT_DIRECTORY:./artifacts/comparisons}

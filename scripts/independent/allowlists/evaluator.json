@@ -1,0 +1,236 @@
+{
+  "application": "evaluator",
+  "version": "independent/v1",
+  "files": [
+    {
+      "source": ".gitattributes",
+      "target": ".gitattributes",
+      "sha256": "34ab5935c5d181ef7c4a06db0cf5f079df4e0a5fa7cdb4f080867cec34e46631"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ClasspathScenarioOracleCatalog.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ClasspathScenarioOracleCatalog.java",
+      "sha256": "f64ec3e965f0b90bf5558f5b09509360fb318452ca16d8a3f3a4186a712b2023"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/DecodedAlertReference.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/DecodedAlertReference.java",
+      "sha256": "6902a8c9d1fb60c0c05808650997de48856e22179f51ab37c829085cdb6a757d"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioOracleCatalog.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioOracleCatalog.java",
+      "sha256": "e76bb649fc0890de992a53a252138c42a5ab857a3d554859d5645d348f6eeaea"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioOracleEntry.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioOracleEntry.java",
+      "sha256": "be8964de0878c04153c69380bbbfe3a1e12a14f66ab7ed8049aa1c8106213c19"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioTruth.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/ScenarioTruth.java",
+      "sha256": "8ba06c90a7bb9851c13e261a83db5cc77401f2779fb0d37f613aedf78334dfb0"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/resources/comparison/text-prompt-v1.txt",
+      "target": "src/main/resources/comparison/text-prompt-v1.txt",
+      "sha256": "535538fb1cff71f11af3b29b62073144fde7aa331e876ed5c8b9e95e23c5eac4"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/resources/scenarios/oracle.json",
+      "target": "src/main/resources/scenarios/oracle.json",
+      "sha256": "4d319d5fc3b09cada589b82bf0fd251ae2339934bea06f5f5afcee5178ba7d30"
+    },
+    {
+      "source": "scripts/independent/evaluator/EvaluationApplication.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/EvaluationApplication.java",
+      "sha256": "f7a36428d038ad21215b2b9e5905bca0d214bbf49792f5e3895e75f069dc38aa"
+    },
+    {
+      "source": "scripts/independent/evaluator/EvaluatorCorsConfiguration.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/EvaluatorCorsConfiguration.java",
+      "sha256": "6b052946e6244a5688a8ead712e4d3a570c840880a3183893a527f62f31e0d3f"
+    },
+    {
+      "source": "scripts/independent/evaluator/AnswerKeyRevealController.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealController.java",
+      "sha256": "a96b2150fd4c2fd493de94c5b135b94f4b2e20df2f5d98acca8f7e567c4d6571"
+    },
+    {
+      "source": "scripts/independent/evaluator/GeneratorExceptionHandler.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/GeneratorExceptionHandler.java",
+      "sha256": "7d5701b69594101c436587cbd81f39877e68ec514c68114949225cabacf959a1"
+    },
+    {
+      "source": "scripts/independent/evaluator/pom.xml",
+      "target": "pom.xml",
+      "sha256": "5cbac68cc6bc52f16694b428b40bc9e99bf0b65e38a72b3df3239bbe6677fa4b"
+    },
+    {
+      "source": "scripts/independent/evaluator/application.yml",
+      "target": "src/main/resources/application.yml",
+      "sha256": "5b333042af93202f6cd438080d72ddf8e35adbab341d64d6ed742814216ca039"
+    },
+    {
+      "source": "SynTen Inc/multi-incidents/v1/oracle.json",
+      "target": "src/main/resources/scenarios/multi-incidents/v1/oracle.json",
+      "sha256": "4e81990c0fa2db1a0673cb5dd744eda2cc27d19b74bb2a189bffd782cca072e1"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/AlertReferenceCodec.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/scenario/AlertReferenceCodec.java",
+      "sha256": "e93ba2e22a029e6f0d1995711f12bd1a1063bb06bb1c9e767f22a874a9109ac8"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/LoggingAnswerKeyRevealAuditSink.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/LoggingAnswerKeyRevealAuditSink.java",
+      "sha256": "93ecfe45bc0e700b9d246b424f124059875a55362f977a705860d9d7e057071b"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/IncidentReviewState.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/IncidentReviewState.java",
+      "sha256": "cee7a859fd2cdec431545927afc2bcfa7f20070820869b35d55a14081b5f32c0"
+    },
+    {
+      "source": ".mvn/wrapper/maven-wrapper.properties",
+      "target": ".mvn/wrapper/maven-wrapper.properties",
+      "sha256": "488e1b3f2e641779d4636abf9390845f901e64607261bc3c0b0bfe4fe96e6706"
+    },
+    {
+      "source": ".node-version",
+      "target": ".node-version",
+      "sha256": "51849cee918b92b09b95121b54380f6124c0f578d8c2323221c0d75bbbadb08d"
+    },
+    {
+      "source": "mvnw",
+      "target": "mvnw",
+      "sha256": "cae96cef89ebea3531221f4ae17c23cf8edf67d00eae8306d4186ae1bbed4d02"
+    },
+    {
+      "source": "mvnw.cmd",
+      "target": "mvnw.cmd",
+      "sha256": "46eedb8419bd14fe70d5bb2916d7b6f51806e51b39d5b76a42610384ca929c1c"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonArtifactStore.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonArtifactStore.java",
+      "sha256": "7d2f5d0bdaf6296f9edc0057e18c7dc31d4a571d4b19a6b0d00aabec14683dc3"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonController.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonController.java",
+      "sha256": "1a5da733b0525e624463bb708f5cc45d5c60e85b912b9b51c3ffe21cf772bab3"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonGrade.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonGrade.java",
+      "sha256": "8a34d1417bffeaaa879981106472f7780452f4ab5d42a6c3c6d2a038c9f20e19"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonProperties.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonProperties.java",
+      "sha256": "46816ababfad4a9da4691dfa88f590c474c4f5399b767ad547cae6f8882597e8"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonResponse.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonResponse.java",
+      "sha256": "8b471cde19f448a24b47b4e4140dfbcebbeae4092afc5a2df710656aade701fa"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonRubric.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonRubric.java",
+      "sha256": "a3211446051cdc1e54a2fc2d2cb391420603f2b1e36b4ef10ee7c2dfcbe71006"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonService.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ComparisonService.java",
+      "sha256": "72c609b99c56d654cebfed2c2e59bc9aa7a2ad67c999a9742bedbb4097629b28"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ConfidenceExpectation.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/ConfidenceExpectation.java",
+      "sha256": "34ab45c71e990caebb82d0c9054259613f66b6c5921565e404972fdff2770a05"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/FrozenOutcome.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/FrozenOutcome.java",
+      "sha256": "d1c4cf8b759c36097c015f2ea4f6d688ce9479367544c08cd79f607d71f8a242"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/FrozenOutcomeClient.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/FrozenOutcomeClient.java",
+      "sha256": "ead91864c5b622ff46ce0e43d414a73246440a4dd06f47bc771bcbeec8a9b274"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/FrozenOutcomeHttpClient.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/FrozenOutcomeHttpClient.java",
+      "sha256": "3b98924b7892b93e0cfbcfdf254a5584e753e8f5feaae7d1568b96621726b7b3"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/OllamaTextJudge.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/OllamaTextJudge.java",
+      "sha256": "ab4a451c1b5529ea3efad6b33e3853c8fa0e55bf1bbf59744f2c0b927ca833ca"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/TextJudge.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/TextJudge.java",
+      "sha256": "27e0557e756cab0d812f4748ab8a4d67c6dc2d2b0010d7819041d28a01a2440b"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/TextScores.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/comparison/TextScores.java",
+      "sha256": "51ffd4722955623b9122a3ab59b70eddda36c63098665b28f64276fab69f8586"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/config/GeneratorProperties.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/config/GeneratorProperties.java",
+      "sha256": "be38c968bf4cd9da743e504607f3e00ed5f95b02accec2e6a30aac584159018b"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyNotReadyException.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyNotReadyException.java",
+      "sha256": "e2e5a13f222359b019c5add0a87f4dc9c8eb6658e6409c1dc5b5c604ace87d2c"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealAuditSink.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealAuditSink.java",
+      "sha256": "8518e3d12a49fb3e0020500ea32e1b383ed4a5aee25e314a96c0d5683e719261"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealEvent.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealEvent.java",
+      "sha256": "e532d7845aca428a92b82aec7060f2c12ecc870631ddc70909fa1411b01fdd35"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealResponse.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealResponse.java",
+      "sha256": "c03bd932117784251a05eb6f9024d2e2eb215b8060fc6ac3def88fc18f24639f"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealService.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyRevealService.java",
+      "sha256": "485726f038870d70653e4a6ff398e3227c8b449f3da163a4a1efbe36d05035b6"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyUnavailableException.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/AnswerKeyUnavailableException.java",
+      "sha256": "27fdf025de241bd35758fdec89a4951d1156d8ba51e4ea87f52517f9d4ce6697"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/CopilotIncidentReviewClient.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/CopilotIncidentReviewClient.java",
+      "sha256": "665671ac0d8c36285fc8fbdb72ef2de2768aa4438443b1e5c65d951ce5e400b5"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/CopilotIncidentReviewHttpClient.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/CopilotIncidentReviewHttpClient.java",
+      "sha256": "636f2104a4d0129f5c8ea9a8d370cc8cab461ada3c95952ee864e4e643139a6c"
+    },
+    {
+      "source": "syntheticIncidentGenerator/src/main/java/com/cguzowski/syntheticincidentgenerator/generation/InvalidAnswerKeyRevealException.java",
+      "target": "src/main/java/com/cguzowski/syntheticincidentgenerator/generation/InvalidAnswerKeyRevealException.java",
+      "sha256": "853bd65d856ecf0a41adf206072aaa7c872c2e061ca562be76860bc6c3e63745"
+    }
+  ]
+}

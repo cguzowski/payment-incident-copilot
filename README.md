@@ -1,194 +1,83 @@
 # Payment Incident Investigation Copilot
 
-An auditable copilot for investigating synthetic payment incidents:
+A local demo that investigates synthetic payment incidents using sourced evidence,
+approved PDF guidance and Ollama. Reports are advisory; a human approves or rejects
+with a reason. The application never processes payments or executes recommendations.
+All organizations and records are fictional. Synthetic identity headers are not
+production authentication.
 
-**alert → incident work queue → evidence → approved knowledge → advisory report
-→ human decision → audit timeline**
+## Run from a Git clone on Windows
 
-The core MVP is implemented. Seven synthetic incident families now share the
-complete triage and human-review workflow. The authorization corpus passes its
-fixed retrieval thresholds; retained live-model evaluations record quality gaps.
-The six added families have deterministic workflow coverage, with live-model
-quality not yet measured.
-See [current status](docs/agent/STATUS.md) and the
-[roadmap](docs/agent/ROADMAP.md).
-See the [expansion plan](docs/agent/PAYMENT_EXPANSION_PLAN.md) for sequencing
-and the distinction between approved direction and implemented behavior.
-
-## What it does
-
-- Keeps active and completed incidents in one tenant-scoped operator queue.
-- Triages authorization declines/timeouts, capture/refund failures, settlement
-  delays, webhook delivery failures and reconciliation mismatches.
-- Collects read-only synthetic service-error evidence through MCP.
-- Retrieves approved PDF knowledge with immutable source provenance; historical
-  Markdown citations remain readable.
-- Generates schema- and citation-validated reports through local Ollama.
-- Requires an attributable human approval or rejection with a reason.
-- Preserves attempt outcomes, missing evidence, and the audit timeline.
-
-All organizations and data are fictional. The application does not process
-payments, move money, or execute recommendations. Caller-supplied synthetic
-identity headers are not authentication.
-
-## Runtime boundaries
-
-| Component | Responsibility |
-|---|---|
-| `frontend/operator-console` | Angular queue, investigation, reports, decisions, and audit UI |
-| `backend/copilot-api` | Java 21/Spring Boot workflow, persistence, Spring AI, and retrieval |
-| `syntheticIncidentGenerator` | Standalone alert generator and matching MCP evidence on port 8082 |
-| `backend/operations-mcp-server` | Legacy fixture provider and MCP compatibility checks on port 8081 |
-| PostgreSQL + pgvector | Application state and tenant-filtered hybrid knowledge retrieval |
-| Ollama | Local embeddings and advisory report generation |
-
-The launcher uses the generator as the API's evidence provider. The legacy
-provider remains independently runnable. See
-[architecture](docs/agent/ARCHITECTURE.md) for feature ownership and data flow.
-
-The [SynTen Inc corpus](SynTen%20Inc/README.md) contains 30 PDF versions and
-705 page-aware chunks. Its README owns the recorded benchmark results and
-their evidence limitations. The additive
-[incident-family package](SynTen%20Inc/multi-incidents/v1/README.md) contains
-six additional families, twelve scenarios and twelve approved Markdown sources.
-Those Markdown sources remain historical inputs. The local launcher now imports
-both the historical PDF catalog and frozen 16-document / 65-chunk independent
-payment library with `./start-local.bat -PrepareKnowledge`.
-
-## Run locally on Windows
-
-Prerequisites:
-
-- Java 21 and system Maven 3.9+ (`mvn.cmd` must be on PATH for the launcher).
-- Node.js 24.14.1 and npm 10.8.3.
-- Windows PowerShell for the batch launcher; PowerShell 7 for the documented
-  verification workflow.
-- Running PostgreSQL with pgvector, either native or through Docker Compose.
-- Ollama with `nomic-embed-text` and `qwen3:8b-q4_K_M` installed.
-
-Create configuration once, then edit the ignored file for your local database:
+Install Java 21, Node.js 24.14.1 with npm 10.8.3, PowerShell 7, Docker Desktop
+(or a native PostgreSQL installation with pgvector), and Ollama. Make `java`,
+`node`, `npm`, and `pwsh` available on PATH. Maven is installed by the included wrapper.
+Internet access is needed for the first dependency build and model downloads.
 
 ```powershell
+git clone https://github.com/cguzowski/payment-incident-copilot.git
+cd payment-incident-copilot
 Copy-Item .env.example .env
 ```
 
-Keep database URL, username, password, and port consistent. For a new
-Compose-managed database, start the required infrastructure with:
+Edit `.env` for your database. For a new Docker database, keep its `POSTGRES_*`
+settings consistent with `SPRING_DATASOURCE_*`, then start Docker Desktop and run:
 
 ```powershell
 docker compose up -d postgres
-```
-
-Do not start another database on a port already used by native PostgreSQL.
-Changing Compose environment values does not reset an existing database volume.
-
-Install the models explicitly, and ensure Ollama is running. Start
-`ollama serve` only if the desktop application/service is not already serving:
-
-```powershell
 ollama pull nomic-embed-text
 ollama pull qwen3:8b-q4_K_M
-```
-
-Report generation defaults to a hard maximum of 150 seconds; shorter
-`REPORT_GENERATION_TIMEOUT` values are supported. `REPORT_BATCH_TOKENS=128`
-reduces the provider's processing batch size while retaining the full context.
-`REPORT_GPU_LAYERS=-1` leaves placement to Ollama. On the measured 6 GiB GTX 1060,
-`REPORT_GPU_LAYERS=35` reduced CPU spill and substantially increased token speed.
-Pair that measured workstation setting with `KNOWLEDGE_EMBEDDING_KEEP_ALIVE=0s`
-to unload the embedding model after retrieval and free GPU memory for reports.
-The portable embedding residency default remains five minutes; explicit bulk
-knowledge preparation can retain that default to avoid repeated model loads.
-Use explicit placement only after measuring memory and latency on your machine;
-return to `-1` if memory pressure slows generation or causes allocation failures.
-Put these values in `.env` and restart the API for changes to take effect.
-Effective GPU/batch options are retained on new report attempts; historical
-settings are preserved. See [ADR-0028](docs/agent/decisions/ADR-0028-report-deadline-and-gpu-tuning.md).
-
-Check local prerequisites:
-
-```powershell
 .\start-local.bat --CheckOnly
-```
-
-For the first run against a new database, prepare the knowledge catalog and
-embeddings before the application starts:
-
-```powershell
 .\start-local.bat -PrepareKnowledge
 ```
 
-This imports/embeds both accepted PDF catalogs: the historical 30 documents /
-705 chunks and independent 16 documents / 65 chunks. New searches use PDF-only
-guidance and applicable shared policies. Run this when upgrading an existing
-database to the added families too. It can take substantial time. Exact complete
-reruns are no-ops; incompatible or partial catalog/embedding state fails closed
-rather than being silently overwritten. It never downloads models. Ordinary
-startup checks both catalogs without importing or embedding. Previous Markdown
-rows and citations remain intact; Markdown ingestion is not needed for startup.
+Ollama must be running. Knowledge preparation explicitly imports and embeds the
+30-document authorization catalog and 16-document payment library; the first run
+can take substantial time. Existing compatible catalogs are reused. For native
+PostgreSQL, configure `.env` for that database and omit Docker startup. Do not start
+a second database on an occupied port. Changing `.env` does not reset Docker volumes.
 
-For subsequent starts:
+For subsequent runs:
 
 ```powershell
 .\start-local.bat
 ```
 
-Normal startup does not import knowledge. The batch launcher starts or reuses
-the generator first, then checks Ollama, database reachability, and other
-prerequisites before starting the API and console. A failed preflight may
-leave the generator running. The launcher loads `.env` and selects the
-generator's MCP endpoint explicitly.
+The launcher exports and builds three independent systems under the ignored
+`.migration-workspaces/independent-v1/` directory, installs console dependencies,
+checks knowledge readiness, and opens four owning terminals. Close a terminal to
+stop that service. Rerunning startup reuses matching services still running.
 
-Startup verifies the running API's evidence endpoint through `/actuator/info`.
-If an existing API uses another provider, or predates this metadata, stop that
-API and rerun the launcher. A healthy HTTP endpoint alone is insufficient for reuse.
-Normal red-button generation selects only scenarios with AVAILABLE evidence;
-explicit degraded scenarios remain available to tests and evaluations. Real
-provider outages still appear as failed evidence attempts.
-
-| Surface | URL |
+| Surface | Address |
 |---|---|
 | Operator console | http://localhost:4200 |
-| Copilot API | http://localhost:8080 |
-| Generator UI and MCP evidence | http://localhost:8082 |
+| Investigation API | http://localhost:8080 |
+| Synthetic generator and MCP evidence | http://localhost:8082 |
+| Evaluator | http://127.0.0.1:8083 |
 
-Use the generator's red button to create an incident. Its sealed answer key
-can be revealed only after the exact incident has an explicit terminal human
-decision. Revealing it automatically compares the report and human decision in
-separate scored cards. These advisory scores do not change either outcome.
-See [evaluation limitations](docs/agent/STATUS.md).
+Use the generator's red button, investigate in the console, and record an explicit
+human decision. The generator screen can then reveal the synthetic answer and
+request advisory report/decision scores from the evaluator.
 
-## Independent development and verification
+## What is included
 
-The generator is outside the root Maven reactor. Each component remains
-independently buildable:
+Only the current systems' source/build inputs, startup scripts, public contract
+pins, configuration templates, and required knowledge assets are maintained.
+Tests, evaluation archives, migration experiments, backup copies and obsolete
+launchers are removed. PDF sources and manifests are required for validated
+knowledge import. Historical PDF versions remain available for existing citations.
+The source and evaluator share source inputs through explicit hash-pinned export
+lists, while their exported applications build and run independently.
 
-```powershell
-.\mvnw.cmd -pl backend/copilot-api -am clean verify
-.\mvnw.cmd -pl backend/operations-mcp-server -am clean verify
-.\mvnw.cmd -f syntheticIncidentGenerator/pom.xml clean verify
-```
+Java dependencies, `node_modules`, generated workspaces, build output, `.env`,
+logs, local comparison results, database state and Ollama models are excluded from
+Git. A fresh clone downloads dependencies and models separately. Runtime disk
+usage will therefore be larger than the source checkout. To reclaim generated
+files, first close all four service terminals, then delete `.migration-workspaces`
+and any `target`, `node_modules`, `.angular`, `dist` or `tmp` directories. They are
+recreated when needed. Back up comparison results if you want to retain them.
 
-For the console, run `npm ci` and `npm start` from
-`frontend/operator-console`; its development proxy forwards `/api` to port
-8080. See the [console README](frontend/operator-console/README.md) and
-[generator README](syntheticIncidentGenerator/README.md).
-
-The authoritative repository completion gate is:
-
-```powershell
-.\verify.ps1
-```
-
-[QUALITY.md](docs/agent/QUALITY.md) documents scopes, prerequisites, and the
-documentation-only exception. Tests use deterministic model doubles; dependency
-installation and container images may still require network access.
-
-## Engineering documentation
-
-- [PROJECT.md](docs/agent/PROJECT.md): durable product scope and non-goals.
-- [STATUS.md](docs/agent/STATUS.md): current facts, verification, and limitations.
-- [ROADMAP.md](docs/agent/ROADMAP.md): ordered future outcomes.
-- [ARCHITECTURE.md](docs/agent/ARCHITECTURE.md): ownership, lifecycle, and data flow.
-- [Agent context map](docs/agent/README.md): rules and canonical documentation.
-- [Current task](docs/agent/tasks/current.md): latest authorized task contract.
+Reports have a maximum 150-second generation deadline. GPU/model throughput can
+still cause timeouts or malformed output. Scores and schema-valid reports do not
+prove correctness. Knowledge and report quality have known limitations; this is
+a synthetic local demonstration, without production authentication or deployment.
+Keep the portable GPU defaults in `.env.example` unless tuning your own hardware.

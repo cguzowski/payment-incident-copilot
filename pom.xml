@@ -21,7 +21,7 @@
 
     <modules>
         <module>backend/copilot-api</module>
-        <module>backend/operations-mcp-server</module>
+
     </modules>
 
     <properties>

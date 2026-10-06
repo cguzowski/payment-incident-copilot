@@ -1,0 +1,34 @@
+{
+  "release": "investigation-source-contracts",
+  "version": "v1",
+  "files": [
+    {
+      "path": "alerts/input.schema.json",
+      "sha256": "dca1f4feb0b3427af508558fa97ac07f3ff10a8dad2c0ad8c7ab3b2a1c3838ef"
+    },
+    {
+      "path": "examples/alert.json",
+      "sha256": "b01ae8c7497d6983d1be1e3251ae94b6e11151389fecd68d9a4f099daf389568"
+    },
+    {
+      "path": "examples/evidence-not-found.json",
+      "sha256": "96df1ffdba13230f4e48992c8ce997896cb250732f88a02f75f4c9d2da0769b0"
+    },
+    {
+      "path": "examples/evidence-request.json",
+      "sha256": "6f2ee640317c691693735bc5b02cc9d36f6e7c8e06763bd5e5e386e8f334cc7c"
+    },
+    {
+      "path": "mcp/input.schema.json",
+      "sha256": "591da3b9e1e60dfb5c12afc3db70c9ed857eb352e4bba2757abe5368f238a2f9"
+    },
+    {
+      "path": "mcp/output.schema.json",
+      "sha256": "e0a0bbea1a191bae699f4c762ebe95fd324255f24a7a84092cc3a07487f72e82"
+    },
+    {
+      "path": "metadata.json",
+      "sha256": "28ba654128187ad7c82930bfe0fdf53445338337334854fd2d98ff492eacea80"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "release": "investigation-source-contracts",
+  "version": "v1",
+  "mcp": {
+    "tool": "getRecentServiceErrors",
+    "contentSchemaVersion": "service-errors/v1",
+    "inputSchema": "mcp/input.schema.json",
+    "outputSchema": "mcp/output.schema.json",
+    "readOnly": true
+  },
+  "alerts": {
+    "method": "POST",
+    "path": "/api/alerts",
+    "schema": "alerts/input.schema.json",
+    "tenantHeader": "X-Synthetic-Tenant-Id",
+    "createdStatus": 201,
+    "replayStatus": 200,
+    "changedPayloadReplayStatus": 200,
+    "duplicatePayloadPolicy": "Retain original incident content for the tenant/externalAlertId key."
+  }
+}

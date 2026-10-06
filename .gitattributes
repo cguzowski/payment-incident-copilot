@@ -1,3 +1,14 @@
 * text=auto eol=lf
 *.bat text eol=crlf
 *.cmd text eol=crlf
+
+# Preserve exact bytes of the hash-pinned runtime catalogs and browser assets.
+mvnw.cmd -text
+contracts/releases/** -text
+"SynTen Inc/multi-incidents/v1/catalog.json" -text
+"SynTen Inc/multi-incidents/v1/oracle.json" -text
+syntheticIncidentGenerator/src/main/resources/scenarios/catalog.json -text
+syntheticIncidentGenerator/src/main/resources/scenarios/oracle.json -text
+scripts/independent/source/app.js -text
+scripts/independent/source/application.yml -text
+scripts/independent/source/index.html -text
